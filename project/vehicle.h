@@ -90,6 +90,11 @@ public:
 	Vector3f GetVehicleVelocityLC() { return velocityLC; };
 	void SetVehicleVelocityLC(float magnitude) {velocityLC = Vector3f(magnitude, 0.0f, 0.0f);};
 	void SetVehiclePositionLC(Vector3f pos) {positionLC = pos;}
+	void SetRotationLC(Vector3f rot) {rotationLC = rot;}
+	Vector3f& GetRotationLC() {return rotationLC;}
+	Vector3f& GetPositionLC() {return positionLC;}
+	void updateBoundingBoxes(Vector3f bodyRotWC);
+	void SetFLTirePosition(Vector3f TirePos) {FLTirePosition = TirePos;}
 	// end Gib's additions
 
     //Rams Add
@@ -208,6 +213,7 @@ protected:
 	// Gib's additions
 	Vector3f ExtraneousForces;
 	bool isPlayer;
+	Vector3f FLTirePosition; // The vector that points from the bbox center to the front-left tire's bbox center
 };
 
 

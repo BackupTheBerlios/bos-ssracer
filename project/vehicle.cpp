@@ -1115,14 +1115,11 @@ void CVehicle::TransformLocalToWorldSpace()
 	// Apply the transformation WC(X,Y,Z) = LC(X,-Z,Y) to the position of the vehicle
 	Vector3f bodyTransWC(positionLC.X(), positionLC.Z()*(-1.0f), positionLC.Y());
 	m_translate = bodyTransWC;
-	/*Gib's modification*/m_box.Center() = bodyTransWC;/*end Gib's modification*/
 
 	// Update the car body rotation value for the renderer.
 	Vector3f bodyRotWC(DEGREES(rotationLC.X()), DEGREES(rotationLC.Z()*(-1.0f)), DEGREES(rotationLC.Y()));
 	m_rotate = bodyRotWC;
-	// Gib's comment: m_box's rotation cannot be done in the same way, but must be done nevertheless.
-	// See WmlBox3.h: it has an array of 3 axes that denote its orientation.
-	
+
 	// Then transform all 4 tires
 	Vector3f tireTransformedLC;
 	Vector3f tireTransLC;
@@ -1156,8 +1153,12 @@ void CVehicle::TransformLocalToWorldSpace()
 	headingWC = Vector3f( headingTotLC.X(), -headingTotLC.Z(), headingTotLC.Y());
 	velocityWC = Vector3f( velocityTotLC.X(), -velocityTotLC.Z(), velocityTotLC.Y());
 
+	// Gib's additions
+
+	updateBoundingBoxes(bodyRotWC); // gib's addition
+
 	/*
-	// Gib's addition
+
 	if (ExtraneousForces.Length() > 0.1f) {
 		m_translate += ExtraneousForces;
 		m_box.Center() += ExtraneousForces;
@@ -1166,6 +1167,7 @@ void CVehicle::TransformLocalToWorldSpace()
 	}
 	else ExtraneousForces = Vector3f(0.0f, 0.0f, 0.0f);
 */
+
 
 }
 
@@ -1186,26 +1188,57 @@ void CVehicle::RotateVectorAboutLocalZ(Vector3f* param, float rotZRADS)
 
 }
 
-/* // This function is now in CRigidBody
 // Gib's addition
-#define FACTOR 1.0f
-void CVehicle::DeliverCollisionMessage(CCollisionMessage* ColMsg)
+
+void CVehicle::updateBoundingBoxes(Vector3f bodyRotWC)
 {
-	if (!ColMsg) return;
 
-	// Reverse vehicle back to collision point
-	m_translate += *ColMsg->GetReverse();
-	m_box.Center() += *ColMsg->GetReverse();
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 50, "heading = (%f, %f, %f)",
+		headingWC.X(), headingWC.Y(), headingWC.Z());
 
-	Vector3f reflected = velocityWC - 2.0f*(velocityWC.Dot(*ColMsg->GetNormal()))*(*ColMsg->GetNormal());
+		// update position
+	m_box.Center() = m_translate;
 
-	//velocityTotLC = Vector3f(reflected.X(), reflected.Z(), -reflected.Y());
-	//velocityLC = reflected;
-	velocityLC.X() = -velocityLC.X()*FACTOR;
-	//ExtraneousForces = reflected*0.01f;
+//	if (bodyRotWC.Y() == 0.0f) return;
+
+	m_box.Axis(0) = headingWC;
+	m_box.Axis(0).Normalize();
+
+	m_box.Axis(2) = headingWC.Cross(m_box.Axis(1));
+	m_box.Axis(2).Normalize();
+
+	// Do the tires' axes
+	for (int i = 0; i < 4; i++) {
+		tires[i]->GetBoundingBox()->Axis(0) = headingWC;
+		tires[i]->GetBoundingBox()->Axis(0).Normalize();
+		tires[i]->GetBoundingBox()->Axis(2) = headingWC.Cross(m_box.Axis(1));
+		tires[i]->GetBoundingBox()->Axis(2).Normalize();
+	}
+
+	// tire positions
+	Vector3f TirePosCopy = Vector3f(FLTirePosition);
+	Vector3f Axis0Copy = Vector3f(m_box.Axis(0));
+	Vector3f Axis2Copy = Vector3f(m_box.Axis(2));
+	Vector3f TirePosYValue = Vector3f(0.0f, TirePosCopy.Y(), 0.0f);
+
+	Axis0Copy.Normalize(); Axis2Copy.Normalize();
+	Axis0Copy *= TirePosCopy.X(); Axis2Copy *= TirePosCopy.Z();
+
+	// These are equivalent to FLTirePosition except rotated properly
+	Vector3f FLRotatedTirePos = Axis0Copy + Axis2Copy + TirePosYValue; 
+	Vector3f FRRotatedTirePos = Axis0Copy + Axis2Copy*(-1.0f) + TirePosYValue;
+	Vector3f RLRotatedTirePos = Axis0Copy*(-1.0f) + Axis2Copy + TirePosYValue;
+	Vector3f RRRotatedTirePos = Axis0Copy*(-1.0f) + Axis2Copy*(-1.0f) + TirePosYValue;
+
+	// Now, set their positions
+	tires[FLTIRE]->GetBoundingBox()->Center() = m_box.Center() + FLRotatedTirePos; // FL
+	tires[FRTIRE]->GetBoundingBox()->Center() = m_box.Center() + FRRotatedTirePos; // FR
+	tires[RLTIRE]->GetBoundingBox()->Center() = m_box.Center() + RLRotatedTirePos; // RR
+	tires[RRTIRE]->GetBoundingBox()->Center() = m_box.Center() + RRRotatedTirePos; // RL
+
+
 
 }
-#undef FACTOR
-// end Gib's addition
-*/
 
+
+// end Gib's addition

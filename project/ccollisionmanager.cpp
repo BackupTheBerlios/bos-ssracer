@@ -79,8 +79,7 @@ void CCollisionManager::Update()
 		}
 		// Implement opponent vehicle collisions with other opponent vehicles here
 		// Remember to skip opponent vehicles colliding with themselves
-		thisEntity++;
-        OP++;  //$$$NOTE Gibs it get stuck in this infinite loop, I think you forgot to inc this variable?!?!!? -J
+		OP++;
 	}
 
 	// Basic needs:
@@ -161,13 +160,15 @@ bool CCollisionManager::hasCollided(CVehicle* PV, std::vector<Rectangle3f*>::ite
 	if (POS && NEG) {
 		// Find the collision point
 		ReverseVelocity = new Vector3f(PV->GetVehicleVelocityWC());
-		if (PV->GetVehicleVelocityLC().X() > 0)
-			*ReverseVelocity *= -1;
+		// If going forward, ReverseVelocity should point in opposite direction
+		if (PV->GetVehicleVelocityLC().X() > 0.0f)
+			*ReverseVelocity *= -1.0f;
 		ReverseNormal = -P->GetNormal();
 		theta = acos((ReverseVelocity->Dot(ReverseNormal))/(ReverseVelocity->Length()*ReverseNormal.Length()));		
 		h = m_CI.dist/cos(theta);
 		ReverseVelocity->Normalize();
 		*ReverseVelocity *= Math<float>::FAbs(h);
+
 		SAFE_DELETE(m_CI.Reverse);
 		m_CI.Reverse = ReverseVelocity;
 		SAFE_DELETE(m_CI.ColPoint);
@@ -198,12 +199,12 @@ int CCollisionManager::respond(std::vector<CEntity*>::iterator E1, std::vector<C
 // playervehicle, plane
 int CCollisionManager::respond(CVehicle* PV, std::vector<Rectangle3f*>::iterator Plane)
 {
-	// Make CRASH sound
+	/*** Make CRASH sound ***/
 	CSoundMessage* SoundMsg = new CSoundMessage();
 	SoundMsg->PlaySoundEffectOnce("crash_hard");
 	CKernel::GetKernelPtr()->DeliverMessage(SoundMsg, SOUND_TASK);
 
-	// Send collision info to physics task
+	/*** Send collision info to physics task ***/
 	CCollisionMessage* ColMsg = new CCollisionMessage();
 	// Set Entity
 	ColMsg->SetEntity((CEntity*)PV);
@@ -211,6 +212,8 @@ int CCollisionManager::respond(CVehicle* PV, std::vector<Rectangle3f*>::iterator
 	Vector3f* Normal = new Vector3f((*Plane)->Edge0().Cross((*Plane)->Edge1()));
 	Normal->Normalize();
 	ColMsg->SetNormal(Normal);
+	// Set Plane
+	ColMsg->SetPlane(*Plane);
 	// Set Reverse
 	ColMsg->SetReverse(m_CI.Reverse);
 	// Set Collision Point

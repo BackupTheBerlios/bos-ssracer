@@ -1679,6 +1679,9 @@ int CCommandLineParser::LoadCollisionTest()
 	}
 	CVehicle * PV = (CVehicle *)CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
 	PV->IsPlayer() = true;
+	PV->SetPositionLC(Vector3f(0.0f, 0.0f, 0.0f));
+
+	// Set its bounding box
 	PV->GetBoundingBox()->Extent(0) = 1.5f;
 	PV->GetBoundingBox()->Extent(1) = 0.5f;
 	PV->GetBoundingBox()->Extent(2) = 0.5f;
@@ -1686,11 +1689,38 @@ int CCommandLineParser::LoadCollisionTest()
 	PV->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
 	PV->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
 	PV->SetPositionLC(Vector3f(0.0f, 30.0f, 0.0f));
+PV->GetBoundingBox()->Center() = PV->GetPositionLC();
+
+	/*** set bbox for tires ***/
+	// First, initialize their extents and axis
+	for (int i = 0; i < 4; i++) {
+		PV->GetTire(i)->GetBoundingBox()->Extent(0) = 0.2f;
+		PV->GetTire(i)->GetBoundingBox()->Extent(1) = 0.2f;
+		PV->GetTire(i)->GetBoundingBox()->Extent(2) = 0.1f;
+		PV->GetTire(i)->GetBoundingBox()->Axis(0) = Vector3f(1.0f, 0.0f, 0.0f);
+		PV->GetTire(i)->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
+		PV->GetTire(i)->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
+	}
+
+	// Now, prepare a vector that points from the car center to one of the tire centers
+	// and use it to set each tire
+// enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
+	Vector3f TireCenter = Vector3f (0.85f, -0.25f, 0.5f); // guestimate for FLTIRE
+	PV->SetFLTirePosition(TireCenter);
+	PV->GetTire(FLTIRE)->GetBoundingBox()->Center() = TireCenter + PV->GetBoundingBox()->Center();
+	TireCenter.Z() *= -1.0f; // front-right
+	PV->GetTire(FRTIRE)->GetBoundingBox()->Center() = TireCenter + PV->GetBoundingBox()->Center();
+	TireCenter.X() *= -1.0f; // rear-right
+	PV->GetTire(RRTIRE)->GetBoundingBox()->Center() = TireCenter + PV->GetBoundingBox()->Center();
+	TireCenter.Z() *= -1.0f; // rear-left
+	PV->GetTire(RLTIRE)->GetBoundingBox()->Center() = TireCenter + PV->GetBoundingBox()->Center();
+	
+
 //	PV->SetTranslate(Vector3f(0.0f, 0.0f, 30.0f));
 
-	
+	/*
 	// Load a couple opponent vehicles
-/*	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&oppDir1, &oppName1))) {
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&oppDir1, &oppName1))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Opponent Vehicle 1 not loaded correctly!");
 		return GENERAL_ERROR;
 	}
@@ -1724,6 +1754,11 @@ int CCommandLineParser::LoadCollisionTest()
 	// Make planes visible
 	string drawplanes = "drawplanes 1";
 	parse(drawplanes);
+	execute();
+
+	// Make bounding boxes visible
+	string drawentbbox = "drawentbbox 1";
+	parse(drawentbbox);	
 	execute();
 
 	// set camera

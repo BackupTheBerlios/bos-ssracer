@@ -17,7 +17,8 @@ public:
 
 protected:
 	Vector3f m_vPosition;
-	Vector3f m_vOrientation;
+	Vector3f m_vRotation;
+	Vector3f m_vOrientation; // not being used... yet
 	Vector3f m_vReflection;
 	Vector3f m_vDirectionWhenDisturbed;
 	bool disturbed;
