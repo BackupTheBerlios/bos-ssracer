@@ -17,6 +17,15 @@ enum GameSetting
     DIRSOUND,
     DIRMUSIC,
     DIRMESH,
+    
+    DIRDYNMESH,
+    DIRDYNVEHICLES,
+    DIRDYNPROPS,
+
+    DIRSTATICMESH,
+    DIRSTATICPROPS,
+    DIRSTATICBUILDINGS,
+    DIRSTATICMISC,
     DIRDEBUG
 };
 
@@ -37,7 +46,7 @@ public:
 
 protected:
     static CSettingsManager * ms_pkSettingsMgr;
-    std::map< GameSetting, std::string > m_settingMap;
+    static std::map< GameSetting, std::string > m_settingMap;
 };
 
 

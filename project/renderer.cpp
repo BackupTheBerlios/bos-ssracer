@@ -30,10 +30,16 @@ using namespace Wml;
 #include "stl.h"
 
 
+
+
+
+
 HRESULT CRenderer::ms_hResult                = NULL;
 LPDIRECT3D9       CRenderer::m_pD3D          = NULL;
 LPDIRECT3DDEVICE9 CRenderer::m_pd3dDevice    = NULL;
 std::map<std::string, CD3DMesh *> CRenderer::m_kMeshMap;       // meshes available to this app
+std::map< unsigned int, CD3DCamera * > CRenderer::m_pkCameraMap;  // cameras used by this renderer
+
 CRenderer * CRenderer::ms_pkRenderer = NULL; 
 
 
@@ -75,8 +81,44 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     m_kFontMap[FONT_SYSTEM]  = new CD3DFont( _T("System"), 12, D3DFONT_BOLD|D3DFONT_ITALIC|D3DFONT_ZENABLE );
     m_kFontMap[FONT_SMALL]   = new CD3DFont( _T("Arial"), 8 );
 	
-	// Gib's modification
 	ms_pkRenderer = this;
+
+    // set up the cameras
+   	m_pkCameraMap[CAMERA_BUMPER] = NULL;//new CD3DCamera();  // bumper camera
+	
+	m_pkCameraMap[CAMERA_CHASE]  = NULL;//new CCameraChase();  // chase camera
+
+	m_pkCameraMap[CAMERA_FREELOOK]   = new CCameraFreeLook(); // free look
+
+	// set up default camera parameters for each main camera
+    // 1 eye origin            2 look at pt      3 up vector
+	// 1 field of view    2 aspect ratio  3 nearplane     4 farplane
+
+
+	//--- bumper camera --- //
+	//$$$TODO
+	
+	//--- chase camera --- //
+/*	// eye 5 back, 3 up from objects position
+	// look at car position
+	// up is Y
+	m_pkCameraMap[CAMERA_CHASE]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, 0.0f), 
+				                                &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+	// shorter FOV shorter frustrum
+	m_pkCameraMap[CAMERA_CHASE]->SetProjParams( D3DX_PI/3.0f, 1.0f ,1.0f ,100.0f );
+
+*/
+	//--- free look camera --- //	
+	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(0.0f, 10.0f, -10.0f), 
+				                               &D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	// wide FOV and a large frustrum
+	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f ,1.0f ,1000.0f );
+
+    // defaults to this camera
+    m_pActiveCamera = m_pkCameraMap[CAMERA_FREELOOK];
+    m_eActiveCamType = CAMERA_FREELOOK;
+
 }
 
 
@@ -251,8 +293,15 @@ void CRenderer::CreateMeshes ()
 int CRenderer::CreateMesh( CD3DMesh * pMesh, char * pcFileName )
 {
 
+    FILE* fp = fopen(pcFileName, "r");
+
+    if (!fp)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, IDS_RENDER_ERROR, "could not load mesh, path invalid");
+        return 0;
+    }
+
     HRESULT hr;
-    if ( FAILED( hr = pMesh->Create( m_pd3dDevice, pcFileName )) )  {
+    if ( FAILED( hr = pMesh->Create( m_pd3dDevice, _T(pcFileName) )) )  {
 	    #ifdef _DEBUG
 	    CLog::GetLog().Write(LOG_APP, IDS_RENDER_ERROR, "could not load mesh");
 	    #endif
@@ -281,11 +330,10 @@ void CRenderer::DisplayBackBuffer ()
     // flip buffers
     HRESULT hr;
     hr = m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
-if ( hr == D3DERR_DEVICELOST )  {
-         
-#ifdef _DEBUG
+    if ( hr == D3DERR_DEVICELOST )  {
+        #ifdef _DEBUG
         CLog::GetLog().Write(LOG_APP, IDS_RENDER_ERROR, "Rendering Failed");
-#endif
+        #endif
         DXTRACE_ERR_MSGBOX( "m_pd3dDevice->Present( NULL, NULL, NULL, NULL ))", hr );
     }
 
@@ -326,8 +374,8 @@ bool CRenderer::CheckDevice()
 void CRenderer::RenderScene()
 {
     InitializeState();
-    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,20,50), 1.0f, 0 );
-    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );
+    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,100,200), 1.0f, 0 );
+    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );D3DCOLOR_XRGB(0,20,50)
 
     m_pd3dDevice->BeginScene();  // --- begin scene drawing commands
 
@@ -390,7 +438,7 @@ void CRenderer::RenderScene()
 	    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
 
           //actual drawing of the mesh
-        if ( FAILED(hr =  (*it)->GetMesh()->Render(m_pd3dDevice,true,true)) )  {
+        if ( FAILED(hr =  (*it)->GetMesh()->Render(m_pd3dDevice)) )  {
 		    #ifdef _DEBUG
 		    CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
             CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", (*it)->GetMesh()->m_strName);
@@ -398,7 +446,7 @@ void CRenderer::RenderScene()
 	    }
 	    else {
 		    #ifdef _DEBUG
-		    CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", (*it)->GetMesh()->m_strName);
+		    //CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", (*it)->GetMesh()->m_strName);
 		    #endif
         }
 
@@ -721,12 +769,12 @@ void CRenderer::InitializeState ()
 //-----------------------------------------------------------------------------
 // Name:  SetCamera()
 // Desc:  set the view and projection matrices in the new camera model
-// Defaults: uiCameraName = CAMERA_DEFAULT
+// Defaults: eCameraName = CAMERA_FREELOOK
 //-----------------------------------------------------------------------------
-CD3DCamera * CRenderer::SetCamera( CD3DCamera* pkCamera, unsigned int uiCameraName )
+CD3DCamera * CRenderer::SetCamera( CD3DCamera* pkCamera, CameraType eCameraName)
 { 
     assert(pkCamera);
-    m_pkCameraMap[uiCameraName] = pkCamera; 
+    m_pkCameraMap[eCameraName] = pkCamera; 
     
     // set the view and projection matrices for the device
     m_pd3dDevice->SetTransform( D3DTS_VIEW, pkCamera->GetViewMatrix() );
@@ -740,11 +788,11 @@ CD3DCamera * CRenderer::SetCamera( CD3DCamera* pkCamera, unsigned int uiCameraNa
 //-----------------------------------------------------------------------------
 // Name:  GetCamera()
 // Desc:  get a pointer to a camera specified by name
-// Defaults: uiCameraName = CAMERA_DEFAULT
+// Defaults: eCameraName = CAMERA_FREELOOK
 //-----------------------------------------------------------------------------
-CD3DCamera * CRenderer::GetCamera (unsigned int uiCameraName)
+CD3DCamera * CRenderer::GetCameraPtr (CameraType eCameraName)
 {
-    return m_pkCameraMap[uiCameraName]; 
+    return m_pkCameraMap[eCameraName]; 
 }
 
 
@@ -756,8 +804,7 @@ CD3DCamera * CRenderer::GetCamera (unsigned int uiCameraName)
 void CRenderer::Click()
 {
     // set the new view matrix for the camera in the D3Ddevice
-    //m_pd3dDevice->SetTransform( D3DTS_VIEW, &m_pkCameraMap[CAMERA_DEFAULT]->GetViewMatrix() );
-    //m_pd3dDevice->SetTransform( D3DTS_VIEW, CGame::GetGamePtr()->GetActiveCameraPtr()->GetViewMatrix() );
+    m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );
 
 }
 

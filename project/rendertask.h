@@ -39,7 +39,7 @@ public:
 
 private:
     CRenderer * m_pkRenderer;  // the renderer attached to this task 
-    CD3DCamera * m_pkCamera;   // camera for this renderer
+    void HandleInputMessage( CInputTaskMessage * pIMsg );
 };
 
 

@@ -404,7 +404,9 @@ int CScene::LoadEntity(string* directory, string* filename)
 	string path;
 	char temp[128];
 
-	// Construct the path of the filename
+/*	
+    do your own file checking here,  I check for the .x file when I load it
+    // Construct the path of the filename
 	path = directory->c_str();
 	path.append("\\");
 	path.append(filename->c_str());
@@ -417,7 +419,7 @@ int CScene::LoadEntity(string* directory, string* filename)
 		CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntity >> Unable to open file for reading");
 		return 0;
 	}
-
+*/
 	// Allocate memory for the entity
 	NEW(newEntity, CEntity, "Error CScene::LoadEntity() >> new operator failed");
 

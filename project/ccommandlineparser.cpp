@@ -281,13 +281,13 @@ int CCommandLineParser::LoadScene()
 
 	if(!directorySet && !filenameSet) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Invalid Usage!  See help for instructions.");
-		return 0;
+		return GENERAL_ERROR;
 	}
 
 	if(directorySet && filenameSet) {
 		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadScene(&directory, &filename))) {
 			CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
-			return 0;
+			return GENERAL_ERROR;
 		}
 	}
 		
@@ -322,13 +322,13 @@ int CCommandLineParser::LoadEntity()
 
 	if(!directorySet && !filenameSet) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Invalid Usage!  See help for instructions.");
-		return 0;
+		return GENERAL_ERROR;
 	}
 
 	if(directorySet && filenameSet) {
 		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&directory, &filename))) {
 			CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity was not loaded successfully!");
-			return 0;
+			return GENERAL_ERROR;
 		}
 	}
     
@@ -384,7 +384,7 @@ int CCommandLineParser::ClearScene()
 {
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->ReleaseScene())) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not cleared successfully!");
-		return 0;
+		return GENERAL_ERROR;
 	}
 	return OK;
 }
@@ -395,10 +395,12 @@ int CCommandLineParser::ClearScene()
 
 int CCommandLineParser::JScript1()
 {
-    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(new string("."), new string("nsx")))) {
+    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(new string("\0"), new string("ferrarif20\0")))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity was not loaded successfully!");
-		return 0;
+		return GENERAL_ERROR;
 	}
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "J's script 1 loaded the entity %s Sucessfully!", "ferrarif20\0" );
+    return OK;
 }
 
 

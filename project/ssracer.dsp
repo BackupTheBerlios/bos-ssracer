@@ -92,62 +92,6 @@ LINK32=link.exe
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
-# Begin Group "Core Sources"
-
-# PROP Default_Filter ".cpp"
-# Begin Group "Game Console Sources"
-
-# PROP Default_Filter ".cpp"
-# Begin Source File
-
-SOURCE=.\ccommandlineparser.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\cinputconsole.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\consolemessage.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\consoletask.cpp
-# End Source File
-# End Group
-# Begin Group "System Sources"
-
-# PROP Default_Filter ".cpp"
-# Begin Source File
-
-SOURCE=.\kernel.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\task.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\timer.cpp
-# End Source File
-# End Group
-# Begin Source File
-
-SOURCE=.\appstate.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\bosapp.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\log.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Settings.cpp
-# End Source File
-# End Group
 # Begin Group "Renderer Sources"
 
 # PROP Default_Filter ".cpp"
@@ -294,6 +238,62 @@ SOURCE=.\ctextfield.cpp
 # Begin Source File
 
 SOURCE=.\cwidget.cpp
+# End Source File
+# End Group
+# Begin Group "Core Sources"
+
+# PROP Default_Filter ".cpp"
+# Begin Group "Game Console Sources"
+
+# PROP Default_Filter ".cpp"
+# Begin Source File
+
+SOURCE=.\ccommandlineparser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\cinputconsole.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\consolemessage.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\consoletask.cpp
+# End Source File
+# End Group
+# Begin Group "System Sources"
+
+# PROP Default_Filter ".cpp"
+# Begin Source File
+
+SOURCE=.\kernel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\task.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\timer.cpp
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=.\appstate.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\bosapp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\log.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Settings.cpp
 # End Source File
 # End Group
 # Begin Source File
@@ -450,6 +450,30 @@ SOURCE=.\gamestatemanager.h
 SOURCE=.\physicstask.h
 # End Source File
 # End Group
+# Begin Group "Front End Headers"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\cbutton.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\clabel.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\cscreens.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ctextfield.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\cwidget.h
+# End Source File
+# End Group
 # Begin Group "Core Headers"
 
 # PROP Default_Filter ".h"
@@ -508,30 +532,6 @@ SOURCE=.\log.h
 # Begin Source File
 
 SOURCE=.\Settings.h
-# End Source File
-# End Group
-# Begin Group "Front End Headers"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\cbutton.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\clabel.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\cscreens.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\ctextfield.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\cwidget.h
 # End Source File
 # End Group
 # Begin Source File

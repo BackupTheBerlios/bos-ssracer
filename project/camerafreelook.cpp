@@ -6,7 +6,7 @@
 
 //-----------------------------------------------------------------------------
 // Name: MapKey
-// Desc: Maps a windows virtual key to an enum
+// Desc: Maps a key to an enum
 //-----------------------------------------------------------------------------
 D3DUtil_CameraKeys CCameraFreeLook::MapKey( UINT nKey )
 {
@@ -276,9 +276,6 @@ void CCameraFreeLook::Update( int iInput )
 //-----------------------------------------------------------------------------
 VOID CCameraFreeLook::FrameMove( FLOAT fElapsedTime )
 {
-/*	for (int i=0; i<CAM_MAX_KEYS; i++)
-		CLog::GetLog().Write( LOG_GAMECONSOLE, "active keys %d", m_aKeys[i]);
-*/
     if( IsKeyDown(m_aKeys[CAM_RESET]) )
         Reset();
 
@@ -323,7 +320,7 @@ VOID CCameraFreeLook::FrameMove( FLOAT fElapsedTime )
     // If rotating the camera 
     //if( m_bMouseLButtonDown ||  m_bMouseMButtonDown || m_bMouseRButtonDown )
 	
-	if ( IsKeyDown(m_aKeys[CAM_ROTATE_X_POS]) || IsKeyDown(m_aKeys[CAM_ROTATE_Y_NEG]) ||
+	if ( IsKeyDown(m_aKeys[CAM_ROTATE_X_POS]) || IsKeyDown(m_aKeys[CAM_ROTATE_X_NEG]) ||
 		 IsKeyDown(m_aKeys[CAM_ROTATE_Y_POS]) || IsKeyDown(m_aKeys[CAM_ROTATE_Y_NEG]) )
     {
         // Update the pitch & yaw angle based on mouse movement
@@ -345,10 +342,6 @@ VOID CCameraFreeLook::FrameMove( FLOAT fElapsedTime )
         m_fCameraPitchAngle = max( -D3DX_PI/2.0f,  m_fCameraPitchAngle );
         m_fCameraPitchAngle = min( +D3DX_PI/2.0f,  m_fCameraPitchAngle );
     }
-
-
-
-
 
 
     // Make a rotation matrix based on the camera's yaw & pitch
@@ -380,4 +373,7 @@ VOID CCameraFreeLook::FrameMove( FLOAT fElapsedTime )
     D3DXMatrixLookAtLH( &m_mView, &m_vEye, &m_vLookAt, &vWorldUp );
 
     //D3DXMatrixInverse( &m_mCameraWorld, NULL, &m_mView );
+    #ifdef _DEBUG
+    CLog::GetLog().Write(LOG_GAMECONSOLE, " Camera Position %f %f %f", m_vEye.x, m_vEye.y, m_vEye.z);
+    #endif
 }

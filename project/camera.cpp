@@ -411,9 +411,6 @@ void CD3DCamera::HandleInputMessages( CInputTaskMessage * pIMsg )
                 m_aKeys[ mappedKey ] &= ~KEY_IS_DOWN_MASK;
             break;
         }
-
-		default:
-			break;
 	}
 
 /*

@@ -10,6 +10,7 @@
 
 #include "appstate.h"
 #include "input.h"
+#include  "renderer.h"
 //#include "physics.h"
 
 //$$$TEMP
@@ -41,6 +42,8 @@ bool CAITask::Start() {
 	if(!CGameStateManager::GetGameStateManagerPtr()) {
 		return FALSE;
 	}
+
+    m_kInputMap.clear();
 
 	return TRUE;
 }
@@ -82,7 +85,10 @@ void CAITask::Update() {
 
 			// generate a input message for any keys still pressed
 			if (it->second) {
-				//CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(it->first, it->second), AI_TASK );
+                // free look camera controls
+                if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
+    				CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(it->first, it->second), RENDER_TASK );
+                // else  // driving controls
 			}
 		}
 	}
@@ -136,7 +142,7 @@ void CAITask::HandleInputMessage( CInputTaskMessage *cIMsg ) {
 	
 	#ifdef _DEBUG
 	//CLog::GetLog().Write(LOG_MISC, "AI Task: Input message received with timestamp %f.", cIMsg->GetTimeStamp() );
-    //CLog::GetLog().Write(LOG_GAMECONSOLE, "AI:  cIMsg->m_keyValue %c Hex %x Dec %d", cIMsg->m_keyValue, cIMsg->m_keyValue, cIMsg->m_keyValue );	
+    CLog::GetLog().Write(LOG_MISC, "AI:  cIMsg->m_keyValue %c Hex %x Dec %d", cIMsg->m_keyValue, cIMsg->m_keyValue, cIMsg->m_keyValue );	
 	#endif
 
     switch ( CAppStateManager::GetAppMan().GetAppState() ) {
@@ -155,7 +161,8 @@ void CAITask::HandleInputMessage( CInputTaskMessage *cIMsg ) {
     case STATE_PAUSE:
 		// special case to handle the pause key
 
-    case STATE_IN_GAME: // for now, assume its all in game input
+    case STATE_IN_GAME: 
+
     default:
         DEBUGHandleInGameInput( cIMsg );
 		break;
@@ -190,6 +197,7 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 				iConsoleOn ^= 1;
 				// play a sound
 				CKernel::GetKernel().DeliverMessage( new CSoundMessage(), SOUND_TASK );
+                m_kInputMap[ cIMsg->m_keyValue ] = FALSE;  // set the key as inactive
 			}
 			else {
 				// toggle the console

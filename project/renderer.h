@@ -21,7 +21,7 @@
 #include "stl.h"
 
 // --- internal library includes --- //
-#include "camera.h"
+#include "camerafreelook.h"
 #include "log.h"
 #include "d3denumeration.h"
 #include "d3dsettings.h"
@@ -34,19 +34,18 @@
 #define FONT_SYSTEM 1
 #define FONT_SMALL 2
 
-// Active cameras available to render
-#define CAMERA_DEFAULT 0
-
 
 class CRenderTask; // forward declaration
 //class CObject;
 //class CPlayerVehicle;
 
+// camera types renderer uses
 enum CameraType 
 {
-CAMERA_FREELOOK,
-CAMERA_CHASE,
-CAMERA_TRACK,
+    CAMERA_FREELOOK,
+    CAMERA_CHASE,
+    CAMERA_BUMPER,
+    CAMERA_UNKNOWN = 0xFF
 };
 
 
@@ -92,10 +91,11 @@ private:
     UINT m_iXpos, m_iYpos, m_iWidth, m_iHeight, m_iQuantity;
 
     std::map< unsigned int, CD3DFont * > m_kFontMap;       // fonts available to this app    
-    std::map< unsigned int, CD3DCamera * > m_pkCameraMap;  // cameras used by this renderer
+    static std::map< unsigned int, CD3DCamera * > m_pkCameraMap;  // cameras used by this renderer
     static std::map< std::string, CD3DMesh * > m_kMeshMap;       // meshes available to this app
 
-    D3DXMATRIX m_mLastTrans;
+    CD3DCamera * m_pActiveCamera; // active camera in game
+    CameraType m_eActiveCamType;     // type of active camera
 
     // renderer capabilities
     bool m_bCapMultitexture;
@@ -131,8 +131,17 @@ public:
     void ResetDevice();
     void OnDeviceLost();
 
-    CD3DCamera * SetCamera ( CD3DCamera* pkCamera, unsigned int uiCameraName=CAMERA_DEFAULT );
-    CD3DCamera * GetCamera ( unsigned int uiCameraName = CAMERA_DEFAULT );
+    // set a camera to use a different model
+    CD3DCamera * SetCamera ( CD3DCamera* pkCamera, CameraType eCameraName = CAMERA_FREELOOK );
+    // get a camera by type
+    CD3DCamera * GetCameraPtr ( CameraType eCameraName = CAMERA_FREELOOK );
+
+    // set the active camera for viewing
+    bool SetActiveCamera( CameraType eCameraName )  { m_pActiveCamera = m_pkCameraMap[eCameraName];
+                                                      m_eActiveCamType = eCameraName; };
+    // get the camera being used
+    CD3DCamera * GetActiveCameraPtr() { return m_pActiveCamera; };
+    CameraType GetActiveCameraType() { return m_eActiveCamType; };
 
     void InitializeState();
     //void SetState (const RenderStatePtr aspkState[]);

@@ -64,7 +64,6 @@ CRenderTask::CRenderTask( CRenderer * pkRenderer )
 CRenderTask::~CRenderTask()
 {
     delete m_pkRenderer;
-    delete m_pkCamera;
 }
 
 
@@ -83,9 +82,6 @@ bool CRenderTask::Start()
     m_pkRenderer->Initialize();
 
     m_pkRenderer->InitializeState();
-
-    // set default camera model
-    //m_pkRenderer->SetCamera();
 
     // establish device caps and check if it meets the minimum requirements
 
@@ -148,12 +144,44 @@ void CRenderTask::Stop()
 }
 
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void CRenderTask::DoMessageHandle(ITaskMessage *cMsg) 
 {
     #ifdef _DEBUG
     //CLog::GetLog().Write( LOG_MISC, IDS_RENDER_MSG, "Handled a message" );
     #endif
+
+    // usually gets input messages
+	switch ( cMsg->GetType() ) {
+
+	case INPUT_TASK_MESSAGE:
+		HandleInputMessage( (CInputTaskMessage *)cMsg );
+		break;
+
+	default:
+		#ifdef _DEBUG
+		CLog::GetLog().Write(LOG_MISC, "Render Task: Message type %d not recognized.", cMsg->GetType() );
+		#endif
+		break;
+	}
+
    
+}
+
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void CRenderTask::HandleInputMessage( CInputTaskMessage * pIMsg )
+{
+    #ifdef _DEBUG
+    //CLog::GetLog().Write( LOG_GAMECONSOLE, IDS_RENDER_MSG, "Handled an Input message" );
+    #endif
+
+    // forward it to the camera
+    m_pkRenderer->GetActiveCameraPtr()->Update(pIMsg->m_keyValue, pIMsg->m_keyDown);
+
 }
 
 //END rendertask.cpp ==============================================================
