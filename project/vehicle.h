@@ -69,6 +69,11 @@ public:
 	// Get other member variables
 	Vector3f GetVehicleHeadingWC() { return headingWC; };
 	Vector3f GetVehicleVelocityWC() { return velocityWC; };
+    // J: for HUD stats
+    int GetRPM() {return rpm;};
+    float GetMaxRPM() {return maximumRPM;};
+    int GetGear() {return gear;};
+    float GetSpeed() { return velocityWC.Length(); };
 
 	// Set methods for the vehicle's input state
 	void SetGas(bool gas) { inputState.gas = gas; };

@@ -36,9 +36,10 @@
 // fonts available to render
 enum FontType 
 {
-    FONT_DEFAULT=0,
+    FONT_DEFAULT = 0,
     FONT_SYSTEM,
     FONT_FRONT_END,  // just use this one for now
+    FONT_HUD,  
     FONT_SMALL
 };
 

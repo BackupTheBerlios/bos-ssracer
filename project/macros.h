@@ -71,11 +71,13 @@
 #define SOUTH 2
 #define WEST 3 // note: clockwise again
 
+// conversion macros
 #ifndef PI_BOS
 #define PI_BOS	3.1415926f
 #define RADIANS(a) ((PI_BOS*a)/180.0f) // convert from degrees to radians
 #define DEGREES(a) ((a*180.0f)/PI_BOS) // convert from radians to degrees
 #endif
+#define MPS_TO_MPH_CONSTANT 2.23693629f
 
 // for waypoint positions (add to N,E,S,W above):
 #define LEAVING 0

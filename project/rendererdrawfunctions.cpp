@@ -717,33 +717,31 @@ bool CRenderer::DrawHUD()
     // apply HUD render states
     m_pSBMap[RENSB_HUD]->Apply();
 
-    //D3DXMATRIX matOrth;
-    //D3DXMatrixOrthoLH(&matOrth, 2, 2, 0, 1 );
-    //
-    //D3DXMatrixOrthoLH(&matOrth, (float)((float)m_iWidth/(float)m_iHeight)*2.0f, (float)((float)m_iHeight/(float)m_iWidth)*2.0f, 0, 1 );
+    
+  	D3DTexMappedVertex Polygon_Data[12] = {
+        // quad for rpm guage 
+        {-0.3f, 0.3f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 0.0},  
+        {0.3f, 0.3f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 0.0},   
+	    {-0.3f, -0.3f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 1.0}, 
+        {0.3f, -0.3f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 1.0},  
 
-    //m_pd3dDevice->SetTransform( D3DTS_VIEW, &matOrth );
-    //m_pd3dDevice->SetTransform( D3DTS_PROJECTION, &matOrth );
+        // quad for gear display
+        {-0.27f, 0.27f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 0.0},  // TL 
+        {0.27f, 0.27f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 0.0},   // TR 
+	    {-0.27f, -0.27f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 1.0}, // BL 
+        {0.27f, -0.27f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 1.0},   // BR 
 
+        // needle quad
+        {-0.3f, 0.02f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 0.0},  
+        {0.0f, 0.02f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 0.0},   
+	    {-0.3f, -0.02f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 1.0}, 
+        {0.0f, -0.02f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 1.0}   
 
-    // Square data for its position and texture coords.
-/*	D3DTexMappedVertex Polygon_Data[4] = {
-		{-0.5f, 0.5f, 0.0f, 0.0, 0.0},
-      {0.5f, 0.5f, 0.0f, 1.0, 0.0},
-	   {-0.5f, -0.5f, 0.0f, 0.0, 1.0},
-      {0.5f, -0.5f, 0.0f, 1.0, 1.0}
 	};
-*/
 
-  	D3DTexMappedVertex Polygon_Data[4] = {
-		{0.7f, -0.4f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 0.0},  // BL -+
-        {1.3f, -0.4f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 0.0},   // TR ++
-	    {0.7f, -1.0f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 1.0}, // TL --
-        {1.3f, -1.0f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 1.0}   // BR +-
-	};
 
     // Create the vertex buffer that will hold the square.
-    if(FAILED(m_pd3dDevice->CreateVertexBuffer(4*sizeof(D3DTexMappedVertex),
+    if(FAILED(m_pd3dDevice->CreateVertexBuffer(12*sizeof(D3DTexMappedVertex),
                                             0, D3DFVF_D3DTMVertex,
                                             D3DPOOL_DEFAULT, &Vertex_Buffer, NULL)))
     {
@@ -763,29 +761,72 @@ bool CRenderer::DrawHUD()
     // Unlock when your done copying data into the buffer.
     Vertex_Buffer->Unlock();
 
-
     // This will bind the vertex data in the buffer to the Direct3D device.
     m_pd3dDevice->SetStreamSource(0, Vertex_Buffer, 0, sizeof(D3DTexMappedVertex));
 
-    // Set the vertex stream declaration.
-    //m_pd3dDevice->SetFVF(D3DFVF_D3DTMVertex);
+    // move this hud component to the corner
+    D3DXMATRIX matTForm, matRot, matTrans, matSave;
+    D3DXMatrixTranslation(&matTrans, 1.0f, -0.7f, 0.0f);
+    matTForm = matTrans;
+    m_pd3dDevice->GetTransform( D3DTS_WORLD,  &matSave );
+    m_pd3dDevice->SetTransform( D3DTS_WORLD,  &matTForm );
 
-    // SetTexture will add the image in the Texture object to all things draw after this.
+    // render RPM
     m_pd3dDevice->SetTexture(0, m_pTextureMap["rpm_gauge.bmp"]);
-
-    // This will draw everything in the buffer (the square we created in InitializeObject().
     m_pd3dDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 
-    // SetTexture will add the image in the Texture object to all things draw after this.
+    // render gear/MPH
     m_pd3dDevice->SetTexture(0, m_pTextureMap["mpg_gear.bmp"]);
+    m_pd3dDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 4, 2);
 
-    // This will draw everything in the buffer (the square we created in InitializeObject().
-    m_pd3dDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+    
+    // first check if there's even a vehicle to display data for
+    if (CGameStateManager::GetGameStateManager().GetPlayerVehicle() != NULL)  {
+        // draw the needle based on RPMs
+        // max RPMs is about 9000, every 20 degs is a notch on the meter (1000 RPMS)
+        // initial needle position is ~225 degrees about 0 
 
+        // Build a matrix which rotates around the Z axis
+        float fRPMpercent = (float)CGameStateManager::GetGameStateManager().GetPlayerVehicle()->GetRPM()/CGameStateManager::GetGameStateManager().GetPlayerVehicle()->GetMaxRPM();
+        float fAngle = RADIANS(45.0f) - RADIANS(fRPMpercent*180.0f);  //45 degrees puts it to 0 RPMS
+        //static float sfPrevAngle = 0.0f, sfPrevPrevAngle = 0.0f; //use this to minimize needle jumping
+
+        D3DXMatrixTranslation(&matTrans, 0.0f, 0.0f, 0.0f);  //move it back to the origin
+        //D3DXMatrixRotationZ(&matRot, LERP(fAngle, sfPrevAngle, sfPrevPrevAngle ));  
+        D3DXMatrixRotationZ(&matRot, fAngle );  //45 degrees puts it to 0 RPMS
+        //sfPrevPrevAngle = sfPrevAngle;
+        //sfPrevAngle = fAngle;
+        D3DXMatrixMultiply(&matTForm, &matTrans, &matRot);
+        D3DXMatrixTranslation(&matTrans, 1.0f, -0.7f, 0.0f);  //move it back to the  corner
+        D3DXMatrixMultiply(&matTForm, &matTForm, &matTrans);
+    }
+    else {
+
+    }
+
+
+    // render the needle
+    m_pd3dDevice->SetTexture(0, m_pTextureMap["needle.bmp"]);
+    m_pd3dDevice->SetTransform( D3DTS_WORLD,  &matTForm );
+    m_pd3dDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 8, 2);
+
+    // resrore previous world transform
+    m_pd3dDevice->SetTransform( D3DTS_WORLD,  &matSave );
 
 
     SAFE_RELEASE(Vertex_Buffer);
 
+    if (CGameStateManager::GetGameStateManager().GetPlayerVehicle() != NULL)  {        
+        char * szbuf = new char[4];
+        //draw GEAR
+        sprintf(szbuf,"%.1d", CGameStateManager::GetGameStateManager().GetPlayerVehicle()->GetGear());
+        Draw3DTextScaled( 0.87f, 0.58f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), szbuf, 0.09f, 0.07f, D3DFONT_FILTERED, FONT_HUD);
+
+        //draw MPH
+        sprintf(szbuf,"%.3d", (int)(CGameStateManager::GetGameStateManager().GetPlayerVehicle()->GetSpeed()*MPS_TO_MPH_CONSTANT));
+        Draw3DTextScaled( 0.743, 0.76f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), szbuf, 0.08f, 0.07f, D3DFONT_FILTERED, FONT_HUD);
+    }
+    
     // restore default states
     m_pDefaultSB->Apply();  
     

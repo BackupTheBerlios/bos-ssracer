@@ -66,6 +66,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     m_kFontMap[FONT_SYSTEM]     = new CD3DFont( _T("System"), 12, D3DFONT_BOLD|D3DFONT_ITALIC|D3DFONT_ZENABLE );
     m_kFontMap[FONT_SMALL]      = new CD3DFont( _T("Arial"), 8 );
     m_kFontMap[FONT_FRONT_END]  = new CD3DFont( _T("Arial"), 48 );
+    m_kFontMap[FONT_HUD]        = new CD3DFont( _T("Impact"), 48, D3DFONT_ITALIC|D3DFONT_ZENABLE );
 
     // set up the skybox
     m_pSkyBox = new CD3DMesh(_T("skybox"));
@@ -665,7 +666,7 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
 
     // Set up the texture 
-    m_pd3dDevice->SetTexture(0, NULL);
+    //m_pd3dDevice->SetTexture(0, NULL);
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
@@ -676,6 +677,8 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
+
+    //m_pd3dDevice->SetTexture(1, NULL);
 
     // disable texture transparencies
     m_pd3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,FALSE);
@@ -699,18 +702,11 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
     m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
+
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_DISABLE );  // disable textures
+    m_pd3dDevice->SetTextureStageState( 1, D3DTSS_COLOROP,   D3DTOP_DISABLE );
+
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
-    m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
     m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
     m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_DEBUGSTATE] );
     // END debug info state block //
@@ -737,12 +733,30 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE );
+    //m_pd3dDevice->SetTexture(0, NULL);
 
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP ); 
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP ); 
+
+    m_pd3dDevice->SetTextureStageState( 1, D3DTSS_COLOROP,   D3DTOP_MODULATE );
+    m_pd3dDevice->SetTextureStageState( 1, D3DTSS_COLORARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetTextureStageState( 1, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+    m_pd3dDevice->SetTextureStageState( 1, D3DTSS_ALPHAOP,   D3DTOP_MODULATE );
+    m_pd3dDevice->SetTextureStageState( 1, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetTextureStageState( 1, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
+    m_pd3dDevice->SetTextureStageState( 1, D3DTSS_TEXCOORDINDEX, 0 );
+    m_pd3dDevice->SetTextureStageState( 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE );
+    //m_pd3dDevice->SetTexture(1, NULL);
+
+    m_pd3dDevice->SetSamplerState( 1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 1, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 1, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP ); 
+    m_pd3dDevice->SetSamplerState( 1, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP ); 
+
     // for transparencies
     m_pd3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);
     m_pd3dDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);
