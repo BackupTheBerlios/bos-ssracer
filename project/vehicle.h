@@ -44,6 +44,43 @@ public:
 	void Init();
 	void UpdateVehiclePhysics();
 
+	void SetTire(CTire* tire, int index) { if(index >= 0 && index <=3) { tires[index] = tire; } };
+	CTire* GetTire(int index) { if(index >= 0 && index <=3) { return tires[index]; } return NULL; };
+
+	// Set methods for the vehicle's empirical data
+	void SetB(float param) { b = param; };
+	void SetC(float param) { c = param; };
+	void SetHeight(float param) { height = param; };
+	void SetRollCenterHeight(float param) { rollCenterHeight = param; };
+	void SetTrackWidth(float param) { trackWidth = param; };
+	void SetSuspensionStiffness(float param) { suspensionStiffness = param; };
+	void SetVehicleMass(float param) { vehicleMass = param; };
+	void SetRotatingMass(float param) { rotatingMass = param; };
+	void SetTireMass(float param) { tireMass = param; };
+	void SetMaximumTorque(float param) { maximumTorque = param; };
+	void SetMaximumRPM(float param) { maximumRPM = param; };
+	void SetDrivetrainEfficiency(float param) { drivetrainEfficiency = param; };
+	void SetRearDiffRatio(float param) { rearDiffRatio = param; };
+	void SetGearRatios(float *param) { for(int i=0;i<6;i++) { gearRatios[i] = param[i]; } };
+	void SetTireRadius(float param) { tireRadius = param; };
+	void SetFrontalArea(float param) { frontalArea = param; };
+	void SetCoefficientOfAerodynamicFriction(float param) { coefficientOfAerodynamicFriction = param; };
+	void SetCoefficientOfTireFriction(float param) { coefficientOfTireFriction = param; };
+
+	// Set methods for the vehicle's input state
+	void SetGas(bool gas) { inputState.gas = gas; };
+	void SetBrake(bool brake) { inputState.brake = brake; };
+	void SetLTurn(bool lturn) { inputState.lturn = lturn; };
+	void SetRTurn(bool rturn) { inputState.rturn = rturn; };
+	void SetEBrake(bool ebrake) { inputState.ebrake = ebrake; };
+
+	// Get methods for the vehicle's input state
+	bool GetGas() { return inputState.gas; };
+	bool GetBrake() { return inputState.brake; };
+	bool GetEBrake() { return inputState.ebrake; };
+	bool GetLTurn() { return inputState.lturn; };
+	bool GetRTurn() { return inputState.rturn; };
+
 protected:
 	
 private:
@@ -60,14 +97,17 @@ private:
 	void CalculateVehicleVelocity(float deltaT);
 	void CalculateVehiclePosition(float deltaT);
 	void CalculateTireAngularVelocity(float deltaT);
-	void CalculateTireRotation(float deltaT);	
-	void TransformLocalToWorldSpace();
+	void CalculateTireRotation(float deltaT);
+	void CalculateBodyOrientation();
+
 
 	float CalculateTraction(float engineForce, float rearAxleWeight);
 	float CalculateMaxTraction(float rearAxleWeight);
 
 	void InterpolateTireRotation(float deltaT);
 	void CalculateAutomaticGearShifting();
+
+	void TransformLocalToWorldSpace();
 
 	// Required from .car file
 	// Following data is what gives each car its driving characteristics
@@ -94,7 +134,7 @@ private:
 	float coefficientOfRollingResistance;	// Approx. 30 times greater than the drag of a vehicle travelling at 1 m/s.
 	float coefficientOfDrag;		// Approx. 1/30 of the coefficient of rolling resistance.
 	float coefficientOfTireFriction; // Scalar value that determines how good the tires are.  Average Tires = 1, Racing Tires <= 2
-	CTire tires[4];		// Actual tire objects
+	CTire *tires[4];		// Pointers to the 4 tires.
 
 	// Required from ingame queries
 	// Following data is what state the car is currently in

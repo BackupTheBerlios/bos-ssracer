@@ -7,7 +7,7 @@ CPhysicsTask::CPhysicsTask()
 
 bool CPhysicsTask::Start()
 {
-  //new CPhysics(0);
+  new CPhysics(0);
   CLog::GetLog().Write(LOG_MISC, "Starting Physics Task...");
 
   return true;

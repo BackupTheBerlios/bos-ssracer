@@ -21,6 +21,15 @@ void CVehicle::Init()
 	velocityLC = Vector3f(0.0f, 0.0f, 0.0f);
 	positionLC = Vector3f(0.0f, 0.0f, 0.0f);
 
+	// Calculate the wheelbase, using the distance from the center
+	// of gravity to the front axle (b), and the distance from
+	// the center of gravity to the rear axle (c)
+	L = b + c;
+
+	// Calculate the difference between the CG and the roll center
+	// height
+	deltaHeight = float(fabs(height - rollCenterHeight));
+
 	steerAngleRADS = 0.0f;
 
 	// Figure out what bank and gradient the vehicle sits on

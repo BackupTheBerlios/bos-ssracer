@@ -213,6 +213,10 @@ SOURCE=.\gamestatemanager.cpp
 # PROP Default_Filter ".cpp"
 # Begin Source File
 
+SOURCE=.\physics.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\physicstask.cpp
 # End Source File
 # Begin Source File
@@ -453,6 +457,10 @@ SOURCE=.\gamestatemanager.h
 # Begin Group "Physics Headers"
 
 # PROP Default_Filter ".h"
+# Begin Source File
+
+SOURCE=.\physics.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\physicstask.h
