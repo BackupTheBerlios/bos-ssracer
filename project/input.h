@@ -4,7 +4,7 @@
 #define DIRECTINPUT_VERSION		0x0800
 #include <dinput.h>
 
-#define STL_USING_MAP
+#define STL_USING_ALL
 #include "stl.h"
 
 #define KEYDOWN(name, key) (name[key].dwData & 0x80)

@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 // Name: WinMain()
 // Desc: Entry point to the program. Initializes everything, and goes into a
-//       message-processing loop. Idle time is used to render the scene.
+//       message-processing loop.
 //-----------------------------------------------------------------------------
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT )
 {
@@ -54,11 +54,14 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT )
     // create a singleton instance of the application
     new CBOSApplication( TEXT( "Super Street Racer" ), hInst, 640, 480, bFullscreen );
 
-    
-    InitCommonControls();  // init common windows input control classes
-    //InitCommonControlsEx( ICC_PROGRESS_CLASS );
+    // init common windows input control classes
+    InitCommonControls();  
+
+    // hide the windows mouse cursor
 	#ifdef _DEBUG
-    ShowCursor(FALSE);     // hide the windows mouse cursor
+    ShowCursor(FALSE);     
+    #else
+    ShowCursor(TRUE);     
 	#endif
 
     // Initialize any pre-game objects

@@ -85,11 +85,10 @@ public:
 
 protected:
     void    InitializeKernel();         // create system and game tasks
-    virtual HRESULT OneTimeInit();
-    virtual HRESULT FinalCleanup();
+    HRESULT OneTimeInit();
+    HRESULT FinalCleanup();
     VOID    ReadSettings();
     VOID    WriteSettings();
-    HRESULT RenderText();          //$$$DEBUG
 
 private:
     HRESULT Create( HINSTANCE hInstance );  // register and create the app window

@@ -227,9 +227,9 @@ void CBOSApplication::OnCleanUp()
 {
     if FAILED( FinalCleanup() )  {
           //$$$DEBUG do something bad here
-#ifdef _DEBUG
+        #ifdef _DEBUG
         CLog::GetLog().Write( LOG_APP, IDS_APP_ERROR, "Clean up failed!" );
-#endif
+        #endif
 
     }
 }
@@ -419,7 +419,7 @@ void CBOSApplication::InitializeKernel()
 	// Gib's modification (adding FrontendManager task)
 	// Frontend Manager task
 	static CFrontendManager FrontendManager;
-	FrontendManager.m_lPriority = 300; // idunno
+	FrontendManager.m_lPriority = 3000;//300; // idunno
 	CKernel::GetKernel().AddTask(&FrontendManager);
 	// end Gib's modifications
 

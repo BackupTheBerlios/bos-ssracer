@@ -533,9 +533,15 @@ int CCommandLineParser::cameratest()
     if (Tokens[1] == "CAMERA_FREELOOK")  {
         CRenderer::GetRenderer().SetActiveCamera(CAMERA_FREELOOK);
     }
-    else if (Tokens[1] == "CAMERA_CHASE")  {
-        CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
-        ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+    else if (Tokens[1] == "CAMERA_CHASE")  {        
+        //if (!CGameStateManager::GetGameStateManager().GetPlayerVehicle())  {
+            CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "cameratest:  setting chase cam to track player vehicle");
+            ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+        //}
+        //else  {
+        //    CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR cameratest:  cannot chase a NULL vehicle");
+        //}
     }
     //else if (Tokens[1] == "CAMERA_BUMPER")  {
     //    CRenderer::GetRenderer().SetActiveCamera(CAMERA_BUMPER);

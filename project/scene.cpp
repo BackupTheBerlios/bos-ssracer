@@ -282,7 +282,7 @@ int CScene::LoadEntities(string* directory, string* filename)
                     // the mesh filename is the object's name as well
                     if(!(newObject->LoadMesh(CSettingsManager::GetSettingsManager().GetGameSetting(DIRSTATICMESH) + string(newObject->GetName()) +"\\")) ) {
                         CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntities() >> Error loading mesh");
-//                        return 0;
+//                        return 0; //if you comment this line out, The entity will still load but will not render
                     }
 
                     //=== add it to the entity vector ===//

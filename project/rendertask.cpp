@@ -101,15 +101,46 @@ void CRenderTask::Update()
 {
     HandleMessages();
 
-    m_pkRenderer->Click();       // update view from the camera position
-
+    // clear camera debug info
     #ifdef _DEBUG
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 0, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 1, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 2, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 3, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 4, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 5, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 6, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "");
+    #endif
+
+    // update view from the camera position //
+    m_pkRenderer->Click();       
+
+    // display camera info
+    #ifdef _DEBUG
+    switch (CRenderer::GetRenderer().GetActiveCameraType())  {
+    case CAMERA_FREELOOK:
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 0, "CAMERA_FREELOOK");
+        break;
+    case CAMERA_CHASE:
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 0, "CAMERA_CHASE");
+        break;
+    case CAMERA_BUMPER:
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 0, "CAMERA_BUMPER");
+        break;
+    default:
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 0, "CAMERA_UNKNOWN");
+        break;
+    }
     D3DXVECTOR3 * vEye = m_pkRenderer->GetActiveCameraPtr()->GetEyePtr();
     D3DXVECTOR3 * vLookAt = m_pkRenderer->GetActiveCameraPtr()->GetLookAtPtr();
     D3DXVECTOR3 * vVel = m_pkRenderer->GetActiveCameraPtr()->GetVelocityPtr();
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 0, "Cam Eye Position %f %f %f", vEye->x, vEye->y, vEye->z);
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 1, "Cam Look At %f %f %f", vLookAt->x, vLookAt->y, vLookAt->z);
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 2, "Cam Velocity %f %f %f", vVel->x, vVel->y, vVel->z);
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 1, "Cam Eye Position %f %f %f", vEye->x, vEye->y, vEye->z);
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 2, "Cam Look At %f %f %f", vLookAt->x, vLookAt->y, vLookAt->z);
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 3, "Cam Velocity %f %f %f", vVel->x, vVel->y, vVel->z);
     #endif
 
     m_pkRenderer->RenderScene(); // render current scene
@@ -124,7 +155,6 @@ void CRenderTask::Update()
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "usage Write(LOG_DEBUGOVERLAY, slot#,...)");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "use this to monitor variables");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "press F12 to hide all this");
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "line 10");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 20, "line 20");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 30, "line 30");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 40, "line 40");

@@ -88,6 +88,17 @@ void CCameraChase::Update(int iInput, bool bState)
 VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
 {
 
+    #ifdef _DEBUG
+    if (!m_pkVehicle)  {
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "ERROR: null vehicle!" );	
+        return;
+    }
+    else {
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "status OK" );
+    }
+    #endif
+
+
     UpdateVelocity( fElapsedTime );
     ////m_vVelocity = D3DXVECTOR3(0,0,0);//UpdateVelocity( fElapsedTime );
 
