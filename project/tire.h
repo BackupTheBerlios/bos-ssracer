@@ -2,6 +2,7 @@
 #define _TIRE_H
 
 #include "entity.h"
+#include "macros.h"
 
 class CTire : public CEntity {
 
@@ -13,7 +14,7 @@ public:
 	Vector3f GetRotationLC() { return rotationLC; };
 
 	void SetPositionLC(Vector3f param) { positionLC = param; };
-	void SetRotationLC(Vector3f param) { rotationLC = param; };
+	void SetRotationLC(Vector3f param);
 
 protected:
 

@@ -242,19 +242,19 @@ void CVehicle::CalculateLongitudinalAcceleration()
 
 	float rearAxleWeight = weightDistribution[RRTIRE] + weightDistribution[RLTIRE];
 
-	//CLog::GetLog().Write(LOG_GAMECONSOLE, "rearAxleWeight: %f", rearAxleWeight);
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "rearAxleWeight: %f", rearAxleWeight);
 
 	float engineForce = (engineTorque * gearRatios[gear] * rearDiffRatio) / tireRadius;
 	driveWheelTorque = engineForce * tireRadius;
 
 	//float brakeForce = (brakeTorque *
 
-	// $$$PHYSICSLOGS CLog::GetLog().Write(LOG_GAMECONSOLE, "engineForce: %f", engineForce);
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "engineForce: %f", engineForce);
 
 	float tractionForce = CalculateTraction(engineForce, rearAxleWeight);
 	tractionTorque = tractionForce * tireRadius;
 
-	// $$$PHYSICSLOGS CLog::GetLog().Write(LOG_GAMECONSOLE, "tractionForce: %f", tractionForce);
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "tractionForce: %f", tractionForce);
 
 	float Flongitudinal = tractionForce - drag.X() - rollingResistance.X();
 
@@ -400,7 +400,7 @@ void CVehicle::CalculateRPM()
 	// wheel, the current gear ratio, and the rear differential ratio.
 
 	if(driveWheelAngularVelocityRADS == 0.0f) {
-		rpm = 1000;
+		rpm = IDLE_RPM;
 	}
 	else {
 		rpm = int(driveWheelAngularVelocityRADS * gearRatios[gear] * rearDiffRatio * 60.0f / (2.0f * PI_BOS));
@@ -427,12 +427,12 @@ void CVehicle::CalculateWheelAngularAcceleration()
 	float brakeTorque = 0.0f;
 
 	totalTorque = driveWheelTorque - tractionTorque - brakeTorque;
-/* $$$PHYSICSLOGS
+// $$$PHYSICSLOGS
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "totalTorque: %f", totalTorque);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "tractionTorque: %f", tractionTorque);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "driveWheelTorque: %f", driveWheelTorque);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "brakeTorque: %f", brakeTorque);
-*/
+
 	wheelInertia = (tireMass * (tireRadius * tireRadius)) / 2.0f;
 
 	// Multiply by 2 since there are 2 drive wheels
@@ -440,7 +440,12 @@ void CVehicle::CalculateWheelAngularAcceleration()
 	// the inertia of the axle itself.  I don't do this though.
 	rearAxleInertia = wheelInertia * 2;
 
-	driveWheelAngularAccelerationRADS = totalTorque / rearAxleInertia;
+	// acceleration due to the acceleration of the vehicle along
+	// the X axis
+	driveWheelAngularAccelerationRADS = (accelerationLC.X() / ((2.0f * PI_BOS) * tireRadius));
+	// extra acceleration due to the wheels slipping
+	driveWheelAngularAccelerationRADS += (totalTorque / rearAxleInertia);
+ 
 	// *** End Rear Wheel Acceleration Calculations ***
 
 	// *** Begin Front Wheel Acceleration Calculations ***
@@ -453,7 +458,7 @@ void CVehicle::CalculateWheelAngularAcceleration()
 //--------------------------------------------------------------
 //
 //--------------------------------------------------------------
-void CVehicle::InterpolateTireRotation(float deltaT)
+void CVehicle::InterpolateSteeringAngle(float deltaT)
 {
 	// Based on the player input, we will interpolate
 	// the front tires' rotation about the local Z axis.
@@ -507,6 +512,8 @@ void CVehicle::InterpolateTireRotation(float deltaT)
 			}
 		}
 	}
+
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "SteerAngle: %f", steerAngleRADS);
 }
 
 //--------------------------------------------------------------
@@ -526,7 +533,7 @@ void CVehicle::CalculateAutomaticGearShifting()
 		}
 	}
 	// Shift down
-	else if(rpm < (maximumRPM * 0.50f)) {
+	else if(rpm < (maximumRPM * 0.40f)) {
 		if(gear > 1 && gear <= 5) {
 			gear--;
 		}
@@ -547,11 +554,16 @@ void CVehicle::CalculateTireAngularVelocity(float deltaT)
 }
 
 //--------------------------------------------------------------
-//
+//  Calculates the rotation of the wheels about the local Y axis.
 //--------------------------------------------------------------
 void CVehicle::CalculateTireRotation(float deltaT)
 {
-
+	for(int i=0;i<4;i++) {
+			// Update the tire rotation about the local Y axis
+			Vector3f currentRotation = tires[i]->GetRotationLC();
+			Vector3f newRotation(currentRotation.X(), currentRotation.Y() + (frontWheelAngularVelocityRADS * deltaT), currentRotation.Z());
+			tires[i]->SetRotationLC(newRotation);
+	}
 }
 
 //--------------------------------------------------------------
@@ -575,11 +587,16 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 //--------------------------------------------------------------
 void CVehicle::UpdateVehiclePhysics()
 {
+	float deltaT = CTimer::GetTimer().GetTimeElapsed();
+	
+	
 	CalculateAutomaticGearShifting();
-/*	$$$PHYSICSLOGS
+	InterpolateSteeringAngle(deltaT);
+
+	//	$$$PHYSICSLOGS
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "Gear: %i", gear);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "RPM: %i", rpm);
-*/
+
 	// Begin Variable Precalculation
 	CalculateEngineTorque();
 	CalculateDrag();
@@ -591,17 +608,18 @@ void CVehicle::UpdateVehiclePhysics()
 	CalculateWheelAngularAcceleration();
 	CalculateRPM();
 
-	float deltaT = CTimer::GetTimer().GetTimeElapsed();
+
 
 	CalculateVehicleVelocity(deltaT);
 	CalculateVehiclePosition(deltaT);
-/* $$$PHYSICSLOGS
+
+	// $$$PHYSICSLOGS
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "DeltaT: %f", deltaT);
 
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "Acceleration: %f %f %f", accelerationLC.X(), accelerationLC.Y(), accelerationLC.Z());
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "Velocity: %f %f %f", velocityLC.X(), velocityLC.Y(), velocityLC.Z());
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "Position: %f %f %f", positionLC.X(), positionLC.Y(), positionLC.Z());
-*/
+
 	
 	CalculateTireAngularVelocity(deltaT);
 	CalculateTireRotation(deltaT);
@@ -616,22 +634,27 @@ void CVehicle::TransformLocalToWorldSpace()
 {
 	// Apply the transformation WC(X,Y,Z) = LC(X,-Z,Y) to the position of the vehicle
 	//m_translate = Vector3f(positionLC.Y(), positionLC.Z()*(-1.0f), positionLC.X()*(-1.0f));
-	Vector3f bodyTrans(positionLC.X(), positionLC.Z()*(-1.0f), positionLC.Y());
-	m_translate = bodyTrans;
+	Vector3f bodyTransWC(positionLC.X(), positionLC.Z()*(-1.0f), positionLC.Y());
+	m_translate = bodyTransWC;
 
 	// Update the rotation value for the renderer.
 	m_rotate = rotationLC;
 	
 	// Then transform all 4 tires
-	Vector3f tireTransWC;
+	Vector3f tireTransformedLC;
 	Vector3f tireTransLC;
 	for(int i=0;i<4;i++) {
-		tireTransLC = tires[i]->GetPositionLC();
-		tireTransWC = Vector3f(tireTransLC.X(), tireTransLC.Z()*(-1.0f), tireTransLC.Y()) + bodyTrans;
-		tires[i]->SetTranslate(tireTransWC);
-		//tires[i]->SetRotate(tires[i]->GetRotationLC());
-	}
+		Vector3f tireRotLC = tires[i]->GetRotationLC();
+		if(i == FLTIRE || i == FRTIRE) { // We are dealing with front tires, so we need to factor in steer angle
+			tireRotLC.Z() += steerAngleRADS;
+		}
 
+		tireTransLC = tires[i]->GetPositionLC();
+		tireTransLC += positionLC;
+		tires[i]->SetTranslate(Vector3f(tireTransLC.X(), tireTransLC.Z()*(-1.0f), tireTransLC.Y()));
+		
+		tires[i]->SetRotate(Vector3f( DEGREES(tireRotLC.X()), DEGREES(tireRotLC.Z()*(-1.0f)), DEGREES(tireRotLC.Y()) ));
+	}
 }
 
 

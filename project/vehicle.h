@@ -12,7 +12,7 @@ enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
 // Maximum angle (in rads) that the front tires can turn
 #define MAX_STEER_ANGLE_RADS	0.43f
 // Number of seconds for the tires to get from 0 - MAX_STEER_ANGLE_RADS
-#define STEER_ANGLE_TIME		1.0f
+#define STEER_ANGLE_TIME		0.5df
 
 // RPM that the vehicle idles at
 #define IDLE_RPM	1000
@@ -102,7 +102,7 @@ private:
 	float CalculateTraction(float engineForce, float rearAxleWeight);
 	float CalculateMaxTraction(float rearAxleWeight);
 
-	void InterpolateTireRotation(float deltaT);
+	void InterpolateSteeringAngle(float deltaT);
 	void CalculateAutomaticGearShifting();
 
 	void TransformLocalToWorldSpace();

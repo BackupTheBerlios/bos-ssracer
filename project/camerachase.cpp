@@ -15,7 +15,7 @@ void CCameraChase::SetVehicle( CVehicle * pkVehicle )
 
 	// look at vector is a little past the vehicles origin
 	Vector3f vOrigin = Vector3f(*pkVehicle->GetTranslate());
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "worldpos of vehicle %f %f %f", vOrigin.X(), vOrigin.Y() , vOrigin.Z() );	
+//    CLog::GetLog().Write(LOG_GAMECONSOLE, "worldpos of vehicle %f %f %f", vOrigin.X(), vOrigin.Y() , vOrigin.Z() );	
     Vector3f vTemp = vOrigin + vHeading*1.2f; //need to know the length of the car to set the offset properly
     vTemp.Y() += 0.5f;  //raise the look at point a little
 
@@ -133,7 +133,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
         vPosDeltaWorld.y = 0.0f;
 
     vTemp = Vector3f(*m_pkVehicle->GetTranslate());
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "worldpos %f %f %f", vTemp.X(), vTemp.Y() , vTemp.Z() );	
+//    CLog::GetLog().Write(LOG_GAMECONSOLE, "worldpos %f %f %f", vTemp.X(), vTemp.Y() , vTemp.Z() );	
     m_vEye = D3DXVECTOR3(vTemp.X(), 1.2f, vTemp.Z()) - vLocalAhead*4.5f;
 
     // Move the eye position 
@@ -141,7 +141,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     if( m_bClipToBoundary )
         ConstrainToBoundary( &m_vEye );
 
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "eye %f %f %f", m_vEye.x, m_vEye.y, m_vEye.z );	
+//    CLog::GetLog().Write(LOG_GAMECONSOLE, "eye %f %f %f", m_vEye.x, m_vEye.y, m_vEye.z );	
 
     // Update the lookAt position based on the eye position 
     //m_vLookAt = m_vEye - vWorldAhead*5.2f;
@@ -149,7 +149,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     //m_vLookAt = m_vEye + vWorldAhead;
     //m_vLookAt.y ;//+= 0.5f;
 
-   	CLog::GetLog().Write(LOG_GAMECONSOLE, "look %f %f %f", m_vLookAt.x, m_vLookAt.y, m_vLookAt.z );	
+//   	CLog::GetLog().Write(LOG_GAMECONSOLE, "look %f %f %f", m_vLookAt.x, m_vLookAt.y, m_vLookAt.z );	
 
     // Update the view matrix
     D3DXMatrixLookAtLH( &m_mView, &m_vEye, &m_vLookAt, &vWorldUp );
