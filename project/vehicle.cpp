@@ -207,10 +207,11 @@ void CVehicle::CalculateWeightDistribution()
 	// FOR NOW WE DON"T NEED TO TAKE INTO ACCOUNT THE BANK
 	// AND GRADIENT SINCE THEY ARE EQUAL TO 0
 	/////////////////////////////////////////////////////////
-	weightDistribution[FRTIRE] = wFront / 2.0f;
-	weightDistribution[FLTIRE] = wFront / 2.0f;
-	weightDistribution[RRTIRE] = wRear / 2.0f;
-	weightDistribution[RLTIRE] = wRear / 2.0f;
+	//vehicleWeight * ( (c/L) - ((height/L) * gradientAngleRADS) ) - (height/L) * vehicleMass * accelerationLC.X();
+	weightDistribution[FRTIRE] = wFront/2.0f - height/2.0f * wFront * accelerationLC.Y();
+	weightDistribution[FLTIRE] = wFront/2.0f + height/2.0f * wFront * accelerationLC.Y();
+	weightDistribution[RRTIRE] = wRear/2.0f - height/2.0f * wFront * accelerationLC.Y();
+	weightDistribution[RLTIRE] = wRear/2.0f - height/2.0f * wFront * accelerationLC.Y();
 	///////////////////////////////////////////////////////////
 
 }
@@ -903,7 +904,7 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 		Vector3f Gprime = Aprime - Bprime;
 		Gprime = Gprime * ( c / (c + b) );
 
-		Vector3f trans = Gprime - G;
+		Vector3f trans = Gprime - G;		
 		
 		Vector3f temp = velocityLC;
 		
@@ -926,8 +927,10 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 		Vector3f AB = A - B;
 		Vector3f AprimeBprime = Aprime - Bprime;
 
-		headingTotLC = rotPos / deltaT;
-		velocityTotLC = temp;
+		headingTotLC = Vector3f(1.0f, 0.0f, 0.0f);
+		RotateVectorAboutLocalZ(&headingTotLC, rotationLC.Z());
+
+		velocityTotLC = rotPos / deltaT;
 
 		float ABdotAprimeBprime = AB.X() * AprimeBprime.X() + AB.Y() * AprimeBprime.Y() + AB.Z() * AprimeBprime.Z();
 		float magAB = pow(AB.X(), 2) + pow(AB.Y(), 2) + pow(AB.Z(), 2);
