@@ -212,7 +212,7 @@ SOURCE=.\copponentai.cpp
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\Documents and Settings\kkar\Desktop\gibran\ssracer\ssracer\copponentvehicle.cpp"
+SOURCE=.\copponentvehicle.cpp
 # End Source File
 # Begin Source File
 

@@ -285,7 +285,8 @@ int CCommandLineParser::help()
 {
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "AVAILABLE COMMANDS ARE:");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "-----------------------");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "general command syntax:  command <arg> [optional arg]");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "HELP - Display this list.");				
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "ECHO <text> - echoes the text entered.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEAR - clear the console.");
@@ -299,9 +300,9 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADPLAYERVEHICLE <params> - load a new player vehicle");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESHTEST <file> <dir> - load a mesh at some directory (leave .x extension off");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> <dir> - load a map and create a scene from a .map file");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "-----------------------");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> [dir] - load a map and create a scene from a .map file [dir] defaults to .\\maps\\ if omitted");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map and scene objects");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;
 }
@@ -520,11 +521,20 @@ int CCommandLineParser::loadmap()
     string sDir, sName;
     FILE *fp;
 
-    if (Tokens.size() < 3)  {
+    // if only 'loadmap' was entered
+    if (Tokens.size() == 1)  {
         CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading scene from debug.map");
         sName = "debug";
         sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + sName + "\\";
     }
+    // if only 'loadmap <mapname>' was entered
+    else if (Tokens.size() == 2)  {
+        sName = Tokens[1];
+        // look in the .\maps directory
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + sName + "\\";
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadmap:  looking in %s for map", sDir.c_str());
+    }
+    // if 'loadmap <mapname> <dir>' was entered
     else if (Tokens[2].find(".\\", 0) == 0)  { // check if they used that .\ dir shortcut
         sName = Tokens[1];
         sDir = Tokens[2];
@@ -563,11 +573,20 @@ int CCommandLineParser::loadmap()
 int CCommandLineParser::loadmeshtest()
 {
     string sDir, sName;
-    if (Tokens.size() < 3)  {
+    // if only 'loadmeshtest' was entered
+    if (Tokens.size() == 1)  {
         CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading default mesh: pylon");
         sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\pylon\\";
         sName = "pylon";
     }
+    // if only 'loadmeshtest <meshname>' was entered
+    else if (Tokens.size() == 2)  {
+        sName = Tokens[1];
+        // look in the .\meshes\static\ directory
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\" + sName + "\\";
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadmeshtest:  looking in %s for mesh", sDir.c_str());
+    }
+    // if 'loadmeshtest <meshname> <dir>' was entered
     else if (Tokens[2].find(".\\", 0) == 0)  { // check if they used that .\ dir shortcut
         sName = Tokens[1];
         sDir = Tokens[2];
