@@ -38,6 +38,34 @@
 CQuadNode * CQuadTree::m_pkQRoot = NULL;
 
 
+CQuadNode::CQuadNode(Vector3f vOrigin, float fHalfWidth) {
+    m_vOrigin = vOrigin;
+    m_fHalfWidth = fHalfWidth;
+    for (int i=0; i<4; i++)  m_pChildNode[i] = NULL;
+    m_EntMap.clear();
+
+    // set the AABBox
+    m_BBox.Center() = vOrigin;
+    m_BBox.Extent(0) = m_BBox.Extent(2) = fHalfWidth;
+    m_BBox.Extent(1) = 20.0f;//fHalfWidth;//20.0f; // thin out the height of the box
+    m_BBox.Axis(0) = Vector3f(1,0,0);  // axis aligned
+    m_BBox.Axis(1) = Vector3f(0,1,0);
+    m_BBox.Axis(2) = Vector3f(0,0,1);
+
+    // set the bounding sphere
+    //m_BSphere.Center() = vOrigin;
+    // use diagonal of box to get bounding sphere
+    m_BSphere.Radius() = (Vector3f(max(m_BBox.Extent(0), m_BBox.Extent(2)), 0, max(m_BBox.Extent(0), m_BBox.Extent(2))) 
+        + Vector3f(min(m_BBox.Extent(0), m_BBox.Extent(2)), 0, min(m_BBox.Extent(0), m_BBox.Extent(2)))).Length()/2.0f; 
+    //m_BSphere.Radius() = fHalfWidth;
+    
+    //Vector3f vBox[8];
+    //m_BBox.ComputeVertices(vBox);
+    //m_BSphere = ContSphereOfAABB(8, vBox);
+};
+
+
+
 CQuadTree::CQuadTree() {
     m_pkQRoot = NULL;
     m_iLevels = QUADTREE_DEFAULT_LEVELS;
@@ -124,7 +152,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     m_fNodeWidth = max( m_vfMaxExtent.X()-m_vfMinExtent.X(), m_vfMinExtent.X() - m_vfMaxExtent.X());
     m_fNodeWidth = max( m_fNodeWidth, m_vfMaxExtent.Z()-m_vfMinExtent.Z());
     m_fNodeWidth = max( m_fNodeWidth, m_vfMinExtent.Z()-m_vfMaxExtent.Z());
-    m_fNodeWidth *= 0.80f;//2.0f;
+    m_fNodeWidth *= 10.50f;//2.0f;   
 
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE, "Quadtree root node width: %f", m_fNodeWidth);
@@ -161,8 +189,6 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
         Add(*it);
     }
 
-    // assume that all nodes are visible at this point
-    //m_vpVisibleNodes.push_back(m_pkQRoot);
 
     return;
 }
@@ -198,7 +224,7 @@ void CQuadTree::Add(CEntity *pEntity)
     AddReference( vBox[5], pEntity);  // SW -z -x
 
     // add reference to each box that this intersects
-    AddReference( m_pkQRoot->m_BBox, pEntity);
+    //AddReference( m_pkQRoot->m_BBox, pEntity, m_pkQRoot); ////$$$$$$$ still debugging
 
     return;
 }
@@ -258,56 +284,58 @@ void CQuadTree::AddReference( Vector3f vOrigin, CEntity * pEntity )
 
 
 
-void CQuadTree::AddReference( Box3f box, CEntity * pEntity )  {
-    CQuadNode	*node;
-	CQuadNode	*prev;		// to point to parent of node
+void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  {
 
     assert( m_iLevels > 1 ); 
 
-	// Search in quadtree for the node this entity should be in
-	node = m_pkQRoot;
 
-    // copy this entity into each child node
-    for (int i=0; i<m_iLevels-1; i++)  {
-        prev = node;
-        node->m_EntMap[pEntity->GetId()] = pEntity;
-        //#ifdef _DEBUG
-        //CLog::GetLog().Write(LOG_MISC, "quadtree:  entity %s ID %d added to node with origin at: %f %f %f", pEntity->GetName(), pEntity->GetId(), node->m_vOrigin.X(), node->m_vOrigin.Y(), node->m_vOrigin.Z());
-        //#endif
+    bool bEntInQuad = false;
 
-        // check entity OBB side intersections with quadtree nodes
-        // if not intersecting, its inside or out
-        if ( TestIntersection( *pEntity->GetBoundingBox(), prev->m_BBox ) == true ) 
-			node = node->m_pChildNode[SW];
-        if( TestIntersection( *pEntity->GetBoundingBox(), prev->m_BBox ) == true )
-			node = node->m_pChildNode[SE];
-        if( TestIntersection( *pEntity->GetBoundingBox(), prev->m_BBox ) == true ) 
-			node = node->m_pChildNode[NW];
-		if( TestIntersection( *pEntity->GetBoundingBox(), prev->m_BBox ) == true )
-			node = node->m_pChildNode[NE];
+    Vector3f vBoxVerts[8];
+    bool abValid[8] = { 0,0,0,0,0,0,0,0 };
+    switch(TestIntersection( *pEntity->GetBoundingBox(), node->m_BBox) )  
+    {
+        case true:  // box intersects
+            node->m_EntMap[pEntity->GetId()] = pEntity; 
+            bEntInQuad = true;  // find if the children intersect too
+            break;
 
-        
+        case false:  // box is INSIDE or OUTSIDE the node
+            // get vertices for the bounding box                
+            pEntity->GetBoundingBox()->ComputeVertices(vBoxVerts);
 
-        // check if its already there
-        if (prev->m_EntMap[pEntity->GetId()] != pEntity)  {
-
-            #ifdef _DEBUG
-            CLog::GetLog().Write(LOG_MISC, "quadtree:  entity %s ID %d added to node with origin at: %f %f %f", pEntity->GetName(), pEntity->GetId(), prev->m_vOrigin.X(), prev->m_vOrigin.Y(), prev->m_vOrigin.Z());
-            #endif
-            prev->m_EntMap[pEntity->GetId()] = pEntity;
-        }
-        else {
-            #ifdef _DEBUG 
-            CLog::GetLog().Write(LOG_MISC, "quadtree:  entity %s ID %d IS ALREADY IN node with origin at: %f %f %f", pEntity->GetName(), pEntity->GetId(), prev->m_vOrigin.X(), prev->m_vOrigin.Y(), prev->m_vOrigin.Z());
-            #endif
-            return;
-        }
-
-        #ifdef _DEBUG //spacer for log entry
-        CLog::GetLog().Write(LOG_MISC, "\n");
-        #endif
-
+            // if entities box is contained in node box
+            if (ContOrientedBox (8, vBoxVerts, abValid, node->m_BBox))  {
+                node->m_EntMap[pEntity->GetId()] = pEntity; //entity is in this node
+                bEntInQuad = true;  // find out what child quads also contain this
+            }
+            else { // entity is outside, so don't add
+                bEntInQuad = false;
+                break;//return
+            }
+            break;
     }
+
+    // now this box will also intersect/be contained in the children as well
+    if (bEntInQuad == true )  {
+        if (node->m_pChildNode[NE] != NULL)  {
+            AddReference( node->m_pChildNode[NE]->m_BBox, pEntity, node->m_pChildNode[NE]);
+            //node->m_pChildNode[NE]->m_EntMap[pEntity->GetId()] = pEntity;
+        }
+        if (node->m_pChildNode[NW] != NULL)  {
+            AddReference( node->m_pChildNode[NW]->m_BBox, pEntity, node->m_pChildNode[NW]);
+            //node->m_pChildNode[NW]->m_EntMap[pEntity->GetId()] = pEntity;
+        }
+        if (node->m_pChildNode[SE] != NULL)  {
+            AddReference( node->m_pChildNode[SE]->m_BBox, pEntity, node->m_pChildNode[SE]);
+            //node->m_pChildNode[SE]->m_EntMap[pEntity->GetId()] = pEntity;
+        }
+        if (node->m_pChildNode[SW] != NULL)  {
+            AddReference( node->m_pChildNode[SW]->m_BBox, pEntity, node->m_pChildNode[SW]);
+            //node->m_pChildNode[SW]->m_EntMap[pEntity->GetId()] = pEntity;
+        }        
+    }
+
     return;
 }
 
@@ -354,9 +382,6 @@ void CQuadTree::SubDivide( CQuadNode * pQNode, int iLevel )
    	SubDivide(pQNode->m_pChildNode[NW], iLevel-1);
    	SubDivide(pQNode->m_pChildNode[SE], iLevel-1);
 	SubDivide(pQNode->m_pChildNode[SW], iLevel-1);
-
-
-	
 
 	return;
 }
@@ -539,7 +564,7 @@ void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTes
                
                 default:
                     assert(0);
-            }// end switch (Frust-Sphere
+            }// end switch (
         }// end if (InSphere ...
 	}// end if (bTestChildren ...
     
@@ -548,15 +573,24 @@ void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTes
     if (bTestChildren)  {
         if (pNode->m_pChildNode[NE] )
             CullVisibility( pCamera, pNode->m_pChildNode[NE], true);
+        else
+            m_vpVisibleNodes.push_back(pNode);  
 
         if (pNode->m_pChildNode[NW])
             CullVisibility( pCamera, pNode->m_pChildNode[NW], true);
-          
+        else
+            m_vpVisibleNodes.push_back(pNode);  
+       
         if (pNode->m_pChildNode[SE])
             CullVisibility( pCamera, pNode->m_pChildNode[SE], true);
+        else
+            m_vpVisibleNodes.push_back(pNode);  
 
         if (pNode->m_pChildNode[SW])
             CullVisibility( pCamera, pNode->m_pChildNode[SW], true);
+        else
+            m_vpVisibleNodes.push_back(pNode);  
+
     }
     else  {  // put this node in the renderable list
         #ifdef _DEBUG

@@ -48,6 +48,8 @@ void CCameraChase::SetVehicle( CVehicle * pkVehicle )
 
     SetViewParams( &m_vEye, &m_vLookAt);
 
+    FrameMove( CTimer::GetTimer().GetTimeElapsed() );
+
     m_pkVehicle = pkVehicle;
 }
 
@@ -55,7 +57,7 @@ CCameraChase::CCameraChase()
 {
     m_pkVehicle = NULL;
     m_bMovementDrag = true;  // want to lag movement btw frames
-    m_fTotalDragTimeToZero = 0.5;
+    m_fTotalDragTimeToZero = 1.8;
 }
 
 // create an object for this camera to chase
@@ -112,10 +114,10 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     D3DXVECTOR3 vPosDelta;
     vPosDelta = m_vVelocity * fElapsedTime;  //$$$TEMP once velocity in WC is updated try the following instead
     
-    
-    Vector3f vVel = m_pkVehicle->GetVehicleVelocityWC();
+    //$$$TEMP use heading for now, velocity isn't updated yet
+    Vector3f vVel = m_pkVehicle->GetVehicleHeadingWC();//m_pkVehicle->GetVehicleVelocityWC();
     vVel.Normalize();
-    //vPosDelta = D3DXVECTOR3(vVel.X(), vVel.Y(), vVel.Z()) * fElapsedTime;
+    vPosDelta = D3DXVECTOR3(vVel.X(), vVel.Y(), vVel.Z()) * fElapsedTime;
     
 
     #ifdef _DEBUG

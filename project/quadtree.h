@@ -57,29 +57,8 @@ public:
 
     Box3f m_BBox;        // bounding box for this node
     Sphere3f m_BSphere;  // bounding sphere
-
     
-    CQuadNode(Vector3f vOrigin, float fHalfWidth) {
-        m_vOrigin = vOrigin;
-        m_fHalfWidth = fHalfWidth;
-        for (int i=0; i<4; i++)  m_pChildNode[i] = NULL;
-        m_EntMap.clear();
-
-        // set the AABBox
-        m_BBox.Center() = vOrigin;
-        m_BBox.Extent(0) = m_BBox.Extent(2) = fHalfWidth;
-        m_BBox.Extent(1) = 50.0f;//fHalfWidth;//20.0f; // thin out the height of the box
-        m_BBox.Axis(0) = Vector3f(1,0,0);  // axis aligned
-        m_BBox.Axis(1) = Vector3f(0,1,0);
-        m_BBox.Axis(2) = Vector3f(0,0,1);
-
-        // set the bounding sphere
-        m_BSphere.Center() = vOrigin;
-        // use diagonal of box to get bounding sphere
-        m_BSphere.Radius() = (Vector3f(max(m_BBox.Extent(0), m_BBox.Extent(2)), 0, max(m_BBox.Extent(0), m_BBox.Extent(2))) 
-            + Vector3f(min(m_BBox.Extent(0), m_BBox.Extent(2)), 0, min(m_BBox.Extent(0), m_BBox.Extent(2)))).Length()/2.0f; 
-        //m_BSphere.Radius() = fHalfWidth;
-    };
+    CQuadNode(Vector3f vOrigin, float fHalfWidth);
 
     
 };
@@ -118,8 +97,7 @@ public:
 private:
 	void SubDivide( CQuadNode * pQNode, int iLevel );
 	void AddReference( Vector3f vOrigin, CEntity * pEntity);
-    void AddReference( Box3f box, CEntity * pEntity );
-	//void CQuadTree::Render( CQuadNode * pQNode, int cullcode, int iLevel );
+    void AddReference( Box3f box, CEntity * pEntity,  CQuadNode * node );
 	static CQuadNode	* m_pkQRoot;
 	int			m_iTraversalCount;
     float       m_fNodeWidth;

@@ -505,14 +505,15 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
         }
         else {
             #ifdef _DEBUG
-            CLog::GetLog().Write(LOG_GAMECONSOLE, "Entity %d, is already drawn");
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "Entity %d %s, is already drawn", it->second->GetId(), it->second->GetName());
             #endif
         }
 
     }
 
+    //$$$TEMP THE FOLLOWING DRAWS CHILD NODES EVEN IF EMPTY
     // recursively draw the child nodes
-/*    if (!pQNode->m_pChildNode[NE])  {
+    if (!pQNode->m_pChildNode[NE])  {
         return; // no children to draw
     }
     else {
@@ -539,9 +540,11 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
     else {
         DrawQuadTreeNode(pQNode->m_pChildNode[SW]);
     }
-*/
-    if (m_bDrawQNodeBBoxes == true)// && !pQNode->m_EntMap.empty())
+
+
+    if (m_bDrawQNodeBBoxes == true && !pQNode->m_EntMap.empty())
         DrawBBox(&pQNode->m_BBox, 1.0f, D3DCOLOR_ARGB(150, 50, 200, 50));
+
 
     return;
 }
