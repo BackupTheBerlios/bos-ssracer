@@ -215,6 +215,10 @@ SOURCE=.\gamestatemanager.cpp
 
 SOURCE=.\physicstask.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\vehicle.cpp
+# End Source File
 # End Group
 # Begin Group "Front End Sources"
 
@@ -448,6 +452,10 @@ SOURCE=.\gamestatemanager.h
 # Begin Source File
 
 SOURCE=.\physicstask.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vehicle.h
 # End Source File
 # End Group
 # Begin Group "Front End Headers"
