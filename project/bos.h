@@ -16,7 +16,7 @@
 
 #ifndef DIRECT3D_VERSION
 #define DIRECT3D_VERSION         0x0900
-#endif  //DIRECT3D_VERSION
+#endif  //DIRECT3D_VERSION   
 
 #ifndef DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION      0x0800
@@ -27,6 +27,8 @@
 #endif
 
 #define BOSAPPVERSION "BETA 3.0"
+
+#define TEMP 888
 
 /*
  * Disable following warnings when including Windows headers
