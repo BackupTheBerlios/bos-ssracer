@@ -525,12 +525,17 @@ void CVehicle::UpdateVehiclePhysics()
 void CVehicle::TransformLocalToWorldSpace()
 {
 	// Apply the transformation Rotx(90)Roty(-90) to the position of the vehicle
-	m_translate = Vector3f(positionLC.Z()*(-1), positionLC.X(), positionLC.Y()*(-1));
+	m_translate = Vector3f(positionLC.Y(), positionLC.Z()*(-1.0f), positionLC.X()*(-1.0f));
 
 	// Update the rotation value for the renderer.
 	m_rotate = rotationLC;
 	
 	// Then transform all 4 tires
+	for(int i=0;i<4;i++) {
+		Vector3f test = tires[i]->GetPositionLC();
+		tires[i]->SetTranslate(Vector3f(test.Y(), test.Z()*(-1.0f), test.X() * (-1.0f)));
+	}
+
 }
 
 
