@@ -118,7 +118,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     vPosDelta = m_vVelocity * fElapsedTime;
     
     ////////////  CANT USE UNTIL ROTATION AND VELOCITY FIXED
-    //vTemp = vHeading * fElapsedTime * 0.2f;
+    //vTemp = vVel * fElapsedTime * 0.2f;
     //vPosDelta = D3DXVECTOR3(vTemp.X(), vTemp.Y(), vTemp.Z());
     
 
@@ -143,29 +143,41 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     
     // get the camera's local ahead vector based on the vehicles heading and velocity
     if (vVel.Length() < 20.0f)  {// if velocity is small use heading
-        vTemp = m_pkVehicle->GetVehicleHeadingWC();
+        vTemp = vHeading;
         #ifdef _DEBUG
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using car heading");    
         #endif
     }
     else  {  // interpolate between velocity and heading
         //$$$TEMP not sure if i'm using the velocity correctly yet???
-        /*
-        // get angle between velocity and heading and make a rotation matrix
-        float fAngle = m_pkVehicle->GetVehicleHeadingWC().Dot(m_pkVehicle->GetVehiclVelocityWC()) * fElapsedTime;
-        Matrix3f matRot = Matrix3f( Vector3f(0,1,0),  fAngle);
-  
-        // rotate heading around Y to get this direction
-        vTemp = matRot*m_pkVehicle->GetVehicleHeadingWC();
         
-        #ifdef _DEBUG
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using angle %.4f", fAngle );    
-        #endif
-        */
+        // get angle between velocity and heading and make a rotation matrix
+        Vector3f vVelDir = m_pkVehicle->GetVehicleVelocityWC();
+        vVelDir.Normalize();
+
+        float fAngle = vHeading.Dot(vVelDir);
+        if (fAngle <= 4.0f)  {
+            vTemp = vHeading;        
+        }
+        else {
+            /*
+            Matrix3f matRot = Matrix3f( Vector3f(0,1,0),  RADIANS(fAngle));
+             // rotate heading around Y to get this direction
+            vTemp = matRot* vHeading * fElapsedTime;
+                   
+            #ifdef _DEBUG
+            CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using angle %.4f degs", fAngle );    
+            #endif
+            */
+            vTemp = vVelDir;
+            #ifdef _DEBUG
+            CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using velocity to set cam" );    
+            #endif
+        }
         //$$$TEMP just use the heading for now
-        vTemp = m_pkVehicle->GetVehicleHeadingWC();
+        //vTemp = vHeading;//m_pkVehicle->GetVehicleHeadingWC();
         #ifdef _DEBUG
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using heading until I get velocity in WC..." );    
+        //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using heading until I can interpolate" );    
         #endif
     }
 
@@ -185,21 +197,20 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     float fEyeDelta = 1.0f, fVelDelta = 0.0f;
 
     // pull the camera back if we're going fast enough
-    if (m_pkVehicle->GetVehicleVelocityWC().Length() > 20.0f)  {
+    if (vVel.Length() > 20.0f)  {
         // get change in velocity so we can scale things accordingly
-        fVelDelta = (m_pkVehicle->GetVehicleHeadingWC().Length() - 20.0f)*0.008f;
-
-        if (m_pkVehicle->GetVehicleVelocityWC().Length() > 30.0f)  {
-            // start widening the fov
-            SetProjParams( CAMERA_CHASE_DEFAULT_FOV+fVelDelta*0.09f, 1.0f ,1.0f ,800.0f );
-
-        }
-        fEyeDelta = 1.0f + fVelDelta;
-
+        //fVelDelta = (vVel.Length() - 20.0f)*0.008f;
+        fVelDelta = (vVel.Length() - 20.0f);
+        fEyeDelta = 1.0f + fVelDelta*0.008f;
         //$$$TODO turn motion blur on
     }
     else { 
         fEyeDelta = 1.0f;
+    }
+    // start widening the fov if +30 m/s
+    if (vVel.Length() > 30.0f)  {            
+        fVelDelta = (vVel.Length() - 30.0f);
+        SetProjParams( CAMERA_CHASE_DEFAULT_FOV+fVelDelta*0.005f, 1.0f ,1.0f ,800.0f );
     }
     
     // place eye position based on vehicle's origin

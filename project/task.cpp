@@ -88,24 +88,20 @@ void ITask::HandleMessages() {
 	ITaskMessage *iMsg = NULL;
 
 	// Handle each message in the order it was received (FIFO)
-    std::list< ITaskMessage* >::iterator it;
+    std::list< ITaskMessage* >::iterator it, thisIt;
     for (it = m_lMsgCache.begin(); it!=m_lMsgCache.end(); it++)  {
 		iMsg = (ITaskMessage*)(*it);
 
+        #ifdef _DEBUG
 		assert(*it);  // will halt the program if NULL
-
+        #endif
 		//if ( SYSTEM_CALL <= iMsg->GetType() && iMsg->GetType() <= 10 ) {
 			// Handle the message
 			DoMessageHandle( *it );
-			delete *it;  // free the memory pointed to by the iterator NOT the iterator itself -J
+            thisIt=it; ++it;
 		//}
 
-		// Remove the message from the front of the queue
-		//m_lMsgCache.pop_front();
-
-        m_lMsgCache.erase(it);
-
-        it = m_lMsgCache.begin();  //reset the iterator because we just popped its object -J
+        m_lMsgCache.erase(thisIt);
 	}
 
 	return;

@@ -115,7 +115,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
     			                                   &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
 	// wide FOV and a large frustrum
-	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 10000.0f );
+	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 100000.0f );
 
 
     // defaults to this camera
