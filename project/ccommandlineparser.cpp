@@ -56,6 +56,13 @@ int CCommandLineParser::initKeywords()
 	Keywords.push_back(std::string("stop"));
     Keywords.push_back(std::string("settimer"));
 
+	/*** Begin Chris' Commands ***/
+	Keywords.push_back(std::string("loadscene"));
+	Keywords.push_back(std::string("loadentity"));
+	Keywords.push_back(std::string("loadplayervehicle"));
+	Keywords.push_back(std::string("clearscene"));
+	/*** End Chris' Commands ***/
+
 
 	return OK;
 }
@@ -222,10 +229,17 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "AVAILABLE COMMANDS ARE:");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "-----------------------");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "help - Display this list.");				
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "echo <text> - echoes the text entered.");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "clear - clear the console.");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "setttimer <n> - set game timer resolution to 1/n clicks per second");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "HELP - Display this list.");				
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "ECHO <text> - echoes the text entered.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEAR - clear the console.");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "SETTIMER <n> - set game timer resolution to 1/n clicks per second");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADSCENE <params> - load a new scene");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "                     <params>: -file <filename> -dir <directory>");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "                     where: <filename> is the name of the map to load");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "                                 <directory> is the directory where the map is located");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADENTITY <params> - load a new entity and add it to the current scene");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEARSCENE - clear the current scene");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADPLAYERVEHICLE <params> - load a new player vehicle");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "-----------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;

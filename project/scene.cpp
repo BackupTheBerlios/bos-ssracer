@@ -2,6 +2,23 @@
 
 #include "log.h"
 
+int CScene::ReleaseScene()
+{
+	unsigned int i;
+
+	// Free all the meshes
+	for(i=0;i<m_vMeshes.size();i++) {
+		delete m_vMeshes[i];
+	}
+
+	// Free all the entities
+	for(i=0;i<m_vEntities.size();i++) {
+		delete m_vEntities[i];
+	}
+
+	return 1;
+}
+
 int CScene::LoadScene(char* directory, char* filename)
 {
 	char buf[512];
@@ -33,7 +50,19 @@ int CScene::LoadScene(char* directory, char* filename)
 		return 0;
     } 
     else {
-	    LoadMap(fp, filename, directory);
+		if(!ReleaseScene()) {
+			#ifdef _DEBUG
+				CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadScene() >> Unable to release scene");
+			#endif
+			return 0;
+		}
+	    
+		if(!LoadMap(fp, filename, directory)) {
+			#ifdef _DEBUG
+				CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadScene() >> Unable to load scene %s", buf);
+			#endif
+			return 0;
+		}
 
     }
 

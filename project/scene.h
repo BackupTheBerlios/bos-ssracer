@@ -28,6 +28,8 @@ private:
 	int LoadObjects(char* directory, char* filename);	// Load the objects specified in the map file (.objects file)
 	int LoadPlayerVehicle(char* directory, char* filename);		// Load a new player vehicle (.car file)
 	int LoadMeshes();	// Load all the meshes in the scene
+
+	/*void LoadMap(char * cFilename = "debug", char * cDir = "./maps/debug/");*/
 };
 
 #endif

@@ -257,7 +257,7 @@ SOURCE=.\aitask.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\game.cpp
+SOURCE=.\gamestatemanager.cpp
 # End Source File
 # End Group
 # Begin Group "Physics Sources"
@@ -471,7 +471,7 @@ SOURCE=.\aitask.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Game.h
+SOURCE=.\gamestatemanager.h
 # End Source File
 # End Group
 # Begin Group "Physics Headers"
