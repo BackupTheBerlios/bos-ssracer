@@ -14,8 +14,7 @@
 #include "timer.h"
 #include "macros.h"
 
-static bool firstFrame = true;
-
+static float theta = 0.0f;
 float sgn(float x)
 {
 	if(x > 0) {
@@ -29,6 +28,8 @@ float sgn(float x)
 	}
 }
 
+static float sgnVel = 0.0f;
+
 void CVehicle::Init()
 {
 	inputState.gas = false;
@@ -36,6 +37,9 @@ void CVehicle::Init()
 	inputState.ebrake = false;
 	inputState.lturn = false;
 	inputState.rturn = false;
+
+	b_playSkidSound = false;
+
 	// Initialize position, acceleration, and velocity to zero
 	accelerationLC = Vector3f(0.0f, 0.0f, 0.0f);
 	velocityLC = Vector3f(0.0f, 0.0f, 0.0f);
@@ -209,7 +213,7 @@ void CVehicle::CalculateWeightDistribution()
 	*/
 
 
-	float maximumTractionForce = 10000.0f;
+	float maximumTractionForce = 7000.0f;
 
 	/////////////////////////////////////////////////////////
 	// FOR NOW WE DON"T NEED TO TAKE INTO ACCOUNT THE BANK
@@ -233,8 +237,12 @@ void CVehicle::CalculateWeightDistribution()
 		weightDistribution[RLTIRE] = 4000.0f;
 	}
 	///////////////////////////////////////////////////////////
+	bool sgnSetAlready = false;
 
-	
+	if(b_dynamicTraction) {
+		sgnSetAlready = true;
+	}
+
 	b_dynamicTraction = false;
 	
 	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 64, "FR: %f", weightDistribution[FRTIRE]);
@@ -255,13 +263,13 @@ void CVehicle::CalculateWeightDistribution()
 	if(weightDistribution[RLTIRE] > maximumTractionForce) {
 		b_dynamicTraction = true;
 	}
-
 	if(inputState.ebrake) {
 		b_dynamicTraction = true;
 	}
 
-
-
+	if(b_dynamicTraction && !sgnSetAlready) {
+		sgnVel = sgn(velocityLC.X());
+	}
 
 	if(b_dynamicTraction) {
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 60, "DYNAMIC TRACTION");
@@ -832,7 +840,7 @@ void CVehicle::CalculateAutomaticGearShifting()
 		}
 	}
 	// Shift down
-	else if(rpm < (maximumRPM * 0.40f)) {
+	else if(rpm < (maximumRPM * 0.60f)) {
 		if(gear > 1 && gear <= 5) {
 			gear--;
 		}
@@ -845,7 +853,7 @@ void CVehicle::CalculateAutomaticGearShifting()
 void CVehicle::CalculateTireAngularVelocity(float deltaT)
 {
 	// *** Begin Front Wheel Velocity Calculations ***
-	float velocityMagnitude = float(sqrt(pow(velocityLC.X(), 2) + pow(velocityLC.Y(), 2) + pow(velocityLC.Z(), 2)));
+	float velocityMagnitude = float(sqrt(pow(velocityTotLC.X(), 2) + pow(velocityTotLC.Y(), 2) + pow(velocityTotLC.Z(), 2)));
 	float angularVelocityMagnitude = velocityMagnitude / tireRadius;
 
 	// Calculate the angle between the heading of the vehicle
@@ -881,7 +889,10 @@ void CVehicle::CalculateTireAngularVelocity(float deltaT)
 		driveWheelAngularVelocityRADS += driveWheelAngularAccelerationRADS * deltaT;
 	}
 	else {
-		driveWheelAngularVelocityRADS = velocityLC.X() / tireRadius;	
+		if(velocityLC.X() > -0.1f)
+			driveWheelAngularVelocityRADS = velocityMagnitude / tireRadius;
+		else
+			driveWheelAngularVelocityRADS = velocityLC.X() / tireRadius;
 	}
 	// *** End Front Wheel Acceleration Calculations ***
 
@@ -921,9 +932,12 @@ void CVehicle::CalculateVehicleVelocity(float deltaT)
 {
 	if(!b_dynamicTraction) {
 		velocityLC.X() = velocityLC.X() + (accelerationLC.X() * deltaT);
+		velocityLC.Y() = 0.0f;
+		velocityLC.Z() = 0.0f;
 	}
-	velocityLC.Y() = 0.0f;
-	velocityLC.Z() = 0.0f;
+	else {
+		accelerationLC = Vector3f(0.0f, 0.0f, 0.0f);
+	}
 }
 
 //--------------------------------------------------------------
@@ -935,7 +949,10 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 //	if(float(fabs(steerAngleRADS)) > 0.0f  && float(fabs(velocityLC.X())) > 0.5f) {
 		// Yes, so calculate the effects of the steering angle
 
+	b_playSkidSound = false;
+
 	if(!b_dynamicTraction) {
+		theta = 0.0f;
 		Vector3f rotPos(0.0f, 0.0f, 0.0f);
 		float R = L / float(sin(steerAngleRADS));
 		float M = float(tan(steerAngleRADS)) * L;
@@ -1035,7 +1052,12 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 		//Vector3f test = (0.0f, trans.Y(), 0.0f);
 		//RotateVectorAboutLocalZ(&test, -rotationLC.Z());
 
-		accelerationLC.Y() = (tempTrans.Y() / deltaT) * sgn(steerAngleRADS);
+		if(velocityLC.X() > 10.0f) {
+			accelerationLC.Y() = (tempTrans.Y() / deltaT) * sgn(steerAngleRADS) * fabs(velocityLC.X() / 40.0f);
+		}
+		else {
+			accelerationLC.Y() = 0.05f;
+		}
 		
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 37, "rotPos: %f %f %f", rotPos.X(), rotPos.Y(), rotPos.Z());
 //		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 38, "test.Y(): %f", test.Y());
@@ -1091,18 +1113,16 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 			temp.Z() = 0.0f;
 
 			temp += trans / deltaT;
-			//if(sgn(steerAngleRADS != 0.0f))
-			//	temp *= sgn(steerAngleRADS);
 
 			Vector3f tempTrans = temp * deltaT;
 
 			Vector3f AB = A - B;
 			Vector3f AprimeBprime = Aprime - Bprime;
 
-			if(velocityLC.X() < -0.3f) {
-				velocityTotLC *= -1.0f;
-				headingTotLC *= -1.0f;
-			}
+		//	if(velocityLC.X() < -0.3f) {
+		//		velocityTotLC *= -1.0f;
+		//		headingTotLC *= -1.0f;
+		//	}
 
 			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 41, "tempTrans: %f %f %f", tempTrans.X(), tempTrans.Y()*sgn(steerAngleRADS), tempTrans.Z());
 			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 42, "B: %f %f %f", B.X(), B.Y(), B.Z());
@@ -1122,29 +1142,52 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 	//		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 38, "test.Y(): %f", test.Y());
 	//		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 39, "accelerationLC.Y(): %f", accelerationLC.Y());
 			// We are in dynamic friction mode (ie, skidding, ebraking)
+			float magVel = sqrt(pow(velocityTotLC.X(), 2) + pow(velocityTotLC.Y(), 2) + pow(velocityTotLC.Z(), 2));
+			
 			if(inputState.ebrake) {
 				if(velocityLC.X() > -0.1f) {
-					rotationLC.Z() += RADIANS(180) * deltaT * sgn(steerAngleRADS);
+					rotationLC.Z() += RADIANS(magVel * 6) * deltaT * sgn(steerAngleRADS);
+					theta += RADIANS(magVel * 6) * deltaT * sgn(steerAngleRADS);
 				}
 				else {
-					rotationLC.Z() -= RADIANS(180) * deltaT * sgn(steerAngleRADS);
+					rotationLC.Z() += RADIANS(magVel * 6) * deltaT * sgn(steerAngleRADS);
+					theta += RADIANS(magVel * 6) * deltaT * sgn(steerAngleRADS);
 				}
 			}
 			else {
 				if(velocityLC.X() > -0.1f) {
-					rotationLC.Z() += RADIANS(40) * deltaT * sgn(steerAngleRADS);
+					rotationLC.Z() += RADIANS(magVel*2) * deltaT * sgn(steerAngleRADS);
+					theta += RADIANS(magVel*2) * deltaT * sgn(steerAngleRADS);
 				}
 				else {
-					rotationLC.Z() -= RADIANS(40) * deltaT * sgn(steerAngleRADS);
+					rotationLC.Z() += RADIANS(magVel*2) * deltaT * sgn(steerAngleRADS);
+					theta += RADIANS(magVel*2) * deltaT * sgn(steerAngleRADS);
 				}
 			}
 
-			velocityTotLC *= 0.99;
-			positionLC += velocityTotLC * deltaT;			
+			if(magVel > 1.0f) {
+				b_playSkidSound = true;
+			}
+			else {
+				b_playSkidSound = false;
+			}
+
+			velocityTotLC *= 0.99f;
+			positionLC += velocityTotLC * deltaT;
 			
+			Vector3f test1 = velocityTotLC;
+
+			RotateVectorAboutLocalZ(&test1, -rotationLC.Z());
+			float magVel1 = sqrt(pow(test1.X(), 2) + pow(test1.Y(), 2) + pow(test1.Z(), 2));
+			velocityLC = Vector3f(magVel1 * cos(theta), 0.0f, 0.0f);
+
 			headingTotLC = Vector3f(1.0f, 0.0f, 0.0f);
 			RotateVectorAboutLocalZ(&headingTotLC, rotationLC.Z());
-
+			
+			if(sgn(velocityLC.X()) != sgnVel) {
+				velocityLC.X() *= -1.0f;
+				headingTotLC *= -1.0f;
+			}
 	}
 }
 
@@ -1176,7 +1219,7 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 
 	if(float(fabs(accelerationLC.Y())) > 0.1f) {
 		rotationLC.X() += RADIANS(3.0f*deltaT) * sgn(accelerationLC.Y());
-		if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
+		if(sgn(accelerationLC.Y()) == sgn(rotationLC.X())) {
 			if( fabs(rotationLC.X()) > RADIANS(3.0f)) {
 				rotationLC.X() = RADIANS(3.0f) * sgn(accelerationLC.Y());
 			}
@@ -1273,6 +1316,18 @@ void CVehicle::UpdateVehiclePhysics()
 		if(engineRev->IsPlaying() == false) {
 			engineRev->SetVolume( 0.8f );
 			engineRev->Play( TRUE, FALSE );
+		}
+
+		if(b_playSkidSound) {
+			if(tireSkid->IsPlaying() == false) {
+				tireSkid->SetVolume( 0.8f );
+				tireSkid->Play( TRUE, FALSE );
+			}
+		}
+		else {
+			if(tireSkid->IsPlaying() == true) {
+				tireSkid->Stop();
+			}
 		}
 
 		// Modulate engine sound based on RPM
