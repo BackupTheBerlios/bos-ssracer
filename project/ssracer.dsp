@@ -280,6 +280,10 @@ SOURCE=.\ccollisionmanager.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ccollisionmessage.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\physics.cpp
 # End Source File
 # Begin Source File
@@ -572,6 +576,10 @@ SOURCE=.\gamestatemanager.h
 # Begin Source File
 
 SOURCE=.\ccollisionmanager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ccollisionmessage.h
 # End Source File
 # Begin Source File
 

@@ -79,7 +79,7 @@ int COpponentAI::addCar(std::string dir, std::string file)
 
 int COpponentAI::removeCar(int i)
 {
-	if (i < 0 || i >= m_pCars.size())
+	if (i < 0 || i >= signed(m_pCars.size()))
 		return INDEX_OUT_OF_RANGE;
 
 	// from local vectore
@@ -102,7 +102,7 @@ int COpponentAI::removeCar(int i)
 
 bool COpponentAI::isAtWaypoint(COpponentVehicle* Car)
 {
-	if (!Car) return NULL_POINTER;
+	if (!Car) return bool(NULL_POINTER);
 
 	// if distance btwn wp center and car pos < wp radius
 	// then it's at the waypoint

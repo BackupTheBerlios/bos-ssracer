@@ -93,7 +93,7 @@ void CVehicle::Init()
 	CSoundCore::GetSoundCore().GetSoundEffect("car_engine", &engineRev);
 	CSoundCore::GetSoundCore().GetSoundEffect("car_skid", &tireSkid);
 	oldFreq = engineRev->GetFrequency();
-	engineIdle->SetFrequency( engineIdle->GetFrequency() * 1.5 );
+	engineIdle->SetFrequency( engineIdle->GetFrequency() * 1.5f );
 
 }
 

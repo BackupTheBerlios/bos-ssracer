@@ -203,10 +203,10 @@ void CRenderTask::Update()
     if ( CBOSApplication::GetBOSApp().GetDebugOverlayState() == TRUE ) {
 
         // draw some screen calibration stuff
-        CRenderer::GetRendererPtr()->Draw3DTextScaled(-1,-1, 0, D3DCOLOR_ARGB(100,255,255,255), "--", 0.05, 0.05, D3DFONT_FILTERED, FONT_DEFAULT);
-        CRenderer::GetRendererPtr()->Draw3DTextScaled(0.9,0.9, 0, D3DCOLOR_ARGB(100,255,255,255), "++", 0.05, 0.05, D3DFONT_FILTERED, FONT_DEFAULT);
-        CRenderer::GetRendererPtr()->Draw3DTextScaled(-1,0.9, 0, D3DCOLOR_ARGB(100,255,255,255), "-+", 0.05, 0.05, D3DFONT_FILTERED, FONT_DEFAULT);
-        CRenderer::GetRendererPtr()->Draw3DTextScaled(0.9,-1, 0, D3DCOLOR_ARGB(100,255,255,255), "+-", 0.05, 0.05, D3DFONT_FILTERED, FONT_DEFAULT);
+        CRenderer::GetRendererPtr()->Draw3DTextScaled(-1,-1, 0, D3DCOLOR_ARGB(100,255,255,255), "--", 0.05f, 0.05f, D3DFONT_FILTERED, FONT_DEFAULT);
+        CRenderer::GetRendererPtr()->Draw3DTextScaled(0.9,0.9, 0, D3DCOLOR_ARGB(100,255,255,255), "++", 0.05f, 0.05f, D3DFONT_FILTERED, FONT_DEFAULT);
+        CRenderer::GetRendererPtr()->Draw3DTextScaled(-1,0.9, 0, D3DCOLOR_ARGB(100,255,255,255), "-+", 0.05f, 0.05f, D3DFONT_FILTERED, FONT_DEFAULT);
+        CRenderer::GetRendererPtr()->Draw3DTextScaled(0.9,-1, 0, D3DCOLOR_ARGB(100,255,255,255), "+-", 0.05f, 0.05f, D3DFONT_FILTERED, FONT_DEFAULT);
 
 
         //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "press F12 to hide all this");
