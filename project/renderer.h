@@ -22,6 +22,7 @@
 
 // --- internal library includes --- //
 #include "camerafreelook.h"
+#include "camerachase.h"
 #include "log.h"
 #include "d3denumeration.h"
 #include "d3dsettings.h"
@@ -136,10 +137,12 @@ public:
     CD3DCamera * GetCameraPtr ( CameraType eCameraName = CAMERA_FREELOOK );
 
     // set the active camera for viewing
-    bool SetActiveCamera( CameraType eCameraName )  { m_pActiveCamera = m_pkCameraMap[eCameraName];
-                                                      m_eActiveCamType = eCameraName; };
-    // get the camera being used
+    bool SetActiveCamera( CameraType eCameraName );
+
+    // get the camera being currently used
     CD3DCamera * GetActiveCameraPtr() { return m_pActiveCamera; };
+
+    // get the camera type currently being used
     CameraType GetActiveCameraType() { return m_eActiveCamType; };
 
     void InitializeState();

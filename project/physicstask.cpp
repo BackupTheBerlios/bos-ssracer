@@ -36,7 +36,7 @@ void CPhysicsTask::Stop()
 	// release any memory that was dynamically allocated
 	// release devices
 
-	//delete CPhysics::GetPhysicsPtr();
+	delete CPhysics::GetPhysicsPtr();
 }
 
 void CPhysicsTask::DoMessageHandle( ITaskMessage *cMsg ) {

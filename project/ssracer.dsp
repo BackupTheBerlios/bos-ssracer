@@ -128,6 +128,10 @@ SOURCE=.\camera.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\camerachase.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\camerafreelook.cpp
 # End Source File
 # End Group
@@ -371,6 +375,10 @@ SOURCE=.\d3dutil.h
 # Begin Source File
 
 SOURCE=.\camera.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\camerachase.h
 # End Source File
 # Begin Source File
 

@@ -27,6 +27,12 @@ CInputConsole::CInputConsole(char* str)
 
 	archives.reserve(STD_ARC_SIZE);
 	archives.clear();
+    #ifdef _DEBUG  // to save time just preload your command into here
+    archives.push_back("cameratest CAMERA_FREELOOK");
+    archives.push_back("cameratest CAMERA_CHASE");
+    archives.push_back("loadmeshtest ferrarif20 .\\");
+    archives.push_back("physicstest1");
+    #endif
 	archiveIterator = archives.end();
 
 	active = false;

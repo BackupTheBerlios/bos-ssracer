@@ -88,8 +88,8 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 	ms_pkRenderer = this;
 
     // set up the cameras
-   	m_pkCameraMap[CAMERA_BUMPER] = NULL;//new CD3DCamera();  // bumper camera
-	m_pkCameraMap[CAMERA_CHASE]  = NULL;//new CCameraChase();  // chase camera
+   	m_pkCameraMap[CAMERA_BUMPER]     = NULL;//new CD3DCamera();  // bumper camera
+	m_pkCameraMap[CAMERA_CHASE]      = new CCameraChase();  // chase camera
 	m_pkCameraMap[CAMERA_FREELOOK]   = new CCameraFreeLook(); // free look
 
 	// set up default camera parameters for each main camera
@@ -101,17 +101,18 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 	//$$$TODO
 	
 	//--- chase camera --- //
-/*	// eye 5 back, 3 up from objects position
+	// eye 5 back, 3 up from objects position
 	// look at car position
 	// up is Y
-	m_pkCameraMap[CAMERA_CHASE]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, 0.0f), 
-				                                &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
-	// shorter FOV shorter frustrum
-	m_pkCameraMap[CAMERA_CHASE]->SetProjParams( D3DX_PI/3.0f, 1.0f ,1.0f ,100.0f );
+    //$$$J THESE PARAMETERS ARE NOW SET WHEN THE CAMERA IS SET TO CHASE A CAR
+	//m_pkCameraMap[CAMERA_CHASE]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, 0.0f), 
+	//			                                &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+	// slightly wider FOV and shorter frustrum
+	m_pkCameraMap[CAMERA_CHASE]->SetProjParams( D3DX_PI/4.5f, 1.0f ,1.0f ,100.0f );
 
-*/
+
 	//--- free look camera --- //	
-	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(-1.0f, 0.0f, 0.0f), 
+	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(-5.0f, 0.0f, 0.0f), 
     			                                   &D3DXVECTOR3(0.0f, 0.0f, 0.0f) );
 
 	// wide FOV and a large frustrum
@@ -121,23 +122,6 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     // defaults to this camera
     m_pActiveCamera = m_pkCameraMap[CAMERA_FREELOOK];
     m_eActiveCamType = CAMERA_FREELOOK;
-
-
-	/*
-		//--- free look camera --- //	
-	// HAVE TO FIX UPDATE FUNCTION TO USE PRESET VIEW MATRIX
-	m_pkCameraMap[CAMERA_FREE]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, -1.0f), 
-				                               &D3DXVECTOR3(0.0f, 0.0f, 0.0f));//,
-									           //D3DXVECTOR3(0.0f, 1.0f, 0.0f) );
-
-	// wide FOV and a large frustrum
-	m_pkCameraMap[CAMERA_FREE]->SetProjParams( D3DX_PI/4.0f, 1.0f ,1.0f ,1000.0f );
-
-  	//m_pkCameraMap[CAMERA_FREE]->m_trans = D3DXVECTOR3(0.0f, 10.0f, -10.0f);
-	//m_pkCameraMap[CAMERA_FREE]->m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-  */
-
 }
 
 
@@ -869,6 +853,24 @@ void CRenderer::DrawConsole()
 
 }
 
+
+
+
+bool CRenderer::SetActiveCamera( CameraType eCameraName )  { 
+    // check if there even exists a camera to set
+    if (!m_pkCameraMap[eCameraName])
+        return 0;
+
+    // if it's a bumper cam or chase cam there has to be a vehicle to track
+    if (eCameraName == CAMERA_CHASE || eCameraName == CAMERA_BUMPER)  {
+        if (!CGameStateManager::GetGameStateManager().GetPlayerVehicle())  {
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "Renderer:  WARNING you need to set the camera to track a vehicle!");
+        }
+    }
+    m_pActiveCamera = m_pkCameraMap[eCameraName];
+    m_eActiveCamType = eCameraName; 
+    return 1;
+};
 
 
 

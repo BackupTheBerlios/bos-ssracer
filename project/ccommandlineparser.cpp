@@ -65,7 +65,8 @@ int CCommandLineParser::initKeywords()
 	/*** End Chris' Commands ***/
 
     /*** Begin J's Commands ***/
-    Keywords.push_back(std::string("jscript1"));
+    Keywords.push_back(std::string("loadmeshtest"));
+    Keywords.push_back(std::string("cameratest"));
     /*** End J's Commands ***/
 
 
@@ -108,8 +109,10 @@ int CCommandLineParser::execute()
 	if (*it == "loadentity") error = LoadEntity();
 	if (*it == "loadplayervehicle") error = LoadPlayerVehicle();
 	if (*it == "clearscene") error = ClearScene();
-    if (*it == "jscript1") error = JScript1();
 	if (*it == "physicstest1") error = PhysicsTest1();
+
+    if (*it == "loadmeshtest") error = loadmeshtest();
+    if (*it == "cameratest") error = cameratest();
 
 
 	return error;
@@ -250,6 +253,8 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADENTITY <params> - load a new entity and add it to the current scene");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEARSCENE - clear the current scene");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADPLAYERVEHICLE <params> - load a new player vehicle");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "loadmeshtest <file> <dir> - load a mesh at some directory");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "cameratest <CAMERA_NAME> - change cameras to a specific one");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "-----------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;
@@ -398,8 +403,16 @@ int CCommandLineParser::PhysicsTest1()
 
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&sDir, &sName))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
-		return GENERAL_ERROR;
+		return OK;
 	}
+
+    /*J fucken w Chris' shit*/
+
+    //set the active camera to the chase cam
+    CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+
+    //set it to chase the vehicle we just created
+    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
 
 	return OK;
 
@@ -409,19 +422,57 @@ int CCommandLineParser::PhysicsTest1()
 
 
 
-int CCommandLineParser::JScript1()
+// ===== Begin Jay's Functions ==== ///
+int CCommandLineParser::loadmeshtest()
 {
-    string sDir = "\0";
-    string sName = "ferrarif20\0";
+    string sDir, sName;
+    if (Tokens.size() < 3)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading defaults");
+        sDir = "\0";
+        sName = "\0";
+    }
+    else {
+        sDir = Tokens[2] + "\0";
+        sName = Tokens[1] + "\0";
+    }
+
     if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity was not loaded successfully!");
-		return GENERAL_ERROR;
+		return OK;
 	}
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "J's script 1 loaded the mesh %s Sucessfully!", sName.c_str() );
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "J's loadmeshtest loaded the mesh %s Sucessfully!", sName.c_str() );
     return OK;
 }
 
 
+int CCommandLineParser::cameratest()
+{
+    if (Tokens.size()<2)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements to cameratest");
+		return OK;
+    }
+
+    //check which camera is needed
+    if (Tokens[1] == "CAMERA_FREELOOK")  {
+        CRenderer::GetRenderer().SetActiveCamera(CAMERA_FREELOOK);
+    }
+    else if (Tokens[1] == "CAMERA_CHASE")  {
+        CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+        ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+    }
+    //else if (Tokens[1] == "CAMERA_BUMPER")  {
+    //    CRenderer::GetRenderer().SetActiveCamera(CAMERA_BUMPER);
+    //    ((CCameraBumper *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+    //}
+    else  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "sorry, that camera is not implemented yet");
+		return OK;
+    }
+
+    return OK;
+}
+
+// ===== End Jay's functions ==== //
 
 
 // SAVING THIS; IT'S USEFUL:

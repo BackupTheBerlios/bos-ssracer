@@ -41,7 +41,9 @@ public:
 	int ClearScene();
 	int PhysicsTest1();
 
-    int JScript1();
+    // === J's Functions === //
+    int loadmeshtest();
+    int cameratest();
 
 protected:
 	std::string deliminators;

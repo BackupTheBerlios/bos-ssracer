@@ -39,14 +39,14 @@ D3DUtil_CameraKeys CCameraFreeLook::MapKey( UINT nKey )
         case ' ': //spacebar
 			return CAM_MOVE_UP;
 
-		case GAME_RIGHT:
-			return CAM_ROTATE_X_POS;
 		case GAME_LEFT:
+			return CAM_ROTATE_X_POS;
+		case GAME_RIGHT:
 			return CAM_ROTATE_X_NEG;
 
-		case GAME_UP:
-			return CAM_ROTATE_Y_POS;
 		case GAME_DOWN:
+			return CAM_ROTATE_Y_POS;
+		case GAME_UP:
 			return CAM_ROTATE_Y_NEG;
 
 		//case GAME_DELETE:
@@ -69,7 +69,7 @@ void CCameraFreeLook::Update( int iInput, bool bState )
 
 }
 
-#define INPUTSPEED 0.1f;
+#define ROTSPEED 0.4f;
 //-----------------------------------------------------------------------------
 // Name: FrameMove
 // Desc: Update the view matrix based on user input & elapsed time
@@ -89,20 +89,20 @@ VOID CCameraFreeLook::FrameMove( FLOAT fElapsedTime )
 
 	if ( IsKeyDown(m_aKeys[CAM_ROTATE_X_POS]) ) {
 		//m_bInvertPitch = FALSE;
-		m_vRotVelocity.x += INPUTSPEED;     //rot around X
+		m_vRotVelocity.x += ROTSPEED;     //rot around X
 	}
 	if ( IsKeyDown(m_aKeys[CAM_ROTATE_X_NEG]) ) {
 		//m_bInvertPitch = TRUE;
-		m_vRotVelocity.x -= INPUTSPEED;     //rot around X
+		m_vRotVelocity.x -= ROTSPEED;     //rot around X
 	}
 
 	if ( IsKeyDown(m_aKeys[CAM_ROTATE_Y_POS]) ) {
 		//m_bInvertYaw = FALSE;
-		m_vRotVelocity.y += INPUTSPEED;  	//rot around Y
+		m_vRotVelocity.y += ROTSPEED;  	//rot around Y
 	}
 	if ( IsKeyDown(m_aKeys[CAM_ROTATE_Y_NEG]) ) {
 		//m_bInvertYaw = TRUE;
-		m_vRotVelocity.y -= INPUTSPEED;  	//rot around Y
+		m_vRotVelocity.y -= ROTSPEED;  	//rot around Y
 	}
 
 

@@ -87,9 +87,9 @@ void CAITask::Update() {
 			// generate a input message for any keys still pressed
 			if (it->second) {
                 // free look camera controls
-                if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
+                //if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
     			    CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(it->first, it->second), RENDER_TASK );
-                // else  // driving controls
+                //else  // driving controls
 			}
 		}
 	}
@@ -155,17 +155,21 @@ void CAITask::HandleInputMessage( CInputTaskMessage *cIMsg ) {
 
 	case STATE_FRONT_END:
 		//forward to front end manager
+        //break;
 	
     case STATE_PRE_GAME:
 		// may have special cases here
+        //break;
 
     case STATE_PAUSE:
 		// special case to handle the pause key
+        //break;
 
     case STATE_IN_GAME: 
-
-    default:
         DEBUGHandleInGameInput( cIMsg );
+        break;
+
+    default:        
 		break;
 	}//end switch
 	// END input task handling --------------------------------------//
@@ -220,8 +224,7 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
             return;  // don't save the new state
 		}
         else if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
-    		CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown), RENDER_TASK );
-
+       		CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown), RENDER_TASK );
 		break;
     }
 

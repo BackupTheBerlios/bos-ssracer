@@ -17,7 +17,7 @@ public:
 protected:
 
 	CPhysics() {};
-   	~CPhysics() {};
+   	//~CPhysics() {};
 	static CPhysics * m_physics;
 
 
