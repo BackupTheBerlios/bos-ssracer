@@ -76,6 +76,22 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("loadvehicleai"));
     /*** End Ram & Gib Commands ***/
 
+    /*** Begin Rob's Commands ***/
+    Keywords.push_back(std::string("playsound"));
+    Keywords.push_back(std::string("stopsound"));
+    Keywords.push_back(std::string("loadsound"));
+    Keywords.push_back(std::string("releasesound"));
+    Keywords.push_back(std::string("pausesound"));
+    Keywords.push_back(std::string("unpausesound"));
+
+    Keywords.push_back(std::string("playstream"));
+    Keywords.push_back(std::string("stopstream"));
+    Keywords.push_back(std::string("loadstream"));
+    Keywords.push_back(std::string("releasestream"));
+    Keywords.push_back(std::string("pausestream"));
+    Keywords.push_back(std::string("unpausestream"));
+    /*** End Rob's Commands ***/
+
 	return OK;
 }
 
@@ -124,6 +140,19 @@ int CCommandLineParser::execute()
     if (*it == "loadmeshtest") error = loadmeshtest();
     if (*it == "cameratest") error = cameratest();
     if (*it == "loadvehicleai") error = LoadVehicleAI();
+
+    if (*it == "playsound") error = SoundEffectCommand();
+    if (*it == "stopsound") error = SoundEffectCommand();
+    if (*it == "loadsound") error = SoundEffectCommand();
+    if (*it == "releasesound") error = SoundEffectCommand();
+    if (*it == "pausesound") error = SoundEffectCommand();
+    if (*it == "unpausesound") error = SoundEffectCommand();
+    if (*it == "playstream") error = SoundStreamCommand();
+    if (*it == "stopstream") error = SoundStreamCommand();
+    if (*it == "loadstream") error = SoundStreamCommand();
+    if (*it == "releasestream") error = SoundStreamCommand();
+    if (*it == "pausestream") error = SoundStreamCommand();
+    if (*it == "unpausestream") error = SoundStreamCommand();
 
 	return error;
 }
@@ -576,6 +605,394 @@ int CCommandLineParser::LoadVehicleAI()
 }
 
 //  ===== End Ram & Gibs Functions =====//
+
+
+// ===== Begin Rob's Functions ==== ///
+int CCommandLineParser::SoundEffectCommand()
+{
+	std::string sSoundFile;
+	std::string sSoundID;
+	CSoundMessage *cSMsg = NULL;
+
+	// ** PLAYSOUND command ** //
+	if ( strcmp( Tokens[0].c_str(), "playsound" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: playsound -once (soundname)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "OR: playsound [-loop] (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (soundname) - name of sound file (not including .wav extension!)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - alias of sound to play." );
+			break;
+
+		case 2:
+			sSoundID = Tokens[1].begin();
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->PlaySoundEffect( sSoundID, false );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		case 3:
+			// Ensure the middle argument is an AS statement
+			if ( strcmp( Tokens[1].c_str(), "-once" ) == 0 ) {
+				sSoundFile = Tokens[2].begin();
+
+				// Send the sound message
+				cSMsg = new CSoundMessage();
+				cSMsg->PlaySoundEffectOnce( sSoundFile );
+				CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			}
+			else if ( strcmp( Tokens[1].c_str(), "-loop" ) == 0 ) {
+				sSoundID = Tokens[2].begin();
+
+				// Send the sound message
+				cSMsg = new CSoundMessage();
+				cSMsg->PlaySoundEffect( sSoundID, true );
+				CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+
+			}
+			else {
+				return BAD_COMMAND;
+
+			}
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "playsound - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** LOADSOUND command ** //
+	else if ( strcmp( Tokens[0].c_str(), "loadsound" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: loadsound (soundname) as (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (soundname) - name of sound file (not including .wav extension!)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - unique identifier string to use as alias for loaded sound." );
+			break;
+
+		case 4:
+			sSoundFile = Tokens[1].begin();
+			sSoundID = Tokens[3].begin();
+
+			// Ensure the middle argument is an AS statement
+			if ( strcmp( Tokens[2].c_str(), "as" ) != 0 ) return BAD_COMMAND;
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->LoadSoundEffect( sSoundFile, sSoundID );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "loadsound - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** STOPSOUND command ** //
+	else if ( strcmp( Tokens[0].c_str(), "stopsound" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: stopsound (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - Alias of sound to be stopped." );
+			break;
+
+		case 2:
+			sSoundID = Tokens[1].begin();
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->StopSoundEffect( sSoundID );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "stopsound - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** RELEASESOUND command ** //
+	else if ( strcmp( Tokens[0].c_str(), "releasesound" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: releasesound (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - Alias of sound to be released." );
+			break;
+
+		case 2:
+			sSoundID = Tokens[1].begin();
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->ReleaseSoundEffect( sSoundID );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "releasesound - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** PAUSESOUND command ** //
+	else if ( strcmp( Tokens[0].c_str(), "pausesound" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: pausesound (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - Alias of sound to be paused." );
+			break;
+
+		case 2:
+			sSoundID = Tokens[1].begin();
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->PauseSoundEffect( sSoundID );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "pausesound - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** UNPAUSESOUND command ** //
+	else if ( strcmp( Tokens[0].c_str(), "unpausesound" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: unpausesound (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - Alias of sound to be unpaused." );
+			break;
+
+		case 2:
+			sSoundID = Tokens[1].begin();
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->UnpauseSoundEffect( sSoundID );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "unpausesound - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+    return OK;
+}
+
+
+int CCommandLineParser::SoundStreamCommand()
+{
+	std::string sSoundFile;
+	std::string sSoundID;
+	CSoundMessage *cSMsg = NULL;
+
+	// ** PLAYSTREAM command ** //
+	if ( strcmp( Tokens[0].c_str(), "playstream" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: playstream -once (streamname)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "OR: playsound [-loop] (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (streamname) - name of stream file (not including .wav extension!)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - alias of stream to play." );
+			break;
+
+		case 2:
+			sSoundID = Tokens[1].begin();
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->PlayStream( sSoundID, false );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		case 3:
+			// Ensure the middle argument is an AS statement
+			if ( strcmp( Tokens[1].c_str(), "-once" ) == 0 ) {
+				sSoundFile = Tokens[2].begin();
+
+				// Send the sound message
+				cSMsg = new CSoundMessage();
+				cSMsg->PlayStreamOnce( sSoundFile );
+				CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			}
+			else if ( strcmp( Tokens[1].c_str(), "-loop" ) == 0 ) {
+				sSoundID = Tokens[2].begin();
+
+				// Send the sound message
+				cSMsg = new CSoundMessage();
+				cSMsg->PlayStream( sSoundID, true );
+				CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+
+			}
+			else {
+				return BAD_COMMAND;
+
+			}
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "playstream - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** LOADSTREAM command ** //
+	else if ( strcmp( Tokens[0].c_str(), "loadstream" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: loadstream (streamname) as (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (streamname) - name of stream file (not including .wav extension!)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - unique identifier string to use as alias for loaded stream." );
+			break;
+
+		case 4:
+			sSoundFile = Tokens[1].begin();
+			sSoundID = Tokens[3].begin();
+
+			// Ensure the middle argument is an AS statement
+			if ( strcmp( Tokens[2].c_str(), "as" ) != 0 ) return BAD_COMMAND;
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->LoadStream( sSoundFile, sSoundID );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "loadstream - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** STOPSTREAM command ** //
+	else if ( strcmp( Tokens[0].c_str(), "stopstream" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: stopstream (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - Alias of stream to be stopped." );
+			break;
+
+		case 2:
+			sSoundID = Tokens[1].begin();
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->StopStream( sSoundID );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "stopstream - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** RELEASESTREAM command ** //
+	else if ( strcmp( Tokens[0].c_str(), "releasestream" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: releasestream (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - Alias of stream to be released." );
+			break;
+
+		case 2:
+			sSoundID = Tokens[1].begin();
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->ReleaseStream( sSoundID );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "releasestream - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** PAUSESTREAM command ** //
+	else if ( strcmp( Tokens[0].c_str(), "pausestream" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: pausestream (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - Alias of stream to be paused." );
+			break;
+
+		case 2:
+			sSoundID = Tokens[1].begin();
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->PauseStream( sSoundID );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "pausestream - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** UNPAUSESOUND command ** //
+	else if ( strcmp( Tokens[0].c_str(), "unpausestream" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "SYNTAX: unpausestream (ID)" );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "  (ID) - Alias of stream to be unpaused." );
+			break;
+
+		case 2:
+			sSoundID = Tokens[1].begin();
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->UnpauseStream( sSoundID );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "unpausestream - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+    return OK;
+}
+// ===== End Rob's functions ==== //
+
+
 
 // SAVING THIS; IT'S USEFUL:
 /*

@@ -50,6 +50,10 @@ public:
     int unloadmap();
     int cameratest();
 
+	// === Rob's Functions === //
+    int SoundEffectCommand();
+    int SoundStreamCommand();
+
 protected:
 	std::string deliminators;
 	int ndels;
