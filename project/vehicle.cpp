@@ -34,6 +34,13 @@ void CVehicle::Init()
 	accelerationLC = Vector3f(0.0f, 0.0f, 0.0f);
 	velocityLC = Vector3f(0.0f, 0.0f, 0.0f);
 	positionLC = Vector3f(0.0f, 0.0f, 0.0f);
+	// Initialize angular values;
+	angularAccelerationLC = Vector3f(0.0f, 0.0f, 0.0f);
+	angularVelocityLC = Vector3f(0.0f, 0.0f, 0.0f);
+	rotationLC = Vector3f(0.0f, 0.0f, 0.0f);
+	// Initialize orientation
+	orientationLC = Vector3f(1.0f, 0.0f, 0.0f);
+
 
 	// Calculate the wheelbase, using the distance from the center
 	// of gravity to the front axle (b), and the distance from
@@ -514,9 +521,12 @@ void CVehicle::UpdateVehiclePhysics()
 //--------------------------------------------------------------
 void CVehicle::TransformLocalToWorldSpace()
 {
-	// First transform the vehicle
-	// Apply transformation matrix to the body of the vehicle
-	// Rotate Y(-90), X(90)
+	// Apply the transformation Rotx(90)Roty(-90) to the position of the vehicle
+	m_translate = Vector3f(position.Z()*(-1), position.X(), position.Y()*(-1));
+
+	// 
+
+	
 	
 	// Then transform all 4 tires
 

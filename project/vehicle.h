@@ -57,6 +57,9 @@ public:
 
 	// Set other member variables
 	void SetPositionLC(Vector3f param) { positionLC = param; };
+	
+	// Get other member variables
+	Vector3f GetVehicleOrientationWC() { return orientationWC; };
 
 	// Set methods for the vehicle's input state
 	void SetGas(bool gas) { inputState.gas = gas; };
@@ -154,6 +157,12 @@ private:
 	Vector3f accelerationLC;	// acceleration of the vehicle in local coordinate space
 	Vector3f velocityLC;	// velocity of the vehicle in local coordinate space
 	Vector3f positionLC;	// position of the vehicle in local coordinate space
+
+	Vector3f angularAccelerationLC;	// angular acceleration of the vehicle in local coordinate space;
+	Vector3f angularVelocityLC;		// angular velocity of the vehicle in local coordinate space
+	Vector3f rotationLC;			// rotation of the vehicle in local coordinate space. (X = roll, Y = pitch, Z = yaw)
+
+	Vector3f orientationWC;	// orientation of the vehicle in world coordinates. (vector that tells us which direction the vehicle is facing.)
 
 	tInputState inputState;
 };
