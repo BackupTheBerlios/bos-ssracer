@@ -90,13 +90,9 @@ void CAITask::Update() {
 			// generate a input message for any keys still pressed
 			if (it->second) {
                 // free look camera controls
-                if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
+                //if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
     			    CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(it->first, it->second), RENDER_TASK );
                 //else  // driving controls
-
-				// TEMPORARY SHIT FOR PLAYER VEHICLE TESTING
-				CGameStateManager::GetGameStateManagerPtr()->ProcessInput( new CInputTaskMessage(it->first, it->second) );
-				// #############################################
 			}
 		}
 	}
@@ -173,7 +169,7 @@ void CAITask::HandleInputMessage( CInputTaskMessage *cIMsg ) {
 		}
 
 		// temporary (to be removed when we've got frontend rendering)
-		if (cIMsg->m_keyValue == GAME_ESCAPE)  
+		if (!cIMsg->m_keyDown && cIMsg->m_keyValue == GAME_ESCAPE)  
 			CAppStateManager::GetAppManPtr()->SetAppState(STATE_IN_GAME);
 		break;
 		// end Gib's modification
@@ -242,10 +238,6 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 		}
         else if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
        		CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown), RENDER_TASK );
-
-		// TEMPORARY SHIT FOR PLAYER VEHICLE TESTING
-		CGameStateManager::GetGameStateManagerPtr()->ProcessInput( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown) );
-		// #############################################
 		break;
     }
 
