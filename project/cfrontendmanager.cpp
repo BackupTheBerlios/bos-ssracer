@@ -98,7 +98,7 @@ int CFrontendManager::Transition()
 {
 	int next_screen = m_curScreen->getGotoScreen();
 	// Ramit, uncomment this when you have it implemented
-	//m_curScreen->resetGotoScreen();
+	m_curScreen->resetGotoScreen();
 
 	switch(next_screen) {
 	case MAIN_MENU: 

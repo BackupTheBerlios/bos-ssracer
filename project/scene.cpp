@@ -24,6 +24,7 @@ CScene::CScene()
     //m_vMeshes.clear();
     m_kMeshMap.clear();
     m_vEntities.clear();
+    m_vWaypoints.clear();
     m_kQuadTree = new CQuadTree();
 }
 
@@ -33,6 +34,7 @@ CScene::~CScene()
     //m_vMeshes.clear();
     m_kMeshMap.clear();
     m_vEntities.clear();
+    m_vWaypoints.clear();
     delete m_kQuadTree;
 };
 
@@ -92,6 +94,15 @@ int CScene::ReleaseScene()
 
 	// Clear the vector of entity pointers
 	m_vEntities.clear();
+
+    //Ramit's add to free all waypoints in scene
+    // Free all the Waypoints
+	for(unsigned int j=0;j<m_vWaypoints.size();j++) {
+		FREE(m_vWaypoints[j], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
+	}
+
+	// Clear the vector of entity pointers
+	m_vWaypoints.clear();
 
 	// set player vehicle pointer to NULL
     CGameStateManager::GetGameStateManager().SetPlayerVehicle(NULL);

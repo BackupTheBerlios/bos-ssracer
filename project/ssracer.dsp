@@ -542,7 +542,7 @@ SOURCE=.\copponentai.h
 # End Source File
 # Begin Source File
 
-SOURCE="..\..\Documents and Settings\kkar\Desktop\gibran\ssracer\ssracer\copponentvehicle.h"
+SOURCE=.\copponentvehicle.h
 # End Source File
 # Begin Source File
 
