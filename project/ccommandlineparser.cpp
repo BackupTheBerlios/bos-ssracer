@@ -887,15 +887,15 @@ int CCommandLineParser::LoadVehicleAI()
    
 	//COpponentVehicle * opponent = (COpponentVehicle *)CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
 	opponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetWaypoints());
-;
+
     opponent->initNext();
    
 	COpponentAI::GetOpponentAIPtr()->addCar(opponent);
    
-	
+	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
     //((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
     ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(opponent);
-	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+	
     return OK;
 }
 

@@ -7,6 +7,8 @@
 
 CVehicle * CGameStateManager::m_playerVehicle = NULL;
 CGameStateManager * CGameStateManager::ms_pkGame = NULL;
+//Rams add
+COpponentVehicle * CGameStateManager::m_opponentVehicle = NULL;
 
 CGameStateManager & CGameStateManager::GetGameStateManager()
 {

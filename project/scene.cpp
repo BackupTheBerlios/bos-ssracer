@@ -192,6 +192,12 @@ int CScene::LoadMap(FILE* fp, string* directory, string* filename)
 				if(!LoadEntities(directory, filename)) {
 					return 0;
 				}
+            }
+            //Rams add
+            if(!strcmp(token, "waypoints")) {
+				if(!LoadWaypoints(directory, filename)) {
+					return 0;
+				}
 			}
 
 			// Add more strcmp's here for other file types
@@ -891,7 +897,7 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
     //$$$NOTE then set the active camera to the chase cam -J
 	
     // Set the playerVehicle pointer for the gamestatemanager,
-	//CGameStateManager::GetGameStateManagerPtr()->SetPlayerVehicle(newCar);  //please fix
+	CGameStateManager::GetGameStateManagerPtr()->SetOpponentVehicle(newCar); 
 
 	return 1;
 }

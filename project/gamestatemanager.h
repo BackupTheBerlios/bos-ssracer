@@ -3,6 +3,7 @@
 
 #include "scene.h"
 #include "vehicle.h"
+#include "copponentvehicle.h"
 #include "inputmessage.h"
 
 
@@ -31,6 +32,9 @@ public:
 	void SetPlayerVehicle(CVehicle* param) { m_playerVehicle = param; };
 
 	CVehicle* GetPlayerVehicle() { return m_playerVehicle; };
+    //Ram's Add
+    void SetOpponentVehicle(COpponentVehicle* param) { m_opponentVehicle = param; };
+	COpponentVehicle* GetOpponentVehicle() { return m_opponentVehicle; };
 
 	void ProcessInput(CInputTaskMessage* msg);
 
@@ -44,6 +48,10 @@ protected:
 private:
 	CScene * ms_pkScene;
 	static CVehicle* m_playerVehicle;
+    //Rams add TODO must allow more than one opponent
+    //setup a vector later
+    static COpponentVehicle* m_opponentVehicle;
+
 };
 
 
