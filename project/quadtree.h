@@ -89,7 +89,8 @@ public:
 
     void Initialize( std::vector <CEntity *> * pvEntities = NULL);  // use loaded scene info to create this quadtree
     bool IsInitialized(){ return m_bIsInitialized; };
-    vector <CQuadNode *> * GetVisibleNodesPtr(){ return &m_vpVisibleNodes; };
+    //vector <CQuadNode *> * GetVisibleNodesPtr(){ return &m_vpVisibleNodes; };
+    std::map <Vector3f, CQuadNode *> * GetVisibleNodesPtr(){ return &m_vpVisibleNodes; };
 
     void CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode = m_pkQRoot, bool bTestChildren = true);
     CQuadNode * GetRootNodePtr(){ return m_pkQRoot; };
@@ -99,6 +100,9 @@ private:
 	void AddReference( Vector3f vOrigin, CEntity * pEntity);
     void AddReference( Box3f box, CEntity * pEntity,  CQuadNode * node );
     void AddReference( Box3f box, CEntity * pEntity );
+    
+    int  AddVisibleNode( CQuadNode * pQNode ){ m_vpVisibleNodes[pQNode->m_vOrigin] = pQNode; return 1;};
+
 	static CQuadNode	* m_pkQRoot;
 	int			m_iTraversalCount;
     float       m_fNodeWidth;
@@ -112,7 +116,8 @@ private:
 
 
     std::vector <CQuadNode *> m_vpNodes;         // a vector to manage node pointers
-    std::vector <CQuadNode *> m_vpVisibleNodes;  // all visible nodes in the scene
+    //std::vector <CQuadNode *> m_vpVisibleNodes;  // all visible nodes in the scene
+    std::map <Vector3f, CQuadNode *> m_vpVisibleNodes;  // all visible nodes in the scene
 
 };
 

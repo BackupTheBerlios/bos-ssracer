@@ -111,10 +111,10 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 
 
 	//--- free look camera --- //	
-	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(-5.0f, 0.0f, 0.0f), 
-    			                                   &D3DXVECTOR3( 0.0f, 0.0f, 0.0f) );
+	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
+    			                                   &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
 	// wide FOV and a large frustrum
-	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 50.0f );
+	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000.0f );
 
 
     // defaults to this camera
@@ -362,7 +362,7 @@ bool CRenderer::CheckDevice()
 }
 
 
-
+int iDrawnEnt = 0, iTotalNodeEnt=0;
 //-----------------------------------------------------------------------------
 // Name:  RenderScene()
 // Desc:  draw the scene using information from the game state
@@ -396,10 +396,18 @@ void CRenderer::RenderScene()
         m_kDrawnEntIDs.clear();
 
         // get visible quadtree nodes
+        /*
         vector<CQuadNode *> * pvVisible = CGameStateManager::GetGameStateManager().GetScenePtr()->GetQuadTree()->GetVisibleNodesPtr();
         for (vector<CQuadNode *>::iterator it2 = pvVisible->begin();  it2 != pvVisible->end(); it2++)  {
             DrawQuadTreeNode(*it2);// render this visible nodes contents
         }
+        */
+        iDrawnEnt = iTotalNodeEnt=0;
+        std::map <Vector3f, CQuadNode *> * pvVisible = CGameStateManager::GetGameStateManager().GetScenePtr()->GetQuadTree()->GetVisibleNodesPtr();
+        for (std::map <Vector3f, CQuadNode *>::iterator it2 = pvVisible->begin();  it2 != pvVisible->end(); it2++)  {
+            DrawQuadTreeNode(it2->second);// render this visible nodes contents
+        }
+
     }
     
     else {  //just draw all renderable entities

@@ -489,6 +489,7 @@ void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize, DWORD dwColor)
 */
 
 
+extern int iDrawnEnt, iTotalNodeEnt;
 
 //-----------------------------------------------------------------------------
 // Name:  DrawQuadTreeNode()
@@ -502,18 +503,23 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
         if (!m_kDrawnEntIDs[it->second->GetId()])  {
             DrawEntity(it->second);
             m_kDrawnEntIDs[it->second->GetId()] = true;
+            iDrawnEnt++;
         }
         else {
             #ifdef _DEBUG
             CLog::GetLog().Write(LOG_GAMECONSOLE, "Entity %d %s, is already drawn", it->second->GetId(), it->second->GetName());
             #endif
         }
-
+        iTotalNodeEnt++;       
     }
 
-    if (m_bDrawQNodeBBoxes == true && !pQNode->m_EntMap.empty())
-        DrawBBox(&pQNode->m_BBox, 1.0f, D3DCOLOR_ARGB(150, 50, 200, 50));
+    #ifdef _DEBUG
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 18, "Drew %d of %d entities", iDrawnEnt, iTotalNodeEnt);
+    #endif
 
+    if (m_bDrawQNodeBBoxes == true)// && !pQNode->m_EntMap.empty())
+        DrawBBox(&pQNode->m_BBox, 1.0f, D3DCOLOR_ARGB(150, 50, 200, 50));
+/*
     
     //$$$TEMP THE FOLLOWING DRAWS CHILD NODES EVEN IF EMPTY
     // recursively draw the child nodes
@@ -544,6 +550,6 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
     else {
         DrawQuadTreeNode(pQNode->m_pChildNode[SW]);
     }
-
+*/
     return;
 }

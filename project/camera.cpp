@@ -502,17 +502,17 @@ void CD3DCamera::UpdateCullInfo( CULLINFO* pCullInfo, D3DXMATRIX* pMatView, D3DX
         D3DXVec3TransformCoord( &pCullInfo->vecFrustum[i], &pCullInfo->vecFrustum[i], &mat );
 
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[0], &pCullInfo->vecFrustum[0], 
-        &pCullInfo->vecFrustum[1], &pCullInfo->vecFrustum[2] ); // Near
+                         &pCullInfo->vecFrustum[1], &pCullInfo->vecFrustum[2] ); // Near
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[1], &pCullInfo->vecFrustum[6], 
-        &pCullInfo->vecFrustum[7], &pCullInfo->vecFrustum[5] ); // Far
+                         &pCullInfo->vecFrustum[7], &pCullInfo->vecFrustum[5] ); // Far
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[2], &pCullInfo->vecFrustum[2], 
-        &pCullInfo->vecFrustum[6], &pCullInfo->vecFrustum[4] ); // Left
+                         &pCullInfo->vecFrustum[6], &pCullInfo->vecFrustum[4] ); // Left
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[3], &pCullInfo->vecFrustum[7], 
-        &pCullInfo->vecFrustum[3], &pCullInfo->vecFrustum[5] ); // Right
+                         &pCullInfo->vecFrustum[3], &pCullInfo->vecFrustum[5] ); // Right
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[4], &pCullInfo->vecFrustum[2], 
-        &pCullInfo->vecFrustum[3], &pCullInfo->vecFrustum[6] ); // Top
+                         &pCullInfo->vecFrustum[3], &pCullInfo->vecFrustum[6] ); // Top
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[5], &pCullInfo->vecFrustum[1], 
-        &pCullInfo->vecFrustum[0], &pCullInfo->vecFrustum[4] ); // Bottom
+                         &pCullInfo->vecFrustum[0], &pCullInfo->vecFrustum[4] ); // Bottom
 }
 
 

@@ -57,7 +57,7 @@ CQuadNode::CQuadNode(Vector3f vOrigin, float fHalfWidth) {
     // use diagonal of box to get bounding sphere
     //m_BSphere.Radius() = (Vector3f(max(m_BBox.Extent(0), m_BBox.Extent(2)), 0, max(m_BBox.Extent(0), m_BBox.Extent(2))) 
     //    + Vector3f(min(m_BBox.Extent(0), m_BBox.Extent(2)), 0, min(m_BBox.Extent(0), m_BBox.Extent(2)))).Length()/2.0f; 
-    //m_BSphere.Radius() = fHalfWidth;
+    m_BSphere.Radius() = fHalfWidth;
     //m_BSphere.Radius() = 1.0f;
     
     //Vector3f vBox[8];
@@ -219,10 +219,10 @@ void CQuadTree::Add(CEntity *pEntity)
     }
 
     // Add references for each corner of the bounding box
-  	AddReference( vBox[0], pEntity);  // NE +z +x
-    AddReference( vBox[1], pEntity);  // NW +z -x
-    AddReference( vBox[4], pEntity);  // SE -z +x
-    AddReference( vBox[5], pEntity);  // SW -z -x
+  	//AddReference( vBox[0], pEntity);  // NE +z +x
+    //AddReference( vBox[1], pEntity);  // NW +z -x
+    //AddReference( vBox[4], pEntity);  // SE -z +x
+    //AddReference( vBox[5], pEntity);  // SW -z -x
 
     Box3f tempBox = *pEntity->GetBoundingBox();
     tempBox.Center().Y() = 0.0f;
@@ -362,7 +362,7 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity)  {
 
 
     Vector3f vBoxVerts[8];
-    bool abValid[8] = { 1,1,1,1,1,1,1,1 };//{ 0,0,0,0,0,0,0,0 };
+    bool abValid[8] = { 0,0,0,0,0,0,0,0 };//{ 1,1,1,1,1,1,1,1 };//
 
     for (int i=0; i<m_iLevels; i++)  {
         prev = node;
@@ -579,6 +579,7 @@ int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
 
 			// test this point against the planes
             if( plane[p].WhichSide(vCorner[i]) == Plane3f::POSITIVE_SIDE ) {
+            //if(plane[p][0] * vCorner[i].X() + plane[p][1] * vCorner[i].Y() + plane[p][2] * vCorner[i].Z() + plane[p][3] >= 0) {
                 iPtIn = 0;
 				--iInCount;
 			}
@@ -586,7 +587,7 @@ int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
 
 		// were all the points outside of plane p?
 		if(iInCount == 0)
-			return(OUTSIDE);
+			return(INSIDE);
 
 		// check if they were all on the right side of the plane
 		iTotalIn += iPtIn;
@@ -594,7 +595,7 @@ int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
 
 	// so if iTotalIn is 6, then all are inside the view
 	if(iTotalIn == 6)
-		return(INSIDE);
+		return(OUTSIDE);
 
 	// we must be partly in then otherwise
 	return(INTERSECT);
@@ -606,13 +607,12 @@ int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
 // recursively cull nodes that are not visible to the camera
 void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTestChildren)
 {
-    bool bInt = false;
 	// do we need to check for clipping?
 	//if(bTestChildren) {
         // check if we are inside this node first
         //if(InSphere (pCamera->GetEye(), pNode->m_BSphere) == false) { //== true )  {
-        if(InBox (pCamera->GetEye(), pNode->m_BBox) == false) { //true )  {
-            /*
+        if(InBox (pCamera->GetEye(), pNode->m_BBox) == false )  {
+            
             // check if frustrum constains bounding sphere for node
             switch (FrustumContainsSphere(pCamera, pNode->m_BSphere))  {
 
@@ -620,19 +620,22 @@ void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTes
                     return;
         
                 case INSIDE:  // inside so render this node and it's children
+                    AddVisibleNode( pNode );  
                     bTestChildren = false;
+                    return;
                     break;
 
                 case INTERSECT:  // intersects, so check the AABB
-                    
                     switch( FrustumContainsBox(pCamera, pNode->m_BBox) )  {
-                        case INSIDE:   // inside the AABB, so render
+                    case INSIDE:   // inside the AABB, so render
                             #ifdef _DEBUG
                             //CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "INSIDE AABB");
                             #endif
+                            AddVisibleNode( pNode );  
                             bTestChildren = false;
+                            return;
                             break;
-                        case OUTSIDE:  // outside the AABB, so cull
+                    case OUTSIDE:  // outside the AABB, so cull
                             #ifdef _DEBUG
                             //CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "OUTSIDE AABB");
                             #endif
@@ -648,55 +651,33 @@ void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTes
                 default:
                     assert(0);
             }// end switch (
-            */
-            
-                switch( FrustumContainsBox(pCamera, pNode->m_BBox) )  {
-                    case INSIDE:   // inside the AABB, so render
-                        #ifdef _DEBUG
-                        //CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "INSIDE AABB");
-                        #endif
-                        m_vpVisibleNodes.push_back(pNode);  
-                        bTestChildren = false;
-                        bInt = false;
-                        break;
-                    case OUTSIDE:  // outside the AABB, so cull
-                        #ifdef _DEBUG
-                        //CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "OUTSIDE AABB");
-                        #endif
-                        bInt = false;
-                        return;
-                    case INTERSECT:
-                        bTestChildren = true;  // need to test the children                            
-                        bInt = true;
-                        break;
-                    default:
-                        assert(0);
-                }
+           
 
         }// end if (InSphere ...
         else {
-            bTestChildren = true;  // need to test the children   
-            bInt = true;
+            bTestChildren = true;  // need to test the children since we're in this node 
         }
 	//}// end if (bTestChildren ...
     
 
     // check the children if this node intersects or camera intersects the bounding box for this node
     if (bTestChildren)  {
-        if (pNode->m_pChildNode[NE] )  {
-            CullVisibility( pCamera, pNode->m_pChildNode[NE], true);
-
-        }
-        else{
-            if(bInt == true)  m_vpVisibleNodes.push_back(pNode);  
-        }
 
         if (pNode->m_pChildNode[NW])  {
             CullVisibility( pCamera, pNode->m_pChildNode[NW], true);
 
         }
         else{
-            if(bInt == true)  m_vpVisibleNodes.push_back(pNode);  
+            AddVisibleNode( pNode );  
+            //return;
+        }
+        if (pNode->m_pChildNode[NE] )  {
+            CullVisibility( pCamera, pNode->m_pChildNode[NE], true);
+
+        }
+        else{
+            AddVisibleNode( pNode );
+            //return;
         }
        
         if (pNode->m_pChildNode[SE])  {
@@ -704,7 +685,8 @@ void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTes
 
         }
         else{
-            if(bInt == true)  m_vpVisibleNodes.push_back(pNode);  
+            AddVisibleNode( pNode );
+            //return;
         }
 
         if (pNode->m_pChildNode[SW])  {
@@ -712,7 +694,8 @@ void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTes
 
         }
         else{
-            if(bInt == true)  m_vpVisibleNodes.push_back(pNode);  
+            AddVisibleNode( pNode );
+            //return;
         }
     }
 
