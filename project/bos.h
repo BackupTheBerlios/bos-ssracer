@@ -50,4 +50,5 @@
 #include "resource.h" 
 
 #endif
+/* Chris's changes here */
 //END bos.h ==============================================================
