@@ -1,6 +1,14 @@
 #include "camera.h"
 #include "input.h"
 
+
+// static menbers
+D3DXMATRIX CD3DCamera::m_mView;              // View matrix 
+D3DXMATRIX CD3DCamera::m_mProj;              // Projection matrix
+CULLINFO   CD3DCamera::m_CullInfo;           // frustrum information for this camera
+
+
+
 //-----------------------------------------------------------------------------
 // Name: CD3DCamera
 // Desc: Constructor
@@ -82,6 +90,9 @@ VOID CD3DCamera::SetViewParams( D3DXVECTOR3* pvEyePt, D3DXVECTOR3* pvLookatPt )
     m_fCameraYawAngle   = atan2f( pZBasis->x, pZBasis->z );
     float fLen = sqrtf(pZBasis->z*pZBasis->z + pZBasis->x*pZBasis->x);
     m_fCameraPitchAngle = -atan2f( pZBasis->y, fLen );
+
+    // update frustum information
+    UpdateCullInfo();
 }
 
 
@@ -458,4 +469,44 @@ void CD3DCamera::HandleInputMessages( CInputTaskMessage * pIMsg )
 
     return FALSE;
 	*/
+}
+
+
+//-----------------------------------------------------------------------------
+// Name: UpdateCullInfo()
+// Desc: Sets up the frustum planes, endpoints, and center for the frustum
+//       defined by a given view matrix and projection matrix.  
+// Defaults: this cameras own view and projection matrix
+//-----------------------------------------------------------------------------
+void CD3DCamera::UpdateCullInfo( CULLINFO* pCullInfo, D3DXMATRIX* pMatView, D3DXMATRIX* pMatProj )
+{
+    D3DXMATRIXA16 mat;
+
+    D3DXMatrixMultiply( &mat, pMatView, pMatProj );
+    D3DXMatrixInverse( &mat, NULL, &mat );
+
+    pCullInfo->vecFrustum[0] = D3DXVECTOR3(-1.0f, -1.0f,  0.0f); // xyz
+    pCullInfo->vecFrustum[1] = D3DXVECTOR3( 1.0f, -1.0f,  0.0f); // Xyz
+    pCullInfo->vecFrustum[2] = D3DXVECTOR3(-1.0f,  1.0f,  0.0f); // xYz
+    pCullInfo->vecFrustum[3] = D3DXVECTOR3( 1.0f,  1.0f,  0.0f); // XYz
+    pCullInfo->vecFrustum[4] = D3DXVECTOR3(-1.0f, -1.0f,  1.0f); // xyZ
+    pCullInfo->vecFrustum[5] = D3DXVECTOR3( 1.0f, -1.0f,  1.0f); // XyZ
+    pCullInfo->vecFrustum[6] = D3DXVECTOR3(-1.0f,  1.0f,  1.0f); // xYZ
+    pCullInfo->vecFrustum[7] = D3DXVECTOR3( 1.0f,  1.0f,  1.0f); // XYZ
+
+    for( INT i = 0; i < 8; i++ )
+        D3DXVec3TransformCoord( &pCullInfo->vecFrustum[i], &pCullInfo->vecFrustum[i], &mat );
+
+    D3DXPlaneFromPoints( &pCullInfo->planeFrustum[0], &pCullInfo->vecFrustum[0], 
+        &pCullInfo->vecFrustum[1], &pCullInfo->vecFrustum[2] ); // Near
+    D3DXPlaneFromPoints( &pCullInfo->planeFrustum[1], &pCullInfo->vecFrustum[6], 
+        &pCullInfo->vecFrustum[7], &pCullInfo->vecFrustum[5] ); // Far
+    D3DXPlaneFromPoints( &pCullInfo->planeFrustum[2], &pCullInfo->vecFrustum[2], 
+        &pCullInfo->vecFrustum[6], &pCullInfo->vecFrustum[4] ); // Left
+    D3DXPlaneFromPoints( &pCullInfo->planeFrustum[3], &pCullInfo->vecFrustum[7], 
+        &pCullInfo->vecFrustum[3], &pCullInfo->vecFrustum[5] ); // Right
+    D3DXPlaneFromPoints( &pCullInfo->planeFrustum[4], &pCullInfo->vecFrustum[2], 
+        &pCullInfo->vecFrustum[3], &pCullInfo->vecFrustum[6] ); // Top
+    D3DXPlaneFromPoints( &pCullInfo->planeFrustum[5], &pCullInfo->vecFrustum[1], 
+        &pCullInfo->vecFrustum[0], &pCullInfo->vecFrustum[4] ); // Bottom
 }

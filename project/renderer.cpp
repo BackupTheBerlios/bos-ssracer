@@ -367,14 +367,15 @@ bool CRenderer::CheckDevice()
 //-----------------------------------------------------------------------------
 void CRenderer::RenderScene()
 {
-    InitializeState();
     m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,50,110), 1.0f, 0 );
     //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );//D3DCOLOR_XRGB(0,20,50)
 
+    InitializeState();
 
     // render the skybox first
     DrawSkyBox();
 
+    InitializeState();
 
     //$$$TEMP renders ALL entitites until I get the Octree up    
     ID3DXMatrixStack* pMatrixStack;
@@ -391,7 +392,16 @@ void CRenderer::RenderScene()
 	#endif
 
 
-    //$$$TODO ONLY RENDER VISIBLE OBJECTS
+
+    //$$$TODO 
+
+    // if m_bVisCullingEnabled
+
+    // empty out visible quadtree nodes <-DO THIS IN AI
+    // get visible quadtree nodes
+    // render visible quadtree nodes
+
+    // else just draw all renderable entities
 
     assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
 
@@ -425,7 +435,7 @@ void CRenderer::RenderScene()
 	    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
 
         //actual drawing of the mesh
-        if ( FAILED(hr =  (*it)->GetMesh()->Render(m_pd3dDevice)) )  {
+        if ( FAILED(hr =  (*it)->GetMesh()->Render(m_pd3dDevice, true, true)) )  {
         //if ( FAILED(hr =  m_kMeshMap[(*it)->GetMesh()->m_strName]->Render(m_pd3dDevice)) )  {
 		    #ifdef _DEBUG
 		    CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");

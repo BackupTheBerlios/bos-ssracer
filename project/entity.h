@@ -47,8 +47,10 @@ public:
     int LoadMesh( string strDir );  // load a mesh in a certain directory
     
     // Gib's modification (temporary. Will remove when Chris gets the vehicle vector in the game class implemented)
-	std::string* GetEntityType() {return &m_strEntityType;}
-
+	std::string* GetEntityType() {return &m_strEntityType;};
+    // Rams add for isRenderable
+    bool getIsRenderable() {return isRenderable;};
+    void setIsRenderable(bool r) {isRenderable = r;};
 
 
 protected:
@@ -61,9 +63,14 @@ protected:
 	Box3f m_box;	// Oriented bounding box for the entity
 	Sphere3f m_sphere;	// Bounding sphere for the entity
 
-    	// Gib's modification (temporary. Will remove when Chris gets the vehicle vector in the game class implemented)
+    // Gib's modification (temporary. Will remove when Chris gets the vehicle vector in the game class implemented)
 	std::string m_strEntityType;
+    //Ram's Add for Jay So we can make waypoints invisible
+    bool isRenderable;
 
+    //J
+    bool m_bIsDynamic;  // most objects are static right now except for vehicles, I need this to help update the quadtree
+    
 private:
 
 };

@@ -18,31 +18,29 @@
 
 //#include "macros.h"
 
-#define QUADTREE_LEVELS 4
+#define QUADTREE_DEFAULT_LEVELS 4
+#define QUADTREE_DEFAULT_NODE_WIDTH 25
 
 enum { SW=0, SE, NW, NE };
 
 CQuadTree::CQuadTree() {
     m_pkQRoot = NULL;
+    m_iLevels = QUADTREE_DEFAULT_LEVELS;
+    m_fNodeWidth = QUADTREE_DEFAULT_NODE_WIDTH;
+    m_bIsInitialized = false;
     m_vpNodes.clear();
-    m_iLevels = QUADTREE_LEVELS;
+    Initialize();
 }
 
 CQuadTree::CQuadTree( float fNodeWidth ) 
 {
-    CQuadTree();
+    m_pkQRoot = NULL;
+    m_iLevels = QUADTREE_DEFAULT_LEVELS;
+    m_fNodeWidth = QUADTREE_DEFAULT_NODE_WIDTH;
+    m_bIsInitialized = false;
+    m_vpNodes.clear();
     m_fNodeWidth = fNodeWidth;
-    m_iLevels = QUADTREE_LEVELS;  // min # of levels
-   	
-    // Construct a quadtree of TREE_LEVELS levels deep
-	//traversal_count = 0;
-	m_pkQRoot = new CQuadNode( Vector3f(fNodeWidth/2.0f, fNodeWidth/2.0f, 0), fNodeWidth/2.0f );
-    
-    // save the root node for deletion later
-    m_vpNodes.push_back(m_pkQRoot);
-
-    // compute the initial sub levels of the tree
-	SubDivide(m_pkQRoot, m_iLevels);
+    Initialize();
 }
 
 
@@ -56,19 +54,21 @@ CQuadTree::~CQuadTree()
 
 void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
 {
-/*    m_fNodeWidth = fNodeWidth;
-    m_iLevels = QUADTREE_LEVELS;  // min # of levels
-   	
-    // Construct a quadtree of TREE_LEVELS levels deep
-	//traversal_count = 0;
-	m_pkQRoot = new CQuadNode( Vector3f(fNodeWidth/2.0f, fNodeWidth/2.0f, 0), fNodeWidth/2.0f );
-    
-    // save the root node for deletion later
-    m_vpNodes.push_back(m_pkQRoot);
+    // use default values to create the quadtree centered at the origin
+    if (!pvEntities)  {
 
-    // compute the initial sub levels of the tree
-	SubDivide(m_pkQRoot, m_iLevels);
-*/
+        // Construct a quadtree of m_iLevels levels deep
+	    m_pkQRoot = new CQuadNode( Vector3f(0, 0, 0), m_fNodeWidth/2.0f );
+    
+        // save the root node for deletion later
+        m_vpNodes.push_back(m_pkQRoot);
+
+        // compute the initial sub levels of the tree
+	    SubDivide(m_pkQRoot, m_iLevels);
+
+        m_bIsInitialized = true;
+        return;
+    }
 
     // find min/max extents of the quadtree
     vector <CEntity *>::iterator it = pvEntities->begin();
@@ -113,22 +113,27 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     #endif
 
     // create the quadtree based on these statistics
-    // Construct a quadtree of TREE_LEVELS levels deep
-	//traversal_count = 0;
-	m_pkQRoot = new CQuadNode( Vector3f(m_fNodeWidth/2.0f, m_fNodeWidth/2.0f, 0), m_fNodeWidth/2.0f );
+    m_pkQRoot = new CQuadNode( m_vfMapOrigin, m_fNodeWidth/2.0f );
     
     // save the root node for deletion later
     m_vpNodes.push_back(m_pkQRoot);
 
+    #ifdef _DEBUG
+    CLog::GetLog().Write(LOG_ALL, "Root node origin: %f %f %f", m_pkQRoot->m_vOrigin.X(), m_pkQRoot->m_vOrigin.Y(), m_pkQRoot->m_vOrigin.Z());
+    #endif
+
     // assuming a uniform distribution of entities, try to compute an optimal tree depth
     // want #levels = log(#entities)/log(#subdiv at each level=4)
-    //m_iLevels = (int)Mathf::Ceil((Mathf::Log((float)pvEntities->size()))/(Mathf::Log(4.0f)));
-    m_iLevels = 5;
+    m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) );
+    //m_iLevels = 5;
     CLog::GetLog().Write(LOG_GAMECONSOLE,"Quadtree depth %d", m_iLevels);
 
     // compute the initial sub levels of the tree
 	SubDivide(m_pkQRoot, m_iLevels);
-    
+
+    // quadtree is now initialized
+    m_bIsInitialized = true;
+
     // add renderable game entities to the quadtree
     for (it = pvEntities->begin(); it!=pvEntities->end(); it++)  {
         //$$$TEMP for now, just add all entities
@@ -151,6 +156,13 @@ void CQuadTree::Add(CEntity *pEntity)
 	addReference( gobj->bbox.min.x, gobj->bbox.min.y, gobj );    //
     */
 
+    if(m_bIsInitialized == false) {
+        #ifdef _DEBUG
+        CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "ERROR:  Quadtree::add could not add entity QuadTree not initialized yet");
+        #endif
+        return;
+    }
+
     // for now, use the position of the entity to place in the tree
     AddReference(*pEntity->GetTranslate(), pEntity);
     return;
@@ -162,60 +174,49 @@ void CQuadTree::AddReference( Vector3f vOrigin, CEntity * pEntity )
 {
 	CQuadNode	*node;
 	CQuadNode	*prev;		// to point to parent of node
-	//Tjunc	*ptr;
-	//Tjunc	*list;
-    CQuadNode * ptr;
-    CQuadNode * list;
-	
-	assert( m_iLevels > 1 ); 
 
-	// Search in quadtree
+    assert( m_iLevels > 1 ); 
+
+	// Search in quadtree for the node this entity should be in
 	node = m_pkQRoot;
-	for(int level = m_iLevels; level > 0; level--)
-	{
-		prev = node;
-		if( vOrigin.X() <= node->m_vOrigin.X() && vOrigin.Z() <= node->m_vOrigin.Z() ) 
+
+    //// update the pointers in each node to point to this entity
+    //while (node != NULL) {
+
+    //find lowest node in which this entity will fit
+    for (int i=0; i<m_iLevels; i++)  {
+        prev = node;
+        //node->m_EntMap[pEntity->GetId()] = pEntity;
+        //#ifdef _DEBUG
+        //CLog::GetLog().Write(LOG_MISC, "quadtree:  entity %s ID %d added to node with origin at: %f %f %f", pEntity->GetName(), pEntity->GetId(), node->m_vOrigin.X(), node->m_vOrigin.Y(), node->m_vOrigin.Z());
+        //#endif
+        if( vOrigin.X() <= node->m_vOrigin.X() && vOrigin.Z() <= node->m_vOrigin.Z() ) 
 			node = node->m_pChildNode[SW];
-		else if( vOrigin.X() > node->m_vOrigin.X() && vOrigin.Z() <= node->m_vOrigin.Z() ) 
+        else if( vOrigin.X() > node->m_vOrigin.X() && vOrigin.Z() <= node->m_vOrigin.Z() )
 			node = node->m_pChildNode[SE];
-		else if( vOrigin.X() <= node->m_vOrigin.X() && vOrigin.Z() > node->m_vOrigin.Z() ) 
+        else if( vOrigin.X() <= node->m_vOrigin.X() && vOrigin.Z() > node->m_vOrigin.Z() ) 
 			node = node->m_pChildNode[NW];
 		else 
 			node = node->m_pChildNode[NE];
-	}
+    }
 
-	// We're below the last level of the tree now, the pointer points to a 
-	// linked list of Tjunc elements.
-	// cast the node pointer to a Tjunc pointer so we can search
-	// the linked list
-	//list = (Tjunc*) node;		
-    list = node;
-	
-	// First check if the game object is already in the linked list
-	ptr = list;
-    
-	while (ptr != NULL)
-	{
-		//if(ptr->gameObject->id == gobj->id )	// found it
-        if(ptr->m_EntMap[pEntity->GetId()] != NULL)
-			return;		// it's already in the list, do nothing!
-		ptr = ptr->m_pNextNode;
-	}
+    // check if its already there
+    if (prev->m_EntMap[pEntity->GetId()] != pEntity)  {
+        #ifdef _DEBUG
+        CLog::GetLog().Write(LOG_MISC, "quadtree:  entity %s ID %d added to node with origin at: %f %f %f", pEntity->GetName(), pEntity->GetId(), prev->m_vOrigin.X(), prev->m_vOrigin.Y(), prev->m_vOrigin.Z());
+        #endif
+        prev->m_EntMap[pEntity->GetId()] = pEntity;
+    }
+    else {
+        #ifdef _DEBUG 
+        CLog::GetLog().Write(LOG_MISC, "quadtree:  entity %s ID %d IS ALREADY IN node with origin at: %f %f %f", pEntity->GetName(), pEntity->GetId(), prev->m_vOrigin.X(), prev->m_vOrigin.Y(), prev->m_vOrigin.Z());
+        #endif
+        return;
+    }
 
-	// Add new item to head of the list
-	//list = new Tjunc( gobj, list );
-    list = new CQuadNode( pEntity, list );
-
-	// And hang the list in the tree
-
-	if( vOrigin.X() <= prev->m_vOrigin.X() && vOrigin.Z() <= prev->m_vOrigin.Z() ) 
-		prev->m_pChildNode[SW] = list;
-	else if( vOrigin.X() > prev->m_vOrigin.X() && vOrigin.Z() <= prev->m_vOrigin.Z() ) 
-		prev->m_pChildNode[SE] = list;
-	else if( vOrigin.X() <= prev->m_vOrigin.X() && vOrigin.Z() > prev->m_vOrigin.Z() ) 
-		prev->m_pChildNode[NW] = list;
-	else 
-		prev->m_pChildNode[NE] = list;
+    #ifdef _DEBUG //spacer for log entry
+    CLog::GetLog().Write(LOG_MISC, "\n\n\n");
+    #endif
 
     return;
 }
@@ -227,7 +228,7 @@ void CQuadTree::ClearQuadTree()
     for (vector <CQuadNode *>::iterator it = m_vpNodes.begin(); it!=m_vpNodes.end(); it++)
         delete (*it);
     m_vpNodes.clear();
-
+    m_bIsInitialized = false;
 }
 
 void CQuadTree::SubDivide( CQuadNode * pQNode, int iLevel )
@@ -252,6 +253,13 @@ void CQuadTree::SubDivide( CQuadNode * pQNode, int iLevel )
     m_vpNodes.push_back(pQNode->m_pChildNode[SE]);
     m_vpNodes.push_back(pQNode->m_pChildNode[NW]);
     m_vpNodes.push_back(pQNode->m_pChildNode[NE]);
+
+    #ifdef _DEBUG
+    CLog::GetLog().Write(LOG_MISC, "NE node origin: %f %f %f", pQNode->m_pChildNode[NE]->m_vOrigin.X(), pQNode->m_pChildNode[NE]->m_vOrigin.Y(), pQNode->m_pChildNode[NE]->m_vOrigin.Z());
+    CLog::GetLog().Write(LOG_MISC, "NW node origin: %f %f %f", pQNode->m_pChildNode[NW]->m_vOrigin.X(), pQNode->m_pChildNode[NW]->m_vOrigin.Y(), pQNode->m_pChildNode[NW]->m_vOrigin.Z());
+    CLog::GetLog().Write(LOG_MISC, "SE node origin: %f %f %f", pQNode->m_pChildNode[SE]->m_vOrigin.X(), pQNode->m_pChildNode[SE]->m_vOrigin.Y(), pQNode->m_pChildNode[SE]->m_vOrigin.Z());
+    CLog::GetLog().Write(LOG_MISC, "SW node origin: %f %f %f", pQNode->m_pChildNode[SW]->m_vOrigin.X(), pQNode->m_pChildNode[SW]->m_vOrigin.Y(), pQNode->m_pChildNode[SW]->m_vOrigin.Z());
+    #endif
 
 	SubDivide(pQNode->m_pChildNode[SW], iLevel-1);
 	SubDivide(pQNode->m_pChildNode[SE], iLevel-1);

@@ -174,6 +174,11 @@ VOID CCameraFreeLook::FrameMove( FLOAT fElapsedTime )
     D3DXMatrixLookAtLH( &m_mView, &m_vEye, &m_vLookAt, &vWorldUp );
 
     //D3DXMatrixInverse( &m_mCameraWorld, NULL, &m_mView );
+
+    // update frustum information
+    UpdateCullInfo();
+
+
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 0, " Camera Position %f %f %f", m_vEye.x, m_vEye.y, m_vEye.z);
     #endif

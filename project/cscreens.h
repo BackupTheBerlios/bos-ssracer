@@ -29,10 +29,11 @@ class CScreen
 public:
   virtual void draw()=0;
   virtual void processInput(int key)=0;
-  int getGotoScreen(){return gotoScreen;}
+  int getGotoScreen(){return gotoScreen;};
+  void resetGotoScreen(){gotoScreen=0;};
   //not much else in base class for now
-  CScreen(){gotoScreen=0; maxScreeni = 1000; selectedScreeni =0;}
-  ~CScreen(){}
+  CScreen(){gotoScreen=0; maxScreeni = 1000; selectedScreeni =0;};
+  ~CScreen(){};
 
 protected:
   //CWidget * selectedWidget;

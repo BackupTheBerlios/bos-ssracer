@@ -30,7 +30,7 @@ typedef struct ___X___ {
 class CVehicle : public CEntity {
 
 public:
-	CVehicle() { for(int i=0;i<4;i++) { tires[i] = new CTire(); } dynamicFriction = false; };
+    CVehicle() : CEntity() { for(int i=0;i<4;i++) { tires[i] = new CTire(); } dynamicFriction = false; m_bIsDynamic = true;};
 	~CVehicle() {};
 	void Init();
 	void UpdateVehiclePhysics();

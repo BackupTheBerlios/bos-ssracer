@@ -16,7 +16,7 @@
 
 #ifndef DIRECT3D_VERSION
 #define DIRECT3D_VERSION         0x0900
-#endif  //DIRECT3D_VERSION   
+#endif     
 
 #ifndef DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION      0x0800
@@ -26,9 +26,7 @@
 #define DIRECTSOUND_VERSION      0x0900
 #endif
 
-#define BOSAPPVERSION "BETA 3.0"
-
-#define TEMP 888
+#define BOSAPPVERSION "BETA 4.0"
 
 /*
  * Disable following warnings when including Windows headers
@@ -50,5 +48,4 @@
 #include "resource.h" 
 
 #endif
-/* Chris's changes here */
 //END bos.h ==============================================================

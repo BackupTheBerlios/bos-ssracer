@@ -19,6 +19,7 @@
 #include "stl.h"
 
 #include "wmlvector3.h"
+#include "wmlbox3.h"
 using namespace Wml;
 
 #include "entity.h"
@@ -48,38 +49,26 @@ public:
 	Vector3f	m_vOrigin;
 	float		m_fHalfWidth;
 	CQuadNode * m_pChildNode[4];
+
     // map of entities within this quad indexed by ID
     std::map <int , CEntity *> m_EntMap; 
 
+    Box3f m_BBox;  //bounding box for this node
+    
     CQuadNode(Vector3f vOrigin, float fHalfWidth) {
         m_vOrigin = vOrigin;
         m_fHalfWidth = fHalfWidth;
         for (int i=0; i<4; i++)  m_pChildNode[i] = NULL;
         m_EntMap.clear();
-        m_pNextNode = NULL;
+        m_BBox.Center() = vOrigin;
+        m_BBox.Extent(0) = m_BBox.Extent(1) = m_BBox.Extent(2) = fHalfWidth;
+        m_BBox.Axis(0) = Vector3f(1,0,0);  // axis aligned
+        m_BBox.Axis(1) = Vector3f(0,1,0);
+        m_BBox.Axis(2) = Vector3f(0,0,1);
     };
 
-    CQuadNode( CEntity * pEntity, CQuadNode * pQNode )  {
-        m_EntMap[pEntity->GetId()] = pEntity;
-        m_pNextNode = pQNode;
-    };
-
-    CQuadNode * m_pNextNode;
+    
 };
-
-
-
-/*// Tjunc - a node from which to create linked lists pointing to game objects
-class Tjunc
-{
-public:
-	int			magic;			// TEMP
-	GameObject	*gameObject;
-	Tjunc		*next;
-
-	Tjunc( GameObject *g, Tjunc *n);
-};
-*/
 
 
 
@@ -95,13 +84,17 @@ public:
     CQuadTree();
     ~CQuadTree();
 
+    void Update(){};  //update the quadtree to account for movement of dynamic entities
+
 	void Add( CEntity * pEntity );
 	void Render( void );
     void ClearQuadTree();
+    
     int GetNumLevels(){ return m_iLevels;};
     int GetNumNodes(){ return m_vpNodes.size();};
 
-    void Initialize( std::vector <CEntity *> * pvEntities );  // use loaded scene info to create this quadtree
+    void Initialize( std::vector <CEntity *> * pvEntities = NULL);  // use loaded scene info to create this quadtree
+    bool IsInitialized(){ return m_bIsInitialized; };
 
 private:
 	void SubDivide( CQuadNode * pQNode, int iLevel );
@@ -111,6 +104,7 @@ private:
 	int			m_iTraversalCount;
     float       m_fNodeWidth;
     int         m_iLevels;
+    bool        m_bIsInitialized;
 
     // scene stats used to construct the quadtree properly
     Vector3f m_vfMaxExtent;  // max xyz of all entities

@@ -11,6 +11,19 @@
 //class CObject;
 class CPlayerVehicle;
 
+
+//-----------------------------------------------------------------------------
+// Name: struct CULLINFO
+// Desc: Stores information that will be used when culling objects.  It needs
+//       to be recomputed whenever the view matrix or projection matrix changes.
+//-----------------------------------------------------------------------------
+struct CULLINFO
+{
+    D3DXVECTOR3 vecFrustum[8];    // corners of the view frustum
+    D3DXPLANE planeFrustum[6];    // planes of the view frustum
+};
+
+
 //-----------------------------------------------------------------------------
 // Name: enum D3DUtil_CameraKeys 
 // Desc: used by CCamera to map WM_KEYDOWN keys
@@ -79,20 +92,24 @@ public:
     // Functions to get state
     D3DXMATRIX*  GetViewMatrix()            { return &m_mView; }
     D3DXMATRIX*  GetProjMatrix()            { return &m_mProj; }
+    CULLINFO*    GetCullInfo()              { return &m_CullInfo; }
     bool IsBeingDragged() { return (m_bMouseLButtonDown || m_bMouseMButtonDown || m_bMouseRButtonDown); }
     bool IsMouseLButtonDown() { return m_bMouseLButtonDown; } 
     bool IsMouseMButtonDown() { return m_bMouseMButtonDown; } 
     bool IsMouseRButtonDown() { return m_bMouseRButtonDown; } 
 
+
+    // camera update functions
     virtual void Update(){ /* does nothing */};
 	virtual void Update( int iInput, bool bState ) { /* does nothing */};
+
+    // updates frustum information for a view and projection matrix
+    // defaults to matrices used by this camera
+    void UpdateCullInfo(CULLINFO* pCullInfo = &m_CullInfo, D3DXMATRIX* pMatView = &m_mView, D3DXMATRIX* pMatProj = &m_mProj);
 
     D3DXVECTOR3 * GetEyePtr() { return &m_vEye; };
     D3DXVECTOR3 * GetLookAtPtr() { return &m_vLookAt; };
     D3DXVECTOR3 * GetVelocityPtr() { return &m_vVelocity; };
-
-	//void SetObject( CPlayerVehicle * pkObject ){ m_pkObject = pkObject; }
-	//CPlayerVehicle * GetObject(){ return m_pkObject; }
 
 protected:
     // Functions to map an input key to a D3DUtil_CameraKeys enum
@@ -104,8 +121,9 @@ protected:
     void UpdateMouseDelta( float fElapsedTime );
     void UpdateVelocity( float fElapsedTime );
 
-    D3DXMATRIX            m_mView;              // View matrix 
-    D3DXMATRIX            m_mProj;              // Projection matrix
+    static D3DXMATRIX            m_mView;         // View matrix 
+    static D3DXMATRIX            m_mProj;         // Projection matrix
+    static CULLINFO              m_CullInfo;      // frustrum information for this camera
 
     BYTE                  m_aKeys[CAM_MAX_KEYS];  // State of input - KEY_WAS_DOWN_MASK|KEY_IS_DOWN_MASK
     POINT                 m_ptLastMousePosition;  // Last absolute postion of mouse cursor
@@ -148,8 +166,6 @@ protected:
     D3DXVECTOR3           m_vMaxBoundary;         // Max point in clip boundary
 
     bool                  m_bResetCursorAfterMove;// If true, the class will reset the cursor position so that the cursor always has space to move 
-
-	//CPlayerVehicle * m_pkObject; // pointer to game object/entity this camera should track 
 
 private:
 

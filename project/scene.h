@@ -5,10 +5,12 @@
 #include "stl.h"
 
 #include "entity.h"
+#include "cwaypoint.h"
 #include "ccommandlineparser.h"
 #include "quadtree.h"
 
 class CAITask;  //forward declaration
+
 
 class CScene {
 
@@ -27,12 +29,15 @@ public:
 	//int LoadScene(string* directory, string* filename);		// Load a new scene
 	int LoadPlayerVehicle(string* directory, string* filename);		// Load a new player vehicle (.car file)
 	int LoadEntity(string* directory, string* filename);	// Load an entity and add it to the current scene
-    //Ram's Addition
+    //Ram's Additions
 	int LoadOpponentVehicle(string* directory, string* filename);
-
-
+    int LoadWaypoints(string* directory, string* filename);
+    int LoadWaypoint(CWaypoint* waypoint){m_vWaypoints.push_back(waypoint); return 1;}; //Temp just for my own testing
     //$$$TEMP this is just to get access too the entities for now.
     vector<CEntity*> * TEMPGetEntities() { return &m_vEntities; };
+    
+    //Ramits Add
+    vector<CWaypoint*> * GetWaypoints() { return &m_vWaypoints; };
 
     // misc get functions
     int GetNumEntities() { return m_vEntities.size(); };
@@ -46,6 +51,8 @@ protected:
     static std::map< std::string, CD3DMesh * >   m_kMeshMap;    // meshes in the current scene
 	static vector<CEntity*>                      m_vEntities;	// Vector containing all entities in the scene
     CQuadTree *                                  m_kQuadTree;	// quadtree for visibility culling
+    //Ram's Add to hold me Waypoints
+    static vector<CWaypoint*>                    m_vWaypoints;	// Vector containing all waypoints in the scene
 
 private:
 

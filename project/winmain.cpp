@@ -31,6 +31,7 @@
 //-----------------------------------------------------------------------------
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT )
 {
+    #ifdef _DEBUG
     // initialize logging utility and enable logging
     if(!CLog::GetLog().Init())  {
         #ifdef WIN32
@@ -39,6 +40,7 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT )
         cerr<<"ERROR: log could not be initialized"<<endl;
         #endif
     }
+    #endif
 
   	// Ask the user whether or not they want to run in fullscreen
     bool bFullscreen;

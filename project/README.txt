@@ -1,23 +1,39 @@
 Super Street Racer
-BETA 3.0 Release Documentation -- Readme.txt
+BETA 4.0 Release Documentation -- Readme.txt
 https://developer.berlios.de/projects/bos-ssracer/
 
-
-BETA 3.0 *********** CURRENT VERSION PLEASE FILL THIS IN **************
+BETA 4.0 *********** CURRENT VERSION PLEASE FILL THIS IN **************
 --------
 [DD.MM.2004]
 
+Added basic opponent AI
+Added playlist functionality
+Added sound management
+Changed Entity management
+
+Bug Fixes:
+- skybox rendering no longer clobbers render states
+
+Known Bugs:
+
+
+BETA 3.0 
+--------
+[20.3.2004]
+
 Changes / Additions :
 Added LOG_DEBUGOVERLAY
-Added loadmap console command
-Added unloadmap console command
-Added loadmeshtest console command
+Added various console commands
+Added SkyBox
+Changed  Mesh Management
+Added Front-end framework
 
 Bug Fixes:
 - no longer crashes if no gamepad connected
 
 Known Bugs: 
 - older gamepads keep sending input to console
+- misc bugs in release mode
 
 
 BETA 2.0

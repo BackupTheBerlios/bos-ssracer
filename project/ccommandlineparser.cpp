@@ -767,9 +767,6 @@ int CCommandLineParser::LoadVehicleAI()
 	string carName = "mitsuEclipse.car";
 	string sDir, sName;
 
-    //Set Chase Cam to see where we're at
-    //for some reason it dont chase so well
-    //CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
 	//straight copy from Jays loadmeshtest to get 2 pylons up yay.
 	sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\pylon\\";
     sName = "pylon";
@@ -818,11 +815,15 @@ int CCommandLineParser::LoadVehicleAI()
 	waypoint3->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
     waypoint3->m_isLastWay = true;
 	
-	std::vector<CWaypoint *> * waypointVec = new std::vector<CWaypoint*>();
-	waypointVec->push_back(waypoint1);
+	//std::vector<CWaypoint *> * waypointVec = new std::vector<CWaypoint*>();
+	CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadWaypoint(waypoint1);
+    CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadWaypoint(waypoint2);
+    CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadWaypoint(waypoint3);
+   
+    /* waypointVec->push_back(waypoint1);
 	waypointVec->push_back(waypoint2);
     waypointVec->push_back(waypoint3);
-
+*/
 
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&carDir, &carName))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The Opponent Vehicle is not loaded correctly!");
@@ -830,7 +831,7 @@ int CCommandLineParser::LoadVehicleAI()
 	}
 	
 	COpponentVehicle * opponent = (COpponentVehicle *)CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
-	opponent->setWPSequence(waypointVec);
+	opponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetWaypoints());
 	opponent->initNext();
 	COpponentAI::GetOpponentAIPtr()->addCar(opponent);
 	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);

@@ -94,8 +94,8 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "ssracer___Win32_Debug_Release"
-# PROP Intermediate_Dir "ssracer___Win32_Debug_Release"
+# PROP Output_Dir "Debug_Release"
+# PROP Intermediate_Dir "Debug_Release"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W4 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D _WIN32_WINNT=0x0501 /D "WML_IMPORT_DLL" /YX /FD /c
@@ -110,8 +110,8 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 WildMagic2.lib Kernel32.lib d3dx9dt.lib dsound.lib dinput8.lib dxerr9.lib d3d9.lib d3dxof.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /machine:I386 /nodefaultlib:"MSVCRTD.LIB"
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 WildMagic2.lib Kernel32.lib d3dx9dt.lib dsound.lib dinput8.lib dxerr9.lib d3d9.lib d3dxof.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"MSVCRTD.LIB"
-# SUBTRACT LINK32 /pdb:none /incremental:yes
+# ADD LINK32 WildMagic2.lib Kernel32.lib d3dx9dt.lib dsound.lib dinput8.lib dxerr9.lib d3d9.lib d3dxof.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /debug /machine:I386 /nodefaultlib:"MSVCRTD.LIB" /pdbtype:sept
+# SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
 

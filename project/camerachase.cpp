@@ -111,12 +111,18 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
 
     D3DXVECTOR3 vPosDelta;
     vPosDelta = m_vVelocity * fElapsedTime;  //$$$TEMP once velocity in WC is updated try the following instead
-    /*
+    
+    
     Vector3f vVel = m_pkVehicle->GetVehicleVelocityWC();
-    vVel.Normalize();
-    vVel *= 0.1f;
-    vPosDelta = D3DXVECTOR3(vVel.X(), vVel.Y(), vVel.Z()) * fElapsedTime;
-    */
+    //vVel.Normalize();
+    //vPosDelta = D3DXVECTOR3(vVel.Z(), vVel.Y(), vVel.X()) * fElapsedTime;
+    
+
+    #ifdef _DEBUG
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 6, "car velWC: %f %f %f", vVel.X(), vVel.Y(), vVel.Z());
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 5, "pos Delta: %f %f %f", vPosDelta.x, vPosDelta.y, vPosDelta.z);
+    #endif
+
 
     //vPosDelta = D3DXVECTOR3(vTemp.Z(), 0.0f, vTemp.X()) * fElapsedTime;//m_vVelocity * fElapsedTime;
 
@@ -138,8 +144,9 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     D3DXVECTOR3 vWorldUp, vWorldAhead;
     D3DXVECTOR3 vLocalUp  = D3DXVECTOR3(0,1,0);
     // get the camera's local ahead vector based on the vehicles heading and velocity
-    // if velocity == 0 use heading
-    Vector3f vHeading = m_pkVehicle->GetVehicleHeadingWC();
+    Vector3f vHeading = m_pkVehicle->GetVehicleVelocityWC();
+    if (vHeading.Length() < 0.01f)  // if velocity is small use heading
+        vHeading = m_pkVehicle->GetVehicleHeadingWC();
 
     vHeading.Normalize();
     D3DXVECTOR3 vLocalAhead = D3DXVECTOR3(vHeading.X(), vHeading.Y(), vHeading.Z());
@@ -178,6 +185,8 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
 
     //SetViewParams( &m_vEye, &m_vLookAt);//, D3DXVECTOR3(0.0f,1.0f,0.0f));
 
+    // update frustum information
+    UpdateCullInfo();
 
 
 
