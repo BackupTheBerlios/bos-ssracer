@@ -95,7 +95,7 @@ int COpponentVehicle::setWPSequence(std::vector<CWaypoint*>* WPSeq)
 	return OK;
 }
 
-bool COpponentVehicle::reachedHeadingTarget()
+/*bool COpponentVehicle::reachedHeadingTarget()
 {
 	if (GetLTurn() && GetRTurn()) return true;
 
@@ -129,11 +129,12 @@ bool COpponentVehicle::reachedHeadingTarget()
     else return false;
 	// Note: assuming that if neither lturn or rturn = true, 
 	// target heading already reached.
-}
+}*/
 
-//Rams attempt at affecting steering directly
+//Rams Ai hitting steering direct
 void COpponentVehicle::InterpolateSteeringAngle(float deltaT)
 {
+    //Override of Chris's Interpolate Steering from vehicle.cpp
 	// Based on the ai input, we will interpolate
 	// the front tires' rotation about the local Z axis.
 	// We don't want the wheels to turn instantaneously from
@@ -142,84 +143,33 @@ void COpponentVehicle::InterpolateSteeringAngle(float deltaT)
 
 	// Positive rotation, rotates counterclockwise around the Z axis.
 	// Negative rotation, rotates clockwise around the Z axis.
-float angle = getHeadingAngle();
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 115, "HEAD ANGLE: %f",angle);
-
+    float angle = getHeadingAngle();
+   
     float pi = 3.14159;
-    //float newSteerAngle;
     float speedScalar = 1 - velocityLC.X() / 60.0f;
-float maxTurnAngle = (MAX_STEER_ANGLE_RADS - MIN_STEER_ANGLE_RADS) * speedScalar + MIN_STEER_ANGLE_RADS; 
-	//float vehicleMaxSpeed = 60.0f;
-
+    float maxTurnAngle = (MAX_STEER_ANGLE_RADS - MIN_STEER_ANGLE_RADS) * speedScalar + MIN_STEER_ANGLE_RADS; 
+	
 	
 if(inputState.lturn)
 {
-    CLog::GetLog().Write(LOG_MISC, "When Left: %f",angle);
-if(angle > maxTurnAngle) {
+  if(angle > maxTurnAngle) {
 			steerAngleRADS = maxTurnAngle;
-             CLog::GetLog().Write(LOG_DEBUGOVERLAY, 118, "MAX LEFT HIT!");
-            //SetBrake(true);
+             //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 118, "MAX LEFT HIT!");
 		}
-		else {
-          CLog::GetLog().Write(LOG_DEBUGOVERLAY, 118, "NO MAX");
+  else {
+          //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 118, "NO MAX");
 			steerAngleRADS = angle;
 		}
 }
 else if(inputState.rturn)
 {
-    CLog::GetLog().Write(LOG_MISC, "When Right: %f",angle);
+  
   if(angle < (maxTurnAngle * -1.0f)) {
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 118, "MAX RIGHT HIT!");
+  //  CLog::GetLog().Write(LOG_DEBUGOVERLAY, 118, "MAX RIGHT HIT!");
 			steerAngleRADS = maxTurnAngle * (-1.0f);
 		}
 		else {
 			steerAngleRADS = angle *-1;
 		}
-} //((2*pi)-angle)*-1;
-    
-	/*
-
-	// Interpolate the wheels to steer left ( +Z rotation )
-	if(inputState.lturn) {
-		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * maxTurnAngle + steerAngleRADS;
-		if(newSteerAngle > maxTurnAngle) {
-			steerAngleRADS = maxTurnAngle;
-		}
-		else {
-			steerAngleRADS = newSteerAngle;
-		}
-	}
-	// Interpolate the wheels to steer right ( -Z rotation )
-	else if(inputState.rturn) {
-		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * maxTurnAngle * -1.0f + steerAngleRADS;
-		if(newSteerAngle < (maxTurnAngle * -1.0f)) {
-			steerAngleRADS = maxTurnAngle * (-1.0f);
-		}
-		else {
-			steerAngleRADS = newSteerAngle;
-		}
-	}
-	// Interpolate the wheels back to 0
-	else {	// Right Button nor Left Button is pressed
-		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * maxTurnAngle;
-
-		if(steerAngleRADS >= 0.0f) {
-			if((steerAngleRADS - newSteerAngle) >= 0.0f) {
-				steerAngleRADS -= newSteerAngle;
-			}
-			else {
-				steerAngleRADS = 0.0f;
-			}
-		}
-		else if(steerAngleRADS < 0.0f) {
-			if((steerAngleRADS + newSteerAngle) < 0.0f) {
-				steerAngleRADS += newSteerAngle;
-			}
-			else {
-				steerAngleRADS = 0.0f;
-			}
-		}
-	}*/
-
-	//CLog::GetLog().Write(LOG_GAMECONSOLE, "SteerAngle: %f", steerAngleRADS);
+  } 
 }

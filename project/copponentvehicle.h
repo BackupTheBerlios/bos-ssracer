@@ -26,7 +26,7 @@ public:
 	int incNext();
 	int decNext();
 	int initNext() {m_Next = m_vWPSequence[0].begin(); return OK;}
-	bool reachedHeadingTarget();
+	//bool reachedHeadingTarget();
 
 	//std::vector<CWaypoint*>* WPSequence() {return &m_vWPSequence;}
 	CWaypoint* Next() {return *m_Next;}
@@ -43,14 +43,14 @@ public:
     bool raceOver;
     int getAILevel(){return m_aiLevel;};
     void setAILevel(int lev){m_aiLevel = lev;}; 
-    double headingAngle;
-    double getHeadingAngle(){return headingAngle;};
-    void setHeadingAngle(double ha){headingAngle = ha;}; 
+  
+    double getHeadingAngle(){return m_headingAngle;};
+    void setHeadingAngle(double ha){m_headingAngle = ha;}; 
 protected:
   std::vector<CWaypoint*> m_vWPSequence[4];
     //ShortCut Vectors
     //std::vector<CWaypoint*> m_vWPShort1;
-
+    double m_headingAngle;
 	std::vector<CWaypoint*>::iterator m_Next;
 	Vector3f m_vHeadingTargetWC;
 	Vector3f m_vVelocityTargetWC;
