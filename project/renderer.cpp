@@ -245,7 +245,7 @@ HRESULT CRenderer::Initialize()
     d3dLight.Specular.b = 1.0f;
 
     d3dLight.Position.x = 0.0f;
-    d3dLight.Position.y = 1000.0f;
+    d3dLight.Position.y = 500.0f;
     d3dLight.Position.z = -10.0f;//-100.0f;
 
     d3dLight.Attenuation0 = 1.0f; 
