@@ -212,6 +212,10 @@ SOURCE=.\copponentai.cpp
 # End Source File
 # Begin Source File
 
+SOURCE="..\..\Documents and Settings\kkar\Desktop\gibran\ssracer\ssracer\copponentvehicle.cpp"
+# End Source File
+# Begin Source File
+
 SOURCE=.\cwaypoint.cpp
 # End Source File
 # End Group
@@ -483,6 +487,10 @@ SOURCE=.\scene.h
 # Begin Source File
 
 SOURCE=.\copponentai.h
+# End Source File
+# Begin Source File
+
+SOURCE="..\..\Documents and Settings\kkar\Desktop\gibran\ssracer\ssracer\copponentvehicle.h"
 # End Source File
 # Begin Source File
 

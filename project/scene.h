@@ -22,6 +22,9 @@ public:
 	//int LoadScene(string* directory, string* filename);		// Load a new scene
 	int LoadPlayerVehicle(string* directory, string* filename);		// Load a new player vehicle (.car file)
 	int LoadEntity(string* directory, string* filename);	// Load an entity and add it to the current scene
+    //Ram's Addition
+	int LoadOpponentVehicle(string* directory, string* filename);
+
 
     //$$$TEMP this is just to get access too the entities for now.
     vector<CEntity*> * TEMPGetEntities() { return &m_vEntities; };

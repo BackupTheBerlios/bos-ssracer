@@ -4,7 +4,7 @@
 #define STL_USING_ALL
 #include "stl.h"
 #include "task.h"
-#include "vehicle.h"
+#include "copponentvehicle.h"
 #include "cwaypoint.h"
 #include "macros.h"
 
@@ -22,11 +22,13 @@ public:
 	static COpponentAI * GetOpponentAIPtr() {return m_pkOpponentAI;}
 
 	int createNCars(int n);
-	int addCar(CVehicle* Car);
+	int addCar(COpponentVehicle* Car);
 	int addCar(std::string dir, std::string file);
 	int removeCar(int i);
-	bool isAtWaypoint(CVehicle* Car);
-	int setDirection(CVehicle* Car);
+	bool isAtWaypoint(COpponentVehicle* Car);
+	int setDirection(COpponentVehicle* Car);
+	// This function is F**KED!!! Use the one in COpponentVehicle
+	bool reachedHeadingTarget(std::vector<COpponentVehicle*>::iterator thisCar);
 
 	// inherited virtual functions
 	bool Start();
@@ -35,16 +37,16 @@ public:
 	//void OnResume();
 	//void Stop();
 
-	std::vector<CVehicle*>* Cars() {return &m_pCars;}
+	std::vector<COpponentVehicle*>* Cars() {return &m_pCars;}
 	std::vector<CWaypoint*>* Waypoints() {return &m_pWaypoints;}
-	int setCars(std::vector<CVehicle*> Cars);
+	int setCars(std::vector<COpponentVehicle*> Cars);
 	int setWaypoints(std::vector<CWaypoint*> Waypoints);
 
 protected:
 	// inherited virtual function
 	void DoMessageHandle(ITaskMessage* cMsg);
 
-	std::vector<CVehicle*> m_pCars;
+	std::vector<COpponentVehicle*> m_pCars;
 	std::vector<CWaypoint*> m_pWaypoints;
 	
 private:

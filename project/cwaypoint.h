@@ -8,7 +8,7 @@
 #include "macros.h"
 
 #define WP_NEIGHBOR_SIZE 10
-#define WP_RADIUS 50.0f // idunno
+#define WP_RADIUS 5.0f // idunno
 
 using namespace Wml;
 

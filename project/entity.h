@@ -45,6 +45,11 @@ public:
 
 	int LoadMesh();		// Load the mesh specified by m_strName, append .x to the variable
     int LoadMesh( string strDir );  // load a mesh in a certain directory
+    
+    // Gib's modification (temporary. Will remove when Chris gets the vehicle vector in the game class implemented)
+	std::string* GetEntityType() {return &m_strEntityType;}
+
+
 
 protected:
 	CD3DMesh* m_pMesh;	// Mesh data structure
@@ -55,6 +60,9 @@ protected:
 
 	Box3f m_box;	// Oriented bounding box for the entity
 	Sphere3f m_sphere;	// Bounding sphere for the entity
+
+    	// Gib's modification (temporary. Will remove when Chris gets the vehicle vector in the game class implemented)
+	std::string m_strEntityType;
 
 private:
 

@@ -13,6 +13,10 @@
 #include "gamestatemanager.h"
 #include "renderer.h"
 #include "settings.h"
+#include "cwaypoint.h"
+#include "copponentvehicle.h"
+#include "copponentai.h"
+
 
 // TO ADD COMMANDS AND FUNCTIONS, SEE initKeywords()
 
@@ -618,18 +622,65 @@ int CCommandLineParser::cameratest()
 // ===== Begin Ram & Gib Functions ==== //
 int CCommandLineParser::LoadVehicleAI()
 {
-    //use defaults, all good for us
-    //start pylon
-    loadmeshtest();
-    //end pylon
-    loadmeshtest();
+    
+	string carDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
+	string carName = "mitsuEclipse.car";
+	string sDir, sName;
 
-    //TODO Load Entities for waypoints
-    //TODO Translate existing pylons to same positions as waypoints
+	//straight copy from Jays loadmeshtest to get 2 pylons up yay.
+	sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\pylon\\";
+    sName = "pylon";
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
+	}
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon1 loaded the mesh %s Sucessfully!", sName.c_str() );
 
-    loadmap();
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
+	}
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon2 loaded the mesh %s Sucessfully!", sName.c_str() );
+
+	std::vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()
+						->end()-1;
+
+
+	//translate pylons to desired locations
+	(*it)->SetTranslate(Vector3f(10.0f, 0.0f, 0.0f));
+	(*--it)->SetTranslate(Vector3f(25.0f, 0.0f, -10.0f));
+
+
+	CWaypoint * waypoint1 = new CWaypoint();
+	CWaypoint * waypoint2 = new CWaypoint();
+	
+	
+	waypoint1->SetName("Waypoint1");
+	waypoint1->SetTranslate(Vector3f(10.0f, 0.0f, 0.0f));
+	waypoint1->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
+	waypoint1->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
+	
+	waypoint2->SetName("Waypoint2");
+	waypoint2->SetTranslate(Vector3f(25.0f, 0.0f, -10.0f));
+	waypoint2->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
+	waypoint2->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
+	
+	std::vector<CWaypoint *> * waypointVec = new std::vector<CWaypoint*>();
+	waypointVec->push_back(waypoint1);
+	waypointVec->push_back(waypoint2);
+
+
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&carDir, &carName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The Opponent Vehicle is not loaded correctly!");
+		return OK;
+	}
+	
+	COpponentVehicle * opponent = (COpponentVehicle *)CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
+	opponent->setWPSequence(waypointVec);
+	opponent->initNext();
+	COpponentAI::GetOpponentAIPtr()->addCar(opponent);
+	
+
+    
 	return OK;
-
 }
 
 //  ===== End Ram & Gibs Functions =====//
