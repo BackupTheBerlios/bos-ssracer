@@ -10,13 +10,13 @@ using namespace Wml;
 enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
 
 // Maximum angle (in rads) that the front tires can turn
-#define MAX_STEER_ANGLE_RADS	1.0f
+#define MAX_STEER_ANGLE_RADS	RADIANS(35)
 // Number of seconds for the tires to get from 0 - MAX_STEER_ANGLE_RADS
 #define STEER_ANGLE_TIME		0.25f
 // RPM that the vehicle idles at
 #define IDLE_RPM	1000
 
-
+#define EPSILON		0.5f
 
 typedef struct ___X___ {
 	bool lturn;
@@ -169,12 +169,13 @@ private:
 
 	Vector3f accelerationLC;	// acceleration of the vehicle in local coordinate space
 	Vector3f velocityLC;	// velocity of the vehicle in local coordinate space
+	Vector3f velocityLCRot;	// TEMPORARY
 	Vector3f positionLC;	// position of the vehicle in local coordinate space
 
 	Vector3f angularAccelerationLC;	// angular acceleration of the vehicle in local coordinate space;
 	Vector3f angularVelocityLC;		// angular velocity of the vehicle in local coordinate space
 	Vector3f rotationLC;			// rotation of the vehicle in local coordinate space. (X = roll, Y = pitch, Z = yaw)
-
+	Vector3f rotLCThisFrame;		// amount that the vehicle has been rotated this frame.
 	Vector3f headingWC;	// heading of the vehicle in world coordinates. (vector that tells us which direction the vehicle is facing.)
 	Vector3f velocityWC;	// velocity of the vehicle in world coordinates.
 	tInputState inputState;
