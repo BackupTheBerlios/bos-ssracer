@@ -113,6 +113,9 @@ VOID CD3DCamera::SetProjParams( FLOAT fFOV, FLOAT fAspect, FLOAT fNearPlane,
     m_fFarPlane   = fFarPlane;
 
     D3DXMatrixPerspectiveFovLH( &m_mProj, fFOV, fAspect, fNearPlane, fFarPlane );
+
+    // update frustum information
+    UpdateCullInfo();
 }
 
 

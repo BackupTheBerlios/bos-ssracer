@@ -137,7 +137,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     D3DXMatrixRotationYawPitchRoll( &mCameraRot, m_fCameraYawAngle, m_fCameraPitchAngle, 0 );
 
     vTemp = *m_pkVehicle->GetRotate() ; ////
-    vTemp = vTemp.Cross(Vector3f(0.0f, 0.0f, 1.0f));
+    vTemp = vTemp.Cross(Vector3f(0.0f, 1.0f, 0.0f));
     vTemp.Normalize();    
     
     // Transform vectors based on camera's rotation matrix
@@ -187,13 +187,6 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
 
     // update frustum information
     UpdateCullInfo();
-
-    // update the Wml frustrum
-    m_Frustum.Origin() = Vector3f( m_vEye.x, m_vEye.y, m_vEye.z );
-    m_Frustum.UVector() = Vector3f( vWorldUp.x, vWorldUp.y, vWorldUp.z );    
-    m_Frustum.DVector() = Vector3f( vWorldAhead.x, vWorldAhead.y, vWorldAhead.z );
-    m_Frustum.LVector() = m_Frustum.UVector().UnitCross(m_Frustum.DVector());
-    m_Frustum.Update();
 
 /*
     // Make a rotation matrix based on the camera's yaw & pitch

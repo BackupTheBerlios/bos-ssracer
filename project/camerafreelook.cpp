@@ -172,20 +172,8 @@ VOID CCameraFreeLook::FrameMove( FLOAT fElapsedTime )
 
     // Update the view matrix
     D3DXMatrixLookAtLH( &m_mView, &m_vEye, &m_vLookAt, &vWorldUp );
-
-    //D3DXMatrixInverse( &m_mCameraWorld, NULL, &m_mView );
+    D3DXMatrixInverse( &m_mCameraWorld, NULL, &m_mView );
 
     // update frustum information
     UpdateCullInfo();
-
-    // update the Wml frustrum
-    m_Frustum.Origin() = Vector3f( m_vEye.x, m_vEye.y, m_vEye.z );
-    m_Frustum.UVector() = Vector3f( vWorldUp.x, vWorldUp.y, vWorldUp.z );    
-    m_Frustum.DVector() = Vector3f( vWorldAhead.x, vWorldAhead.y, vWorldAhead.z );
-    m_Frustum.LVector() = m_Frustum.UVector().UnitCross(m_Frustum.DVector());
-    m_Frustum.Update();
-
-    #ifdef _DEBUG
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 0, " Camera Position %f %f %f", m_vEye.x, m_vEye.y, m_vEye.z);
-    #endif
 }

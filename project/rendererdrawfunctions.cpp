@@ -102,8 +102,9 @@ void CRenderer::DrawSkyBox()
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 
     // save the current view matrix
-    D3DXMATRIXA16 matViewSave;
+    D3DXMATRIXA16 matViewSave, matWorldSave;
     m_pd3dDevice->GetTransform( D3DTS_VIEW, &matViewSave );
+    m_pd3dDevice->GetTransform( D3DTS_WORLD, &matWorldSave );
 
     D3DXMATRIXA16 matWorld;
     // scale the skybox up
@@ -117,8 +118,8 @@ void CRenderer::DrawSkyBox()
     m_pd3dDevice->SetTransform( D3DTS_VIEW, &matView );
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, m_pActiveCamera->GetProjMatrix() );
 
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1 );
+    //m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
+    //m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1 );
 
     // set texture filters to reduce seams
     //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_POINT );
@@ -145,6 +146,7 @@ void CRenderer::DrawSkyBox()
     m_pSkyBox->Render( m_pd3dDevice );
 
     // Restore the render states
+    m_pd3dDevice->SetTransform( D3DTS_WORLD,    &matWorldSave );
     m_pd3dDevice->SetTransform( D3DTS_VIEW,      &matViewSave );
     m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
     m_pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, TRUE);
@@ -249,16 +251,6 @@ void CRenderer::DrawDebugOverlay()
 
 
 
-struct D3DVertex
-{
-    FLOAT x, y, z;//, w;
-    FLOAT psize;
-    DWORD color;
-};
-
-//#define D3DFVF_D3DVertex (D3DFVF_XYZW|D3DFVF_PSIZE|D3DFVF_DIFFUSE)
-#define D3DFVF_D3DVertex (D3DFVF_XYZ|D3DFVF_PSIZE|D3DFVF_DIFFUSE)
-//#define D3DFVF_D3DVertex (D3DFVF_XYZ|D3DFVF_DIFFUSE)
 
 
 //-----------------------------------------------------------------------------
@@ -290,8 +282,8 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 
 	// scale
 	vTemp = pEntity->GetScale();
-	//pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
-    pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
+	pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
+    //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 
 
 	m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
@@ -314,13 +306,27 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
     m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
 
     if (m_bDrawEntBBoxes == true)
-        DrawBBox(pEntity->GetBoundingBox(), 10.0f);
+        DrawBBox(pEntity->GetBoundingBox(), 10.0f, D3DCOLOR_ARGB(255, 200, 50, 50));
 
 }
 
 
-void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize)
+
+struct D3DVertex
 {
+    FLOAT x, y, z;//, w;
+    FLOAT nx,ny,nz;
+    FLOAT psize;
+    DWORD color;
+};
+
+//#define D3DFVF_D3DVertex (D3DFVF_XYZW|D3DFVF_PSIZE|D3DFVF_DIFFUSE)
+#define D3DFVF_D3DVertex (D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_PSIZE|D3DFVF_DIFFUSE)
+//#define D3DFVF_D3DVertex (D3DFVF_XYZ|D3DFVF_DIFFUSE)
+
+void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize, DWORD dwColor)
+{
+
     LPDIRECT3DVERTEXBUFFER9 theBuffer;
     //CreateVertexBuffer( 3*sizeof(CUSTOMVERTEX), 0 /* Usage */, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &g_pVB )
 
@@ -342,9 +348,13 @@ void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize)
         myBox[j].x = vBBox[j].X();
         myBox[j].y = vBBox[j].Y();
         myBox[j].z = vBBox[j].Z();
+        myBox[j].nx = 0.0f;
+        myBox[j].ny = 1.0f;
+        myBox[j].nz = 0.0f;
+
         //myBox[j].w = 1.0f;
         myBox[j].psize = fPointSize;
-        myBox[j].color = D3DCOLOR_ARGB( 100, 255, 255, 255 );
+        myBox[j].color = dwColor;
     }
 
     //top edges
@@ -385,17 +395,18 @@ void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize)
     m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
 
     // turn lighting off
-    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
+    //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 
     m_pd3dDevice->DrawPrimitive( D3DPT_POINTLIST, 0, 8 );
     m_pd3dDevice->DrawPrimitive( D3DPT_LINELIST, 0, 12 );
     //m_pd3dDevice->DrawPrimitiveUP( D3DPT_LINELIST, 12, pVertices, sizeof(D3DVertex));
 
     // turn lighting back on
-    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
+    //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
 
     // Destroy the vertex buffer
     theBuffer->Release();
+
 }
 
 
@@ -488,22 +499,49 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
     // draw its entities if any
     map<int, CEntity *>::iterator it;
     for (it=pQNode->m_EntMap.begin(); it!=pQNode->m_EntMap.end(); it++) {
-        DrawEntity(it->second);
+        if (!m_kDrawnEntIDs[it->second->GetId()])  {
+            DrawEntity(it->second);
+            m_kDrawnEntIDs[it->second->GetId()] = true;
+        }
+        else {
+            #ifdef _DEBUG
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "Entity %d, is already drawn");
+            #endif
+        }
+
     }
-
-    if (!pQNode->m_pChildNode[NE])  {
-        return; // no children to draw
-    }
-
-    if (m_bDrawQNodeBBoxes == true)
-        DrawBBox(&pQNode->m_BBox);
-
 
     // recursively draw the child nodes
-    DrawQuadTreeNode(pQNode->m_pChildNode[NE]);
-    DrawQuadTreeNode(pQNode->m_pChildNode[NW]);
-    DrawQuadTreeNode(pQNode->m_pChildNode[SE]);
-    DrawQuadTreeNode(pQNode->m_pChildNode[SW]);
+/*    if (!pQNode->m_pChildNode[NE])  {
+        return; // no children to draw
+    }
+    else {
+        DrawQuadTreeNode(pQNode->m_pChildNode[NE]);
+    }
+
+    if (!pQNode->m_pChildNode[NW])  {
+        return; // no children to draw
+    }
+    else {
+        DrawQuadTreeNode(pQNode->m_pChildNode[NW]);
+    }
+
+    if (!pQNode->m_pChildNode[SE])  {
+        return; // no children to draw
+    }
+    else {
+        DrawQuadTreeNode(pQNode->m_pChildNode[SE]);
+    }
+
+    if (!pQNode->m_pChildNode[SW])  {
+        return; // no children to draw
+    }
+    else {
+        DrawQuadTreeNode(pQNode->m_pChildNode[SW]);
+    }
+*/
+    if (m_bDrawQNodeBBoxes == true)// && !pQNode->m_EntMap.empty())
+        DrawBBox(&pQNode->m_BBox, 1.0f, D3DCOLOR_ARGB(150, 50, 200, 50));
 
     return;
 }

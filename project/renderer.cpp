@@ -107,7 +107,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 	m_pkCameraMap[CAMERA_CHASE]->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
                                                 &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
 	// slightly wider FOV and shorter frustrum
-	m_pkCameraMap[CAMERA_CHASE]->SetProjParams( D3DX_PI/5.5f, 1.0f ,1.0f ,500.0f );
+	m_pkCameraMap[CAMERA_CHASE]->SetProjParams( D3DX_PI/6.5f, 1.0f ,1.0f ,500.0f );
 
 
 	//--- free look camera --- //	
@@ -369,17 +369,20 @@ bool CRenderer::CheckDevice()
 //-----------------------------------------------------------------------------
 void CRenderer::RenderScene()
 {
-    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,50,110), 1.0f, 0 );
+    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
+    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(100,100,150), 1.0f, 0 );
     //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );//D3DCOLOR_XRGB(0,20,50)
+
+    m_pd3dDevice->BeginScene();  // --- begin scene drawing commands
 
     InitializeState();
 
     // render the skybox first
     DrawSkyBox();
 
-    InitializeState();
+    //InitializeState();
 
-    m_pd3dDevice->BeginScene();  // --- begin scene drawing commands
+
 
 	#ifdef _DEBUG  // show developer info
     char tMsgA[25];
@@ -388,8 +391,10 @@ void CRenderer::RenderScene()
 	#endif
 
 
-
     if (m_bVisCullingEnabled && CGameStateManager::GetGameStateManager().GetScenePtr()->GetQuadTree()->IsInitialized())  {
+        // clear drawn entities map
+        m_kDrawnEntIDs.clear();
+
         // get visible quadtree nodes
         vector<CQuadNode *> * pvVisible = CGameStateManager::GetGameStateManager().GetScenePtr()->GetQuadTree()->GetVisibleNodesPtr();
         for (vector<CQuadNode *>::iterator it2 = pvVisible->begin();  it2 != pvVisible->end(); it2++)  {

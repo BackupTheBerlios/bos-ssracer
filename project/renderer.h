@@ -99,6 +99,8 @@ private:
     static std::map< unsigned int, CD3DCamera * > m_pkCameraMap;  // cameras used by this renderer
     //static std::map< std::string, CD3DMesh * > m_kMeshMap;       // meshes available to this app
 
+    std::map< int, bool > m_kDrawnEntIDs;
+
     CD3DCamera * m_pActiveCamera; // active camera in game
     static CameraType m_eActiveCamType;     // type of active camera
 
@@ -202,7 +204,7 @@ protected:
     void DrawDebugOverlay();
     void DrawEntity( CEntity * pEntity );
     void DrawQuadTreeNode( CQuadNode * pQNode );
-    void DrawBBox( Box3f * pBBox, float fPointSize = 1.0f);
+    void DrawBBox( Box3f * pBBox, float fPointSize = 1.0f, DWORD dwColor = D3DCOLOR_ARGB( 255, 155, 155, 155 ));
 
 private:
 };
