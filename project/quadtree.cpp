@@ -15,7 +15,6 @@
 #include "bos.h"
 #include "log.h"
 #include "quadtree.h"
-#include "entity.h"
 
 //#include "macros.h"
 
@@ -95,7 +94,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
 
     // compute the 'center' of the map
     m_vfMapOrigin.Y() = 0.0f;
-    m_vfMapOrigin /= pvEntities->size();
+    m_vfMapOrigin /= (float)pvEntities->size();
 
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE, "Quadtree max extent: %f %f %f", m_vfMaxExtent.X(), m_vfMaxExtent.Y(), m_vfMaxExtent.Z() );
@@ -121,12 +120,18 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     // save the root node for deletion later
     m_vpNodes.push_back(m_pkQRoot);
 
+    // assuming a uniform distribution of entities, try to compute an optimal tree depth
+    // want #levels = log(#entities)/log(#subdiv at each level=4)
+    //m_iLevels = (int)Mathf::Ceil((Mathf::Log((float)pvEntities->size()))/(Mathf::Log(4.0f)));
+    m_iLevels = 5;
+    CLog::GetLog().Write(LOG_GAMECONSOLE,"Quadtree depth %d", m_iLevels);
+
     // compute the initial sub levels of the tree
 	SubDivide(m_pkQRoot, m_iLevels);
-
     
     // add renderable game entities to the quadtree
     for (it = pvEntities->begin(); it!=pvEntities->end(); it++)  {
+        //$$$TEMP for now, just add all entities
         Add(*it);
     }
 
@@ -137,12 +142,84 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
 
 void CQuadTree::Add(CEntity *pEntity)
 {    
-    // figure out which node this entity belongs in
+    //$$$TEMP once bounding boxes are fixed, I'll use this code
+    /*
+	// Add references for each corner of the bounding box
+	addReference( gobj->bbox.max.x, gobj->bbox.max.y, gobj );
+	addReference( gobj->bbox.max.x, gobj->bbox.min.y, gobj );
+	addReference( gobj->bbox.min.x, gobj->bbox.max.y, gobj );
+	addReference( gobj->bbox.min.x, gobj->bbox.min.y, gobj );    //
+    */
 
-    //
+    // for now, use the position of the entity to place in the tree
+    AddReference(*pEntity->GetTranslate(), pEntity);
+    return;
+}
+
+
+
+void CQuadTree::AddReference( Vector3f vOrigin, CEntity * pEntity )
+{
+	CQuadNode	*node;
+	CQuadNode	*prev;		// to point to parent of node
+	//Tjunc	*ptr;
+	//Tjunc	*list;
+    CQuadNode * ptr;
+    CQuadNode * list;
+	
+	assert( m_iLevels > 1 ); 
+
+	// Search in quadtree
+	node = m_pkQRoot;
+	for(int level = m_iLevels; level > 0; level--)
+	{
+		prev = node;
+		if( vOrigin.X() <= node->m_vOrigin.X() && vOrigin.Z() <= node->m_vOrigin.Z() ) 
+			node = node->m_pChildNode[SW];
+		else if( vOrigin.X() > node->m_vOrigin.X() && vOrigin.Z() <= node->m_vOrigin.Z() ) 
+			node = node->m_pChildNode[SE];
+		else if( vOrigin.X() <= node->m_vOrigin.X() && vOrigin.Z() > node->m_vOrigin.Z() ) 
+			node = node->m_pChildNode[NW];
+		else 
+			node = node->m_pChildNode[NE];
+	}
+
+	// We're below the last level of the tree now, the pointer points to a 
+	// linked list of Tjunc elements.
+	// cast the node pointer to a Tjunc pointer so we can search
+	// the linked list
+	//list = (Tjunc*) node;		
+    list = node;
+	
+	// First check if the game object is already in the linked list
+	ptr = list;
+    
+	while (ptr != NULL)
+	{
+		//if(ptr->gameObject->id == gobj->id )	// found it
+        if(ptr->m_EntMap[pEntity->GetId()] != NULL)
+			return;		// it's already in the list, do nothing!
+		ptr = ptr->m_pNextNode;
+	}
+
+	// Add new item to head of the list
+	//list = new Tjunc( gobj, list );
+    list = new CQuadNode( pEntity, list );
+
+	// And hang the list in the tree
+
+	if( vOrigin.X() <= prev->m_vOrigin.X() && vOrigin.Z() <= prev->m_vOrigin.Z() ) 
+		prev->m_pChildNode[SW] = list;
+	else if( vOrigin.X() > prev->m_vOrigin.X() && vOrigin.Z() <= prev->m_vOrigin.Z() ) 
+		prev->m_pChildNode[SE] = list;
+	else if( vOrigin.X() <= prev->m_vOrigin.X() && vOrigin.Z() > prev->m_vOrigin.Z() ) 
+		prev->m_pChildNode[NW] = list;
+	else 
+		prev->m_pChildNode[NE] = list;
 
     return;
 }
+
 
 
 void CQuadTree::ClearQuadTree()
@@ -164,10 +241,11 @@ void CQuadTree::SubDivide( CQuadNode * pQNode, int iLevel )
 
 	// Subdivide this Node into 4 and subdivide those even further if necessary
 	hw = pQNode->m_fHalfWidth/2.0f;
-	pQNode->m_pChildNode[SW] = new CQuadNode( Vector3f(pQNode->m_vOrigin.X() - hw, pQNode->m_vOrigin.Y() - hw, 0), hw );    
-	pQNode->m_pChildNode[SE] = new CQuadNode( Vector3f(pQNode->m_vOrigin.X() + hw, pQNode->m_vOrigin.Y() - hw, 0), hw );
-	pQNode->m_pChildNode[NW] = new CQuadNode( Vector3f(pQNode->m_vOrigin.X() - hw, pQNode->m_vOrigin.Y() + hw, 0), hw );
-	pQNode->m_pChildNode[NE] = new CQuadNode( Vector3f(pQNode->m_vOrigin.X() + hw, pQNode->m_vOrigin.Y() + hw, 0), hw );
+    pQNode->m_pChildNode[NE] = new CQuadNode( Vector3f(pQNode->m_vOrigin.X() + hw, 0, pQNode->m_vOrigin.Z() + hw), hw );
+    pQNode->m_pChildNode[SE] = new CQuadNode( Vector3f(pQNode->m_vOrigin.X() + hw, 0, pQNode->m_vOrigin.Z() - hw), hw );
+	pQNode->m_pChildNode[SW] = new CQuadNode( Vector3f(pQNode->m_vOrigin.X() - hw, 0, pQNode->m_vOrigin.Z() - hw), hw );    
+	pQNode->m_pChildNode[NW] = new CQuadNode( Vector3f(pQNode->m_vOrigin.X() - hw, 0, pQNode->m_vOrigin.Z() + hw), hw );
+	
 
     // save these pointers for deletion later
     m_vpNodes.push_back(pQNode->m_pChildNode[SW]);

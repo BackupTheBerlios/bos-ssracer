@@ -14,14 +14,15 @@
 #ifndef QUADTREE_H
 #define QUADTREE_H
 
-//#include "entity.h"
-
 #define STL_USING_VECTOR
 #define STL_USING_MAP
 #include "stl.h"
 
 #include "wmlvector3.h"
 using namespace Wml;
+
+#include "entity.h"
+
 
 //-----------------------------------------------------------------------------
 // Name: enum CULLSTATE
@@ -36,10 +37,6 @@ enum CULLSTATE
 //    CS_OUTSIDE_SLOW, // OBB is outside frustum, but it took extensive testing to determine this
 };
 
-
-
-
-class CEntity;  // forward declaration
 
 //-----------------------------------------------------------------------------
 // Name: class CQuadNode 
@@ -58,7 +55,16 @@ public:
         m_vOrigin = vOrigin;
         m_fHalfWidth = fHalfWidth;
         for (int i=0; i<4; i++)  m_pChildNode[i] = NULL;
+        m_EntMap.clear();
+        m_pNextNode = NULL;
     };
+
+    CQuadNode( CEntity * pEntity, CQuadNode * pQNode )  {
+        m_EntMap[pEntity->GetId()] = pEntity;
+        m_pNextNode = pQNode;
+    };
+
+    CQuadNode * m_pNextNode;
 };
 
 
@@ -109,7 +115,7 @@ private:
     // scene stats used to construct the quadtree properly
     Vector3f m_vfMaxExtent;  // max xyz of all entities
     Vector3f m_vfMinExtent;  // min xyz of all entities
-    Vector3f m_vfMapOrigin;  // 'center' point of map
+    Vector3f m_vfMapOrigin;  // 'center' point of quadtree
 
 
     std::vector <CQuadNode *> m_vpNodes;  // a vector to manage node pointers
