@@ -736,10 +736,10 @@ bool CRenderer::DrawHUD()
 */
 
   	D3DTexMappedVertex Polygon_Data[4] = {
-		{0.7f, -0.4f, 0.5f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 0.0},  // BL -+
-        {1.3f, -0.4f, 0.5f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 0.0},   // TR ++
-	    {0.7f, -1.0f, 0.5f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 1.0}, // TL --
-        {1.3f, -1.0f, 0.5f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 1.0}   // BR +-
+		{0.7f, -0.4f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 0.0},  // BL -+
+        {1.3f, -0.4f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 0.0},   // TR ++
+	    {0.7f, -1.0f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 1.0}, // TL --
+        {1.3f, -1.0f, 0.0f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 1.0}   // BR +-
 	};
 
     // Create the vertex buffer that will hold the square.
