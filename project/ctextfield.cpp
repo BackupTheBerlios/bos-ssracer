@@ -1,5 +1,6 @@
 #include "ctextfield.h"
 #include "log.h"
+#include "input.h"
 
 CTextField::CTextField()
 {

@@ -412,6 +412,7 @@ int CScene::LoadEntity(string* directory, string* filename)
 
 	strcpy(temp, filename->c_str());
 	newEntity->SetName(temp);
+	newEntity->SetId(m_vEntities.size());
 	newEntity->SetTranslate(Vector3f(0.0f, 0.0f, 0.0f));
 	newEntity->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
 	newEntity->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));

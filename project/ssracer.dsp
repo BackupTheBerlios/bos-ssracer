@@ -446,6 +446,26 @@ SOURCE=.\gamestatemanager.h
 SOURCE=.\physicstask.h
 # End Source File
 # End Group
+# Begin Group "Front End Headers"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\cbutton.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\clabel.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ctextfield.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\cwidget.h
+# End Source File
+# End Group
 # Begin Group "Core Headers"
 
 # PROP Default_Filter ".h"
@@ -504,26 +524,6 @@ SOURCE=.\log.h
 # Begin Source File
 
 SOURCE=.\Settings.h
-# End Source File
-# End Group
-# Begin Group "Front End Headers"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\cbutton.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\clabel.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\ctextfield.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\cwidget.h
 # End Source File
 # End Group
 # Begin Source File
