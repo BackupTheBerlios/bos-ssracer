@@ -266,13 +266,14 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
     HRESULT hr;
 
    	pMatrixStack->Push(); 
-    pMatrixStack->LoadIdentity();
+    //pMatrixStack->LoadIdentity();
 
 	// orientation
 	vTemp = pEntity->GetRotate();
+    //pMatrixstack->LoadMatrix( D3DXMatrixRotateX( RADIANS(vTemp->X()) ) );
     pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
-	pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
-	pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
+    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
+    pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
 	//pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
 
     // translation
@@ -303,7 +304,7 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 		#endif
     }
 
-   	pMatrixStack->Pop();
+    pMatrixStack->Pop();
     m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
 
     if (m_bDrawEntBBoxes == true)
