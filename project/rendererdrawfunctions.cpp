@@ -459,35 +459,39 @@ void CRenderer::DrawRect( Rectangle3f * pRect, float fPointSize, DWORD dwColor)
 
     LPDIRECT3DVERTEXBUFFER9 theBuffer;
 
-    if( FAILED( m_pd3dDevice->CreateVertexBuffer( 6*sizeof(D3DVertex), 0, D3DFVF_D3DVertex, D3DPOOL_DEFAULT, &theBuffer, NULL) ) )
+    if( FAILED( m_pd3dDevice->CreateVertexBuffer( 5*sizeof(D3DVertex), 0, D3DFVF_D3DVertex, D3DPOOL_DEFAULT, &theBuffer, NULL) ) )
     {
         return;
     }
 
-    D3DVertex myRect[6];  // 5 points to complete the line strip list
+    D3DVertex myRect[5];  // 5 points to complete the line strip list
     Vector3f vecOrigin = pRect->Origin(), vecPt;
-    vecPt = vecOrigin + pRect->Edge0()/2.0f + pRect->Edge1()/2.0f;
+    //vecPt = vecOrigin + pRect->Edge0()/2.0f + pRect->Edge1()/2.0f;
+	vecPt = vecOrigin;
     myRect[0].x = vecPt.X();
     myRect[0].y = vecPt.Y();
     myRect[0].z = vecPt.Z();  // top corner ++
     myRect[0].psize = fPointSize;
     myRect[0].color = dwColor;
 
-    vecPt = vecOrigin + pRect->Edge0()/2.0f - pRect->Edge1()/2.0f;
+    //vecPt = vecOrigin + pRect->Edge0()/2.0f - pRect->Edge1()/2.0f;
+	vecPt = vecOrigin + pRect->Edge0();
     myRect[1].x = vecPt.X();
     myRect[1].y = vecPt.Y();
     myRect[1].z = vecPt.Z();  
     myRect[1].psize = fPointSize;
     myRect[1].color = dwColor; // +-
 
-    vecPt = vecOrigin - pRect->Edge0()/2.0f - pRect->Edge1()/2.0f;
+    //vecPt = vecOrigin - pRect->Edge0()/2.0f - pRect->Edge1()/2.0f;
+	vecPt = vecOrigin + pRect->Edge0() + pRect->Edge1();
     myRect[2].x = vecPt.X();
     myRect[2].y = vecPt.Y();
     myRect[2].z = vecPt.Z();  
     myRect[2].psize = fPointSize;
     myRect[2].color = dwColor;
 
-    vecPt = vecOrigin - pRect->Edge0()/2.0f + pRect->Edge1()/2.0f;
+    //vecPt = vecOrigin - pRect->Edge0()/2.0f + pRect->Edge1()/2.0f;
+	vecPt = vecOrigin + pRect->Edge1();
     myRect[3].x = vecPt.X();
     myRect[3].y = vecPt.Y();
     myRect[3].z = vecPt.Z();  
@@ -498,13 +502,13 @@ void CRenderer::DrawRect( Rectangle3f * pRect, float fPointSize, DWORD dwColor)
     myRect[4] = myRect[0];
 
     //origin
-    vecPt = vecOrigin;
+    /*vecPt = vecOrigin;
     myRect[5].x = vecPt.X();
     myRect[5].y = vecPt.Y();
     myRect[5].z = vecPt.Z();  
     myRect[5].psize = fPointSize;
     myRect[5].color = dwColor;
-
+*/
 
     // Copy rect vertices into the buffer
     VOID* pVertices;
@@ -521,7 +525,7 @@ void CRenderer::DrawRect( Rectangle3f * pRect, float fPointSize, DWORD dwColor)
     m_pd3dDevice->SetStreamSource( 0, theBuffer, 0,  sizeof(D3DVertex) );
     m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
 
-    m_pd3dDevice->DrawPrimitive( D3DPT_POINTLIST, 0, 6 );
+    m_pd3dDevice->DrawPrimitive( D3DPT_POINTLIST, 0, 4 );
     //m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 4 );
     m_pd3dDevice->DrawPrimitive( D3DPT_LINESTRIP, 0, 4 );
     

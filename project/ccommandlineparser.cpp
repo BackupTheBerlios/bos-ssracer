@@ -16,6 +16,7 @@
 #include "cwaypoint.h"
 #include "copponentvehicle.h"
 #include "copponentai.h"
+#include "ccollisionmanager.h"
 
 
 // TO ADD COMMANDS AND FUNCTIONS, SEE initKeywords()
@@ -1608,6 +1609,7 @@ int CCommandLineParser::LoadCollisionTest()
 		return GENERAL_ERROR;
 	}
 	CVehicle * PV = (CVehicle *)CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
+	PV->IsPlayer() = true;
 	PV->GetBoundingBox()->Extent(0) = 1.5f;
 	PV->GetBoundingBox()->Extent(1) = 0.5f;
 	PV->GetBoundingBox()->Extent(2) = 0.5f;
@@ -1650,89 +1652,19 @@ int CCommandLineParser::LoadCollisionTest()
 
 	//PV->SetTranslate(Vector3f(50.0f, 0.0f, 50.0f)); // right in the middle of the pylons
 
+	// Make planes visible
+	string drawplanes = "drawplanes 1";
+	parse(drawplanes);
+	execute();
+
 	// set camera
 	CRenderer::GetRenderer().SetActiveCamera(CAMERA_FREELOOK);
     ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
 
+
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 25, "%i planes", CCollisionManager::GetCollisionManagerPtr()->GetPlanes()->size());
+
+
 	return OK;
 }
 
-// SAVING THIS; IT'S USEFUL:
-/*
-	CLog::GetLog().Write(LOG_MISC, "\n\n\n\n\n\n");
-	CLog::GetLog().Write(LOG_MISC, "command:\n|%s|\n ------------------------------------\n", command.begin());
-	for (int i = 0; i < Tokens.size(); i++) {
-		CLog::GetLog().Write(LOG_MISC, "Token[%i]=%s, size=%i", i, Tokens[i].begin(), Tokens[i].size());
-		CLog::GetLog().Write(LOG_MISC, "index=%i, mark=%i, token_size=%i\n", index, mark, token_size);
-	}
-	CLog::GetLog().Write(LOG_MISC, "\n\n\n\n\n\n");
-	*/
-
-
-	/*
-	// Attempt to retrieve sound effect
-	SC->GetSoundEffect(Tokens[1].begin(), &SFX_ref);
-	if (!SFX_ref)
-#ifdef _DEBUG
-		CLog::GetLog().Write(LOG_GAMECONSOLE, 
-		"\nIn CCommandLineParser::play():\n\tSFX_ref = NULL after SC->GetSoundEffect(Tokens[1].begin(), &SFX_ref);\n");
-#endif
-
-	// play it!
-	error = SFX_ref->Play(false, false);
-*/
-
-/*
-	if (error != NO_ERROR) { 
-		if (error == 21) { // would like to use macro instead of 21. Is there one?
-		// it might be a music file
-
-
-			// "IF" PART COPIED DIRECTLY FROM ALPHA 0.0 RELEASE
-			CSoundStream *cSStrm = NULL;
-			if( CSoundCore::GetSoundCorePtr()->GetSoundStream( Tokens[1].begin(), &cSStrm ) == NO_ERROR ) {
-				cSStrm->SetVolume(0.85f);
-				//cSStrm->Play( TRUE );
-				cSStrm->FadeIn( TRUE, 0.4f, 0.02f );
-			}
-			else { // THEN it doesn't exist
-#ifdef _DEBUG
-					CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: so such file", Tokens[1].begin());
-#endif
-					// any other values for error? Put your if statement here.
-					return OK;
-			}
-
-*/
-			// THIS WHOLE SECTION DOES WORK WITH STREAM FILES
-
-			/*
-			// attempt to get the song
-			SC->GetSoundStream(Tokens[1].begin(), &SS_ref);
-			if (!SS_ref) 
-#ifdef _DEBUG
-				CLog::GetLog().Write(LOG_GAMECONSOLE, 
-				"\nIn CCommandLineParser::play():\n\tSS_ref = NULL after SC->GetSoundStream(Tokens[1].begin(), &SS_ref);\n");
-#endif
-
-			error = SS_ref->Play(false, false);
-
-			if (error != NO_ERROR) {
-				if (error == 21) {
-					// THEN it doesn't exist
-#ifdef _DEBUG
-					CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: so such file", Tokens[1].begin());
-#endif
-					// any other values for error? Put your if statement here.
-					return OK;
-
-				// end inner if statements:
-				} // end if (error == 21)
-			} // end if (error != NO_ERROR)
-
-
-
-		// end outer if statements:
-		} // end if (error == 21)
-	} // end if (error != NO_ERROR)
-*/

@@ -25,7 +25,7 @@ CCollisionManager::CCollisionManager()
 
 CCollisionManager::~CCollisionManager()
 {
-	m_vPlanes->clear();
+//	m_vPlanes->clear();
 	SAFE_DELETE(m_vPlanes);
 	SAFE_DELETE(m_CI.Plane);
 	SAFE_DELETE(m_CI.vertices); // This is an array
@@ -160,7 +160,8 @@ bool CCollisionManager::hasCollided(CVehicle* PV, std::vector<Rectangle3f*>::ite
 	if (POS && NEG) {
 		// Find the collision point
 		ReverseVelocity = new Vector3f(PV->GetVehicleVelocityWC());
-		*ReverseVelocity *= -1;
+		if (PV->GetVehicleVelocityLC().X() > 0)
+			*ReverseVelocity *= -1;
 		ReverseNormal = -P->GetNormal();
 		theta = acos((ReverseVelocity->Dot(ReverseNormal))/(ReverseVelocity->Length()*ReverseNormal.Length()));		
 		h = m_CI.dist/cos(theta);

@@ -97,6 +97,7 @@ void CVehicle::Init()
 
 	// Gib's additions
 	ExtraneousForces = Vector3f(0.0f, 0.0f, 0.0f);
+	isPlayer = false;
 
 }
 
@@ -1101,6 +1102,8 @@ void CVehicle::UpdateVehiclePhysics()
 		newFreq = ( ( (float) rpm / (float) (maximumRPM - IDLE_RPM) ) * oldFreq ) + (oldFreq / 3);
 		engineRev->SetFrequency( newFreq );
 //	}
+		// Gib's additions
+		if (disturbed) UpdateCollisionReaction();
 
 }
 
@@ -1183,7 +1186,9 @@ void CVehicle::RotateVectorAboutLocalZ(Vector3f* param, float rotZRADS)
 
 }
 
+/* // This function is now in CRigidBody
 // Gib's addition
+#define FACTOR 1.0f
 void CVehicle::DeliverCollisionMessage(CCollisionMessage* ColMsg)
 {
 	if (!ColMsg) return;
@@ -1195,9 +1200,12 @@ void CVehicle::DeliverCollisionMessage(CCollisionMessage* ColMsg)
 	Vector3f reflected = velocityWC - 2.0f*(velocityWC.Dot(*ColMsg->GetNormal()))*(*ColMsg->GetNormal());
 
 	//velocityTotLC = Vector3f(reflected.X(), reflected.Z(), -reflected.Y());
-	velocityLC = reflected;
-	ExtraneousForces = reflected;
+	//velocityLC = reflected;
+	velocityLC.X() = -velocityLC.X()*FACTOR;
+	//ExtraneousForces = reflected*0.01f;
 
 }
+#undef FACTOR
 // end Gib's addition
+*/
 

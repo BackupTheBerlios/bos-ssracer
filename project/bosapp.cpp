@@ -588,12 +588,12 @@ void CBOSApplication::InitializeKernel()
 
 	// Frontend Manager task
 	static CFrontendManager FrontendManager;
-	FrontendManager.m_lPriority = 3000;//300; // idunno
+	FrontendManager.m_lPriority = 7000;//300; // idunno
 	CKernel::GetKernel().AddTask(&FrontendManager);
 
 	// Collision Manager task
 	static CCollisionManager CollisionManager;
-	CollisionManager.m_lPriority = 500; // good?
+	CollisionManager.m_lPriority = 5000; // good?
 	CKernel::GetKernel().AddTask(&CollisionManager);
 	// end Gib's tasks
 

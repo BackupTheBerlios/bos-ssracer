@@ -6,6 +6,7 @@
 #include "tire.h"
 #include "WmlVector3.h"
 #include "ccollisionmessage.h" // Gib's addition
+#include "rigidbody.h" // Gib's addition
 
 using namespace Wml;
 
@@ -29,10 +30,11 @@ typedef struct ___X___ {
 	bool ebrake;
 } tInputState;
 
-class CVehicle : public CEntity {
+// Gib's modification: parent class now CRigidBody instead of CEntity
+class CVehicle : public CRigidBody {
 
 public:
-    CVehicle() : CEntity() { for(int i=0;i<4;i++) { tires[i] = new CTire(); } dynamicFriction = false; m_bIsDynamic = true;};
+    CVehicle() /*: CEntity */ { for(int i=0;i<4;i++) { tires[i] = new CTire(); } dynamicFriction = false; m_bIsDynamic = true;};
 	~CVehicle() {};
 	void Init();
 	void UpdateVehiclePhysics();
@@ -82,8 +84,12 @@ public:
 	bool GetLTurn() { return inputState.lturn; };
 	bool GetRTurn() { return inputState.rturn; };
 
-	// Gib's additions
-	void DeliverCollisionMessage(CCollisionMessage* ColMsg);
+	// Gib's additions (moved to CRigidBody)
+	//void DeliverCollisionMessage(CCollisionMessage* ColMsg); 
+	bool& IsPlayer() { return isPlayer; };
+	Vector3f GetVehicleVelocityLC() { return velocityLC; };
+	void SetVehicleVelocityLC(float magnitude) {velocityLC = Vector3f(magnitude, 0.0f, 0.0f);};
+	void SetVehiclePositionLC(Vector3f pos) {positionLC = pos;}
 	// end Gib's additions
 
 protected:
@@ -198,6 +204,7 @@ private:
 
 	// Gib's additions
 	Vector3f ExtraneousForces;
+	bool isPlayer;
 };
 
 
