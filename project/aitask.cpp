@@ -87,8 +87,8 @@ void CAITask::Update() {
 			// generate a input message for any keys still pressed
 			if (it->second) {
                 // free look camera controls
-                //if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
-    			//	CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(it->first, it->second), RENDER_TASK );
+                if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
+    			    CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(it->first, it->second), RENDER_TASK );
                 // else  // driving controls
 			}
 		}
@@ -212,15 +212,16 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 
 	default:
 		// Check if we need to forward stuff off to the console
-        if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
-    				CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown), RENDER_TASK );
-		else if ( CBOSApplication::GetBOSApp().GetConsoleState() ) {
+		if ( CBOSApplication::GetBOSApp().GetConsoleState() ) {
 			// check if the key was just lifted
 			if ( m_kInputMap[ cIMsg->m_keyValue ] == cIMsg->m_keyDown ) {
 				CKernel::GetKernel().DeliverMessage( new CConsoleMessage( cIMsg->m_keyValue, false, false), CONSOLE_TASK );
 			}
             return;  // don't save the new state
 		}
+        else if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
+    		CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown), RENDER_TASK );
+
 		break;
     }
 

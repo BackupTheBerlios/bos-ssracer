@@ -84,11 +84,10 @@ public:
     bool IsMouseMButtonDown() { return m_bMouseMButtonDown; } 
     bool IsMouseRButtonDown() { return m_bMouseRButtonDown; } 
 
-    virtual void Update( int iInput=CAM_UNKNOWN )  { /* does nothing */};
 	virtual void Update( int iInput, bool bState ) { /* does nothing */};
 
-	void SetObject( CPlayerVehicle * pkObject ){ m_pkObject = pkObject; }
-	CPlayerVehicle * GetObject(){ return m_pkObject; }
+	//void SetObject( CPlayerVehicle * pkObject ){ m_pkObject = pkObject; }
+	//CPlayerVehicle * GetObject(){ return m_pkObject; }
 
 protected:
     // Functions to map an input key to a D3DUtil_CameraKeys enum
@@ -145,7 +144,7 @@ protected:
 
     bool                  m_bResetCursorAfterMove;// If true, the class will reset the cursor position so that the cursor always has space to move 
 
-	CPlayerVehicle * m_pkObject; // pointer to game object/entity this camera should track 
+	//CPlayerVehicle * m_pkObject; // pointer to game object/entity this camera should track 
 
 private:
 

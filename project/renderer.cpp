@@ -113,7 +113,8 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     			                                   &D3DXVECTOR3(0.0f, 0.0f, 0.0f) );
 
 	// wide FOV and a large frustrum
-	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 500.0f );
+	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000.0f );
+
 
 
 
@@ -444,8 +445,8 @@ void CRenderer::RenderScene()
 	m_kFontMap[FONT_SYSTEM]->DrawText( 0, 0, D3DCOLOR_ARGB(100,255,255,255), tMsgA, D3DFONT_FILTERED|D3DFONT_BOTTOM);
 	#endif
 
-
-/*    assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
+/*
+    assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
 
     for (vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->begin();
          it != CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->end();
@@ -493,7 +494,8 @@ void CRenderer::RenderScene()
    	    pMatrixStack->Pop();
 
      }//end big ass for loop
-*/
+     */
+
 
     assert(m_pd3dDevice);
     int iTemp=0;//$$$TEMP  should slow down the timer
@@ -788,7 +790,11 @@ void CRenderer::Click()
 {
     // set the new view matrix for the camera in the D3Ddevice
     //m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );    
-    m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pkCameraMap[CAMERA_FREELOOK]->GetViewMatrix() );
+    #ifdef _DEBUG
+    assert(m_pActiveCamera);
+    #endif
+    m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );
+    m_pd3dDevice->SetTransform( D3DTS_PROJECTION, m_pActiveCamera->GetProjMatrix() );   
 
 }
 

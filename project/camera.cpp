@@ -51,7 +51,7 @@ CD3DCamera::CD3DCamera()
     m_vMaxBoundary = D3DXVECTOR3(1,1,1);
 
     m_bResetCursorAfterMove = false;
-    m_pkObject = NULL;
+    //m_pkObject = NULL;
 }
 
 
