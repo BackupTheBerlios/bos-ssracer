@@ -12,15 +12,11 @@ public:
 	// singleton instance get functions
     static CPhysics & GetPhysics() { return *m_physics; };
     static CPhysics * GetPhysicsPtr() { return m_physics; };
-	//void setPlayerVehicle(CPlayerVehicle* playerCar);
-	//CPlayerVehicle * getPlayerVehicle(){ return m_playerCar; };
-
-	void Update(int, bool);
+	void Update();
 
 protected:
 
 	CPhysics() {};
-//	CPlayerVehicle* m_playerCar;
 	static CPhysics * m_physics;
 
 

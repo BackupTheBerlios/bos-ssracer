@@ -4,7 +4,6 @@
 #define STL_USING_ALL
 #include "stl.h"
 
-#include "d3dfile.h"
 #include "entity.h"
 
 class CScene {

@@ -34,7 +34,6 @@
 #define FONT_SYSTEM 1
 #define FONT_SMALL 2
 
-
 class CRenderTask; // forward declaration
 //class CObject;
 //class CPlayerVehicle;

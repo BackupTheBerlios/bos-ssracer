@@ -14,6 +14,20 @@
 #include "timer.h"
 #include "macros.h"
 
+
+float sgn(float x)
+{
+	if(x > 0) {
+		return 1.0f;
+	}
+	else if(x < 0) {
+		return -1.0f;
+	}
+	else {
+		return 0.0f;
+	}
+}
+
 void CVehicle::Init()
 {
 	// Initialize position, acceleration, and velocity to zero
@@ -38,7 +52,7 @@ void CVehicle::Init()
 	CalculateWeightDistribution();
 
 	// Approximate values for a corvette are as follows:
-	//		- coefficientOfFriction = 0.30
+	//		- coefficientOfAerodynamicFriction = 0.30
 	//		- frontalArea = 2.2
 	float airDensity = 1.29f;
 

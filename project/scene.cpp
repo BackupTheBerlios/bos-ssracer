@@ -1,6 +1,8 @@
 #include "scene.h"
 
 #include "log.h"
+#include "vehicle.h"
+#include "gamestatemanager.h"
 #include "macros.h"
 
 
@@ -295,48 +297,55 @@ int CScene::LoadEntities(string* directory, string* filename)
 int CScene::LoadPlayerVehicle(string* directory, string* filename)
 {
 	FILE* fp;
-	char path[1024];
+	string path;
 	char buf[1024];
 	char* token;
 	char seps[] = " \t\n";
-//	CPlayerVehicle* newCar;
-	float temp[3];
+	CVehicle* newCar;
+	float temp[6];
 
-	sprintf(path, "%s\\%s", directory, filename);
+	path.assign(directory->c_str());
+	path.append(filename->c_str());
 
-	fp = fopen(path, "r");
+	fp = fopen(path.c_str(), "r");
 
 	if(!fp) {
 		return 0;
 	}
-/*
-	newCar = new CPlayerVehicle;
+
+	newCar = new CVehicle;
 
 	while(fgets(buf, sizeof(buf), fp)) {
 		token = strtok(buf, seps);
 
-		if(!strcmp(token, "<bodyMesh>")) {
-			token = strtok(NULL, seps);
-				newCar->setName(token);
-				continue;
+		if(token == NULL) {
+			continue;
 		}
-		else if(!strcmp(token, "<wheelMesh>")) {
+
+		if(!strcmp(token, "<BodyMesh>")) {
+			token = strtok(NULL, seps);
+			newCar->SetName(token);
+			continue;
+		}
+		else if(!strcmp(token, "<WheelMesh>")) {
 			token = strtok(NULL, seps);
 			for(int i=0;i<4;i++) {
-				newCar->getTires()[i].setName(token);
+				newCar->GetTire(i)->SetName(token);
 			}
 			continue;
 		}
-		else if(!strcmp(token, "<FLWheelTrans>")) {
+		else if(!strcmp(token, "<FRTireTrans>")) {
 			for(int i=0;i<3;i++) {
 				token = strtok(NULL, seps);
 				temp[i] = float(atof(token));
 			}
-			newCar->getTires()[FLWHEEL].setLocalPos(Vector3f(temp[0], temp[1], temp[2]));
-			newCar->getTires()[FRWHEEL].setLocalPos(Vector3f(-temp[0], temp[1], temp[2]));
+			newCar->GetTire(FRTIRE)->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
+			newCar->GetTire(FLTIRE)->SetPositionLC(Vector3f(-temp[0], temp[1], temp[2]));
+			newCar->GetTire(FLTIRE)->SetRotationLC(Vector3f(0.0f, 0.0f, PI_BOS));
 			continue;
 		}
-		else if(!strcmp(token, "<FLWheelScale>")) {
+		/*
+		else if(!strcmp(token, "<FRWheelScale>")) {
 			for(int i=0;i<3;i++) {
 				token = strtok(NULL, seps);
 				temp[i] = float(atof(token));
@@ -344,16 +353,19 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 			newCar->getTires()[FLWHEEL].setScale(Vector3f(temp[0], temp[1], temp[2]));
 			newCar->getTires()[FRWHEEL].setScale(Vector3f(temp[0], temp[1], temp[2]));
 			continue;
-		}
-		else if(!strcmp(token, "<BLWheelTrans>")) {
+		} */
+		else if(!strcmp(token, "<BRTireTrans>")) {
 			for(int i=0;i<3;i++) {
 				token = strtok(NULL, seps);
 				temp[i] = float(atof(token));
 			}
-			newCar->getTires()[BLWHEEL].setLocalPos(Vector3f(temp[0], temp[1], temp[2]));
-			newCar->getTires()[BRWHEEL].setLocalPos(Vector3f(-temp[0], temp[1], temp[2]));
+			newCar->GetTire(RRTIRE)->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
+			newCar->GetTire(RLTIRE)->SetPositionLC(Vector3f(-temp[0], temp[1], temp[2]));
+			newCar->GetTire(RLTIRE)->SetRotationLC(Vector3f(0.0f, 0.0f, PI_BOS));
+			
 			continue;
 		}
+		/*
 		else if(!strcmp(token, "<BLWheelScale>")) {
 			for(int i=0;i<3;i++) {
 				token = strtok(NULL, seps);
@@ -362,38 +374,128 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 			newCar->getTires()[BLWHEEL].setScale(Vector3f(temp[0], temp[1], temp[2]));
 			newCar->getTires()[BRWHEEL].setScale(Vector3f(temp[0], temp[1], temp[2]));
 			continue;
-		}
-		else if(!strcmp(token, "<CarTrans>")) {
+		} */
+		else if(!strcmp(token, "<OverallTrans>")) {
 			for(int i=0;i<3;i++) {
 				token = strtok(NULL, seps);
 				temp[i] = float(atof(token));
 			}
-			newCar->setTranslate(Vector3f(temp[0], temp[1], temp[2]));  //$$$$$$$
+			newCar->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
+			continue;
+		}
+		else if(!strcmp(token, "<Height>")) {
+			token = strtok(NULL, seps);
+			newCar->SetHeight(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<RollCenterHeight>")) {
+			token = strtok(NULL, seps);
+			newCar->SetRollCenterHeight(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<B>")) {
+			token = strtok(NULL, seps);
+			newCar->SetB(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<C>")) {
+			token = strtok(NULL, seps);
+			newCar->SetC(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<TrackWidth>")) {
+			token = strtok(NULL, seps);
+			newCar->SetTrackWidth(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<VehicleMass>")) {
+			token = strtok(NULL, seps);
+			newCar->SetVehicleMass(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<TireMass>")) {
+			token = strtok(NULL, seps);
+			newCar->SetTireMass(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<MaximumTorque>")) {
+			token = strtok(NULL, seps);
+			newCar->SetMaximumTorque(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<MaximumRPM>")) {
+			token = strtok(NULL, seps);
+			newCar->SetMaximumRPM(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<DrivetrainEfficiency>")) {
+			token = strtok(NULL, seps);
+			newCar->SetDrivetrainEfficiency(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<RearDiffRatio>")) {
+			token = strtok(NULL, seps);
+			newCar->SetRearDiffRatio(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<TireRadius>")) {
+			token = strtok(NULL, seps);
+			newCar->SetTireRadius(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<FrontalArea>")) {
+			token = strtok(NULL, seps);
+			newCar->SetFrontalArea(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<CoefficientOfAerodynamicFriction>")) {
+			token = strtok(NULL, seps);
+			newCar->SetCoefficientOfAerodynamicFriction(float(atof(token)));
+			continue;
+		}
+		else if(!strcmp(token, "<GearRatios>")) {
+			for(int i=0;i<6;i++) {
+				token = strtok(NULL, seps);
+				temp[i] = float(atof(token));
+			}
+			newCar->SetGearRatios(temp);
+			continue;
 		}
 	}
-
-	Vector3f test = newCar->getTranslate();
-	for(int i=0;i<4;i++) {
-		Vector3f test1 = newCar->getTires()[i].getLocalPos();
-		if(i ==0 || i == 1) {
-			newCar->getTires()[i].setRotate(Vector3f(90.0f, 0.0f, 0.0f));
-		}
-		newCar->getTires()[i].setTranslate(newCar->getTranslate() + newCar->getTires()[i].getLocalPos());
+	
+	// Load the vehicle mesh
+	if(!newCar->LoadMesh()) {
+		CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadPlayerVehicle() >> Error loading vehicle body mesh");
+		return 0;
+	}
+	// Load the mesh for the first tire
+	if(!newCar->GetTire(0)->LoadMesh()) {
+		CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadPlayerVehicle() >> Error loading tire mesh");
+		return 0;
 	}
 
-	// Add the vehicle to the objects list
-	addObject((CObject*)newCar);
-	newCar->initCarPhysics();
-	CPhysics::GetPhysicsPtr()->setPlayerVehicle(newCar);
+	// Set the remaining tires to point to the first tire mesh
+	for(int i=1;i<4;i++) {
+		newCar->GetTire(i)->SetMesh(newCar->GetTire(0)->GetMesh());
+	}
 
-    // Add the Tires to the objects list
-	addObject( ((CObject *)(&newCar->getTire(0))) );
-    addObject( ((CObject *)(&newCar->getTire(1))) );
-    addObject( ((CObject *)(&newCar->getTire(2))) );
-    addObject( ((CObject *)(&newCar->getTire(3))) );
 
-  */
+	// Initialize the car variables, and convert local variables to world
+	// space for the renderer to use.
+	newCar->Init();
 
+	// Add the mesh, and the vehicle to the scene
+	m_vMeshes.push_back(newCar->GetMesh());
+	m_vEntities.push_back(newCar);
+
+	// Add the tires to the scene
+	m_vMeshes.push_back(newCar->GetTire(0)->GetMesh());
+	for(i=0;i<4;i++) {
+		m_vEntities.push_back(newCar->GetTire(i));
+	}
+
+	// Set the playerVehicle pointer for the gamestatemanager,
+	CGameStateManager::GetGameStateManagerPtr()->SetPlayerVehicle(newCar);
 
 	return 1;
 }

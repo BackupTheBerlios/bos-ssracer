@@ -1,0 +1,22 @@
+<BodyMesh> mitsuEclipseBody
+<WheelMesh> mitsuEclipseWheel
+<FRTireTrans>  0.8670 0.5210 0.2460
+<RRTireTrans>  -0.891 0.5210 0.2430
+<OverallTrans> 0.0000 0.0000 -0.469
+
+<Height> 0.4690
+<RollCenterHeight> 0.4690
+<B> 0.721
+<C> 1.085
+<TrackWidth> 1.044
+<VehicleMass> 1500
+<TireMass> 35
+<MaximumTorque> 250
+<MaximumRPM> 6500
+<DrivetrainEfficiency> 0.75
+<RearDiffRatio> 3.42
+<GearRatios> 2.9 1.78 1.30 1.0 0.74 0.50
+<TireRadius> 0.215
+<FrontalArea> 0.25
+<CoefficientOfAerodynamicFriction> 0.40
+<CoefficientOfTireFriction> 1.0

@@ -3,7 +3,12 @@
 #include "gamestatemanager.h"
 #include "settings.h"
 
-
+CEntity::CEntity()
+{
+	m_rotate = Vector3f(0.0f, 0.0f, 0.0f);
+	m_translate = Vector3f(0.0f, 0.0f, 0.0f);
+	m_scale = Vector3f(1.0f, 1.0f, 1.0f);
+}
 // load a mesh and intitialize it using the renderer
 // stored in the meshes vector of the scene
 int CEntity::LoadMesh()

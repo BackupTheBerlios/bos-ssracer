@@ -39,6 +39,7 @@ public:
 	int LoadEntity();
 	int LoadPlayerVehicle();
 	int ClearScene();
+	int PhysicsTest1();
 
     int JScript1();
 

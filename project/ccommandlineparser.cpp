@@ -60,6 +60,7 @@ int CCommandLineParser::initKeywords()
 	Keywords.push_back(std::string("loadentity"));
 	Keywords.push_back(std::string("loadplayervehicle"));
 	Keywords.push_back(std::string("clearscene"));
+	Keywords.push_back(std::string("physicstest1"));
 	/*** End Chris' Commands ***/
 
     /*** Begin J's Commands ***/
@@ -107,6 +108,7 @@ int CCommandLineParser::execute()
 	if (*it == "loadplayervehicle") error = LoadPlayerVehicle();
 	if (*it == "clearscene") error = ClearScene();
     if (*it == "jscript1") error = JScript1();
+	if (*it == "physicstest1") error = PhysicsTest1();
 
 
 	return error;
@@ -337,7 +339,6 @@ int CCommandLineParser::LoadEntity()
 
 int CCommandLineParser::LoadPlayerVehicle()
 {
-	/*
 	string file = "-file";
 	string dir = "-dir";
 
@@ -373,7 +374,7 @@ int CCommandLineParser::LoadPlayerVehicle()
 			return 0;
 		}
 	}
-	*/
+	
 
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "Command not implemented yet, please come again!");
 
@@ -389,6 +390,20 @@ int CCommandLineParser::ClearScene()
 	return OK;
 }
 
+int CCommandLineParser::PhysicsTest1()
+{
+	string sDir = "C:\\Chris\\Current\\project\\media\\meshes\\dynamic\\vehicles\\mitsuEclipse\\";
+	string sName = "mitsuEclipse.car";
+
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
+		return GENERAL_ERROR;
+	}
+
+	return OK;
+
+}
+
 /*** End Chris' Functions ***/
 
 
@@ -396,7 +411,7 @@ int CCommandLineParser::ClearScene()
 int CCommandLineParser::JScript1()
 {
     string sDir = "\0";
-    string sName = "ferraritest\0";
+    string sName = "ferrarif20\0";
     if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity was not loaded successfully!");
 		return GENERAL_ERROR;

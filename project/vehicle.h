@@ -5,7 +5,6 @@
 #include "tire.h"
 #include "WmlVector3.h"
 
-
 using namespace Wml;
 
 enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
@@ -15,18 +14,7 @@ enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
 // Number of seconds for the tires to get from 0 - MAX_STEER_ANGLE_RADS
 #define STEER_ANGLE_TIME		1.0f
 
-float sgn(float x)
-{
-	if(x > 0) {
-		return 1.0f;
-	}
-	else if(x < 0) {
-		return -1.0f;
-	}
-	else {
-		return 0.0f;
-	}
-}
+
 
 typedef struct ___X___ {
 	bool lturn;
@@ -39,7 +27,7 @@ typedef struct ___X___ {
 class CVehicle : public CEntity {
 
 public:
-	CVehicle() {};
+	CVehicle() { for(int i=0;i<4;i++) { tires[i] = new CTire(); } };
 	~CVehicle() {};
 	void Init();
 	void UpdateVehiclePhysics();
@@ -66,6 +54,9 @@ public:
 	void SetFrontalArea(float param) { frontalArea = param; };
 	void SetCoefficientOfAerodynamicFriction(float param) { coefficientOfAerodynamicFriction = param; };
 	void SetCoefficientOfTireFriction(float param) { coefficientOfTireFriction = param; };
+
+	// Set other member variables
+	void SetPositionLC(Vector3f param) { positionLC = param; };
 
 	// Set methods for the vehicle's input state
 	void SetGas(bool gas) { inputState.gas = gas; };

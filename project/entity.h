@@ -12,7 +12,7 @@ class CEntity {
 
 public:
 	
-	CEntity() {};
+	CEntity();
 	~CEntity() {};
 
 	void SetMesh(CD3DMesh* pMesh) { m_pMesh = pMesh; };
