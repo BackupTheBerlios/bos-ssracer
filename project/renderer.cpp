@@ -123,11 +123,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     m_eActiveCamType = CAMERA_FREELOOK;
 
     // set debugging flags
-    #ifdef _DEBUG
-    m_bDrawQNodeBBoxes = m_bDrawEntBBoxes = true;
-    #else
     m_bDrawQNodeBBoxes = m_bDrawEntBBoxes = false;
-    #endif
 }
 
 

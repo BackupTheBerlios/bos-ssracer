@@ -54,6 +54,7 @@ public:
     int setres();
     int ShowEntities();
     int SetVisCull();
+    int SetDraw();
 
 	// === Rob's Functions === //
     int SoundEffectCommand();

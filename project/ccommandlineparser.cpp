@@ -80,6 +80,8 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("setres"));
     Keywords.push_back(std::string("showentities"));
     Keywords.push_back(std::string("setviscull"));
+    Keywords.push_back(std::string("drawentbbox"));
+    Keywords.push_back(std::string("drawquadtree"));
     /*** End J's Commands ***/
     
     /** Begin Ram & Gib Commands **/
@@ -170,6 +172,8 @@ int CCommandLineParser::execute()
     if (*it == "setres") error = setres();
     if (*it == "showentities") error = ShowEntities();
     if (*it == "setviscull") error = SetVisCull();
+    if (*it == "drawentbbox") error = SetDraw();
+    if (*it == "drawquadtree") error = SetDraw();
 
     if (*it == "loadvehicleai") error = LoadVehicleAI();
 
@@ -334,6 +338,9 @@ int CCommandLineParser::help()
 //	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEARSCENE - clear the current scene");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADPLAYERVEHICLE | LOADPV <file> - load a new player vehicle from file (leave .car extension off)");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESHTEST <file> <dir> - load a mesh at some directory (leave .x extension off");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "SETVISCULL <0|1> - turn on visibility culling");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "DRAW{ENTBBOX|QUADTREE} <0|1> - draw debug information for AI");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> [dir] - load a map and create a scene from a .map file [dir] defaults to .\\maps\\ if omitted");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map and scene objects");
@@ -785,6 +792,47 @@ int CCommandLineParser::SetVisCull()
             return OK;
         }
         CLog::GetLog().Write(LOG_GAMECONSOLE, "setviscull: Visibility Culling set to %d", CRenderer::GetRenderer().IsVisCullingEnabled());
+        return OK;
+    }
+
+    return OK;
+
+}
+
+
+
+int CCommandLineParser::SetDraw()
+{
+    // default to ON
+    if (Tokens.size()<2)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "drawentbbox: no arguments");
+		return OK;
+    }
+    else if (Tokens.size() == 2)  {
+
+        if (Tokens[1] == "ON" || Tokens[1] == "on" || Tokens[1] == "1")  {
+            // drawentbbox command
+            if (Tokens[0] == "drawentbbox")  {
+                CRenderer::GetRenderer().SetDrawEntBBoxes(true);
+            }
+            else if (Tokens[0] == "drawquadtree")  {
+                CRenderer::GetRenderer().SetDrawQNodeBBoxes(true);
+            }
+        }
+        else if (Tokens[1] == "OFF" || Tokens[1] == "off" || Tokens[1] == "0")  {
+            // drawentbbox command
+            if (Tokens[0] == "drawentbbox")  {
+                CRenderer::GetRenderer().SetDrawEntBBoxes(false);
+            }
+            else if (Tokens[0] == "drawquadtree")  {
+                CRenderer::GetRenderer().SetDrawQNodeBBoxes(false);
+            }
+        }
+        else  {
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "drawentbox: invalid syntax");
+            return OK;
+        }
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: state set to %d", Tokens[0].c_str(), CRenderer::GetRenderer().IsDrawEntBBoxesEnabled());
         return OK;
     }
 
