@@ -5,6 +5,7 @@
 
 #define STL_USING_STRING
 #include "stl.h"
+#include <algorithm>  //for lowercasing the command
 #include "log.h"
 #include "kernel.h"
 #include "soundcore.h"
@@ -60,15 +61,15 @@ int CCommandLineParser::initKeywords()
 	Keywords.push_back(std::string("loadscene"));
 	Keywords.push_back(std::string("loadentity"));
 	Keywords.push_back(std::string("loadplayervehicle"));
-	Keywords.push_back(std::string("clearscene"));
+	//Keywords.push_back(std::string("clearscene"));
 	Keywords.push_back(std::string("physicstest1"));
 	/*** End Chris' Commands ***/
-
-    Keywords.push_back(std::string("loadmap"));
 
     /*** Begin J's Commands ***/
     Keywords.push_back(std::string("loadmeshtest"));
     Keywords.push_back(std::string("cameratest"));
+    Keywords.push_back(std::string("loadmap"));
+    Keywords.push_back(std::string("unloadmap"));
     /*** End J's Commands ***/
     
     /** Begin Ram & Gib Commands **/
@@ -94,6 +95,8 @@ int CCommandLineParser::execute()
 
 	std::vector<std::string>::iterator it = Keywords.begin();
 	while (it != Keywords.end()) {
+        // J's Mod:  lowercase the keyword
+        transform (Tokens[0].begin(), Tokens[0].end(), Tokens[0].begin(), tolower);
 		if (Tokens[0] == *it) break;
 		it++;
 	}
@@ -110,11 +113,13 @@ int CCommandLineParser::execute()
 	if (*it == "clear") error = clear();
     if (*it == "echo") error = echo();	
     if (*it == "settimer") error = settimer();
-	if (*it == "loadscene") error = LoadScene();
+	//if (*it == "loadscene") error = LoadScene();
 	if (*it == "loadentity") error = LoadEntity();
 	if (*it == "loadplayervehicle") error = LoadPlayerVehicle();
-	if (*it == "clearscene") error = ClearScene();
+	//if (*it == "clearscene") error = ClearScene();
 	if (*it == "physicstest1") error = PhysicsTest1();
+
+    if (*it == "unloadmap") error = unloadmap();
     if (*it == "loadmap") error = loadmap();
     if (*it == "loadmeshtest") error = loadmeshtest();
     if (*it == "cameratest") error = cameratest();
@@ -245,24 +250,26 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "HELP - Display this list.");				
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "ECHO <text> - echoes the text entered.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEAR - clear the console.");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "SETTIMER <n> - set game timer resolution to 1/n clicks per second");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADSCENE <params> - load a new scene");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "                     <params>: -file <filename> -dir <directory>");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "                     where: <filename> is the name of the map to load");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "                                 <directory> is the directory where the map is located");
+//    CLog::GetLog().Write(LOG_GAMECONSOLE, "SETTIMER <n> - set game timer resolution to 1/n clicks per second");
+//	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADSCENE <params> - load a new scene");
+//	CLog::GetLog().Write(LOG_GAMECONSOLE, "                     <params>: -file <filename> -dir <directory>");
+//	CLog::GetLog().Write(LOG_GAMECONSOLE, "                     where: <filename> is the name of the map to load");
+//	CLog::GetLog().Write(LOG_GAMECONSOLE, "                                 <directory> is the directory where the map is located");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADENTITY <params> - load a new entity and add it to the current scene");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEARSCENE - clear the current scene");
+//	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEARSCENE - clear the current scene");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADPLAYERVEHICLE <params> - load a new player vehicle");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESHTEST <file> <dir> - load a mesh at some directory");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> <dir> - load a scene from a .map file");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESHTEST <file> <dir> - load a mesh at some directory (leave .x extension off");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> <dir> - load a map and create a scene from a .map file");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "-----------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;
 }
 
 /*** Begin Chris' Functions ***/
-int CCommandLineParser::LoadScene()
+// Chris, the loadmap command takes care of this now...
+/*int CCommandLineParser::LoadScene()
 {
 	string file = "-file";
 	string dir = "-dir";
@@ -302,7 +309,7 @@ int CCommandLineParser::LoadScene()
     return OK;
     
 
-}
+}*/
 
 int CCommandLineParser::LoadEntity()
 {
@@ -389,6 +396,7 @@ int CCommandLineParser::LoadPlayerVehicle()
 	return OK;
 }
 
+
 int CCommandLineParser::ClearScene()
 {
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->ReleaseScene())) {
@@ -419,77 +427,97 @@ int CCommandLineParser::PhysicsTest1()
 	return OK;
 
 }
-
-
-
-int CCommandLineParser::loadmap()
-{
-    string sDir, sName;
-    char szBuf[512];
-    FILE *fp;
-
-    if (Tokens.size() < 3)  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading scene from debug map");
-        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + "debug\\";
-        sName = "debug";
-    }
-    else if (Tokens[2].find(".\\", 0) == 0)  { //used that .\ dir shortcut
-        sName = Tokens[1];
-        sDir.replace(0, 1, CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP));
-        sDir += sName + "\\";
-
-    }
-
-    //check if the file exists
-    sprintf(szBuf, "%s%s", sDir.c_str(), sName.c_str());
-    fp = fopen( (sDir+sName+".map").c_str(), "r");
-    if (!fp)  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadmap Error: File does not exist: %s", szBuf);
-        return OK;
-    }
-
-
-    if (CGameStateManager::GetGameStateManager().GetScenePtr()->LoadMap( fp, &sDir, &sName ))  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "Successfully loaded map: %s%s", sDir.c_str(), sName.c_str());
-    }
-    else  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "Failed to load map: %s%s", sDir.c_str(), sName.c_str());
-    }
-    return OK;
-
-/*    // load the map up
-    if (CGameStateManager::GetGameStateManager().GetScenePtr()->LoadMap( sDir, sName ))  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "Successfully loaded map: %s%s", sDir.c_str(), sName.c_str());
-    }
-    else  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "Failed to load map: %s%s", sDir.c_str(), sName.c_str());
-    }
-    return OK;
-*/
-}
 /*** End Chris' Functions ***/
 
 
 
 // ===== Begin Jay's Functions ==== ///
+int CCommandLineParser::unloadmap()
+{
+    if (Tokens.size() != 1)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "unloadmap:  too many arguements");
+    }
+
+    // unload the current map & scene if any
+    if (CGameStateManager::GetGameStateManager().GetScenePtr()->IsLoaded() == true )  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Releasing current scene");
+        if (CGameStateManager::GetGameStateManager().GetScenePtr()->ReleaseScene()){
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "Scene released sucessfully");
+        }
+        else {
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR: Scene was not released sucessfully");
+        }
+    }
+    else {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR: no map is currently loaded");
+    }
+    return OK;
+}
+
+int CCommandLineParser::loadmap()
+{
+    string sDir, sName;
+    FILE *fp;
+
+    if (Tokens.size() < 3)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading scene from debug.map");
+        sName = "debug";
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + sName + "\\";
+    }
+    else if (Tokens[2].find(".\\", 0) == 0)  { // check if they used that .\ dir shortcut
+        sName = Tokens[1];
+        sDir = Tokens[2];
+        sDir.replace(0, 2, CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING));
+    }
+
+    //check if the file exists
+    fp = fopen( (sDir+sName+".map").c_str(), "r");
+    if (!fp)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadmap Error: File does not exist: %s", (sDir+sName+".map").c_str());
+        return OK;
+    }
+
+    // first unload the current map & scene if any
+    if (CGameStateManager::GetGameStateManager().GetScenePtr()->IsLoaded() == true )  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Releasing current scene");
+        if (CGameStateManager::GetGameStateManager().GetScenePtr()->ReleaseScene()){
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "Scene released sucessfully");
+        }
+        else {
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR: Scene was not released sucessfully");
+        }
+    }
+
+    // load the new map and scene
+    if (CGameStateManager::GetGameStateManager().GetScenePtr()->LoadMap( fp, &sDir, &sName ))  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Successfully loaded map: %s%s%s", sDir.c_str(), sName.c_str(), ".map");
+    }
+    else  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR: Failed to load map: %s%s%s", sDir.c_str(), sName.c_str(), ".map");
+    }
+    return OK;
+}
+
+
 int CCommandLineParser::loadmeshtest()
 {
     string sDir, sName;
     if (Tokens.size() < 3)  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading defaults");
-        sDir = "\0";
-        sName = "\0";
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading default mesh: pylon");
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\pylon\\";
+        sName = "pylon";
     }
-    else {
-        sDir = Tokens[2] + "\0";
-        sName = Tokens[1] + "\0";
+    else if (Tokens[2].find(".\\", 0) == 0)  { // check if they used that .\ dir shortcut
+        sName = Tokens[1];
+        sDir = Tokens[2];
+        sDir.replace(0, 2, CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING));
     }
 
     if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity was not loaded successfully!");
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
 		return OK;
 	}
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "J's loadmeshtest loaded the mesh %s Sucessfully!", sName.c_str() );
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "loadmeshtest loaded the mesh %s Sucessfully!", sName.c_str() );
     return OK;
 }
 

@@ -27,7 +27,6 @@ public:
 
 	// Add your command function here:
 	int setvol();
-	int loadmap();
 	int pause();
 	int play(); // soundFX or music
 	int help();
@@ -37,7 +36,7 @@ public:
     int settimer(); // set game timer resolution
 
 
-	int LoadScene();
+	//int LoadScene();
 	int LoadEntity();
 	int LoadPlayerVehicle();
 	int ClearScene();
@@ -47,6 +46,8 @@ public:
 
     // === J's Functions === //
     int loadmeshtest();
+  	int loadmap();
+    int unloadmap();
     int cameratest();
 
 protected:

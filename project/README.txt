@@ -9,12 +9,15 @@ BETA 3.0 *********** CURRENT VERSION PLEASE FILL THIS IN **************
 
 Changes / Additions :
 Added LOG_DEBUGOVERLAY
+Added loadmap console command
+Added unloadmap console command
+Added loadmeshtest console command
 
 Bug Fixes:
 - no longer crashes if no gamepad connected
 
 Known Bugs: 
-
+- older gamepads keep sending input to console
 
 
 BETA 2.0

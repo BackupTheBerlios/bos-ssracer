@@ -384,6 +384,8 @@ void CRenderer::DisplayBackBuffer ()
 
     CheckDevice(); //$$$DEBUG
 
+    //$$$TODO Check for frame buffer effects and apply them here
+
     // flip buffers
     HRESULT hr;
     hr = m_pd3dDevice->Present( NULL, NULL, NULL, NULL );

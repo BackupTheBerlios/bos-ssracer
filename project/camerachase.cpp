@@ -120,6 +120,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     // get the camera's local ahead vector based on the vehicles heading and velocity
     // if velocity == 0 use heading
     Vector3f vHeading = m_pkVehicle->GetVehicleHeadingWC();
+    //Vector3f vHeading = m_pkVehicle->get //GetVehicleVelocityWC();
     vHeading.Normalize();
     D3DXVECTOR3 vLocalAhead = D3DXVECTOR3(vHeading.X(), vHeading.Y(), vHeading.Z());
     //D3DXVECTOR3 vLocalAhead = D3DXVECTOR3(0,0,1);

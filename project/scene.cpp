@@ -32,15 +32,19 @@ int CScene::ReleaseScene()
 	// Clear the vector of entity pointers
 	m_vEntities.clear();
 
-	// Don't forget to set the player vehicle pointer to NULL
-	// Also, clean up any other pointers that use the scene
+	// set player vehicle pointer to NULL
+    CGameStateManager::GetGameStateManager().SetPlayerVehicle(NULL);
+
+    // Also, clean up any other pointers that use the scene
 	// AI player cars would have to be set to NULL as well.
 	// Can't think of anything else right now.
+
+    bMapIsLoaded = false;
 
 	return 1;
 }
 
-
+/*
 // is this old code?
 int CScene::LoadScene(string* directory, string* filename)
 {
@@ -94,7 +98,7 @@ int CScene::LoadScene(string* directory, string* filename)
 	return 1;
 
 }
-
+*/
 
 int CScene::LoadMap(FILE* fp, string* directory, string* filename)
 {
@@ -120,6 +124,8 @@ int CScene::LoadMap(FILE* fp, string* directory, string* filename)
 			// Maybe .aiPaths, .triggers
 		}
 	}
+
+    bMapIsLoaded = true;  
 
 	return 1;
 }
@@ -276,7 +282,7 @@ int CScene::LoadEntities(string* directory, string* filename)
                     // the mesh filename is the object's name as well
                     if(!(newObject->LoadMesh(CSettingsManager::GetSettingsManager().GetGameSetting(DIRSTATICMESH) + string(newObject->GetName()) +"\\")) ) {
                         CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntities() >> Error loading mesh");
-                        return 0;
+//                        return 0;
                     }
 
                     //=== add it to the entity vector ===//
@@ -570,8 +576,8 @@ int CScene::LoadEntity(string* directory, string* filename)
 	newEntity->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
 	newEntity->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
 
-	if(!newEntity->LoadMesh()) {
-		CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntity() >> Error loading mesh");
+	if(!newEntity->LoadMesh( *directory )) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "Error CScene::LoadEntity() >> Error loading mesh %s%s",directory->c_str(), filename->c_str());
 		FREE(newEntity, "Error CScene::LoadIdentity() >> Error releasing memory");
 		return 0;
 	}

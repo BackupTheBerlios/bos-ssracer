@@ -13,6 +13,9 @@ CEntity::CEntity()
 // stored in the meshes vector of the scene
 int CEntity::LoadMesh()
 {
+
+    /*********** THIS CODE IS KIND OF FUCKED ***************/
+
     assert(CRenderer::GetRendererPtr());
     
     string strPath = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES);
