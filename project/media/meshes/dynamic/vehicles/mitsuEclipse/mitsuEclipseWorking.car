@@ -2,7 +2,7 @@
 <WheelMesh> mitsuEclipseWheel
 <FRTireTrans>  0.8670 0.5240 0.2450
 <RRTireTrans>  -0.867 0.5240 0.2460
-<OverallTrans> 0.0000 0.0000 -0.520
+<OverallTrans> 0.0000 0.0000 0.0000
 
 <Height> 0.4690
 <RollCenterHeight> 0.4690
@@ -13,7 +13,7 @@
 <TireMass> 35
 <RotatingMass> 100
 <MaximumEngineTorque> 200
-<MaximumBrakeTorque> 500
+<MaximumBrakeTorque> 200
 <MaximumRPM> 6500
 <DrivetrainEfficiency> 0.75
 <RearDiffRatio> 3.42

@@ -400,9 +400,11 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 			}
             Vector3f vOTrans = Vector3f(temp[0], temp[1], temp[2]);
 			newCar->SetPositionLC(vOTrans);
+			/*
             for(int j=0; j<4; j++) {
                 newCar->GetTire(j)->SetPositionLC(newCar->GetTire(j)->GetPositionLC() + vOTrans);
 			}
+			*/
 			continue;
 		}
 		else if(!strcmp(token, "<Height>")) {
@@ -440,10 +442,14 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 			newCar->SetTireMass(float(atof(token)));
 			continue;
 		}
-		else if(!strcmp(token, "<MaximumTorque>")) {
+		else if(!strcmp(token, "<MaximumEngineTorque>")) {
 			token = strtok(NULL, seps);
-			newCar->SetMaximumTorque(float(atof(token)));
+			newCar->SetMaximumEngineTorque(float(atof(token)));
 			continue;
+		}
+		else if(!strcmp(token, "<MaximumBrakeTorque>")) {
+			token = strtok(NULL, seps);
+			newCar->SetMaximumBrakeTorque(float(atof(token)));
 		}
 		else if(!strcmp(token, "<MaximumRPM>")) {
 			token = strtok(NULL, seps);

@@ -47,7 +47,8 @@ public:
 	void SetVehicleMass(float param) { vehicleMass = param; };
 	void SetRotatingMass(float param) { rotatingMass = param; };
 	void SetTireMass(float param) { tireMass = param; };
-	void SetMaximumTorque(float param) { maximumTorque = param; };
+	void SetMaximumEngineTorque(float param) { maximumEngineTorque = param; };
+	void SetMaximumBrakeTorque(float param) { maximumBrakeTorque = param; };
 	void SetMaximumRPM(float param) { maximumRPM = param; };
 	void SetDrivetrainEfficiency(float param) { drivetrainEfficiency = param; };
 	void SetRearDiffRatio(float param) { rearDiffRatio = param; };
@@ -89,6 +90,7 @@ private:
 	void CalculateLongitudinalAcceleration();
 	void CalculateSlipRatio();
 	void CalculateEngineTorque();
+	void CalculateBrakeTorque();
 	void CalculateRPM();
 	void CalculateWheelAngularAcceleration();
 	void CalculateVehicleVelocity(float deltaT);
@@ -98,7 +100,7 @@ private:
 	void CalculateBodyOrientation();
 
 
-	float CalculateTraction(float engineForce, float rearAxleWeight);
+	float CalculateTraction(float force, float axleWeight);
 	float CalculateMaxTraction(float rearAxleWeight);
 
 	void InterpolateSteeringAngle(float deltaT);
@@ -120,7 +122,8 @@ private:
 	float vehicleWeight; // weight of the vehicle W = mass * gravity
 	float rotatingMass; // mass of the rotating parts of the vehicle
 	float tireMass;		// mass of each of the tires on the vehicle
-	float maximumTorque; // maximum amount of torque the vehicle can generate
+	float maximumEngineTorque; // maximum amount of torque that the engine can generate
+	float maximumBrakeTorque; // maximum amount of torque that the brakes can generate
 	float maximumRPM;	// maximum rpm of the vehicle
 	float drivetrainEfficiency;  // efficiency of the drivetrain to get power to the wheels (usually 70%)
 	float rearDiffRatio;	// rear differential ratio
