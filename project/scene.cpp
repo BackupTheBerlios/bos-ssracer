@@ -896,9 +896,8 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
     //$$$NOTE CRenderer::GetRenderer().GetCameraPtr(CAMERA_CHASE)->SetVehicle(pointertoyouropponentvehicle);
     //$$$NOTE then set the active camera to the chase cam -J
 	
-    // Set the playerVehicle pointer for the gamestatemanager,
-	CGameStateManager::GetGameStateManagerPtr()->SetOpponentVehicle(newCar); 
-
+    // Add opponent to list in Gamestate manager
+    CGameStateManager::GetGameStateManagerPtr()->addOpponentVehicle(newCar);
 	return 1;
 }
 

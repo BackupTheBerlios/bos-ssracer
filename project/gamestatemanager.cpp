@@ -2,13 +2,14 @@
 #include "gamestatemanager.h"
 #include "camera.h"
 #include "camerafreelook.h"
-#include "macros.h"
 #include "input.h"
+#include "macros.h"
 
 CVehicle * CGameStateManager::m_playerVehicle = NULL;
 CGameStateManager * CGameStateManager::ms_pkGame = NULL;
+
 //Rams add
-COpponentVehicle * CGameStateManager::m_opponentVehicle = NULL;
+vector<COpponentVehicle*> CGameStateManager::m_vOpponentVehicles;	// Vector containing all opponents
 
 CGameStateManager & CGameStateManager::GetGameStateManager()
 {

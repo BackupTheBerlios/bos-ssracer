@@ -831,71 +831,37 @@ int CCommandLineParser::LoadVehicleAI()
     (*--it)->SetTranslate(Vector3f(30.0f, 0.0f, 0.0f));
 	(*--it)->SetTranslate(Vector3f(100.0f, 0.0f, 0.0f));
 
-/*
-	CWaypoint * waypoint1 = new CWaypoint();
-	CWaypoint * waypoint2 = new CWaypoint();
-	CWaypoint * waypoint3 = new CWaypoint();
-	
-	waypoint1->SetName("Waypoint 1");
-	waypoint1->SetTranslate(Vector3f(10.0f, 0.0f, 0.0f));
-	waypoint1->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
-	waypoint1->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
-	
-	waypoint2->SetName("Waypoint 2");
-	waypoint2->SetTranslate(Vector3f(30.0f, 0.0f, 0.0f));
-	waypoint2->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
-	waypoint2->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
-
-    waypoint3->SetName("Waypoint 3");
-	waypoint3->SetTranslate(Vector3f(100.0f, 0.0f, 0.0f));
-	waypoint3->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
-	waypoint3->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
-    waypoint3->m_isLastWay = true;
-	
-	//std::vector<CWaypoint *> * waypointVec = new std::vector<CWaypoint*>();
-	CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadWaypoint(waypoint1);
-    CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadWaypoint(waypoint2);
-    CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadWaypoint(waypoint3);
-   
-    /* waypointVec->push_back(waypoint1);
-	waypointVec->push_back(waypoint2);
-    waypointVec->push_back(waypoint3);
-*/
-
+    //load mitsu opponent
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&carDir, &carName))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The Opponent Vehicle is not loaded correctly!");
 		return OK;
 	}
+
+    //load 2nd opponent (nsx)
+    carDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"acuransx\\";
+	carName = "acuransx.car";
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&carDir, &carName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The Opponent Vehicle is not loaded correctly!");
+		return OK;
+	}
+
  
     COpponentVehicle * opponent = NULL;
-    //iterate through entities and find opponent vehicle
+   
+    //get access to opponents and initialize waypoints for each
+    vector<COpponentVehicle *>::iterator it2;
+    for (it2=CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin();
+         it2<CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end();  it2++) {
  
+        opponent = (*it2);
+        opponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetWaypoints());
+        opponent->initNext();
+	    COpponentAI::GetOpponentAIPtr()->addCar(opponent);
      
-    vector<CEntity *>::iterator it2;
-    CLog::GetLog().Write(LOG_MISC, "size %i", CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->size());
-    for (it2=CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.begin();
-         it2<CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.end();  it2++) {
-      if ((*it2)->GetId()==20001)
-      {
-        opponent = (COpponentVehicle *)(*it2);
-      }
     }
     
-    if (opponent ==NULL)
-    {
-      CLog::GetLog().Write(LOG_GAMECONSOLE, "Opponent not found in entity list");
-	  return OK;
-    }
-   
-	//COpponentVehicle * opponent = (COpponentVehicle *)CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
-	opponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetWaypoints());
-
-    opponent->initNext();
-   
-	COpponentAI::GetOpponentAIPtr()->addCar(opponent);
-   
+    //set Cam to last vehicle set in 
 	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
-    //((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
     ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(opponent);
 	
     return OK;

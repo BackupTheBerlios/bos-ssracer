@@ -33,9 +33,8 @@ public:
 
 	CVehicle* GetPlayerVehicle() { return m_playerVehicle; };
     //Ram's Add
-    void SetOpponentVehicle(COpponentVehicle* param) { m_opponentVehicle = param; };
-	COpponentVehicle* GetOpponentVehicle() { return m_opponentVehicle; };
-
+    void addOpponentVehicle(COpponentVehicle* car) {m_vOpponentVehicles.push_back(car);};
+    vector<COpponentVehicle*> * GetOpponents() { return &m_vOpponentVehicles; };
 	void ProcessInput(CInputTaskMessage* msg);
 
 
@@ -50,8 +49,7 @@ private:
 	static CVehicle* m_playerVehicle;
     //Rams add TODO must allow more than one opponent
     //setup a vector later
-    static COpponentVehicle* m_opponentVehicle;
-
+    static vector<COpponentVehicle*> m_vOpponentVehicles;	// Vector containing all opponents
 };
 
 

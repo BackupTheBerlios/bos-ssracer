@@ -21,11 +21,16 @@ void CPhysics::Update()
     //Ramits add to update AI vehicle(s) 
     //TODO Convert to vector and parse through each one....
 	// Get any AI vehicles that need to be updated
-    CVehicle* opponentVehicle = CGameStateManager::GetGameStateManagerPtr()->GetOpponentVehicle();
+    /*CVehicle* opponentVehicle = CGameStateManager::GetGameStateManagerPtr()->GetOpponentVehicle();
  	if(opponentVehicle) {
 		opponentVehicle->UpdateVehiclePhysics();
-	}
+	}*/
 
+    vector<COpponentVehicle *>::iterator it;
+    for (it=CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin();
+         it<CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end();  it++) {
+           (*it)->UpdateVehiclePhysics();
+    }
 	// Get all other rigid bodies in simulation, and update their physics.
 
 }
