@@ -4,23 +4,6 @@
 #include <windows.h>
 #include "dxutil.h"
 #include "timer.h"
-#include "log.h"
-
-
-
-#ifdef _DEBUG
-#define NEW(name, type, errorString)	{ (name) = new (type); if(!(name)) { CLog::GetLog().Write(LOG_MISC, "%s", (errorString)); return 0;}}
-#elif
-#define NEW(name, type, errorString)	{ (name) = new (type); if(!(name)) return 0; }
-#endif
-
-#ifdef _DEBUG
-#define FREE(name, errorString)	{ if(name) { delete name; name = NULL;} else { CLog::GetLog().Write(LOG_MISC, "%s", errorString);} }
-#elif
-#define FREE(name, errorString)	{ if(name) { delete name; name = NULL;} }
-#endif
-
-
 
 // for tiles
 #define STREET_WIDTH 80.0f // this is arbitrary for now
@@ -70,13 +53,8 @@
 #define EAST 1
 #define SOUTH 2
 #define WEST 3 // note: clockwise again
-
-#ifndef PI_BOS
-#define PI_BOS	3.1415926f
-#define RADIANS(a) ((PI_BOS*a)/180.0f) // convert from degrees to radians
-#define DEGREES(a) ((a*180.0f)/PI_BOS) // convert from radians to degrees
-#endif
-
+#define RADIANS(a) ((Math<float>::PI*a)/180.0f) // convert from degrees to radians
+#define DEGREES(a) ((a*180.0f)/Math<float>::PI) // convert from radians to degrees
 // for waypoint positions (add to N,E,S,W above):
 #define LEAVING 0
 #define COMING 4
@@ -92,8 +70,6 @@
 // for vehicle types
 #define MAX_VEHICLE_TYPES 10
 
-// simple interpolation
-#define LERP(a,b,c)     (((b) - (a)) * (c) + (a))
 
 // error codes:
 #define OK 0
@@ -116,7 +92,6 @@
 #define EMPTY_VECTOR 17
 #define NEGATIVE_VALUE 18
 #define NO_SUCH_FONT 19
-
 static int global_error; // for functions that don't return ints but can encounter errors
 // global_error not working properly
 // end error codes

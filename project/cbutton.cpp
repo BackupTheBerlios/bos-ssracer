@@ -23,3 +23,9 @@ void CButton::onDeactivate()
 {
 	m_bDown = false;
 }
+
+void CButton::draw()
+{
+	// To be implemented
+	//CLog::GetLog().Write(LOG_USER, "button draw");
+}

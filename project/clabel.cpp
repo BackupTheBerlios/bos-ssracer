@@ -67,3 +67,9 @@ int CLabel::autoAdjust()
 	m_iWidth = (m_iSize + 4) * m_text.length();
 	return OK;
 }
+
+void CLabel::draw()
+{
+	// To be implemented
+	//	CLog::GetLog().Write(LOG_USER, "label draw");
+}

@@ -14,6 +14,7 @@ public:
 
 	void onActivate();
 	void onDeactivate();
+	void draw();
 
 	bool isDown() {return m_bDown;}
 	void clearText() {m_text.erase();}

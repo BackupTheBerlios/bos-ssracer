@@ -4,6 +4,7 @@
 #define STL_USING_ALL
 #include "stl.h"
 #include "macros.h"
+#include "log.h"
 
 #define STD_WIDGET_WIDTH 20
 #define STD_WIDGET_HEIGHT 10
@@ -22,6 +23,7 @@ public:
 
 	virtual void onActivate()=0;
 	virtual void onDeactivate()=0;
+	virtual void draw()=0;
 
 	int X() {return m_iX;}
 	int Y() {return m_iY;}

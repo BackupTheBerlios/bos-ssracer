@@ -42,6 +42,7 @@ public:
 	// can't really activate a label
 	void onActivate() {}
 	void onDeactivate() {}
+	void draw();
 
 	int setText(std::string text);
 	int setText(char* text);

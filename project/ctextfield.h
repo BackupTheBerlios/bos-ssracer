@@ -13,10 +13,13 @@ public:
 
 	void clearBuffer() {m_buffer.erase();}
 	void addChar(char c);
+	void addChar(int c);
 	void deleteChar();
+	void printBuffer(int where);
 
 	void onActivate();
 	void onDeactivate();
+	void draw();
 
 	bool isActive() {return m_bActive;}
 	std::string* Buffer() {return &m_buffer;}
