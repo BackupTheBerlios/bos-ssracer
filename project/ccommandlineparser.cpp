@@ -734,6 +734,9 @@ int CCommandLineParser::LoadVehicleAI()
 	string carName = "mitsuEclipse.car";
 	string sDir, sName;
 
+    //Set Chase Cam to see where we're at
+    //for some reason it dont chase so well
+    //CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
 	//straight copy from Jays loadmeshtest to get 2 pylons up yay.
 	sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\pylon\\";
     sName = "pylon";
@@ -747,32 +750,45 @@ int CCommandLineParser::LoadVehicleAI()
 	}
     CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon2 loaded the mesh %s Sucessfully!", sName.c_str() );
 
-	std::vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
+	}
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon3 loaded the mesh %s Sucessfully!", sName.c_str() );    
+    
+    std::vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()
 						->end()-1;
 
 
 	//translate pylons to desired locations
 	(*it)->SetTranslate(Vector3f(10.0f, 0.0f, 0.0f));
-	(*--it)->SetTranslate(Vector3f(25.0f, 0.0f, 0.0f));
+    (*--it)->SetTranslate(Vector3f(30.0f, 0.0f, 0.0f));
+	(*--it)->SetTranslate(Vector3f(100.0f, 0.0f, 0.0f));
 
 
 	CWaypoint * waypoint1 = new CWaypoint();
 	CWaypoint * waypoint2 = new CWaypoint();
+	CWaypoint * waypoint3 = new CWaypoint();
 	
-	
-	waypoint1->SetName("Waypoint1");
+	waypoint1->SetName("Waypoint 1");
 	waypoint1->SetTranslate(Vector3f(10.0f, 0.0f, 0.0f));
 	waypoint1->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
 	waypoint1->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
 	
-	waypoint2->SetName("Waypoint2");
-	waypoint2->SetTranslate(Vector3f(10.0f, 0.0f, 0.0f));
+	waypoint2->SetName("Waypoint 2");
+	waypoint2->SetTranslate(Vector3f(30.0f, 0.0f, 0.0f));
 	waypoint2->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
 	waypoint2->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
+
+    waypoint3->SetName("Waypoint 3");
+	waypoint3->SetTranslate(Vector3f(100.0f, 0.0f, 0.0f));
+	waypoint3->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
+	waypoint3->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
+    waypoint3->m_isLastWay = true;
 	
 	std::vector<CWaypoint *> * waypointVec = new std::vector<CWaypoint*>();
 	waypointVec->push_back(waypoint1);
 	waypointVec->push_back(waypoint2);
+    waypointVec->push_back(waypoint3);
 
 
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&carDir, &carName))) {
@@ -784,8 +800,8 @@ int CCommandLineParser::LoadVehicleAI()
 	opponent->setWPSequence(waypointVec);
 	opponent->initNext();
 	COpponentAI::GetOpponentAIPtr()->addCar(opponent);
-	
-
+	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
     
 	return OK;
 }

@@ -25,6 +25,8 @@ class CWaypoint : public CEntity {
 		std::vector<CWaypoint*>* Neighbors() {return &m_Neighbors;}
 		int setRadius(float r);
 		int setNeighbors(std::vector<CWaypoint*> Neighbors);
+        //Rams's Add
+        bool m_isLastWay;
 	protected:
 		float m_fRadius;
 		std::vector<CWaypoint*> m_Neighbors;

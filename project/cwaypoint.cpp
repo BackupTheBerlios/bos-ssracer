@@ -5,6 +5,7 @@ CWaypoint::CWaypoint()
 	m_fRadius = WP_RADIUS;
 	m_Neighbors.reserve(WP_NEIGHBOR_SIZE);
 	m_Neighbors.clear();
+    m_isLastWay = false;
 }
 
 CWaypoint::~CWaypoint()

@@ -17,14 +17,17 @@
 
 COpponentAI* COpponentAI::m_pkOpponentAI = NULL;
 
+
 COpponentAI::COpponentAI()
 {
 	m_pCars.reserve(VAI_CARS_SIZE);
 	m_pCars.clear();
 	m_pWaypoints.reserve(VAI_WP_SIZE);
 	m_pWaypoints.clear();
-
+    
 	m_pkOpponentAI = this;
+
+    lastWPReached = false;
 }
 
 COpponentAI::~COpponentAI()
@@ -107,7 +110,12 @@ bool COpponentAI::isAtWaypoint(COpponentVehicle* Car)
 	// NOTE: This doesn't catch cars who are partially within wp,
 	// But whose corner pos marks is not.
 	float dist = (*Car->Next()->GetTranslate() - *Car->GetTranslate()).Length();
-	if (dist < Car->Next()->Radius()) return true;
+	if (dist < Car->Next()->Radius()) 
+    {
+     // CLog::GetLog().Write(LOG_DEBUGOVERLAY, 28, "WP Name: %s ", string(*Car->Next()->GetName()));
+      return true;
+    }
+
 	else return false;
 
 	return true;
@@ -215,6 +223,21 @@ void COpponentAI::Update()
 			if ((*thisCar)->GetVehicleVelocityWC().Length() > VAI_CARS_VEL) {
 				(*thisCar)->SetBrake(true); (*thisCar)->SetGas(false);
 			}
+
+            //Rams add to brake at last waypoint (after reaching it)
+            if (isAtWaypoint((*thisCar)) && (*thisCar)->Next()->m_isLastWay) {
+                lastWPReached = true;
+            }
+
+            if (lastWPReached){
+            (*thisCar)->SetBrake(false); (*thisCar)->SetGas(false);
+            
+            /* //just coasting to stop for now, must figure out range to stop braking and
+            //get to complete stop
+             if ((*thisCar)->GetVehicleVelocityWC().Length()<=0)
+              (*thisCar)->SetBrake(false); (*thisCar)->SetGas(false);
+              */
+            }
 			// NOTE: vehicle current velocity will rarely ever be EXACTLY VAI_CARS_VEL
 			// Therefore, gas and brake are probably going to alternate.
 			// This can be fixed if necessary bay testing to see if current velocity falls
