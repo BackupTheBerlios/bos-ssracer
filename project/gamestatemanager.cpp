@@ -75,8 +75,18 @@ void CGameStateManager::ProcessInput(CInputTaskMessage* msg)
 			else {
 				m_playerVehicle->SetRTurn(false);
 			}
+
+			break;
+		case ' ':
+			if(msg->m_keyDown) {
+				m_playerVehicle->SetEBrake(true);
+			}
+			else {
+				m_playerVehicle->SetEBrake(false);
+			}
 			break;
 		}
+
 
 	}   
 }

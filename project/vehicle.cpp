@@ -14,6 +14,7 @@
 #include "timer.h"
 #include "macros.h"
 
+static bool firstFrame = true;
 
 float sgn(float x)
 {
@@ -207,17 +208,67 @@ void CVehicle::CalculateWeightDistribution()
 	}
 	*/
 
+
+	float maximumTractionForce = 10000.0f;
+
 	/////////////////////////////////////////////////////////
 	// FOR NOW WE DON"T NEED TO TAKE INTO ACCOUNT THE BANK
 	// AND GRADIENT SINCE THEY ARE EQUAL TO 0
 	/////////////////////////////////////////////////////////
 	//vehicleWeight * ( (c/L) - ((height/L) * gradientAngleRADS) ) - (height/L) * vehicleMass * accelerationLC.X();
-	weightDistribution[FRTIRE] = wFront/2.0f - height/2.0f * wFront * accelerationLC.Y();
-	weightDistribution[FLTIRE] = wFront/2.0f + height/2.0f * wFront * accelerationLC.Y();
-	weightDistribution[RRTIRE] = wRear/2.0f - height/2.0f * wFront * accelerationLC.Y();
-	weightDistribution[RLTIRE] = wRear/2.0f - height/2.0f * wFront * accelerationLC.Y();
+	weightDistribution[FRTIRE] = wFront/2.0f - (height/2.0f * wFront * accelerationLC.Y());
+	if(weightDistribution[FRTIRE] < 3000) {
+		weightDistribution[FRTIRE] = 3000.0f;
+	}
+	weightDistribution[FLTIRE] = wFront/2.0f + (height/2.0f * wFront * accelerationLC.Y());
+	if(weightDistribution[FLTIRE] < 3000) {
+		weightDistribution[FLTIRE] = 3000.0f;
+	}
+	weightDistribution[RRTIRE] = wRear/2.0f - (height/2.0f * wFront * accelerationLC.Y());
+	if(weightDistribution[RRTIRE] < 4000) {
+		weightDistribution[RRTIRE] = 4000.0f;
+	}
+	weightDistribution[RLTIRE] = wRear/2.0f + (height/2.0f * wFront * accelerationLC.Y());
+	if(weightDistribution[RLTIRE] < 4000) {
+		weightDistribution[RLTIRE] = 4000.0f;
+	}
 	///////////////////////////////////////////////////////////
 
+	
+	b_dynamicTraction = false;
+	
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 64, "FR: %f", weightDistribution[FRTIRE]);
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 63, "FL: %f", weightDistribution[FLTIRE]);
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 62, "RR: %f", weightDistribution[RRTIRE]);
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 61, "RL: %f", weightDistribution[RLTIRE]);
+
+	if(weightDistribution[FRTIRE] > maximumTractionForce) {
+		b_dynamicTraction = true;
+	}
+	if(weightDistribution[FLTIRE] > maximumTractionForce) {
+		b_dynamicTraction = true;
+	}
+
+	if(weightDistribution[RRTIRE] > maximumTractionForce) {
+		b_dynamicTraction = true;
+	}
+	if(weightDistribution[RLTIRE] > maximumTractionForce) {
+		b_dynamicTraction = true;
+	}
+
+	if(inputState.ebrake) {
+		b_dynamicTraction = true;
+	}
+
+
+
+
+	if(b_dynamicTraction) {
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 60, "DYNAMIC TRACTION");
+	}
+	else {
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 60, "STATIC TRACTION");
+	}
 }
 
 //--------------------------------------------------------------
@@ -868,7 +919,9 @@ void CVehicle::CalculateTireRotation(float deltaT)
 //--------------------------------------------------------------
 void CVehicle::CalculateVehicleVelocity(float deltaT)
 {
-	velocityLC.X() = velocityLC.X() + (accelerationLC.X() * deltaT);
+	if(!b_dynamicTraction) {
+		velocityLC.X() = velocityLC.X() + (accelerationLC.X() * deltaT);
+	}
 	velocityLC.Y() = 0.0f;
 	velocityLC.Z() = 0.0f;
 }
@@ -881,6 +934,8 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 	// Is the car trying to turn?
 //	if(float(fabs(steerAngleRADS)) > 0.0f  && float(fabs(velocityLC.X())) > 0.5f) {
 		// Yes, so calculate the effects of the steering angle
+
+	if(!b_dynamicTraction) {
 		Vector3f rotPos(0.0f, 0.0f, 0.0f);
 		float R = L / float(sin(steerAngleRADS));
 		float M = float(tan(steerAngleRADS)) * L;
@@ -968,7 +1023,7 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 			rotationLC.Z() -= rotRADS * sgn(steerAngleRADS);
 		}
 
-		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 41, "A: %f %f %f", A.X(), A.Y(), A.Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 41, "tempTrans: %f %f %f", tempTrans.X(), tempTrans.Y()*sgn(steerAngleRADS), tempTrans.Z());
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 42, "B: %f %f %f", B.X(), B.Y(), B.Z());
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 43, "HeadingTotLC: %f %f %f", headingTotLC.X(), headingTotLC.Y(), headingTotLC.Z());
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 44, "VelocityTotLC: %f %f %f", velocityTotLC.X(), velocityTotLC.Y(), velocityTotLC.Z());
@@ -980,13 +1035,117 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 		//Vector3f test = (0.0f, trans.Y(), 0.0f);
 		//RotateVectorAboutLocalZ(&test, -rotationLC.Z());
 
-//		accelerationLC.Y() = test.Y();
+		accelerationLC.Y() = (tempTrans.Y() / deltaT) * sgn(steerAngleRADS);
 		
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 37, "rotPos: %f %f %f", rotPos.X(), rotPos.Y(), rotPos.Z());
 //		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 38, "test.Y(): %f", test.Y());
 //		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 39, "accelerationLC.Y(): %f", accelerationLC.Y());
 
+		}
+		else {
+			Vector3f rotPos(0.0f, 0.0f, 0.0f);
+			float R = L / float(sin(steerAngleRADS));
+			float M = float(tan(steerAngleRADS)) * L;
+			float velocityMagnitude = float(sqrt(pow(velocityLC.X(), 2) + pow(velocityLC.Y(), 2) + pow(velocityLC.Z(), 2)));
+			velocityMagnitude *= float(sin(steerAngleRADS));
+			float D = velocityMagnitude * deltaT;
+			float X = D / R;
+
+			Vector3f A = tires[FRTIRE]->GetPositionLC();
+			A.Z() = 0.0f;
+			Vector3f B = tires[RRTIRE]->GetPositionLC();
+			B.Y() = A.Y();
+			B.Z() = 0.0f;
+			Vector3f K = Vector3f(B.X(), B.Y() + M, B.Z());
+
+			Vector3f AK = A - K;
+			Vector3f BK = B - K;
+
+			Vector3f AKprime;
+			AKprime.X() = AK.X() * float(cos(X)) + AK.Y() * float(sin(X));
+			AKprime.Y() = -AK.X() * float(sin(X)) + AK.Y() * float(cos(X));
+			AKprime.Z() = AK.Z();
+
+			Vector3f Aprime = AKprime + K;
+
+
+			Vector3f BKprime;
+			BKprime.X() = BK.X() * float(cos(X)) + BK.Y() * float(sin(X));
+			BKprime.Y() = -BK.X() * float(sin(X)) + BK.Y() * float(cos(X));
+			BKprime.Z() = BK.Z();
 		
+			Vector3f Bprime = BKprime + K;
+
+			Vector3f G = A - B;
+			G = G * ( c / (c + b) );
+
+			Vector3f Gprime = Aprime - Bprime;
+			Gprime = Gprime * ( c / (c + b) );
+
+			Vector3f trans = Gprime - G;		
+			
+			Vector3f temp = velocityLC;
+			
+			temp.X() = temp.X() * float(cos(steerAngleRADS));
+			temp.Y() = 0.0f;
+			temp.Z() = 0.0f;
+
+			temp += trans / deltaT;
+			//if(sgn(steerAngleRADS != 0.0f))
+			//	temp *= sgn(steerAngleRADS);
+
+			Vector3f tempTrans = temp * deltaT;
+
+			Vector3f AB = A - B;
+			Vector3f AprimeBprime = Aprime - Bprime;
+
+			if(velocityLC.X() < -0.3f) {
+				velocityTotLC *= -1.0f;
+				headingTotLC *= -1.0f;
+			}
+
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 41, "tempTrans: %f %f %f", tempTrans.X(), tempTrans.Y()*sgn(steerAngleRADS), tempTrans.Z());
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 42, "B: %f %f %f", B.X(), B.Y(), B.Z());
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 43, "HeadingTotLC: %f %f %f", headingTotLC.X(), headingTotLC.Y(), headingTotLC.Z());
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 44, "VelocityTotLC: %f %f %f", velocityTotLC.X(), velocityTotLC.Y(), velocityTotLC.Z());
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 50, "steerAngleDEGS: %f", DEGREES(steerAngleRADS));
+			
+			//Vector3f test = velocityTotLC;
+			//Vector3f test = (velocityTotLC - velTotOldLC) * deltaT;
+
+			//Vector3f test = (0.0f, trans.Y(), 0.0f);
+			//RotateVectorAboutLocalZ(&test, -rotationLC.Z());
+
+			accelerationLC.Y() = (tempTrans.Y() / deltaT) * sgn(steerAngleRADS);
+			
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 37, "rotPos: %f %f %f", rotPos.X(), rotPos.Y(), rotPos.Z());
+	//		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 38, "test.Y(): %f", test.Y());
+	//		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 39, "accelerationLC.Y(): %f", accelerationLC.Y());
+			// We are in dynamic friction mode (ie, skidding, ebraking)
+			if(inputState.ebrake) {
+				if(velocityLC.X() > -0.1f) {
+					rotationLC.Z() += RADIANS(180) * deltaT * sgn(steerAngleRADS);
+				}
+				else {
+					rotationLC.Z() -= RADIANS(180) * deltaT * sgn(steerAngleRADS);
+				}
+			}
+			else {
+				if(velocityLC.X() > -0.1f) {
+					rotationLC.Z() += RADIANS(40) * deltaT * sgn(steerAngleRADS);
+				}
+				else {
+					rotationLC.Z() -= RADIANS(40) * deltaT * sgn(steerAngleRADS);
+				}
+			}
+
+			velocityTotLC *= 0.99;
+			positionLC += velocityTotLC * deltaT;			
+			
+			headingTotLC = Vector3f(1.0f, 0.0f, 0.0f);
+			RotateVectorAboutLocalZ(&headingTotLC, rotationLC.Z());
+
+	}
 }
 
 //--------------------------------------------------------------
@@ -1186,7 +1345,7 @@ void CVehicle::TransformLocalToWorldSpace()
 		velocityLC = Vector3f(0.0f, 0.0f, 0.0f);
 	}
 	else ExtraneousForces = Vector3f(0.0f, 0.0f, 0.0f);
-*/
+    */
 
 }
 

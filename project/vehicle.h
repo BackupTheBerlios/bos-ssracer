@@ -14,7 +14,7 @@ enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
 
 // Maximum angle (in rads) that the front tires can turn
 #define MAX_STEER_ANGLE_RADS	RADIANS(40)
-#define MIN_STEER_ANGLE_RADS	RADIANS(5)
+#define MIN_STEER_ANGLE_RADS	RADIANS(20)
 // Number of seconds for the tires to get from 0 - MAX_STEER_ANGLE_RADS
 #define STEER_ANGLE_TIME		0.25f
 // RPM that the vehicle idles at
@@ -206,6 +206,7 @@ protected:
 	tInputState inputState;
 
 	bool dynamicFriction;
+	bool b_dynamicTraction;
 
 	// Sound stuff
 	unsigned long oldFreq;
