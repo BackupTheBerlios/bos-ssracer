@@ -11,6 +11,7 @@
 <TrackWidth> 1.044
 <VehicleMass> 1500
 <TireMass> 35
+<RotatingMass> 100
 <MaximumTorque> 250
 <MaximumRPM> 6500
 <DrivetrainEfficiency> 0.75

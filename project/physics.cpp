@@ -15,7 +15,7 @@ void CPhysics::Update()
 
 	// Get the player vehicle from the game
 	CVehicle* playerVehicle = CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
-	if(playerVehicle) {
+ 	if(playerVehicle) {
 		playerVehicle->UpdateVehiclePhysics();
 	}
 

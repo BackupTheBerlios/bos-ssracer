@@ -42,6 +42,8 @@ void CVehicle::Init()
 	headingWC = Vector3f(1.0f, 0.0f, 0.0f);
 	velocityWC = Vector3f(1.0f, 0.0f, 0.0f);
 
+	// Initialize the gear to first gear
+	gear = 1;
 
 	// Calculate the wheelbase, using the distance from the center
 	// of gravity to the front axle (b), and the distance from
@@ -525,9 +527,8 @@ void CVehicle::TransformLocalToWorldSpace()
 	// Apply the transformation Rotx(90)Roty(-90) to the position of the vehicle
 	m_translate = Vector3f(positionLC.Z()*(-1), positionLC.X(), positionLC.Y()*(-1));
 
-	// Transform the local rotation to the world rotation
-	// Add Z(90), and Y(90)
-	m_rotate = Vector3f(rotationLC.X(), rotationLC.Y() + 90.0f, rotationLC.Z() + 90.0f);
+	// Update the rotation value for the renderer.
+	m_rotate = rotationLC;
 	
 	// Then transform all 4 tires
 }

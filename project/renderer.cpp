@@ -111,7 +111,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 
 */
 	//--- free look camera --- //	
-	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, -1.0f), 
+	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(-1.0f, 0.0f, 0.0f), 
     			                                   &D3DXVECTOR3(0.0f, 0.0f, 0.0f) );
 
 	// wide FOV and a large frustrum
