@@ -12,7 +12,7 @@ enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
 // Maximum angle (in rads) that the front tires can turn
 #define MAX_STEER_ANGLE_RADS	0.43f
 // Number of seconds for the tires to get from 0 - MAX_STEER_ANGLE_RADS
-#define STEER_ANGLE_TIME		0.5df
+#define STEER_ANGLE_TIME		0.5f
 
 // RPM that the vehicle idles at
 #define IDLE_RPM	1000
