@@ -289,6 +289,8 @@ void CRenderer::CreateMeshes ()
     //m_kMeshMap["lambo"]->RestoreDeviceObjects( m_pd3dDevice );
     //$$$ENDTEMP
 
+	//m_kMeshMap["corvette"] = new CD3DMesh(_T(".\\corvetteBody.x\0"));
+
 
 
    	HRESULT   hr;
@@ -501,7 +503,7 @@ void CRenderer::RenderScene()
         //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 
 	    // scale
-	    vTemp = &Vector3f(0.5,0.5,0.5);//(*it)->GetScale();
+	    vTemp = &Vector3f(1.0,1.0,1.0);//(*it)->GetScale();
 	    pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
         //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 

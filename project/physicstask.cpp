@@ -1,6 +1,4 @@
 #include "physicstask.h"
-#include "game.h"
-
 
 CPhysicsTask::CPhysicsTask()
 { 

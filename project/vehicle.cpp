@@ -4,11 +4,15 @@
 //		   +Z is towards the bottom of the vehicle, +Y is out the side of the
 //		   vehicle, and +X points out the front of the vehicle.
 //
+//		   All angular calculations are carried out in RADIANS.
+//
 //		   All calculations are assumed to be operating on a rear wheel drive
 //		   vehicle.
 //---------------------------------------------------------------------------
 
 #include "vehicle.h"
+#include "timer.h"
+#include "macros.h"
 
 void CVehicle::Init()
 {
@@ -16,6 +20,8 @@ void CVehicle::Init()
 	accelerationLC = Vector3f(0.0f, 0.0f, 0.0f);
 	velocityLC = Vector3f(0.0f, 0.0f, 0.0f);
 	positionLC = Vector3f(0.0f, 0.0f, 0.0f);
+
+	steerAngleRADS = 0.0f;
 
 	// Figure out what bank and gradient the vehicle sits on
 	CalculateBankAndGradient();
@@ -187,13 +193,16 @@ void CVehicle::CalculateLongitudinalAcceleration()
 	// affects how much traction we will get from the tires.
 
 	float rearAxleWeight = weightDistribution[RRTIRE] + weightDistribution[RLTIRE];
-	
 
 	float engineForce = (engineTorque * gearRatios[gear] * rearDiffRatio) / tireRadius;
+	driveWheelTorque = engineForce * tireRadius;
 
 	float tractionForce = CalculateTraction(engineForce, rearAxleWeight);
+	tractionTorque = tractionForce * tireRadius;
 
 	float Flongitudinal = tractionForce - drag.X() - rollingResistance.X();
+
+	accelerationLC.X() = Flongitudinal / (vehicleMass + rotatingMass);
 }
 
 //--------------------------------------------------------------
@@ -217,6 +226,8 @@ float CVehicle::CalculateTraction(float engineForce, float rearAxleWeight)
 		return engineForce;
 	}
 	else {
+		// Play the tire spinning sound here
+		// Power exceeds tire traction capabilities
 		return maximumTractionForce;
 	}
 }
@@ -295,12 +306,164 @@ void CVehicle::CalculateEngineTorque()
 	}
 }
 
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::CalculateRPM()
+{
+	// The drivetrain is connected from the engine to the drive wheel 
+	// when the engine is declutched. This means that we can calculate
+	// the rpm of the engine using the angular velocity of the drive 
+	// wheel, the current gear ratio, and the rear differential ratio.
+	rpm = int(driveWheelAngularVelocityRADS * gearRatios[gear] * rearDiffRatio * 60.0f / (2.0f * PI_BOS));
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::CalculateDriveWheelAngularAcceleration()
+{
+	float totalTorque;
+	float rearAxleInertia;
+	float wheelInertia;
+
+	// NOT IMPLEMENTED YET.  ON THE TO DO LIST
+	float brakeTorque = 0.0f;
+
+	totalTorque = driveWheelTorque - tractionTorque - brakeTorque;
+
+	wheelInertia = (tireMass * (tireRadius * tireRadius)) / 2.0f;
+
+	// Multiply by 2 since there are 2 drive wheels
+	// Could also add a little bit to take into account
+	// the inertia of the axle itself.  I don't do this though.
+	rearAxleInertia = wheelInertia * 2;
+
+	driveWheelAngularAccelerationRADS = totalTorque / rearAxleInertia;
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::InterpolateTireRotation(float deltaT)
+{
+	// Based on the player input, we will interpolate
+	// the front tires' rotation about the local Z axis.
+	// We don't want the wheels to turn instantaneously from
+	// 0 - 25 DEGS, we want them to get over the course of about
+	// 1 or 2 seconds. These values need to be tweaked.
+
+	// Positive rotation, rotates counterclockwise around the Z axis.
+	// Negative rotation, rotates clockwise around the Z axis.
+
+	float newSteerAngle;
+
+	// Interpolate the wheels to steer left ( +Z rotation )
+	if(inputState.lturn) {
+		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * MAX_STEER_ANGLE_RADS + steerAngleRADS;
+		if(newSteerAngle > MAX_STEER_ANGLE_RADS) {
+			steerAngleRADS = MAX_STEER_ANGLE_RADS;
+		}
+		else {
+			steerAngleRADS = newSteerAngle;
+		}
+	}
+	// Interpolate the wheels to steer right ( -Z rotation )
+	else if(inputState.rturn) {
+		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * MAX_STEER_ANGLE_RADS * -1.0f + steerAngleRADS;
+		if(newSteerAngle < (MAX_STEER_ANGLE_RADS * -1.0f)) {
+			steerAngleRADS = MAX_STEER_ANGLE_RADS * (-1.0f);
+		}
+		else {
+			steerAngleRADS = newSteerAngle;
+		}
+	}
+	// Interpolate the wheels back to 0
+	else {	// Right Button nor Left Button is pressed
+		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * MAX_STEER_ANGLE_RADS;
+
+		if(steerAngleRADS >= 0.0f) {
+			if((steerAngleRADS - newSteerAngle) >= 0.0f) {
+				steerAngleRADS -= newSteerAngle;
+			}
+			else {
+				steerAngleRADS = 0.0f;
+			}
+		}
+		else if(steerAngleRADS < 0.0f) {
+			if((steerAngleRADS + newSteerAngle) < 0.0f) {
+				steerAngleRADS += newSteerAngle;
+			}
+			else {
+				steerAngleRADS = 0.0f;
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::CalculateAutomaticGearShifting()
+{
+	// Vehicle will shift once it gets to 90% of the
+	// maximum rpm for the engine.
+	// Vehicle will shift down once it gets to 50% of
+	// the maximum rpm for the vehicle
+
+	// Shift up
+	if(rpm > (maximumRPM * 0.90f)) {
+		if(gear >= 1 && gear < 5) {
+			gear++;
+		}
+	}
+	// Shift down
+	else if(rpm < (maximumRPM * 0.50f)) {
+		if(gear > 1 && gear <= 5) {
+			gear--;
+		}
+	}
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::CalculateTireAngularVelocity(float deltaT)
+{
+
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::CalculateTireRotation(float deltaT)
+{
+
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::CalculateVehicleVelocity(float deltaT)
+{
+
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::CalculateVehiclePosition(float deltaT)
+{
+
+}
 
 //--------------------------------------------------------------
 //
 //--------------------------------------------------------------
 void CVehicle::UpdateVehiclePhysics()
 {
+	
+
 	// Begin Variable Precalculation
 	CalculateEngineTorque();
 	CalculateDrag();
@@ -308,6 +471,30 @@ void CVehicle::UpdateVehiclePhysics()
 	CalculateSlipRatio();
 	// End Variable Precalculation
 
+	CalculateLongitudinalAcceleration();
+	CalculateDriveWheelAngularAcceleration();
+	CalculateRPM();
+
+	float deltaT = CTimer::GetTimer().GetTimeElapsed();
+
+	CalculateVehicleVelocity(deltaT);
+	CalculateVehiclePosition(deltaT);
+	
+	CalculateTireAngularVelocity(deltaT);
+	CalculateTireRotation(deltaT);
+	
+	TransformLocalToWorldSpace();
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::TransformLocalToWorldSpace()
+{
+	// First transform the vehicle
+
+
+	// Then transform all 4 tires
 }
 
 

@@ -217,6 +217,10 @@ SOURCE=.\physicstask.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\tire.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vehicle.cpp
 # End Source File
 # End Group
@@ -452,6 +456,10 @@ SOURCE=.\gamestatemanager.h
 # Begin Source File
 
 SOURCE=.\physicstask.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tire.h
 # End Source File
 # Begin Source File
 
