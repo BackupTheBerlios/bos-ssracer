@@ -6023,7 +6023,7 @@ Frame SCENE_ROOT {
      0.000000;0.000000;0.000000;;
 
      TextureFilename {
-      "D:\\Documents and Settings\\Christian Meredith\\Desktop\\tire_right.bmp";
+      "tire_right.bmp";
      }
     }
 
