@@ -107,10 +107,11 @@ void CAITask::Update() {
 
     //$$$DEBUG display some scene info to the overlay lines 11-19 ONLY -J
     #ifdef _DEBUG 
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 11, "# entities: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->GetNumEntities());
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 12, "# quadtree levels: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetNumLevels());
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 13, "# quadtree nodes: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetNumNodes());
-    //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 14, "# quadtree nodes: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetNumNodes());
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 11, "# QTree Entities: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->GetNumEntities());
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 12, "# QTree levels: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetNumLevels());
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 13, "# QTree nodes: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetNumNodes());
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 14, "QTree init state: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->IsInitialized());
+    //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 15, "QTree init: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->IsInitialized());
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 16, "");
 
 

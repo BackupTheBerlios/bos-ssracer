@@ -388,7 +388,7 @@ void CRenderer::RenderScene()
 
 
 
-    if (m_bVisCullingEnabled)  {
+    if (m_bVisCullingEnabled && CGameStateManager::GetGameStateManager().GetScenePtr()->GetQuadTree()->IsInitialized())  {
         // get visible quadtree nodes
         vector<CQuadNode *> * pvVisible = CGameStateManager::GetGameStateManager().GetScenePtr()->GetQuadTree()->GetVisibleNodesPtr();
         for (vector<CQuadNode *>::iterator it2 = pvVisible->begin();  it2 != pvVisible->end(); it2++)  {

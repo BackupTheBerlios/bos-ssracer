@@ -388,8 +388,9 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
 {
     // draw its entities if any
     map<int, CEntity *>::iterator it;
-    for (it=pQNode->m_EntMap.begin(); it!=pQNode->m_EntMap.end(); it++)
+    for (it=pQNode->m_EntMap.begin(); it!=pQNode->m_EntMap.end(); it++) {
         DrawEntity(it->second);
+    }
 
     if (!pQNode->m_pChildNode[NE]) 
         return; // no children to draw

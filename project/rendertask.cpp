@@ -141,6 +141,9 @@ void CRenderTask::Update()
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 1, "Cam Eye Position %f %f %f", vEye->x, vEye->y, vEye->z);
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 2, "Cam Look At %f %f %f", vLookAt->x, vLookAt->y, vLookAt->z);
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 3, "Cam Velocity %f %f %f", vVel->x, vVel->y, vVel->z);
+
+
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "Cam viscull state%d", m_pkRenderer->IsVisCullingEnabled());
     #endif
 
 
