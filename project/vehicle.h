@@ -97,9 +97,12 @@ public:
 	void SetFLTirePosition(Vector3f TirePos) {FLTirePosition = TirePos;}
 	// end Gib's additions
 
+    //Rams Add
+    void SetHeadingTotLC (Vector3f param){headingTotLC = param;};
+
 protected:
 	
-private:
+//private:
 
 	void CalculateBankAndGradient();
 	void CalculateWeightDistribution();
