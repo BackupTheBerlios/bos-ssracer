@@ -290,19 +290,19 @@ void CRenderer::CreateMeshes ()
     sprintf(szCWD, "%s", CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES).c_str());
     sprintf(szFilePath, "%s%s", szCWD, "\\mercedes\\mercedes.x");
     
-    m_kMeshMap["mercedes"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\mercedes\\mercedes.x"));
+    //m_kMeshMap["mercedes"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\mercedes\\mercedes.x"));
     //m_kMeshMap["mercedes"] = new CD3DMesh(_T("mercedes.x"));
     //m_kMeshMap["mercedes"]->Create( m_pd3dDevice, szFilePath );
     //m_kMeshMap["mercedes"]->Create( m_pd3dDevice, "C:\\Documents and Settings\\jay.ALTRON\\My Documents\\SCHOOL\\CPSC585\\CODE\\WORKING\\project\\mercedes.x" );
     //m_kMeshMap["mercedes"]->UseMeshMaterials(true);
     //m_kMeshMap["mercedes"]->RestoreDeviceObjects( m_pd3dDevice );
 
-    m_kMeshMap["f20"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0"));
+    //m_kMeshMap["f20"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0"));
     //m_kMeshMap["f20"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0") );
     //m_kMeshMap["f20"]->UseMeshMaterials(true);
     //m_kMeshMap["f20"]->RestoreDeviceObjects( m_pd3dDevice );
 
-    m_kMeshMap["lambo"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0"));
+    //m_kMeshMap["lambo"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0"));
     //m_kMeshMap["lambo"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0") );
     //m_kMeshMap["lambo"]->UseMeshMaterials(true);
     //m_kMeshMap["lambo"]->RestoreDeviceObjects( m_pd3dDevice );
@@ -445,7 +445,7 @@ void CRenderer::RenderScene()
 	m_kFontMap[FONT_SYSTEM]->DrawText( 0, 0, D3DCOLOR_ARGB(100,255,255,255), tMsgA, D3DFONT_FILTERED|D3DFONT_BOTTOM);
 	#endif
 
-/*
+
     assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
 
     for (vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->begin();
@@ -494,8 +494,8 @@ void CRenderer::RenderScene()
    	    pMatrixStack->Pop();
 
      }//end big ass for loop
-     */
-
+     
+/*
 
     assert(m_pd3dDevice);
     int iTemp=0;//$$$TEMP  should slow down the timer
@@ -554,7 +554,7 @@ void CRenderer::RenderScene()
     //    goto TIMERTEST;
     //}
 
-    
+*/
 
 /*
 LPD3DXBUFFER materialBuffer;
