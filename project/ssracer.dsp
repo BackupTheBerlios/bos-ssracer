@@ -239,13 +239,13 @@ SOURCE=.\inputtask.cpp
 # Begin Group "AI Sources"
 
 # PROP Default_Filter ".cpp"
-# Begin Group "Entity Sources"
+# Begin Group "ChrisSceneConstruct Sources"
 
 # PROP Default_Filter ".cpp"
-# End Group
-# Begin Group "Spatial Sources"
+# Begin Source File
 
-# PROP Default_Filter ".cpp"
+SOURCE=.\scene.cpp
+# End Source File
 # End Group
 # Begin Source File
 
@@ -449,13 +449,17 @@ SOURCE=.\inputtask.h
 # Begin Group "AI Headers"
 
 # PROP Default_Filter ".h"
-# Begin Group "Entity Headers"
+# Begin Group "ChrisSceneConstruct Headers"
 
 # PROP Default_Filter ".h"
-# End Group
-# Begin Group "Spatial Headers"
+# Begin Source File
 
-# PROP Default_Filter ".h"
+SOURCE=.\entity.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\scene.h
+# End Source File
 # End Group
 # Begin Source File
 
