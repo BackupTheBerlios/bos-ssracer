@@ -298,7 +298,7 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 	}
 	else {
 		#ifdef _DEBUG
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", pEntity->GetMesh()->m_strName);
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", pEntity->GetMesh()->m_strName);
 		#endif
     }
 
@@ -514,15 +514,15 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
     }
 
     #ifdef _DEBUG
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 18, "Drew %d of %d entities", iDrawnEnt, iTotalNodeEnt);
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 18, "Drew %d of %d entities in nodes", iDrawnEnt, iTotalNodeEnt);
     #endif
 
     if (m_bDrawQNodeBBoxes == true)// && !pQNode->m_EntMap.empty())
         DrawBBox(&pQNode->m_BBox, 1.0f, D3DCOLOR_ARGB(150, 50, 200, 50));
-/*
-    
+
+/*    
     //$$$TEMP THE FOLLOWING DRAWS CHILD NODES EVEN IF EMPTY
-    // recursively draw the child nodes
+    // recursively draw the visible child nodes
     if (!pQNode->m_pChildNode[NE])  {
         return; // no children to draw
     }
