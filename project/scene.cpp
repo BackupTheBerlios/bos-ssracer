@@ -340,7 +340,7 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 				temp[i] = float(atof(token));
 			}
 			newCar->GetTire(FRTIRE)->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
-			newCar->GetTire(FLTIRE)->SetPositionLC(Vector3f(-temp[0], temp[1], temp[2]));
+			newCar->GetTire(FLTIRE)->SetPositionLC(Vector3f(temp[0], -temp[1], temp[2]));
 			newCar->GetTire(FLTIRE)->SetRotationLC(Vector3f(0.0f, 0.0f, PI_BOS));
 			continue;
 		}
@@ -360,7 +360,7 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 				temp[i] = float(atof(token));
 			}
 			newCar->GetTire(RRTIRE)->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
-			newCar->GetTire(RLTIRE)->SetPositionLC(Vector3f(-temp[0], temp[1], temp[2]));
+			newCar->GetTire(RLTIRE)->SetPositionLC(Vector3f(temp[0], -temp[1], temp[2]));
 			newCar->GetTire(RLTIRE)->SetRotationLC(Vector3f(0.0f, 0.0f, PI_BOS));
 			
 			continue;
