@@ -3,6 +3,7 @@
 
 #include "scene.h"
 #include "vehicle.h"
+#include "inputmessage.h"
 
 
 class CGameStateManager
@@ -30,6 +31,8 @@ public:
 	void SetPlayerVehicle(CVehicle* param) { m_playerVehicle = param; };
 
 	CVehicle* GetPlayerVehicle() { return m_playerVehicle; };
+
+	void ProcessInput(CInputTaskMessage* msg);
 
 
 protected:

@@ -456,6 +456,11 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 			newCar->SetCoefficientOfAerodynamicFriction(float(atof(token)));
 			continue;
 		}
+		else if(!strcmp(token, "<CoefficientOfTireFriction>")) {
+			token = strtok(NULL, seps);
+			newCar->SetCoefficientOfTireFriction(float(atof(token)));
+			continue;
+		}
 		else if(!strcmp(token, "<RotatingMass>")) {
 			token = strtok(NULL, seps);
 			newCar->SetRotatingMass(float(atof(token)));

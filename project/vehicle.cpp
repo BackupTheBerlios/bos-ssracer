@@ -30,6 +30,11 @@ float sgn(float x)
 
 void CVehicle::Init()
 {
+	inputState.gas = false;
+	inputState.brake = false;
+	inputState.ebrake = false;
+	inputState.lturn = false;
+	inputState.rturn = false;
 	// Initialize position, acceleration, and velocity to zero
 	accelerationLC = Vector3f(0.0f, 0.0f, 0.0f);
 	velocityLC = Vector3f(0.0f, 0.0f, 0.0f);
@@ -42,8 +47,15 @@ void CVehicle::Init()
 	headingWC = Vector3f(1.0f, 0.0f, 0.0f);
 	velocityWC = Vector3f(1.0f, 0.0f, 0.0f);
 
+	// Calculate the weight of the vehicle.  W = mass * gravity
+	vehicleWeight = vehicleMass * 9.81f;
+	rpm = 1000;
+	driveWheelAngularVelocityRADS = 0.0f;
+
 	// Initialize the gear to first gear
 	gear = 1;
+
+
 
 	// Calculate the wheelbase, using the distance from the center
 	// of gravity to the front axle (b), and the distance from
@@ -227,11 +239,19 @@ void CVehicle::CalculateLongitudinalAcceleration()
 
 	float rearAxleWeight = weightDistribution[RRTIRE] + weightDistribution[RLTIRE];
 
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "rearAxleWeight: %f", rearAxleWeight);
+
 	float engineForce = (engineTorque * gearRatios[gear] * rearDiffRatio) / tireRadius;
 	driveWheelTorque = engineForce * tireRadius;
 
+	//float brakeForce = (brakeTorque *
+
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "engineForce: %f", engineForce);
+
 	float tractionForce = CalculateTraction(engineForce, rearAxleWeight);
 	tractionTorque = tractionForce * tireRadius;
+
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "tractionForce: %f", tractionForce);
 
 	float Flongitudinal = tractionForce - drag.X() - rollingResistance.X();
 
@@ -253,14 +273,22 @@ float CVehicle::CalculateTraction(float engineForce, float rearAxleWeight)
 	// are able to generate based on the type of tire.  Average street
 	// tires can have a coefficient of about 1, and race cars have tires
 	// that are usually in the range of 1.5 - 2.0
-	maximumTractionForce *= coefficientOfTireFriction;
+
+	if(!dynamicFriction) {
+		maximumTractionForce *= coefficientOfTireFriction;
+	}
+	else {
+		maximumTractionForce *= (coefficientOfTireFriction * 0.5f);
+	}
 
 	if(engineForce <= maximumTractionForce) {
+		dynamicFriction = false;
 		return engineForce;
 	}
 	else {
 		// Play the tire spinning sound here
 		// Power exceeds tire traction capabilities
+		dynamicFriction = true;
 		return maximumTractionForce;
 	}
 }
@@ -305,7 +333,20 @@ void CVehicle::CalculateSlipRatio()
 	// between the tire and the road.  This is what determines
 	// the amount of engineForce that is actually able to be
 	// put to the ground.
-	slipRatio = (driveWheelAngularVelocityRADS * tireRadius - velocityLC.X()) / (float(fabs(velocityLC.X())) );
+
+	if(velocityLC.X() == 0.0f) {
+		slipRatio = 0.06f;
+	}
+	else {
+		if(inputState.gas || inputState.brake) {
+			slipRatio = (driveWheelAngularVelocityRADS * tireRadius - velocityLC.X()) / (float(fabs(velocityLC.X())) );
+		}
+		else {
+			slipRatio = 0.0f;
+		}
+	}
+
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "SlipRatio: %f", slipRatio);
 }
 
 //--------------------------------------------------------------
@@ -320,7 +361,7 @@ void CVehicle::CalculateEngineTorque()
 	// will increase.  After 90% of the maximumRPM, the torque will
 	// decrease until the rpms hit the maximumRPM.
 
-	if(rpm <= 1000) {
+	if(rpm <= 1000 && !(inputState.gas)) {
 		// No torque at or below 1000 rpm.
 		rpm = 1000;
 		engineTorque = 0.0f;
@@ -348,7 +389,17 @@ void CVehicle::CalculateRPM()
 	// when the engine is declutched. This means that we can calculate
 	// the rpm of the engine using the angular velocity of the drive 
 	// wheel, the current gear ratio, and the rear differential ratio.
-	rpm = int(driveWheelAngularVelocityRADS * gearRatios[gear] * rearDiffRatio * 60.0f / (2.0f * PI_BOS));
+
+	if(driveWheelAngularVelocityRADS == 0.0f) {
+		rpm = 1000;
+	}
+	else {
+		rpm = int(driveWheelAngularVelocityRADS * gearRatios[gear] * rearDiffRatio * 60.0f / (2.0f * PI_BOS));
+
+		if(rpm > maximumRPM) {
+			rpm = int(maximumRPM);
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -364,6 +415,11 @@ void CVehicle::CalculateDriveWheelAngularAcceleration()
 	float brakeTorque = 0.0f;
 
 	totalTorque = driveWheelTorque - tractionTorque - brakeTorque;
+
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "totalTorque: %f", totalTorque);
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "tractionTorque: %f", tractionTorque);
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "driveWheelTorque: %f", driveWheelTorque);
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "brakeTorque: %f", brakeTorque);
 
 	wheelInertia = (tireMass * (tireRadius * tireRadius)) / 2.0f;
 
@@ -463,7 +519,8 @@ void CVehicle::CalculateAutomaticGearShifting()
 //--------------------------------------------------------------
 void CVehicle::CalculateTireAngularVelocity(float deltaT)
 {
-
+	driveWheelAngularVelocityRADS += driveWheelAngularAccelerationRADS * deltaT;
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "WheelAngVelocity: %f", driveWheelAngularVelocityRADS);
 }
 
 //--------------------------------------------------------------
@@ -479,7 +536,7 @@ void CVehicle::CalculateTireRotation(float deltaT)
 //--------------------------------------------------------------
 void CVehicle::CalculateVehicleVelocity(float deltaT)
 {
-
+	velocityLC = velocityLC + (accelerationLC * deltaT);
 }
 
 //--------------------------------------------------------------
@@ -487,7 +544,7 @@ void CVehicle::CalculateVehicleVelocity(float deltaT)
 //--------------------------------------------------------------
 void CVehicle::CalculateVehiclePosition(float deltaT)
 {
-
+	positionLC = positionLC + (velocityLC * deltaT);
 }
 
 //--------------------------------------------------------------
@@ -495,7 +552,10 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 //--------------------------------------------------------------
 void CVehicle::UpdateVehiclePhysics()
 {
+	CalculateAutomaticGearShifting();
 	
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "Gear: %i", gear);
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "RPM: %i", rpm);
 
 	// Begin Variable Precalculation
 	CalculateEngineTorque();
@@ -512,6 +572,13 @@ void CVehicle::UpdateVehiclePhysics()
 
 	CalculateVehicleVelocity(deltaT);
 	CalculateVehiclePosition(deltaT);
+
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "DeltaT: %f", deltaT);
+
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "Acceleration: %f %f %f", accelerationLC.X(), accelerationLC.Y(), accelerationLC.Z());
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "Velocity: %f %f %f", velocityLC.X(), velocityLC.Y(), velocityLC.Z());
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "Position: %f %f %f", positionLC.X(), positionLC.Y(), positionLC.Z());
+
 	
 	CalculateTireAngularVelocity(deltaT);
 	CalculateTireRotation(deltaT);
@@ -524,22 +591,22 @@ void CVehicle::UpdateVehiclePhysics()
 //--------------------------------------------------------------
 void CVehicle::TransformLocalToWorldSpace()
 {
-	// Apply the transformation Rotx(90)Roty(-90) to the position of the vehicle
-	m_translate = Vector3f(positionLC.Y(), positionLC.Z()*(-1.0f), positionLC.X()*(-1.0f));
+	// Apply the transformation WC(X,Y,Z) = LC(X,-Z,Y) to the position of the vehicle
+	//m_translate = Vector3f(positionLC.Y(), positionLC.Z()*(-1.0f), positionLC.X()*(-1.0f));
+	Vector3f bodyTrans(positionLC.X(), positionLC.Z()*(-1.0f), positionLC.Y());
+	m_translate = bodyTrans;
 
 	// Update the rotation value for the renderer.
 	m_rotate = rotationLC;
 	
 	// Then transform all 4 tires
+	Vector3f tireTransWC;
+	Vector3f tireTransLC;
 	for(int i=0;i<4;i++) {
-		Vector3f test = tires[i]->GetPositionLC();
-		tires[i]->SetTranslate(Vector3f(test.X(), test.Z() * (-1.0f), test.Y()));
-		//Vector3f test1 = tires[i]->GetRotationLC();
-		//tires[i]->SetRotationLC(Vector3f(0.0f, 180.0f, 0.0f));
-		tires[i]->SetRotate(tires[i]->GetRotationLC());
-		//Vector3f *test2 = tires[i]->GetRotate();
-		//tires[i]->SetTranslate(Vector3f(test.Y(), test.Z()*(-1.0f), test.X() * (-1.0f)));
-        //tires[i]->SetTranslate(tires[i]->GetPositionLC());
+		tireTransLC = tires[i]->GetPositionLC();
+		tireTransWC = Vector3f(tireTransLC.X(), tireTransLC.Z()*(-1.0f), tireTransLC.Y()) + bodyTrans;
+		tires[i]->SetTranslate(tireTransWC);
+		//tires[i]->SetRotate(tires[i]->GetRotationLC());
 	}
 
 }

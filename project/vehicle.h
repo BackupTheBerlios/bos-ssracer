@@ -27,7 +27,7 @@ typedef struct ___X___ {
 class CVehicle : public CEntity {
 
 public:
-	CVehicle() { for(int i=0;i<4;i++) { tires[i] = new CTire(); } };
+	CVehicle() { for(int i=0;i<4;i++) { tires[i] = new CTire(); } dynamicFriction = false; };
 	~CVehicle() {};
 	void Init();
 	void UpdateVehiclePhysics();
@@ -166,6 +166,13 @@ private:
 	Vector3f headingWC;	// heading of the vehicle in world coordinates. (vector that tells us which direction the vehicle is facing.)
 	Vector3f velocityWC;	// velocity of the vehicle in world coordinates.
 	tInputState inputState;
+
+
+
+
+
+
+	bool dynamicFriction;
 };
 
 
