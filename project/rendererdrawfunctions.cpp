@@ -326,8 +326,8 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
     //actual drawing of the mesh
     if ( FAILED(hr =  pEntity->GetMesh()->Render(m_pd3dDevice, true, true)) )  {
 		#ifdef _DEBUG
-		CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
-        CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", pEntity->GetMesh()->m_strName);
+		CLog::GetLog().Write(LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Could not draw: %s", pEntity->GetMesh()->m_strName);
 		#endif
 	}
 	else {
@@ -338,6 +338,8 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 
     pMatrixStack->Pop();
     m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() ); // restore the world matrix
+
+    pMatrixStack->Release();
 
     if (m_bDrawEntBBoxes == true)
         DrawBBox(pEntity->GetBoundingBox(), 10.0f, D3DCOLOR_ARGB(255, 220, 50, 50));

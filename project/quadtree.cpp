@@ -380,8 +380,8 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
 
 void CQuadTree::ClearQuadTree()
 {
-    for (vector <CQuadNode *>::iterator it = m_vpNodes.begin(); it!=m_vpNodes.end(); it++)
-        delete (*it);
+    //for (vector <CQuadNode *>::iterator it = m_vpNodes.begin(); it!=m_vpNodes.end(); it++)
+    //    delete (*it);
     m_vpNodes.clear();
     m_bIsInitialized = false;
 }

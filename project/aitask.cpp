@@ -84,11 +84,11 @@ void CAITask::Update() {
     // update the quadtree to account for new dynamic entity positions
     CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->Update(); //$$$TODO does nothing yet...
 
+    // clear visible nodes first
+    CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetVisibleNodesPtr()->clear();
+
     // perform visibility culling on the quadtree
     if (CRenderer::GetRenderer().IsVisCullingEnabled())  {        
-        // clear visible nodes first
-        CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetVisibleNodesPtr()->clear();
-
         if (CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->IsInitialized()) {
             CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->CullVisibility( CRenderer::GetRenderer().GetActiveCameraPtr() );
             //CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->CullVisibility( CRenderer::GetRenderer().GetActiveCameraPtr(), CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetRootNodePtr() );
