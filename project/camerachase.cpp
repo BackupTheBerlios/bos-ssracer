@@ -142,7 +142,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     #endif
     
     // get the camera's local ahead vector based on the vehicles heading and velocity
-    if (vVel.Length() < 20.0f)  {// if velocity is small use heading
+    if (vVel.Length() < 5.0f)  {// if velocity is below 10 m/s use heading
         vTemp = vHeading;
         #ifdef _DEBUG
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using car heading");    
@@ -155,30 +155,55 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
         Vector3f vVelDir = m_pkVehicle->GetVehicleVelocityWC();
         vVelDir.Normalize();
 
-        float fAngle = vHeading.Dot(vVelDir);
-        if (fAngle <= 4.0f)  {
+        
+        
+        if (0){//fAngle <= RADIANS(4.0f))  {
             vTemp = vHeading;        
         }
         else {
+
+            // get previous position and next position, set cam direction in the neg dir of translation
+            static Vector3f vPrevPos = *m_pkVehicle->GetTranslate();
+            vTemp = vPrevPos - *m_pkVehicle->GetTranslate();
+            vTemp.Normalize();            
+            vTemp *= -1.0f;
+
+            float fAngle = vHeading.Dot(vTemp);
+
+            vPrevPos = *m_pkVehicle->GetTranslate();
+
             /*
-            Matrix3f matRot = Matrix3f( Vector3f(0,1,0),  RADIANS(fAngle));
-             // rotate heading around Y to get this direction
-            vTemp = matRot* vHeading * fElapsedTime;
+            // Keep track of the frame count
+            static FLOAT fLastTime = 0.0f;
+            static DWORD dwFrames  = 0;
+            FLOAT fTime = DXUtil_Timer( TIMER_GETABSOLUTETIME );
+            ++dwFrames;
+
+
+            Matrix3f matRot;
+
+            // Update the scene stats once per second
+            if( fTime - fLastTime > 1.0f )
+            {
+                //m_fFPS    = dwFrames / (fTime - fLastTime);
+                fLastTime = fTime;
+                dwFrames  = 0;
+                
+            }
+            else {
+                // rotate around Y to get this direction
+                matRot = Matrix3f( Vector3f(0,1,0),  RADIANS(fAngle * (fTime - fLastTime)));//fElapsedTime);
+                vTemp = matRot* vTemp;
+            }
+            */
+
+            
                    
             #ifdef _DEBUG
-            CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using angle %.4f degs", fAngle );    
-            #endif
-            */
-            vTemp = vVelDir;
-            #ifdef _DEBUG
-            CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using velocity to set cam" );    
+            CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using angle %.4f degs", DEGREES(LERP(0.0f, fAngle * fElapsedTime, fAngle)));//fElapsedTime) );    
+            CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "using angle %.4f rads", fAngle);//fElapsedTime) );    
             #endif
         }
-        //$$$TEMP just use the heading for now
-        //vTemp = vHeading;//m_pkVehicle->GetVehicleHeadingWC();
-        #ifdef _DEBUG
-        //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using heading until I can interpolate" );    
-        #endif
     }
 
     vTemp.Y() = 0;
