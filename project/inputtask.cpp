@@ -36,8 +36,6 @@ void CInputTask::Update()
 {
 
   HandleMessages();
-  //if(m_cInput->m_fQuit==TRUE)
-  //CKernel::GetKernel().KillAllTasks();
   
   m_cInput->update();
 

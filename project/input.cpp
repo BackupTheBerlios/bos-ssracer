@@ -128,12 +128,10 @@ bool CInput::start()
 		return 0;
 	}
 
-    //crashes without gamepad present
-    /*
 	if(!createJoystickDevice()) {
 		return 0;
 	}
-*/
+
 	return 1;
 }
 
@@ -141,57 +139,71 @@ bool CInput::release()
 {
 	HRESULT hr;
 
-	hr = g_keyboardDIDevice->Unacquire();
+	if(g_keyboardDIDevice) {	// Does the keyboard device interface exist?
+		// Yes, unacquire the device
+		hr = g_keyboardDIDevice->Unacquire();
+		if FAILED(hr) {
+			return 0;
+		}	
 
-	if FAILED(hr) {
-		return 0;
-	}	
-
-	hr = g_keyboardDIDevice->Release();
-
-	if FAILED(hr) {
-		return 0;
-	}	
-
-	hr = g_keyboardDI->Release();
+		// Release the device
+		hr = g_keyboardDIDevice->Release();
+		if FAILED(hr) {
+			return 0;
+		}	
+	}
+	if(g_keyboardDI) {	// Does the keyboard direct input handle exist?
+		// Yes, release the handle
+		hr = g_keyboardDI->Release();
+	}
 	
 	if FAILED(hr) {
 		return 0;
 	}
 	
-	hr = g_joystickDIDevice->Unacquire();
+	if(g_joystickDIDevice) {	// Does the joystick device interface exist?
+		// Yes, unacquire the device
+		hr = g_joystickDIDevice->Unacquire();
+		if FAILED(hr) {
+			return 0;
+		}
+		// Release the device.
+		hr = g_joystickDIDevice->Release();
+		if FAILED(hr) {
+			return 0;
+		}	
+	}
 
-	if FAILED(hr) {
-		return 0;
-	}	
-
-	hr = g_joystickDIDevice->Release();
-
-	if FAILED(hr) {
-		return 0;
-	}	
-
-	hr = g_joystickDI->Release();
+	if(g_joystickDI) {	// Does the joystick direct input handle exist?
+		// Yes, release the handle
+		hr = g_joystickDI->Release();
+	}
 	
 	if FAILED(hr) {
 		return 0;
 	}	
 
 
+	// Return success.
 	return 1;
 }
 
 bool CInput::update()
 {
 
-	if(!updateKeyboard()) {
-		return 0;
-	}
-	
-	if(!updateJoystick()) {
-		return 0;
+	if(g_keyboardDIDevice) {	// Does the keyboard device interface exist?
+		// Yes, Update the keyboard input
+		if(!updateKeyboard()) {
+			return 0;
+		}
 	}
 
+	if(g_joystickDIDevice) {	// Does the joystick device interface exist?
+		// Yes, Update the joystick input
+		if(!updateJoystick()) {
+			return 0;
+		}
+	}
 	return 1;
 
 }
@@ -211,8 +223,10 @@ bool CInput::createJoystickDevice()
 	hr = g_joystickDI->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoysticksCallback, NULL,
 								   DIEDFL_ATTACHEDONLY);
 
-	if FAILED(hr) {
-		return 0;
+	// Has the device interface been created successfully?
+	if ( FAILED(hr) || !g_joystickDIDevice) {
+		// No, so return failure
+		return 1;
 	}
 
     hr = g_joystickDIDevice->SetDataFormat(&c_dfDIJoystick2);//
@@ -226,9 +240,6 @@ bool CInput::createJoystickDevice()
 	if FAILED(hr) {
         return 0;
 	}
-	
-	
-	
 
 	hr = g_joystickDIDevice->EnumObjects( EnumObjectsCallback, (VOID*)CBOSApplication::GetBOSApp().GetMainWindowHandle(),
 										  DIDFT_ALL);
@@ -302,23 +313,11 @@ BOOL CALLBACK EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi,
         diprg.diph.dwSize       = sizeof(DIPROPRANGE); 
         diprg.diph.dwHeaderSize = sizeof(DIPROPHEADER); 
         diprg.diph.dwHow        = DIPH_BYID; 
-		diprg.diph.dwObj        = pdidoi->dwType; // Specify the enumerated axis (X)
+		diprg.diph.dwObj        = pdidoi->dwType; // Specify the enumerated axis or axes
         diprg.lMin              = GAMEPAD_LOWER_RANGE; 
         diprg.lMax              = GAMEPAD_UPPER_RANGE;
-		    
-        // Set the range for the axis
-        //if( FAILED( g_joystickDIDevice->SetProperty( DIPROP_RANGE, &diprg.diph ) ) ) 
-        //    return DIENUM_STOP;
 
 		hr = g_joystickDIDevice->SetProperty( DIPROP_RANGE, &diprg.diph);
-
-		/*
-		diprg.diph.dwObj        = DIJOFS_X; // Specify the enumerated axis (Y)
-
-        // Set the range for the axis
-        if( FAILED( g_joystickDIDevice->SetProperty( DIPROP_RANGE, &diprg.diph ) ) ) 
-            return DIENUM_STOP; 
-			*/
 	}
 
 	return 1;
