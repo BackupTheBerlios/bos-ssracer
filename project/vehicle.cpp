@@ -304,6 +304,8 @@ float CVehicle::CalculateTraction(float force, float axleWeight)
 	// ***************** TWEAKABLE VALUE ******************* //
 	float maximumTractionForce = 8000.0f;
 
+	maximumTractionForce = (axleWeight / maximumTractionForce) * maximumTractionForce;
+
 	// Modulate the maximum amount of tractive force that the tires
 	// are able to generate based on the type of tire.  Average street
 	// tires can have a coefficient of about 1, and race cars have tires
@@ -409,13 +411,21 @@ void CVehicle::CalculateEngineTorque()
 		engineTorque = 0.0f;
 	}
 	*/
-	else if( float(rpm) <= (maximumRPM * 0.90f) ) {
+	else if( float(rpm) <= (maximumRPM * 0.90f)) {
 		// torque varies by 50%
 		// At 1000 rpm we are at 50% torque output
 		// At 90% of maxRPM we are at 100% torque output
 		engineTorque = float(maximumEngineTorque * 0.50f + ( (rpm - 1000) / (((maximumRPM * 0.90f) - 1000) * 2.0f)));
 	}
 	else {
+		
+		// If the rpms are red lined, then we don't want to giving the player
+		// any more power, because the vehicle will accelerate until drag
+		// can overcome the torque.
+		if(rpm == maximumRPM) {
+			engineTorque = 0.0f;
+			return;
+		}
 		// torque varies by 10%
 		// At 90% of maxRPM we are at 100% torque output
 		// At 100% maxRPM we are at 90% torque output
@@ -433,7 +443,7 @@ void CVehicle::CalculateEngineTorque()
 void CVehicle::CalculateBrakeTorque()
 {
 	// Temporary
-	if(inputState.brake) {
+	if(inputState.brake && rpm < maximumRPM) {
 		brakeTorque = maximumBrakeTorque;
 	}
 	else {
@@ -450,11 +460,11 @@ void CVehicle::CalculateRPM()
 	// the rpm of the engine using the angular velocity of the drive 
 	// wheel, the current gear ratio, and the rear differential ratio.
 
-	if(driveWheelAngularVelocityRADS == 0.0f) {
+	if(float(fabs(driveWheelAngularVelocityRADS)) == 0.0f) {
 		rpm = IDLE_RPM;
 	}
 	else {
-		rpm = int(driveWheelAngularVelocityRADS * gearRatios[gear] * rearDiffRatio * 60.0f / (2.0f * PI_BOS)) + IDLE_RPM;
+		rpm = int(float(fabs(driveWheelAngularVelocityRADS)) * gearRatios[gear] * rearDiffRatio * 60.0f / (2.0f * PI_BOS)) + IDLE_RPM;
 
 		if(rpm > maximumRPM) {
 			rpm = int(maximumRPM);
@@ -611,7 +621,9 @@ void CVehicle::CalculateAutomaticGearShifting()
 	// the maximum rpm for the vehicle
 
 	// Shift up
-	if(rpm > (maximumRPM * 0.90f)) {
+	// We don't want to shift up if the user is pressing the brake
+	// this is because the brake doubles as a reverse gear.
+	if(rpm > (maximumRPM * 0.90f)  && !(inputState.brake)) {
 		if(gear >= 1 && gear < 5) {
 			gear++;
 		}
