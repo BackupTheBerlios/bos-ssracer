@@ -13,7 +13,7 @@ using namespace Wml;
 enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
 
 // Maximum angle (in rads) that the front tires can turn
-#define MAX_STEER_ANGLE_RADS	RADIANS(50)
+#define MAX_STEER_ANGLE_RADS	RADIANS(40)
 #define MIN_STEER_ANGLE_RADS	RADIANS(5)
 // Number of seconds for the tires to get from 0 - MAX_STEER_ANGLE_RADS
 #define STEER_ANGLE_TIME		0.25f

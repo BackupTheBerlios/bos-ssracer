@@ -331,7 +331,10 @@ void CVehicle::CalculateLongitudinalAcceleration()
 		else {
 			Flongitudinal = drag.X() - rollingResistance.X() - engineBraking;
 		}
+	}
 
+	if(rpm == maximumRPM) {
+		Flongitudinal = 1000.0f * -sgn(velocityLC.X());
 	}
 
 	accelerationLC.X() = Flongitudinal / (vehicleMass + rotatingMass);
@@ -772,7 +775,7 @@ void CVehicle::CalculateAutomaticGearShifting()
 	// Shift up
 	// We don't want to shift up if the user is pressing the brake
 	// this is because the brake doubles as a reverse gear.
-	if(rpm > (maximumRPM * 0.90f)  && !(inputState.brake)) {
+	if(rpm > (maximumRPM * 0.90f)  && !(inputState.brake) && velocityLC.X() > -0.1f) {
 		if(gear >= 1 && gear < 5) {
 			gear++;
 		}
@@ -878,6 +881,7 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 	// Is the car trying to turn?
 //	if(float(fabs(steerAngleRADS)) > 0.0f  && float(fabs(velocityLC.X())) > 0.5f) {
 		// Yes, so calculate the effects of the steering angle
+		Vector3f rotPos(0.0f, 0.0f, 0.0f);
 		float R = L / float(sin(steerAngleRADS));
 		float M = float(tan(steerAngleRADS)) * L;
 		float velocityMagnitude = float(sqrt(pow(velocityLC.X(), 2) + pow(velocityLC.Y(), 2) + pow(velocityLC.Z(), 2)));
@@ -925,21 +929,15 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 		temp.Z() = 0.0f;
 
 		temp += trans / deltaT;
+		//if(sgn(steerAngleRADS != 0.0f))
+		//	temp *= sgn(steerAngleRADS);
 
 		Vector3f tempTrans = temp * deltaT;
 
-		Vector3f test = velocityTotLC;
-		RotateVectorAboutLocalZ(&test, -rotationLC.Z());
-
-		//accelerationLC.X() = tempTrans.X() / deltaT - test.X();
-		accelerationLC.Y() = tempTrans.Y() / deltaT - test.Y();
-
-		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 39, "accelerationLC.Y(): %f", accelerationLC.Y());
-
-		Vector3f rotPos;
-
 		rotPos.X() = tempTrans.X() * cos(-rotationLC.Z()) + tempTrans.Y() * sin(-tempTrans.Z());
 		rotPos.Y() = tempTrans.X() * -sin(-rotationLC.Z()) + tempTrans.Y() * cos(-tempTrans.Z());
+		//rotPos.X() = tempTrans.X() * cos(-rotationLC.Z()) + tempTrans.Y() * sin(-rotationLC.Z());
+		//rotPos.Y() = tempTrans.X() * -sin(-rotationLC.Z()) + tempTrans.Y() * cos(-rotationLC.Z());
 		rotPos.Z() = tempTrans.Z();
 
 		positionLC += rotPos;
@@ -952,6 +950,7 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 
 		velocityTotLC = rotPos / deltaT;
 
+
 		if(velocityLC.X() < -0.3f) {
 			velocityTotLC *= -1.0f;
 			headingTotLC *= -1.0f;
@@ -961,18 +960,33 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 		float magAB = pow(AB.X(), 2) + pow(AB.Y(), 2) + pow(AB.Z(), 2);
 
 		float rotRADS = float(acos(ABdotAprimeBprime / magAB));
-		rotationLC.Z() += rotRADS * sgn(steerAngleRADS);
+		
+		if(velocityLC.X() > -0.1f) {
+			rotationLC.Z() += rotRADS * sgn(steerAngleRADS);
+		}
+		else {
+			rotationLC.Z() -= rotRADS * sgn(steerAngleRADS);
+		}
 
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 41, "A: %f %f %f", A.X(), A.Y(), A.Z());
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 42, "B: %f %f %f", B.X(), B.Y(), B.Z());
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 43, "HeadingTotLC: %f %f %f", headingTotLC.X(), headingTotLC.Y(), headingTotLC.Z());
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 44, "VelocityTotLC: %f %f %f", velocityTotLC.X(), velocityTotLC.Y(), velocityTotLC.Z());
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 50, "steerAngleDEGS: %f", DEGREES(steerAngleRADS));
+		
+		//Vector3f test = velocityTotLC;
+		//Vector3f test = (velocityTotLC - velTotOldLC) * deltaT;
 
-//	}
-//	else {
-//		positionLC = positionLC + (velocityLC * deltaT);
-//	}
+		//Vector3f test = (0.0f, trans.Y(), 0.0f);
+		//RotateVectorAboutLocalZ(&test, -rotationLC.Z());
+
+//		accelerationLC.Y() = test.Y();
+		
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 37, "rotPos: %f %f %f", rotPos.X(), rotPos.Y(), rotPos.Z());
+//		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 38, "test.Y(): %f", test.Y());
+//		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 39, "accelerationLC.Y(): %f", accelerationLC.Y());
+
+		
 }
 
 //--------------------------------------------------------------
@@ -992,27 +1006,30 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 	
 	// Body rolls 2 degrees per G of acceleration
 	// for right now.
-	if(float(fabs(accelerationLC.X())) > 0.0f) {
-		rotationLC.Y() += RADIANS(6.0f*deltaT) * sgn(accelerationLC.X());
+	if(float(fabs(accelerationLC.X())) > 0.1f) {
+		rotationLC.Y() += RADIANS(10.0f*deltaT) * sgn(accelerationLC.X());
 		if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
-			if(fabs(rotationLC.Y()) > RADIANS(1.0f)) {
-				rotationLC.Y() = RADIANS(1.0f * sgn(accelerationLC.X()));
+			if(fabs(rotationLC.Y()) > RADIANS(0.5f)) {
+				rotationLC.Y() = RADIANS(0.5f * sgn(accelerationLC.X()));
 			}
 		}
 	}
-	
-	
 
-	/*
-	if(float(fabs(accelerationLC.Y())) > 0.0f) {
+	if(float(fabs(accelerationLC.Y())) > 0.1f) {
 		rotationLC.X() += RADIANS(3.0f*deltaT) * sgn(accelerationLC.Y());
 		if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
-			if( fabs(rotationLC.X()) > RADIANS(20.0f)) {
-				rotationLC.X() = RADIANS(20.0f) * sgn(accelerationLC.Y());
+			if( fabs(rotationLC.X()) > RADIANS(3.0f)) {
+				rotationLC.X() = RADIANS(3.0f) * sgn(accelerationLC.Y());
 			}
 		}
 	}
-	*/
+	else if(!inputState.lturn && !inputState.rturn && float(fabs(rotationLC.X())) > RADIANS(1.0f)){
+		rotationLC.X() -= RADIANS(15.0f*deltaT) * sgn(rotationLC.X());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 46, "Rotation: %f %f %f", rotationLC.X(), rotationLC.Y(), rotationLC.Z());
+	}
+
+
+
 	
 }
 
