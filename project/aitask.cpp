@@ -10,7 +10,8 @@
 
 #include "appstate.h"
 #include "input.h"
-#include  "renderer.h"
+#include "renderer.h"
+#include "macros.h"
 //#include "physics.h"
 
 //$$$TEMP
@@ -37,7 +38,8 @@ bool CAITask::Start() {
 	CLog::GetLog().Write(LOG_MISC, "Starting AI Task..." );
 	#endif
 
-	new CGameStateManager(NULL); // no scene to load yet
+	CScene* scenePtr = new CScene();
+	new CGameStateManager(scenePtr); // no scene to load yet
 
 	if(!CGameStateManager::GetGameStateManagerPtr()) {
 		return FALSE;
@@ -59,9 +61,8 @@ void CAITask::Stop() {
 	CLog::GetLog().Write(LOG_APP, "Stopping AI Task..." );
 	#endif
 
-	//CGame::GetGame().Shutdown();
-	
-	//delete CGame::GetGamePtr();
+	// Shutdown the game
+	CGameStateManager::GetGameStateManagerPtr()->Shutdown();
 
 	m_kInputMap.clear();
 

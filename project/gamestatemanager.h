@@ -26,7 +26,7 @@ protected:
 	static CGameStateManager * ms_pkGame;
 
 private:
-	static CScene * ms_pkScene;
+	CScene * ms_pkScene;
 };
 
 

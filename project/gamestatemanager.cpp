@@ -1,10 +1,9 @@
 #include "log.h"
 #include "gamestatemanager.h"
+#include "macros.h"
 
 
 CGameStateManager * CGameStateManager::ms_pkGame = NULL;
-CScene * CGameStateManager::ms_pkScene = NULL;
-
 
 CGameStateManager & CGameStateManager::GetGameStateManager()
 {

@@ -425,7 +425,8 @@ void CRenderer::RenderScene()
 	    //pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
 	    
 	    // translation
-	    vTemp = (*it)->GetTranslate();
+	    //vTemp = (*it)->GetTranslate();
+		vTemp = &Vector3f(0.0f, 0.0f, -100.0f);
 	    pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
         //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 
