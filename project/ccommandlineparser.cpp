@@ -74,6 +74,7 @@ int CCommandLineParser::initKeywords()
 
     /*** Begin J's Commands ***/
     Keywords.push_back(std::string("loadmeshtest"));
+    Keywords.push_back(std::string("loadmesh"));
     Keywords.push_back(std::string("cameratest"));
     Keywords.push_back(std::string("loadmap"));
     Keywords.push_back(std::string("unloadmap"));
@@ -168,6 +169,7 @@ int CCommandLineParser::execute()
     if (*it == "unloadmap") error = unloadmap();
     if (*it == "loadmap") error = loadmap();
     if (*it == "loadmeshtest") error = loadmeshtest();
+    if (*it == "loadmesh") error = loadmeshtest();
     if (*it == "cameratest") error = cameratest();
     if (*it == "setres") error = setres();
     if (*it == "showentities") error = ShowEntities();
@@ -337,7 +339,7 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADENTITY <params> - load a new entity and add it to the current scene");
 //	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEARSCENE - clear the current scene");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADPLAYERVEHICLE | LOADPV <file> - load a new player vehicle from file (leave .car extension off)");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESHTEST <file> <dir> - load a mesh at some directory (leave .x extension off");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESH <file> <dir> - load a mesh at some directory (leave .x extension off");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "SETVISCULL <0|1> - turn on visibility culling");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "DRAW{ENTBBOX|QUADTREE} <0|1> - draw debug information for AI");
@@ -689,14 +691,14 @@ int CCommandLineParser::loadmeshtest()
     // if only 'loadmeshtest' was entered
     if (Tokens.size() == 1)  {
         CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading default mesh: pylon");
-        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\pylon\\";
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\";
         sName = "pylon";
     }
     // if only 'loadmeshtest <meshname>' was entered
     else if (Tokens.size() == 2)  {
         sName = Tokens[1];
         // look in the .\meshes\static\ directory
-        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\" + sName + "\\";
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\";
         CLog::GetLog().Write(LOG_GAMECONSOLE, "loadmeshtest:  looking in %s for mesh", sDir.c_str());
     }
     // if 'loadmeshtest <meshname> <dir>' was entered
@@ -765,7 +767,7 @@ int CCommandLineParser::ShowEntities()
     int i=0;
     for (it=CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.begin();
          it<CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.end();  it++,i++) {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "#%d  Name: %s  Id: %d  MeshName: %s", i, (*it)->GetName(), (*it)->GetId(), (*it)->GetMesh()->m_strName);        
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "#%d  Name: %s  Id: %d  MeshName: %s Position: %f %f %f", i, (*it)->GetName(), (*it)->GetId(), (*it)->GetMesh()->m_strName, (*it)->GetTranslate()->X(), (*it)->GetTranslate()->Y(), (*it)->GetTranslate()->Z() );        
     }
     CLog::GetLog().Write(LOG_GAMECONSOLE, "showentities:  TOTAL # of entities %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.size());
 

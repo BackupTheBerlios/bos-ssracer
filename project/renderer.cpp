@@ -252,7 +252,7 @@ HRESULT CRenderer::Initialize()
     d3dLight.Position.z = -10.0f;//-100.0f;
 
     d3dLight.Attenuation0 = 1.0f; 
-    d3dLight.Range        = 5000.0f;//1000.0f;
+    d3dLight.Range        = 50000.0f;//1000.0f;
 
     // Set the property information for the first light.
     hr = m_pd3dDevice->SetLight(0, &d3dLight);

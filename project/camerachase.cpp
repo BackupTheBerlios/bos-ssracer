@@ -11,6 +11,8 @@ void CCameraChase::SetVehicle( CVehicle * pkVehicle )
         return;
     }
 
+    m_pkVehicle = pkVehicle;
+
     // get heading of vehicle
     Vector3f vHeading = pkVehicle->GetVehicleHeadingWC();
     vHeading.Normalize();
@@ -54,8 +56,6 @@ void CCameraChase::SetVehicle( CVehicle * pkVehicle )
     SetProjParams( CAMERA_CHASE_DEFAULT_FOV, 1.0f ,1.0f ,800.0f );
 
     FrameMove( CTimer::GetTimer().GetTimeElapsed() );
-
-    m_pkVehicle = pkVehicle;
 }
 
 CCameraChase::CCameraChase()
@@ -105,7 +105,6 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "cam status OK" );
     }
     #endif
-
 
     UpdateVelocity( fElapsedTime );
 
@@ -192,7 +191,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
 
         if (m_pkVehicle->GetVehicleVelocityWC().Length() > 30.0f)  {
             // start widening the fov
-            SetProjParams( CAMERA_CHASE_DEFAULT_FOV+fVelDelta*0.2f, 1.0f ,1.0f ,500.0f );
+            SetProjParams( CAMERA_CHASE_DEFAULT_FOV+fVelDelta*0.09f, 1.0f ,1.0f ,800.0f );
 
         }
         fEyeDelta = 1.0f + fVelDelta;
