@@ -25,6 +25,17 @@
 #define MAX_STATES 15
 #define EXIT_GAME 16
 
+
+// so I can quickly arrange these things without bother to tweak -J
+enum WidgetArrangment
+{    
+    WA_LEFT_TOP_VERT,
+    WA_LEFT_MID_HORIZ,
+    WA_TOP_HORIZ,
+    WA_BOTTOM_HORIZ,
+    WA_DEFAULT = WA_LEFT_TOP_VERT
+};
+
 class CScreen
 {
 public:
@@ -43,6 +54,14 @@ protected:
   int maxScreeni;
   int gotoScreen;  
   int screenOrder[20];
+
+  //J's add
+  vector <CWidget *> m_vecWidgets;  // vector of widgets for this screen
+  void AutoArrangeWidgets( WidgetArrangment eWA = WA_DEFAULT);
+  bool SelectWidget(int iWidgetVecIndex);
+  bool DeSelectWidget(int iWidgetVecIndex);
+
+private:
 
 };
 

@@ -170,13 +170,10 @@ void CRenderTask::Update()
     // render the scene based on the current app state
     switch(CAppStateManager::GetAppManPtr()->GetAppState())  
     {
+    case STATE_PRE_GAME:
+        // draw loading screen should be active in front end
     case STATE_FRONT_END:
         m_pkRenderer->DrawFrontEnd();
-        break;
-    
-    case STATE_PRE_GAME:
-        // create DX objects and initialize render states etc.
-        // draw loading screen in front end
         break;
     case STATE_POST_GAME:
         // draw race stats and the win screen

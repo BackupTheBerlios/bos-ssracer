@@ -65,7 +65,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     m_kFontMap[FONT_DEFAULT]    = new CD3DFont( _T("Times"), 12, D3DFONT_BOLD );
     m_kFontMap[FONT_SYSTEM]     = new CD3DFont( _T("System"), 12, D3DFONT_BOLD|D3DFONT_ITALIC|D3DFONT_ZENABLE );
     m_kFontMap[FONT_SMALL]      = new CD3DFont( _T("Arial"), 8 );
-    m_kFontMap[FONT_FRONT_END]  = new CD3DFont( _T("Arial"), 48 );
+    m_kFontMap[FONT_FRONT_END]  = new CD3DFont( _T("Impact"), 48, D3DFONT_ZENABLE );//new CD3DFont( _T("Arial"), 48 );
     m_kFontMap[FONT_HUD]        = new CD3DFont( _T("Impact"), 48, D3DFONT_ITALIC|D3DFONT_ZENABLE );
 
     // set up the skybox

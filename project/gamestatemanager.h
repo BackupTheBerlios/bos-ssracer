@@ -51,6 +51,9 @@ private:
     //Rams add TODO must allow more than one opponent
     //setup a vector later
     static vector<COpponentVehicle*> m_vOpponentVehicles;	// Vector containing all opponents
+
+    // race times for vehicles
+    // vector
 };
 
 

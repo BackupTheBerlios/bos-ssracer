@@ -700,7 +700,10 @@ void CRenderer::DrawFrontEnd()
 
 void CRenderer::DrawScreen(CScreen * pScreen)
 {
+    //$$$TEMP
     pScreen->draw();
+
+
 }
 
 

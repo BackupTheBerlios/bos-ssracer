@@ -17,7 +17,7 @@
 #include "copponentvehicle.h"
 #include "copponentai.h"
 #include "ccollisionmanager.h"
-
+#include "appstate.h" 
 
 // TO ADD COMMANDS AND FUNCTIONS, SEE initKeywords()
 
@@ -176,7 +176,12 @@ int CCommandLineParser::execute()
 	//if (*it == "physicstest2") error = PhysicsTest2();
 
     if (*it == "unloadmap") error = unloadmap();
-    if (*it == "loadmap") error = loadmap();
+    if (*it == "loadmap")   {
+        // load the new map and scene
+        //CAppStateManager::GetAppMan().SetAppState(STATE_PRE_GAME);  // set the pre game loading state (draw loading screen) kill sound buffers etc.
+        error = loadmap();
+    }
+
     if (*it == "loadmeshtest") error = loadmeshtest();
     if (*it == "loadmesh") error = loadmeshtest();
     if (*it == "cameratest") error = cameratest();
@@ -690,8 +695,8 @@ int CCommandLineParser::loadmap()
         }
     }
 
-    // load the new map and scene
     if (CGameStateManager::GetGameStateManager().GetScenePtr()->LoadMap( fp, &sDir, &sName ))  {
+        CAppStateManager::GetAppMan().SetAppState(STATE_IN_GAME);  // set in game state so we can play
         CLog::GetLog().Write(LOG_GAMECONSOLE, "Successfully loaded map: %s%s%s", sDir.c_str(), sName.c_str(), ".map");
     }
     else  {

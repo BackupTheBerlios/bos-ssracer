@@ -3,8 +3,11 @@
 
 // J's edit
 #include "renderer.h"
+#include "appstate.h"
 
 // main input processor maybe overrided in some screens
+//$$$TODO options screen needs a custom one
+//$$$TODO garage needs a custom one
 void CScreen::processInput(int key)
 {
   switch(key)
@@ -12,15 +15,20 @@ void CScreen::processInput(int key)
   case GAME_TAB:
   case GAME_RIGHT:
   case GAME_DOWN:
+    DeSelectWidget(selectedScreeni); //J's add
     selectedScreeni++;
     if (selectedScreeni > maxScreeni)
-    selectedScreeni =maxScreeni;
+        selectedScreeni =maxScreeni;
+
+    SelectWidget(selectedScreeni); //J's add
     break;
   case GAME_LEFT:
   case GAME_UP:
+    DeSelectWidget(selectedScreeni); //J's add
     selectedScreeni--;
     if (selectedScreeni < 0)
       selectedScreeni = 0;
+    SelectWidget(selectedScreeni); //J's add
     break;  
   case GAME_RETURN:
   case GAME_NUMPADENTER:
@@ -29,6 +37,65 @@ void CScreen::processInput(int key)
         CKernel::GetKernel().KillAllTasks();  //exit the game 
   }
 }
+
+// just attempt to auto arrange the widgets on screen
+void CScreen::AutoArrangeWidgets(WidgetArrangment eWA )
+{
+    int iNumWidgets = m_vecWidgets.size();
+    float i=0.0f;
+    for (vector <CWidget *>::iterator it=m_vecWidgets.begin();  it!=m_vecWidgets.end(); it++ ) {
+        // set the first one as selected
+        if (it == m_vecWidgets.begin())  (*it)->onSelected();
+
+        // arrenge them accordingly
+        switch (eWA)  {
+        case WA_LEFT_TOP_VERT:
+            (*it)->setX(-1.0f);
+            (*it)->setY(-1.0f+(i/(float)iNumWidgets));
+            i+=1.0f;
+            break;
+        case WA_BOTTOM_HORIZ:
+            (*it)->setX(-1.0f+(i/(float)iNumWidgets));
+            (*it)->setY(1.0f - (*it)->getHeight()*2.0f);
+            i+=1.0f;
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
+// generic draw function
+//   draws all widgets using their display parameters
+void CScreen::draw()  {
+    // draw all the widgets
+    for (vector <CWidget *>::iterator it=m_vecWidgets.begin(); it!=m_vecWidgets.end(); it++ ) {
+        (*it)->draw();
+    }
+}
+
+bool CScreen::SelectWidget(int iWidgetVecIndex)
+{
+    if (iWidgetVecIndex <= m_vecWidgets.size())  {
+        m_vecWidgets[iWidgetVecIndex]->onSelected();  //J's add
+    }
+    else
+        return false;
+    return true;
+}
+
+
+bool CScreen::DeSelectWidget(int iWidgetVecIndex)
+{
+    if (iWidgetVecIndex <= m_vecWidgets.size())  {
+        m_vecWidgets[iWidgetVecIndex]->onDeSelected();  //J's add
+    }
+    else
+        return false;
+    return true;
+}
+
 
 CMainMenu::CMainMenu()
 {
@@ -66,6 +133,15 @@ CMainMenu::CMainMenu()
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 5;
 
+  // put the widgets into this vector so I can just iterate through them
+  m_vecWidgets.push_back( newGame );
+  m_vecWidgets.push_back( options );
+  m_vecWidgets.push_back( bestTimes );
+  m_vecWidgets.push_back( help );
+  m_vecWidgets.push_back( credits );
+  m_vecWidgets.push_back( quit );
+
+  AutoArrangeWidgets();
 }
 
 
@@ -87,17 +163,24 @@ void CMainMenu::draw()
 
     static int iFade = 255, iDir = -1;
     CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.5, 0.8f,0,D3DCOLOR_ARGB(iFade,200,0,10), "Press F11 to exit the game ESC is remapped for front end -J", 0.03, 0.03);
-    CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.5, 0.9f,0,D3DCOLOR_ARGB(iFade,200,10,0), "Relax, these fonts are just to test the FEM out", 0.03, 0.03);
-    iFade += iDir;
+    CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.5, 0.9f,0,D3DCOLOR_ARGB(iFade,200,10,0), "Isn't this fading text annoying?", 0.03, 0.03);
+    iFade += iDir*5;
     if (iFade <= 0 || iFade >= 255)  iDir *= -1;
 
     //Jay here's your stub function to draw the mainmenu
+    /*
     newGame->draw();
     options->draw();
     bestTimes->draw();
     help->draw();
     credits->draw();
     quit->draw();
+    */
+
+    // draw all the widgets
+    for (vector <CWidget *>::iterator it=m_vecWidgets.begin(); it!=m_vecWidgets.end(); it++ ) {
+        (*it)->draw();
+    }
 }
 
 
@@ -106,15 +189,34 @@ CNewGame::CNewGame()
 {
   ok = new CButton();
   ok->setText("Ok");
+  ok->setX(0.0f);
+  ok->setY(0.0f);
+
   cancel = new CButton();
   cancel->setText("Cancel");
+  cancel->setX(0.0f);
+  cancel->setY(0.2f);
+
+
   name = new CTextField();
+
+
   instructions = new CLabel();
   instructions->setText("Please Enter Name:");
+  instructions->setX(0.0f);
+  instructions->setY(0.3f);
+
   int tempOrder[]={GARAGE, MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 1;
 
+  // put the widgets into this vector so I can just iterate through them
+  m_vecWidgets.push_back( ok );
+  m_vecWidgets.push_back( cancel );
+  m_vecWidgets.push_back( name );
+  AutoArrangeWidgets();
+  
+  m_vecWidgets.push_back( instructions );
 }
 
 CNewGame::~CNewGame()
@@ -131,10 +233,15 @@ void CNewGame::draw()
   CRenderer::GetRendererPtr()->Draw3DTextScaled(-1.0,0.5,0,D3DCOLOR_ARGB(200,0,200,255), tmp, 0.05, 0.05);
 
   //Draw Screen stuff
-  ok->draw();
+  /*ok->draw();
   cancel->draw();
   name->draw();
   instructions->draw();
+  */
+  // draw all the widgets
+  for (vector <CWidget *>::iterator it=m_vecWidgets.begin(); it!=m_vecWidgets.end(); it++ ) {
+      (*it)->draw();
+  }
 }
 
 void CNewGame::processInput(int key)
@@ -169,6 +276,10 @@ CGarage::CGarage()
   int tempOrder[]={HOME, MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 1;
+  m_vecWidgets.push_back( select );
+  m_vecWidgets.push_back( cancel );
+  m_vecWidgets.push_back( instructions );
+  AutoArrangeWidgets(WA_BOTTOM_HORIZ);
 }
 
 CGarage::~CGarage()
@@ -184,9 +295,15 @@ void CGarage::draw()
   sprintf(tmp, "sel screen: %d", selectedScreeni);  
   CRenderer::GetRendererPtr()->Draw3DTextScaled(-1.0,0.5,0,D3DCOLOR_ARGB(200,0,200,255), tmp, 0.05, 0.05);
 
+  /*  
   select->draw();
   cancel->draw();
   instructions->draw();
+  */
+  // draw all the widgets
+  for (vector <CWidget *>::iterator it=m_vecWidgets.begin(); it!=m_vecWidgets.end(); it++ ) {
+      (*it)->draw();
+  }
 }
 
 void CGarage::processInput(int key)
@@ -236,6 +353,14 @@ CPostGame::CPostGame()
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 2;
 
+  // put the widgets into this vector so I can just iterate through them
+  m_vecWidgets.push_back( onward );
+  m_vecWidgets.push_back( restartRace );
+  m_vecWidgets.push_back( congrats );
+  m_vecWidgets.push_back( placement );
+  m_vecWidgets.push_back( winnings );
+  AutoArrangeWidgets();
+
 }
 
 CPostGame::~CPostGame()
@@ -275,6 +400,12 @@ CPauseGame::CPauseGame()
   int tempOrder[]={IN_GAME, PRE_GAME, MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 2;
+
+  m_vecWidgets.push_back( resume );
+  m_vecWidgets.push_back( restartRace );
+  m_vecWidgets.push_back( mainMenu );
+  m_vecWidgets.push_back( instructions );
+  AutoArrangeWidgets();
 }
 
 
@@ -318,6 +449,16 @@ CHome::CHome()
   int tempOrder[]={PRE_GAME,PERFORMANCE, GARAGE, DEALERSHIP, MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 4;
+
+  // put the widgets into this vector so I can just iterate through them
+  m_vecWidgets.push_back( race );
+  m_vecWidgets.push_back( performanceUpgrade );
+  m_vecWidgets.push_back( dealership );
+  m_vecWidgets.push_back( garage );
+  m_vecWidgets.push_back( mainMenu );
+  AutoArrangeWidgets();
+
+  m_vecWidgets.push_back( home );
 }
 
 
@@ -360,6 +501,10 @@ CQuit::CQuit()
   int tempOrder[]={MAIN_MENU, EXIT_GAME};  
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 1;
+
+  m_vecWidgets.push_back( mainMenu );
+  m_vecWidgets.push_back( quit );
+  AutoArrangeWidgets();
 }
 
 
@@ -376,13 +521,18 @@ void CQuit::draw()
   sprintf(tmp, "sel screen: %d", selectedScreeni);  
   CRenderer::GetRendererPtr()->Draw3DTextScaled(-1.0,0.5,0,D3DCOLOR_ARGB(200,0,200,255), tmp, 0.05, 0.05);
 
-  quit->draw();
-  mainMenu->draw();
+  //quit->draw();
+  //mainMenu->draw();
+  // draw all the widgets
+  for (vector <CWidget *>::iterator it=m_vecWidgets.begin(); it!=m_vecWidgets.end(); it++ ) {
+      (*it)->draw();
+  }
 }
 
 //PreGame Game Screen
 CPreGame::CPreGame()
 {
+    CAppStateManager::GetAppMan().SetAppState(STATE_PRE_GAME);
   onward = new CButton();
   onward->setText("Onward!");
   mainMenu = new CButton();
@@ -394,6 +544,12 @@ CPreGame::CPreGame()
   int tempOrder[]={IN_GAME, MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 1;
+
+  m_vecWidgets.push_back( onward );
+  m_vecWidgets.push_back( mainMenu );
+  AutoArrangeWidgets();
+
+  m_vecWidgets.push_back( ready );
 
 }
 
@@ -431,9 +587,17 @@ COptions::COptions()
   int tempOrder[]={MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 0;
+
   //TODO ADD OPTIONS
+  m_vecWidgets.push_back( mainMenu );
+  m_vecWidgets.push_back( option1 );
+  m_vecWidgets.push_back( option2 );
+  m_vecWidgets.push_back( option3 );
+  AutoArrangeWidgets();
+  m_vecWidgets.push_back( instructions );
 }
 
+//$$$NOTE OPTIONS SCREEN NEEDS SPECIAL INPUT HANDLER
 
 COptions::~COptions()
 {
@@ -466,6 +630,11 @@ CBestTimes::CBestTimes()
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 0;
 
+  m_vecWidgets.push_back( mainMenu );
+  AutoArrangeWidgets();
+
+  m_vecWidgets.push_back( bestTime );
+
 }
 
 CBestTimes::~CBestTimes()
@@ -494,6 +663,11 @@ CHelp::CHelp()
   int tempOrder[]={MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 0;
+
+  m_vecWidgets.push_back( mainMenu );
+  AutoArrangeWidgets();
+
+  m_vecWidgets.push_back( help );
 
 }
 
@@ -524,6 +698,8 @@ CCredits::CCredits()
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 0;
 
+  m_vecWidgets.push_back( mainMenu );
+  AutoArrangeWidgets();
 }
 
 CCredits::~CCredits()
@@ -559,6 +735,14 @@ CPerformance::CPerformance()
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 0;
   //TODO ADD CURRENT LEVELS OF TUNE
+
+  m_vecWidgets.push_back( tireUp );
+  m_vecWidgets.push_back( engineUp );
+  m_vecWidgets.push_back( weightRed );
+  m_vecWidgets.push_back( home );
+  AutoArrangeWidgets();
+
+  m_vecWidgets.push_back( instructions );
 }
 
 
@@ -592,6 +776,12 @@ CDealership::CDealership()
   int tempOrder[]={HOME, MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 1;
+
+  m_vecWidgets.push_back( select );
+  m_vecWidgets.push_back( cancel );
+  AutoArrangeWidgets();
+
+  m_vecWidgets.push_back( instructions );
 }
 
 CDealership::~CDealership()

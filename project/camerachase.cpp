@@ -89,7 +89,7 @@ void CCameraChase::Update(int iInput, bool bState)
 }
 
 
-#define TIME_TO_INTERP 0.5f
+#define TIME_TO_INTERP 2.5f
 //-----------------------------------------------------------------------------
 // Name: FrameMove
 // Desc: Update the view matrix based on user input & elapsed time
@@ -144,7 +144,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     Vector3f vDisp;
 
     // get the camera's local ahead vector based on the vehicles heading and velocity
-    if (vVel.Length() < 5.0f)  {// if velocity is small use heading
+    if (0){//vVel.Length() < 5.0f)  {// if velocity is small use heading
         vDisp = vHeading;
         #ifdef _DEBUG
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using car heading");    
@@ -161,32 +161,59 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
         vDisp = vPrevPos - *m_pkVehicle->GetTranslate();
         vDisp.Normalize();            
         vDisp *= -1.0f;
-        vPrevPos = *m_pkVehicle->GetTranslate();
+        
+        vPrevPos = *m_pkVehicle->GetTranslate();////
         
 
+/*        
+        // SLERP
+        static float t = 0.0f;// = 0...1 interpolation value.
+        float theta = (float)acos(vHeading.Dot(vDisp));  //theta = acos(v1 DOT v2)
+        //v3 = vHeading * (sin((1.0f-t)*theta)/sin(theta) + v2 * (sin(t*theta)/sin(theta))
+        vDisp = vHeading * (sin((1.0f-t)*theta)/sin(theta)) + vDisp * (sin(t*theta)/sin(theta));  
+
+        // angle reached
+        if ((float)acos(vHeading.Dot(vDisp)) >= theta || t >= 1.0f)  {
+            t = 0.0f;
+            vPrevPos = -vDisp *( m_pkVehicle->GetTranslate()->Length());
+        }
+        else  {
+            t += 0.01f;
+            vPrevPos = *m_pkVehicle->GetTranslate();
+            if (t > 1.0f)
+                t = 1.0f;
+        }
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using current angle %f", DEGREES((float)acos(vHeading.Dot(vDisp))));
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "using end angle %f", DEGREES(theta));
+  */      
+/*
         // interpolate between heading and displacement
         static float fLastTime = 0.0f;
+        static bool bAngleReached = false;
         float fTime = DXUtil_Timer( TIMER_GETABSOLUTETIME );
         float fTDelta = (fTime - fLastTime);
         
-/*
+
         static float fEndAngle =(float)acos(vHeading.Dot(vDisp)); // get angle between displacement and heading
         // % of the end angle left to interpolate
         float fCurrentAngle = fEndAngle * (1.0f - fTDelta/TIME_TO_INTERP);
 
         // stop interpolating if desired angle reached
-        if ( fCurrentAngle <= RADIANS(0.0f)) {
+        if ( fabs(fCurrentAngle) <= RADIANS(1.0f) || bAngleReached == true) {
             fLastTime = fTime;  //reset the timer
             vDisp = vHeading;
+            fEndAngle = 0.0f;
+            bAngleReached = true;
         }
         else  {
             Matrix3f matRot = Matrix3f(Vector3f(0,1,0), fCurrentAngle);
             vDisp = matRot * vDisp;
+            bAngleReached = false;
+            fEndAngle =(float)acos(vHeading.Dot(vDisp));
         }
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using current angle %f", DEGREES(fCurrentAngle));
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "using end angle %f", DEGREES(fEndAngle));
 */
-
     }
 
     vTemp = vDisp;

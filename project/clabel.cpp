@@ -1,4 +1,5 @@
 #include "clabel.h"
+#include "renderer.h"
 
 CLabel::CLabel()
 {
@@ -72,4 +73,5 @@ void CLabel::draw()
 {
 	// To be implemented
 	//	CLog::GetLog().Write(LOG_USER, "label draw");
+    CRenderer::GetRendererPtr()->Draw3DTextScaled(m_fX,m_fY,0,m_dwCurrentColor, (char *)m_text.data(), 0.1, 0.1);
 }

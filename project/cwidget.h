@@ -23,6 +23,8 @@ public:
 	CWidget();
 	~CWidget();
 
+    virtual void onSelected();
+    virtual void onDeSelected();
 	virtual void onActivate()=0;
 	virtual void onDeactivate()=0;
 	virtual void draw()=0;
@@ -47,7 +49,10 @@ public:
 	void setX(float x) {m_fX = x;}
 	void setY(float y) {m_fY = y;}
 	void setWidth(float w) {m_fWidth = w;}
+    float getWidth() { return m_fWidth; }
 	void setHeight(float h) {m_fHeight = h;}
+    float getHeight() { return m_fHeight; }
+
 	void setType(int t) {m_iType = t;}
 	void setName(std::string str) {m_name = str;}
 	void setName(char* str) {m_name.erase(); m_name.append(str);}
@@ -67,6 +72,7 @@ protected:
 	std::string m_name;
 
 private:
+    
 
 };
 

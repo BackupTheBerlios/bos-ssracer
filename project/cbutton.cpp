@@ -4,6 +4,7 @@
 
 CButton::CButton()
 {
+    m_fHeight = m_fWidth = 0.1f;
 	m_text.reserve(STD_BTEXT_SIZE);
 	m_text.erase();
 	m_text.append("Click Me!");
@@ -31,6 +32,7 @@ void CButton::onDeactivate()
 void CButton::draw()
 {
     //$$$TEMp draw static text for now
-    //CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.9,-0.9,0,D3DCOLOR_ARGB(255,255,0,0), "Quit", 0.1, 0.1);
-    CRenderer::GetRendererPtr()->Draw3DTextScaled(m_fX,m_fY,0,m_dwCurrentColor, (char *)m_text.data(), 0.1, 0.1);
+    
+    //CRenderer::GetRendererPtr()->Draw3DTextScaled(m_fX,m_fY,0,m_dwCurrentColor, (char *)m_text.data(), 0.1, 0.1);
+    CRenderer::GetRendererPtr()->Draw3DTextScaled(m_fX,m_fY,0,m_dwCurrentColor, (char *)m_text.data(), m_fHeight, m_fWidth);
 }

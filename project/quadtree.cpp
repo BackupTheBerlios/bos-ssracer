@@ -173,8 +173,8 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
 
     // assuming a uniform distribution of entities, try to compute an optimal tree depth
     // want #levels = log(#entities)/log(#subdiv at each level=4)
-    //m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) ) +2 ;
-    m_iLevels = 7;//m_iLevels = 7;///GOOD
+    //m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) );
+    m_iLevels = 7;//m_iLevels = 7;/// optimal for map_final only!
     
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE,"Quadtree depth %d", m_iLevels);
@@ -289,17 +289,19 @@ void CQuadTree::AddReference( Vector3f vOrigin, CEntity * pEntity )
 }
 
 
-
+#define MAX_ENTS_PER_NODE 5
 void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  {
 
     assert( m_iLevels > 1 ); 
+
+    int iNumInside = 0;
 
     Box3f boxTemp =  box;
     Box3f boxEnt = *pEntity->GetBoundingBox();
 
     // move box to the entity's height
     boxTemp.Center().Y() = boxEnt.Center().Y();
-    //box.Extent(1) = 100.0f; //extend this box infinitely
+    boxTemp.Extent(1) = 100.0f; //extend this box infinitely
 
     bool bEntInQuad = false;
 
@@ -308,7 +310,8 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
     bool bEntBoxInNode = false;
     bool bNodeInEntBox = false;
 
-    switch(TestIntersection( boxTemp,  boxEnt ) ) 
+    //switch(TestIntersection( boxTemp,  boxEnt ) ) 
+    switch(TestIntersection( boxEnt, boxTemp ) ) 
     {
         case true:  // box intersects
             node->m_EntMap[pEntity->GetId()] = pEntity; 
@@ -326,10 +329,11 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
                 }
             }
 
-            if (bEntBoxInNode ==true)  {
+            if (bEntBoxInNode == true)  {
             //if (ContOrientedBox (8, vBoxVerts, abValid, node->m_BBox))  {
                 node->m_EntMap[pEntity->GetId()] = pEntity; //entity is in this node
                 bEntInQuad = true;  // find out what child quads also contain this
+                iNumInside++;                
             }
             else { // OUTSIDE or entities box contains the bounding box!
                 boxTemp.ComputeVertices(vBoxVerts);
@@ -345,6 +349,7 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
                 //if (ContOrientedBox (8, vBoxVerts, abValid, boxTemp))  {
                     node->m_EntMap[pEntity->GetId()] = pEntity; //entity is in this node
                     bEntInQuad = true;  // find out what child quads also contain this
+
                 }
                 else {
                     // entity is outside, so don't add
@@ -357,6 +362,12 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
 
     // now this box will also intersect/be contained in the children as well
     if (bEntInQuad == true )  {
+        //check if we need to subdivide even further
+        if (iNumInside >= MAX_ENTS_PER_NODE)  {
+            m_iLevels++;  //increase the number of levels
+            SubDivide(node, m_iLevels-1);
+        }
+
         if (node->m_pChildNode[NE] != NULL)  {
             AddReference( node->m_pChildNode[NE]->m_BBox, pEntity, node->m_pChildNode[NE]);
             //node->m_pChildNode[NE]->m_EntMap[pEntity->GetId()] = pEntity;
