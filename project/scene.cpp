@@ -1008,7 +1008,7 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 		if(token == NULL) {
 			continue;
 		}
-		if(!strcmp(token, "<newObject>")) {
+		if(!strcmp(token, "<newwp>")) {
 			//newObject = new CEntity;
 
 

@@ -1,4 +1,4 @@
-<newObject>
+<newwp>
 <type> 0
 <path> 0
 <id> 11999
@@ -7,7 +7,7 @@
 <rotate> 0.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 
-<newObject>
+<newwp>
 <type> 1
 <BranchToPath> 1
 <path> 0
@@ -17,7 +17,7 @@
 <rotate> 0.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 
-<newObject>
+<newwp>
 <type> 0
 <path> 1
 <id> 11201
@@ -26,7 +26,7 @@
 <rotate> 0.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 
-<newObject>
+<newwp>
 <type> 0
 <path> 1
 <id> 11202
@@ -35,7 +35,7 @@
 <rotate> 0.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 
-<newObject>
+<newwp>
 <type> 3
 <ConjunctIndex> 5
 <path> 1
@@ -45,7 +45,7 @@
 <rotate> 0.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 
-<newObject>
+<newwp>
 <type> 0
 <path> 0
 <id> 11204
@@ -54,7 +54,7 @@
 <rotate> 0.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 
-<newObject>
+<newwp>
 <type> 0
 <path> 0
 <id> 11205
@@ -63,7 +63,7 @@
 <rotate> 0.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 
-<newObject>
+<newwp>
 <type> 0
 <path> 0
 <id> 11206
@@ -72,7 +72,7 @@
 <rotate> 0.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 
-<newObject>
+<newwp>
 <type> 0
 <path> 0
 <id> 112112
@@ -81,7 +81,7 @@
 <rotate> 0.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 
-<newObject>
+<newwp>
 <type> 0
 <path> 0
 <id> 11207
