@@ -16,7 +16,7 @@ enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
 #define MAX_STEER_ANGLE_RADS	RADIANS(50)
 #define MIN_STEER_ANGLE_RADS	RADIANS(5)
 // Number of seconds for the tires to get from 0 - MAX_STEER_ANGLE_RADS
-#define STEER_ANGLE_TIME		0.20f
+#define STEER_ANGLE_TIME		0.000000000000001f
 // RPM that the vehicle idles at
 #define IDLE_RPM	1000
 
@@ -92,10 +92,11 @@ public:
 	void SetVehiclePositionLC(Vector3f pos) {positionLC = pos;}
 	// end Gib's additions
 
-protected:
-	
-private:
+    //Rams Add
+    void SetHeadingTotLC (Vector3f param){headingTotLC = param;};
 
+protected:
+//private:
 	void CalculateBankAndGradient();
 	void CalculateWeightDistribution();
 	void CalculateDrag();
@@ -120,11 +121,13 @@ private:
 	float CalculateMaxTraction(float rearAxleWeight);
 	float CalculateLateralForce(float slipAngleRADS, float axleWeight);
 
-	void InterpolateSteeringAngle(float deltaT);
+	virtual void InterpolateSteeringAngle(float deltaT);
 	void CalculateAutomaticGearShifting();
 
 	void TransformLocalToWorldSpace();
 	void RotateVectorAboutLocalZ(Vector3f* param, float rotZ);
+
+    
 
 	  // Required from .car file
 	// Following data is what gives each car its driving characteristics

@@ -36,11 +36,16 @@ public:
 	int setNext(std::vector<CWaypoint*>::iterator next);
 	int setHeadingTarget(Vector3f* HT);
 	int setVelocityTarget(Vector3f* VT);
+    
+    void InterpolateSteeringAngle(float deltaT);
     //Ram's Add 
     bool lastWPReached;
     bool raceOver;
     int getAILevel(){return m_aiLevel;};
     void setAILevel(int lev){m_aiLevel = lev;}; 
+    double headingAngle;
+    double getHeadingAngle(){return headingAngle;};
+    void setHeadingAngle(double ha){headingAngle = ha;}; 
 protected:
   std::vector<CWaypoint*> m_vWPSequence[4];
     //ShortCut Vectors
@@ -50,6 +55,7 @@ protected:
 	Vector3f m_vHeadingTargetWC;
 	Vector3f m_vVelocityTargetWC;
     int m_aiLevel;
+    //overload of steer from vehicle
 
 
 private:

@@ -130,3 +130,75 @@ bool COpponentVehicle::reachedHeadingTarget()
 	// Note: assuming that if neither lturn or rturn = true, 
 	// target heading already reached.
 }
+
+//Rams attempt at affecting steering directly
+void COpponentVehicle::InterpolateSteeringAngle(float deltaT)
+{
+	// Based on the ai input, we will interpolate
+	// the front tires' rotation about the local Z axis.
+	// We don't want the wheels to turn instantaneously from
+	// 0 - 40 DEGS, we want them to get over the course of about
+	// 1 or 2 seconds. These values need to be tweaked.
+
+	// Positive rotation, rotates counterclockwise around the Z axis.
+	// Negative rotation, rotates clockwise around the Z axis.
+float angle = getHeadingAngle();
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 115, "HEAD ANGLE: %f",angle);
+
+    float pi = 3.14159;
+    //float newSteerAngle;
+
+	//float vehicleMaxSpeed = 60.0f;
+
+	//float speedScalar = 1 - velocityLC.X() / 60.0f;
+if(inputState.lturn)
+steerAngleRADS = angle;
+else if(inputState.rturn)
+steerAngleRADS = angle *-1; //((2*pi)-angle)*-1;
+    /*float maxTurnAngle = (MAX_STEER_ANGLE_RADS - MIN_STEER_ANGLE_RADS) * speedScalar + MIN_STEER_ANGLE_RADS; 
+	
+
+	// Interpolate the wheels to steer left ( +Z rotation )
+	if(inputState.lturn) {
+		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * maxTurnAngle + steerAngleRADS;
+		if(newSteerAngle > maxTurnAngle) {
+			steerAngleRADS = maxTurnAngle;
+		}
+		else {
+			steerAngleRADS = newSteerAngle;
+		}
+	}
+	// Interpolate the wheels to steer right ( -Z rotation )
+	else if(inputState.rturn) {
+		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * maxTurnAngle * -1.0f + steerAngleRADS;
+		if(newSteerAngle < (maxTurnAngle * -1.0f)) {
+			steerAngleRADS = maxTurnAngle * (-1.0f);
+		}
+		else {
+			steerAngleRADS = newSteerAngle;
+		}
+	}
+	// Interpolate the wheels back to 0
+	else {	// Right Button nor Left Button is pressed
+		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * maxTurnAngle;
+
+		if(steerAngleRADS >= 0.0f) {
+			if((steerAngleRADS - newSteerAngle) >= 0.0f) {
+				steerAngleRADS -= newSteerAngle;
+			}
+			else {
+				steerAngleRADS = 0.0f;
+			}
+		}
+		else if(steerAngleRADS < 0.0f) {
+			if((steerAngleRADS + newSteerAngle) < 0.0f) {
+				steerAngleRADS += newSteerAngle;
+			}
+			else {
+				steerAngleRADS = 0.0f;
+			}
+		}
+	}*/
+
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "SteerAngle: %f", steerAngleRADS);
+}

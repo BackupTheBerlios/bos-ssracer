@@ -138,7 +138,7 @@ void CNewGame::draw()
 }
 
 void CNewGame::processInput(int key)
-{
+{CLog::GetLog().Write(LOG_DEBUGOVERLAY, 114, "in BLAH screen");
   switch(key)
   {//TODO Deal With ASCII Chars for TEXTFIELD!!!
   case GAME_TAB:

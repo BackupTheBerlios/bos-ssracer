@@ -1,6 +1,7 @@
 #include "copponentai.h"
 #include "appstate.h"
 #include "gamestatemanager.h"
+#include "wmlvector.h"
 
 // Copied comment from vehicle.cpp:
 //---------------------------------------------------------------------------
@@ -157,21 +158,31 @@ int COpponentAI::setDirection(COpponentVehicle* Car)
 	NormalizedHeadingTargetWC.Normalize();
    // CLog::GetLog().Write(LOG_DEBUGOVERLAY,64, "Normalized Heading: %f %f %f", NormalizedHeadingTargetWC.X(), NormalizedHeadingTargetWC.Y(),NormalizedHeadingTargetWC.Z());
 	double heading_target_angle = asin(NormalizedHeadingTargetWC.Z());
-
+    double resultAngle = acos(NormalizedHeadingWC.X()*NormalizedHeadingTargetWC.X()+NormalizedHeadingWC.Y()*NormalizedHeadingTargetWC.Y()+NormalizedHeadingWC.Z()*NormalizedHeadingTargetWC.Z());
 	// compare angles to see if lturn or rturn should be set
     CLog::GetLog().Write(LOG_DEBUGOVERLAY,65, "Vehicle Angle: %f Target Angle: %f", heading_angle, heading_target_angle);
 	if (heading_angle < heading_target_angle) {
      //   CLog::GetLog().Write(LOG_MISC, "Attempting to turn Left");
 		Car->SetRTurn(false);
 		Car->SetLTurn(true);
-	}
+    //  Car->SetHeadingTotLC(Vector3f(direction.X(),direction.Z(), -direction.Y()));
+	Car->setHeadingAngle(resultAngle);
+    }
 	if (heading_angle > heading_target_angle) {
        // CLog::GetLog().Write(LOG_MISC, "Attempting to turn Right");
 		Car->SetLTurn(false);
 		Car->SetRTurn(true);
-	}
+      // Car->SetHeadingTotLC(Vector3f(direction.X(),direction.Z(), -direction.Y()));
+	Car->setHeadingAngle(resultAngle);
+    }
 	// if angles are =, no need to turn
-    
+    if (heading_angle == heading_target_angle) {
+       // CLog::GetLog().Write(LOG_MISC, "Attempting to turn Right");
+	//	Car->SetLTurn(false);
+	//	Car->SetRTurn(false);
+      // Car->SetHeadingTotLC(Vector3f(direction.X(),direction.Z(), -direction.Y()));
+	//Car->setHeadingAngle(resultAngle);
+    }
 	return OK;
 }
 
@@ -263,8 +274,8 @@ void COpponentAI::Update()
 			}
           
             if ((*thisCar)->reachedHeadingTarget()) {
-				(*thisCar)->SetLTurn(false);
-				(*thisCar)->SetRTurn(false);
+				//(*thisCar)->SetLTurn(false);
+				//(*thisCar)->SetRTurn(false);
                 //(*thisCar)->SetGas(true);
                 CLog::GetLog().Write(LOG_DEBUGOVERLAY, 111, "Reached Heading Target");
 			}
