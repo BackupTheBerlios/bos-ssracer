@@ -106,7 +106,7 @@ LRESULT CBOSApplication::MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 {
     switch( msg )
     {
-        // TODO: Respond to Windows messages as needed
+/*        // TODO: Respond to Windows messages as needed
 
         case WM_COMMAND:
         {
@@ -158,6 +158,171 @@ LRESULT CBOSApplication::MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
             PostQuitMessage( 0 );
             break;
     }
+    */
+        case WM_PAINT:
+            // Handle paint messages when the app is paused
+            /*
+            if( m_pd3dDevice && !m_bActive && 
+                m_bDeviceObjectsInited && m_bDeviceObjectsRestored )
+            {
+                Render();
+                m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
+            }
+            */
+            if( ms_bLoadingApp )
+            {
+                // Draw on the window tell the user that the app is loading
+                // TODO: change as needed
+                HDC hDC = GetDC( hWnd );
+                TCHAR strMsg[1000];//MAX_PATH];
+                wsprintf( strMsg, TEXT("loading game please wait...") );
+                RECT rct;
+                GetClientRect( hWnd, &rct );
+                DrawText( hDC, strMsg, -1, &rct, DT_CENTER|DT_VCENTER);//|DT_SINGLELINE );
+                ReleaseDC( hWnd, hDC );
+            }
+            break;
+
+        case WM_ENTERSIZEMOVE:
+            // Halt frame movement while the app is sizing or moving
+            Suspend( true );
+            break;
+
+        case WM_SIZE:
+            // Pick up possible changes to window style due to maximize, etc.
+            if( m_bWindowed && hWnd != NULL )
+                m_dwWindowStyle = GetWindowLong( hWnd, GWL_STYLE );
+
+            if( SIZE_MINIMIZED == wParam )
+            {
+                if( m_bClipCursorWhenFullscreen && !m_bWindowed )
+                    ClipCursor( NULL );
+                Suspend( true ); // Pause while we're minimized
+                m_bMinimized = true;
+                m_bMaximized = false;
+            }
+            else if( SIZE_MAXIMIZED == wParam )
+            {
+                if( m_bMinimized )
+                    Suspend( false ); // Unpause since we're no longer minimized
+                m_bMinimized = false;
+                m_bMaximized = true;
+                //HandlePossibleSizeChange();
+            }
+            else if( SIZE_RESTORED == wParam )
+            {
+                if( m_bMaximized )
+                {
+                    m_bMaximized = false;
+                    //HandlePossibleSizeChange();
+                }
+                else if( m_bMinimized)
+                {
+                    Suspend( false ); // Unpause since we're no longer minimized
+                    m_bMinimized = false;
+                    //HandlePossibleSizeChange();
+                }
+                else
+                {
+                    // If we're neither maximized nor minimized, the window size 
+                    // is changing by the user dragging the window edges.  In this 
+                    // case, we don't reset the device yet -- we wait until the 
+                    // user stops dragging, and a WM_EXITSIZEMOVE message comes.
+                }
+            }
+            break;
+
+        case WM_EXITSIZEMOVE:
+            Suspend( false );
+            //HandlePossibleSizeChange();
+            break;
+
+        case WM_SETCURSOR:
+            // Turn off Windows cursor in fullscreen mode
+            /*if( m_bActive && !m_bWindowed )
+            {
+                SetCursor( NULL );
+                if( m_bShowCursorWhenFullscreen )
+                    m_pd3dDevice->ShowCursor( true );
+                return true; // prevent Windows from setting cursor to window class cursor
+            }
+            */
+            break;
+
+         case WM_MOUSEMOVE:
+/*            if( m_bActive && m_pd3dDevice != NULL )
+            {
+                POINT ptCursor;
+                GetCursorPos( &ptCursor );
+                if( !m_bWindowed )
+                    ScreenToClient( hWnd, &ptCursor );
+                m_pd3dDevice->SetCursorPosition( ptCursor.x, ptCursor.y, 0 );
+            }
+            */
+            break;
+
+       case WM_ENTERMENULOOP:
+            // Pause the app when menus are displayed
+            Suspend(true);
+            break;
+
+        case WM_EXITMENULOOP:
+            Suspend(false);
+            break;
+
+        case WM_NCHITTEST:
+            // Prevent the user from selecting the menu in fullscreen mode
+            if( !m_bWindowed )
+                return HTCLIENT;
+            break;
+
+        case WM_SYSCOMMAND:
+            // Prevent moving/sizing and power loss in fullscreen mode
+            switch( wParam )
+            {
+                case SC_MOVE:
+                case SC_SIZE:
+                case SC_MAXIMIZE:
+                case SC_KEYMENU:
+                case SC_MONITORPOWER:
+                    if( false == m_bWindowed )
+                        return 1;
+                    break;
+            }
+            break;
+
+        case WM_COMMAND:
+            switch( LOWORD(wParam) )
+            {
+            /*    case IDM_CHANGEDEVICE:
+                    // Prompt the user to select a new device or mode
+                    Pause(true);
+                    UserSelectNewDevice();
+                    Pause(false);
+                    return 0;
+
+                case IDM_TOGGLEFULLSCREEN:
+                    // Toggle the fullscreen/window mode
+                    Pause( true );
+                    if( FAILED( ToggleFullscreen() ) )
+                        DisplayErrorMsg( D3DAPPERR_RESETFAILED, MSGERR_APPMUSTEXIT );
+                    Pause( false );                        
+                    return 0;
+            */
+                case IDM_EXIT:
+                    // Recieved key/menu command to exit app
+                    SendMessage( hWnd, WM_CLOSE, 0, 0 );
+                    return 0;
+            }
+            break;
+
+        case WM_CLOSE:
+            DestroyWindow( hWnd );
+            PostQuitMessage(0);
+            hWnd = NULL;
+            return 0;
+    }
+
 
     return DefWindowProc( hWnd, msg, wParam, lParam );
 }

@@ -62,15 +62,16 @@ D3DUtil_CameraKeys CCameraFreeLook::MapKey( UINT nKey )
 }
 
 
-void CCameraFreeLook::Update( int iInput, bool bState )
+void CCameraFreeLook::Update( CInputTaskMessage * pIMsg )
 {
-	HandleInputMessages( new CInputTaskMessage(iInput, bState));
+	HandleInputMessages( pIMsg );
 	FrameMove( CTimer::GetTimer().GetTimeElapsed() );
 	return;
 
 }
 
-#define ROTSPEED 0.4f;
+
+#define CAMERA_INPUT_SPEED 0.4f;
 //-----------------------------------------------------------------------------
 // Name: FrameMove
 // Desc: Update the view matrix based on user input & elapsed time
@@ -90,20 +91,20 @@ VOID CCameraFreeLook::FrameMove( FLOAT fElapsedTime )
 
 	if ( IsKeyDown(m_aKeys[CAM_ROTATE_X_POS]) ) {
 		//m_bInvertPitch = FALSE;
-		m_vRotVelocity.x += ROTSPEED;     //rot around X
+		m_vRotVelocity.x += CAMERA_INPUT_SPEED;     //rot around X
 	}
 	if ( IsKeyDown(m_aKeys[CAM_ROTATE_X_NEG]) ) {
 		//m_bInvertPitch = TRUE;
-		m_vRotVelocity.x -= ROTSPEED;     //rot around X
+		m_vRotVelocity.x -= CAMERA_INPUT_SPEED;     //rot around X
 	}
 
 	if ( IsKeyDown(m_aKeys[CAM_ROTATE_Y_POS]) ) {
 		//m_bInvertYaw = FALSE;
-		m_vRotVelocity.y += ROTSPEED;  	//rot around Y
+		m_vRotVelocity.y += CAMERA_INPUT_SPEED;  	//rot around Y
 	}
 	if ( IsKeyDown(m_aKeys[CAM_ROTATE_Y_NEG]) ) {
 		//m_bInvertYaw = TRUE;
-		m_vRotVelocity.y -= ROTSPEED;  	//rot around Y
+		m_vRotVelocity.y -= CAMERA_INPUT_SPEED;  	//rot around Y
 	}
 
 

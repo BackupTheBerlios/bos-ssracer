@@ -8,7 +8,7 @@ class CCameraFreeLook : public CD3DCamera
 {
 public:
     CCameraFreeLook();
-    void Update( int iInput, bool bState );
+    void Update( CInputTaskMessage * pIMsg );
     VOID    FrameMove( FLOAT fElapsedTime );
     D3DUtil_CameraKeys MapKey( UINT nKey );
 protected:

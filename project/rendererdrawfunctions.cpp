@@ -575,3 +575,30 @@ void CRenderer::DrawVehicle( CVehicle * pVehicle )
     //$$$TODO draw headlights
     // get position of headlights in local coords
 }
+
+
+
+//-----------------------------------------------------------------------------
+// Name:  DrawScreenText()
+// Desc:  Draw text using screen coordinates without any effects using font size
+// Defaults: dwFlags = 0, eFType = FONT_MENU
+//-----------------------------------------------------------------------------
+void CRenderer::DrawScreenText(  FLOAT fXPos, FLOAT fYPos, DWORD dwColor, char * szText, DWORD dwFlags, FontType eFType )
+{
+    m_kFontMap[eFType]->DrawText( fXPos, fYPos, dwColor, szText, dwFlags);
+    return;
+}
+
+
+
+//-----------------------------------------------------------------------------
+// Name:  Draw3DTextScaled()
+// Desc:  Draw a scaled text relative to screen size in world coordinates
+// Defaults: dwFlags = 0, eFType = FONT_MENU
+//-----------------------------------------------------------------------------
+void CRenderer::Draw3DTextScaled( FLOAT fXPos, FLOAT fYPos, FLOAT fZPos, DWORD dwColor, char * szText, FLOAT fXScale, FLOAT fYScale, DWORD dwFlags, FontType eFType )
+{
+    m_kFontMap[eFType]->DrawTextScaled(fXPos, fYPos, fZPos, fXScale, fYScale, dwColor, szText, dwFlags);
+    return;
+}
+

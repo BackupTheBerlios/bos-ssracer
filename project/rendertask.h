@@ -40,6 +40,7 @@ public:
 private:
     CRenderer * m_pkRenderer;  // the renderer attached to this task 
     void HandleInputMessage( CInputTaskMessage * pIMsg );
+    float m_fFPS; // frames per second stat
 };
 
 

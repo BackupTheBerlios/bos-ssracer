@@ -115,6 +115,20 @@ void CRenderTask::Update()
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "");
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "");
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 18, "");
+
+    // Keep track of the frame count
+    static FLOAT fLastTime = 0.0f;
+    static DWORD dwFrames  = 0;
+    FLOAT fTime = DXUtil_Timer( TIMER_GETABSOLUTETIME );
+    ++dwFrames;
+
+    // Update the scene stats once per second
+    if( fTime - fLastTime > 1.0f )
+    {
+        m_fFPS    = dwFrames / (fTime - fLastTime);
+        fLastTime = fTime;
+        dwFrames  = 0;
+    }
     #endif
 
     //--- update view from the camera position ---//
@@ -139,12 +153,12 @@ void CRenderTask::Update()
     D3DXVECTOR3 * vEye = m_pkRenderer->GetActiveCameraPtr()->GetEyePtr();
     D3DXVECTOR3 * vLookAt = m_pkRenderer->GetActiveCameraPtr()->GetLookAtPtr();
     D3DXVECTOR3 * vVel = m_pkRenderer->GetActiveCameraPtr()->GetVelocityPtr();
+   
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 1, "Cam Eye Position %f %f %f", vEye->x, vEye->y, vEye->z);
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 2, "Cam Look At %f %f %f", vLookAt->x, vLookAt->y, vLookAt->z);
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 3, "Cam Velocity %f %f %f", vVel->x, vVel->y, vVel->z);
-
-
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "Cam viscull state %d", m_pkRenderer->IsVisCullingEnabled());
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 20, "FPS:  %f", m_fFPS);
     #endif
 
 
@@ -160,8 +174,7 @@ void CRenderTask::Update()
     #ifdef _DEBUG
     if ( CBOSApplication::GetBOSApp().GetDebugOverlayState() == TRUE ) {
         //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "press F12 to hide all this");
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 19, "J:  got lines 0-19");
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 20, "line 20");
+        //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 20, "line 20");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 30, "line 30");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 40, "line 40");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 100, "line 100");
@@ -240,7 +253,7 @@ void CRenderTask::HandleInputMessage( CInputTaskMessage * pIMsg )
     #endif
 
     // forward it to the camera
-    m_pkRenderer->GetActiveCameraPtr()->Update(pIMsg->m_keyValue, pIMsg->m_keyDown);
+    m_pkRenderer->GetActiveCameraPtr()->Update(pIMsg);
 
 }
 

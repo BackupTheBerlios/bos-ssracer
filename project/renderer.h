@@ -31,9 +31,13 @@
 
 // --- defines and constants --- //
 // fonts available to render
-#define FONT_DEFAULT 0
-#define FONT_SYSTEM 1
-#define FONT_SMALL 2
+enum FontType 
+{
+    FONT_DEFAULT=0,
+    FONT_SYSTEM,
+    FONT_MENU = FONT_SYSTEM,  // just use this one for now
+    FONT_SMALL
+};
 
 class CRenderTask; // forward declaration
 //class CObject;
@@ -206,6 +210,11 @@ protected:
     void DrawQuadTreeNode( CQuadNode * pQNode );
     void DrawBBox( Box3f * pBBox, float fPointSize = 1.0f, DWORD dwColor = D3DCOLOR_ARGB( 255, 155, 155, 155 ));
     void DrawVehicle( CVehicle * pVehicle );
+
+    void DrawScreenText(  FLOAT fXPos, FLOAT fYPos, DWORD dwColor, char * szText, DWORD dwFlags=0L, FontType eFType = FONT_MENU );
+    void Draw3DTextScaled( FLOAT fXPos, FLOAT fYPos, FLOAT fZPos, DWORD dwColor, char * szText, FLOAT fXScale, FLOAT fYScale, DWORD dwFlags=0L, FontType eFType = FONT_MENU );
+
+    void DrawFrontEnd();
 
 
 private:

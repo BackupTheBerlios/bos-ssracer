@@ -105,7 +105,7 @@ public:
 
     // camera update functions
     virtual void Update(){ /* does nothing */};
-	virtual void Update( int iInput, bool bState ) { /* does nothing */};
+	virtual void Update( CInputTaskMessage * pIMsg ) { /* does nothing */};
 
     // updates frustum information for a view and projection matrix
     // defaults to matrices used by this camera

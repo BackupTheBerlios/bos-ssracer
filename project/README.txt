@@ -7,14 +7,17 @@ BETA 4.0 *********** CURRENT VERSION PLEASE FILL THIS IN **************
 [DD.MM.2004]
 
 Added basic opponent AI
+Added FPS counter
 Added playlist functionality
 Added sound management
 Changed Entity management
 
 Bug Fixes:
 - skybox rendering no longer clobbers render states
+- fixed memory leak with input to player vehicle
 
 Known Bugs:
+- window resizing, minimizing not handled
 
 
 BETA 3.0 

@@ -107,14 +107,14 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 	((CCameraChase *)m_pkCameraMap[CAMERA_CHASE])->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
                                                 &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
 	// slightly wider FOV and shorter frustrum
-	((CCameraChase *)m_pkCameraMap[CAMERA_CHASE])->SetProjParams( CAMERA_CHASE_DEFAULT_FOV, 1.0f ,1.0f ,800.0f );
+	((CCameraChase *)m_pkCameraMap[CAMERA_CHASE])->SetProjParams( CAMERA_CHASE_DEFAULT_FOV, 1.0f ,1.0f ,8000.0f );
 
 
 	//--- free look camera --- //	
 	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
     			                                   &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
 	// wide FOV and a large frustrum
-	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000.0f );
+	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 10000.0f );
 
 
     // defaults to this camera
@@ -367,7 +367,7 @@ void CRenderer::RenderScene()
 {
     // clear the previous frame   
     //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
-    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(20,10,70), 1.0f, 0 );
+    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,20,100), 1.0f, 0 );
     //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );//D3DCOLOR_XRGB(0,20,50)
 
     m_pd3dDevice->BeginScene();  // --- begin scene drawing commands

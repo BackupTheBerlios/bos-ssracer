@@ -47,6 +47,20 @@ private:
     static BOOL                    ms_bFullScreen;          // TRUE if the app is fullscreen
     static BOOL                    ms_bConsoleDown;         // TRUE if the in game console is displayed
     static BOOL                    ms_bShowDebugOverlay;    // TRUE if debug overlay is to be shown
+    
+    bool                           m_bWindowed;
+    DWORD                          m_dwWindowStyle;
+    bool              m_bShowCursorWhenFullscreen; // Whether to show cursor when fullscreen
+    bool              m_bClipCursorWhenFullscreen; // Whether to limit cursor pos when fullscreen
+    bool              m_bStartFullscreen;  // Whether to start up the app in fullscreen mode
+
+    bool              m_bActive;
+    bool              m_bDeviceLost;
+    bool              m_bMinimized;
+    bool              m_bMaximized;
+    bool              m_bIgnoreSizeChange;
+    bool              m_bDeviceObjectsInited;
+    bool              m_bDeviceObjectsRestored;
 
 protected:
     static CBOSApplication * ms_pkBOSApp; // static reference to this singleton
