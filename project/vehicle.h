@@ -100,7 +100,8 @@ private:
 	void CalculateBodyOrientation();
 
 
-	float CalculateTraction(float force, float axleWeight);
+	float CalculateDriveTraction(float force);
+	float CalculateBrakeTraction(float force);
 	float CalculateMaxTraction(float rearAxleWeight);
 
 	void InterpolateSteeringAngle(float deltaT);
@@ -153,7 +154,8 @@ private:
 	int gear;	// Vehicle's current gear;
 	float engineTorque; // Engine's current torque output;
 	float driveWheelTorque; // Torque generated at the drive wheel by the engine
-	float tractionTorque;	// Torque generated on the drive wheel due to friction. (opposes driveWheelTorque)
+	float tractionDriveTorque;	// Torque generated on the drive wheel due to friction. (opposes driveWheelTorque)
+	float tractionBrakeTorque;  // Torque generated on the tires due to friction from braking.
 	float brakeTorque;		// Torque generated on the drive wheel due to application of the brakes. (opposes driveWheelTorque)
 	float slipRatio;	// Slip ratio between the tire and the road
 

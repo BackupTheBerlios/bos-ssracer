@@ -261,31 +261,25 @@ void CVehicle::CalculateLongitudinalAcceleration()
 	// the vehicle's weight is distributed over the rear axle because this
 	// affects how much traction we will get from the tires.
 
-	float rearAxleWeight;
-	float frontAxleWeight;
 	float engineForce;
 	float brakeForce;
-	float tractionForce;
-
-	rearAxleWeight = weightDistribution[RRTIRE] + weightDistribution[RLTIRE];
-	frontAxleWeight = weightDistribution[FRTIRE] + weightDistribution[FLTIRE];
-
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "rearAxleWeight: %f", rearAxleWeight);
+	float tractionBrakeForce;
+	float tractionDriveForce;
 
 	engineForce = (engineTorque * gearRatios[gear] * rearDiffRatio) / tireRadius;
 	driveWheelTorque = engineForce * tireRadius;
 
-	brakeForce = brakeTorque / tireRadius;
-	//tractionForce += CalculateTraction(brakeForce, frontAxleWeight);
-
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "engineForce: %f", engineForce);
 
-	tractionForce = CalculateTraction(engineForce, rearAxleWeight);
-	tractionTorque = tractionForce * tireRadius;
+	tractionDriveForce = CalculateDriveTraction(engineForce);
+	tractionDriveTorque = tractionDriveForce * tireRadius;
 
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "tractionForce: %f", tractionForce);
+	brakeForce = brakeTorque / tireRadius;
 
-	float Flongitudinal = tractionForce - brakeForce - drag.X() - rollingResistance.X();
+	tractionBrakeForce = CalculateBrakeTraction(brakeForce);
+	tractionBrakeTorque = tractionBrakeForce * tireRadius;
+
+	float Flongitudinal = tractionDriveForce - tractionBrakeForce - drag.X() - rollingResistance.X();
 
 	accelerationLC.X() = Flongitudinal / (vehicleMass + rotatingMass);
 }
@@ -293,18 +287,19 @@ void CVehicle::CalculateLongitudinalAcceleration()
 //--------------------------------------------------------------
 //
 //--------------------------------------------------------------
-float CVehicle::CalculateTraction(float force, float axleWeight)
+float CVehicle::CalculateDriveTraction(float force)
 {
 	// First we need to calculate the maximum amount of 
 	// force that the tires can put to the ground.  This
 	// value is affected by the amount of weight on the rear
 	// axle, which transfers into the weight on the rear tires.
 	
-	//float maximumTractionForce = CalculateMaxTraction(rearAxleWeight);
+	float rearAxleWeight = weightDistribution[RRTIRE] + weightDistribution[RLTIRE];
+
 	// ***************** TWEAKABLE VALUE ******************* //
 	float maximumTractionForce = 8000.0f;
 
-	maximumTractionForce = (axleWeight / maximumTractionForce) * maximumTractionForce;
+	maximumTractionForce = (rearAxleWeight / maximumTractionForce) * maximumTractionForce;
 
 	// Modulate the maximum amount of tractive force that the tires
 	// are able to generate based on the type of tire.  Average street
@@ -330,6 +325,30 @@ float CVehicle::CalculateTraction(float force, float axleWeight)
 		dynamicFriction = true;
 		return maximumTractionForce;
 	}
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+float CVehicle::CalculateBrakeTraction(float force)
+{
+	//float rearAxleWeight = weightDistribution[RRTIRE] + weightDistribution[RLTIRE];
+	float frontAxleWeight = weightDistribution[FRTIRE] + weightDistribution[FLTIRE];
+	
+	float maximumTractionForce = 8000.0f;
+
+	maximumTractionForce = (force / maximumTractionForce) * frontAxleWeight;
+
+	if(force > maximumTractionForce) {
+		return maximumTractionForce;
+	}
+	else {
+		return force;
+	}
+
+	return 0.0f;
+	
+	
 }
 
 //--------------------------------------------------------------
@@ -404,13 +423,6 @@ void CVehicle::CalculateEngineTorque()
 		engineTorque = 0.0f;
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Gas not pressed.");
 	}
-	/*
-	else if(rpm <= IDLE_RPM && !(inputState.gas) {
-		// No torque at or below 1000 rpm.
-		rpm = IDLE_RPM;
-		engineTorque = 0.0f;
-	}
-	*/
 	else if( float(rpm) <= (maximumRPM * 0.90f)) {
 		// torque varies by 50%
 		// At 1000 rpm we are at 50% torque output
@@ -482,14 +494,35 @@ void CVehicle::CalculateWheelAngularAcceleration()
 	float rearAxleInertia;
 	float wheelInertia;
 
-	// NOT IMPLEMENTED YET.  ON THE TO DO LIST
-
 	// *** Begin Rear Wheel (Drive Wheel) Acceleration Calculations ***
+	driveWheelAngularAccelerationRADS = 0.0f;
 
-	totalTorque = driveWheelTorque - tractionTorque - brakeTorque;
+	if(inputState.gas && !inputState.brake) {
+		if(sgn(velocityLC.X()) > 0.0f) {
+			totalTorque = driveWheelTorque - tractionDriveTorque;
+		}
+		else {
+			totalTorque = 0.0f;
+		}
+	}
+	else if(!inputState.gas && inputState.brake) {
+		if(sgn(velocityLC.X()) < 0.0f) {
+			totalTorque = brakeTorque - tractionBrakeTorque;
+		}
+		else {
+			totalTorque = 0.0f;
+		}
+	}
+	else if(!inputState.gas && !inputState.brake) {
+		totalTorque = 0.0f;
+	}
+	else if(inputState.gas && inputState.brake) {
+		// Have to implement this later.
+		totalTorque = 0.0f;
+	}
+
 // $$$PHYSICSLOGS
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "totalTorque: %f", totalTorque);
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "tractionTorque: %f", tractionTorque);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "driveWheelTorque: %f", driveWheelTorque);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "brakeTorque: %f", brakeTorque);
 
@@ -502,51 +535,16 @@ void CVehicle::CalculateWheelAngularAcceleration()
 
 	// acceleration due to the acceleration of the vehicle along
 	// the X axis
-	driveWheelAngularAccelerationRADS = accelerationLC.X() / tireRadius;
+	//driveWheelAngularAccelerationRADS = accelerationLC.X() / tireRadius;
 	
 	// Is the player pressing the gas?
-	if(inputState.gas) {
+	if( (inputState.gas || inputState.brake) && (!(inputState.gas && inputState.brake))) {
 		// extra acceleration due to the wheels slipping because the player
 		// is pressing the gas pedal.
 		driveWheelAngularAccelerationRADS += (totalTorque / rearAxleInertia);
 	}
- 
+
 	// *** End Rear Wheel Acceleration Calculations ***
-
-	// *** Begin Front Wheel Acceleration Calculations ***
-	float accelMagnitude = float(sqrt(pow(accelerationLC.X(), 2) + pow(accelerationLC.Y(), 2) + pow(accelerationLC.Z(), 2)));
-	float angularAccelMagnitude = accelMagnitude / tireRadius;
-
-	// Calculate the angle between the heading of the vehicle
-	// and the acceleration vector.  To do this we will compute
-	// the inverseCos(dotProduct(accel * heading) / (magnitude ( accel ) * magnitude ( heading)))
-	// this gives us the angle in RADIANS.
-
-	if(accelMagnitude != 0.0f) {
-		// HeadingLC = (1.0f, 0.0f, 0.0f), so when we dot product with it
-		// we are left with u.x * headingLC.x = u.x * 1.0f = u.x
-		float accelDotHeading = accelerationLC.X();
-		
-		// Don't need heading magnitude because it will always be 1.
-		// This is because we are working along the local coordinate system,
-		// and so the heading of the vehicle is always pointing directly
-		// up the X-axis, with unit length.  Thus magnitude(heading) = 1.
-		float cosTheta = accelDotHeading / accelMagnitude;
-		float angleBetweenAccelAndHeadingRADS = float(acos(cosTheta));
-
-		// Check to see if the acceleration is occuring in the opposite direction of the tire
-		// spin.  If it is then we need to negate the angularAccelMagnitude.
-		if(float(fabs(angleBetweenAccelAndHeadingRADS - steerAngleRADS)) > (PI_BOS / 2.0f)) {
-			angularAccelMagnitude *= -1.0f;
-		}
-		
-		frontWheelAngularAccelerationRADS = float(cos(DEGREES(steerAngleRADS + sideSlipAngleRADS))) * angularAccelMagnitude;
-	}
-	else {
-		frontWheelAngularAccelerationRADS = 0.0f;
-	}
-
-	// *** End Front Wheel Acceleration Calculations ***
 }
 
 //--------------------------------------------------------------
@@ -641,8 +639,50 @@ void CVehicle::CalculateAutomaticGearShifting()
 //--------------------------------------------------------------
 void CVehicle::CalculateTireAngularVelocity(float deltaT)
 {
-	driveWheelAngularVelocityRADS += driveWheelAngularAccelerationRADS * deltaT;
-	frontWheelAngularVelocityRADS += frontWheelAngularAccelerationRADS * deltaT;
+	// *** Begin Front Wheel Velocity Calculations ***
+	float velocityMagnitude = float(sqrt(pow(velocityLC.X(), 2) + pow(velocityLC.Y(), 2) + pow(velocityLC.Z(), 2)));
+	float angularVelocityMagnitude = velocityMagnitude / tireRadius;
+
+	// Calculate the angle between the heading of the vehicle
+	// and the acceleration vector.  To do this we will compute
+	// the inverseCos(dotProduct(accel * heading) / (magnitude ( accel ) * magnitude ( heading)))
+	// this gives us the angle in RADIANS.
+
+	if(velocityMagnitude != 0.0f) {
+		// HeadingLC = (1.0f, 0.0f, 0.0f), so when we dot product with it
+		// we are left with u.x * headingLC.x = u.x * 1.0f = u.x
+		float velocityDotHeading = velocityLC.X();
+		
+		// Don't need heading magnitude because it will always be 1.
+		// This is because we are working along the local coordinate system,
+		// and so the heading of the vehicle is always pointing directly
+		// up the X-axis, with unit length.  Thus magnitude(heading) = 1.
+		float cosTheta = velocityDotHeading / velocityMagnitude;
+		float angleBetweenVelocityAndHeadingRADS = float(acos(cosTheta));
+
+		// Check to see if the acceleration is occuring in the opposite direction of the tire
+		// spin.  If it is then we need to negate the angularAccelMagnitude.
+		if(float(fabs(angleBetweenVelocityAndHeadingRADS - steerAngleRADS)) > (PI_BOS / 2.0f)) {
+			angularVelocityMagnitude *= -1.0f;
+		}
+		
+		frontWheelAngularVelocityRADS = float(cos(DEGREES(steerAngleRADS + sideSlipAngleRADS))) * angularVelocityMagnitude;
+	}
+	else {
+		frontWheelAngularVelocityRADS = 0.0f;
+	}
+
+	if(driveWheelAngularAccelerationRADS != 0.0f) {
+		driveWheelAngularVelocityRADS += driveWheelAngularAccelerationRADS * deltaT;
+	}
+	else {
+		driveWheelAngularVelocityRADS = velocityLC.X() / tireRadius;	
+	}
+	// *** End Front Wheel Acceleration Calculations ***
+
+
+	//driveWheelAngularVelocityRADS += driveWheelAngularAccelerationRADS * deltaT;
+	//frontWheelAngularVelocityRADS += frontWheelAngularAccelerationRADS * deltaT;
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "DriveWheelAngVelocity: %f", driveWheelAngularVelocityRADS);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "FrontWheelAngVelocity: %f", frontWheelAngularVelocityRADS);
 	// $$$PHYSICSLOGS CLog::GetLog().Write(LOG_GAMECONSOLE, "WheelAngVelocity: %f", driveWheelAngularVelocityRADS);
