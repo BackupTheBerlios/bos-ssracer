@@ -46,7 +46,7 @@ int CCommandLineParser::initKeywords()
 {
 	// define your keywords here:
 /*	Keywords.push_back(std::string("setvol"));
-	Keywords.push_back(std::string("loadmap"));
+	
 	Keywords.push_back(std::string("pause"));
 	Keywords.push_back(std::string("stop"));
 	Keywords.push_back(std::string("play"));
@@ -63,6 +63,8 @@ int CCommandLineParser::initKeywords()
 	Keywords.push_back(std::string("clearscene"));
 	Keywords.push_back(std::string("physicstest1"));
 	/*** End Chris' Commands ***/
+
+    Keywords.push_back(std::string("loadmap"));
 
     /*** Begin J's Commands ***/
     Keywords.push_back(std::string("loadmeshtest"));
@@ -96,7 +98,7 @@ int CCommandLineParser::execute()
 	if (it == Keywords.end()) return BAD_COMMAND;
 
 /*	if (*it == "setvol") error = setvol();
-	if (*it == "loadmap") error = loadmap();
+	
 	if (*it == "pause") error = pause();
 	if (*it == "stop") error = stop();
 	if (*it == "play") error = play();
@@ -110,7 +112,7 @@ int CCommandLineParser::execute()
 	if (*it == "loadplayervehicle") error = LoadPlayerVehicle();
 	if (*it == "clearscene") error = ClearScene();
 	if (*it == "physicstest1") error = PhysicsTest1();
-
+    if (*it == "loadmap") error = loadmap();
     if (*it == "loadmeshtest") error = loadmeshtest();
     if (*it == "cameratest") error = cameratest();
 
@@ -208,11 +210,6 @@ int CCommandLineParser::settimer()
 }
 
 
-int CCommandLineParser::loadmap()
-{
-	return OK;
-}
-
 int CCommandLineParser::pause()
 {
 #ifdef _DEBUG
@@ -298,8 +295,9 @@ int CCommandLineParser::LoadScene()
 			return OK;
 		}
 	}
-		
-	return OK;
+    return OK;
+    
+
 }
 
 int CCommandLineParser::LoadEntity()
@@ -418,6 +416,53 @@ int CCommandLineParser::PhysicsTest1()
 
 }
 
+
+
+int CCommandLineParser::loadmap()
+{
+    string sDir, sName;
+    char szBuf[512];
+    FILE *fp;
+
+    if (Tokens.size() < 3)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading scene from debug map");
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + "debug\\";
+        sName = "debug";
+    }
+    else if (Tokens[2].find(".\\", 0) == 0)  { //used that .\ dir shortcut
+        sName = Tokens[1];
+        sDir.replace(0, 1, CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP));
+        sDir += sName + "\\";
+
+    }
+
+    //check if the file exists
+    sprintf(szBuf, "%s%s", sDir.c_str(), sName.c_str());
+    fp = fopen( (sDir+sName+".map").c_str(), "r");
+    if (!fp)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadmap Error: File does not exist: %s", szBuf);
+        return OK;
+    }
+
+
+    if (CGameStateManager::GetGameStateManager().GetScenePtr()->LoadMap( fp, &sDir, &sName ))  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Successfully loaded map: %s%s", sDir.c_str(), sName.c_str());
+    }
+    else  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Failed to load map: %s%s", sDir.c_str(), sName.c_str());
+    }
+    return OK;
+
+/*    // load the map up
+    if (CGameStateManager::GetGameStateManager().GetScenePtr()->LoadMap( sDir, sName ))  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Successfully loaded map: %s%s", sDir.c_str(), sName.c_str());
+    }
+    else  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Failed to load map: %s%s", sDir.c_str(), sName.c_str());
+    }
+    return OK;
+*/
+}
 /*** End Chris' Functions ***/
 
 

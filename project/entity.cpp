@@ -48,8 +48,18 @@ int CEntity::LoadMesh( string strDir )
 
     m_pMesh = new CD3DMesh(_T(m_strName));
 
-    if (!CRenderer::GetRenderer().CreateMesh( m_pMesh, szPath ))
+    // use the current working directory trick to make DX load the textures from the same dir
+    if (!SetCurrentDirectory(strDir.c_str()))
+        return 0;
+    if (!CRenderer::GetRenderer().CreateMesh( m_pMesh, szPath ))  {
+        // set the CWD back
+        if (!SetCurrentDirectory(CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING).c_str()))
+            return 0;
         return 0;  // Failure
+    }
+    // set the CWD back
+    if (!SetCurrentDirectory(CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING).c_str()))
+        return 0;
 
     return 1;  // Success
 }

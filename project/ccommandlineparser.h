@@ -35,11 +35,14 @@ public:
 	int echo(); // echo text
 	int stop(); // soundFX or music
     int settimer(); // set game timer resolution
+
+
 	int LoadScene();
 	int LoadEntity();
 	int LoadPlayerVehicle();
 	int ClearScene();
 	int PhysicsTest1();
+
 
     // === J's Functions === //
     int loadmeshtest();

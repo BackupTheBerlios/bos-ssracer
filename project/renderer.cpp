@@ -18,11 +18,8 @@ using namespace Wml;
 // --- internal library includes --- //
 #include "timer.h"
 #include "renderer.h"
-//#include "d3dutil.h"
-//#include "game.h"
 #include "gamestatemanager.h"
 #include "settings.h"
-//#include "bosutil.h"
 #include "cinputconsole.h"
 #include "macros.h"
 
@@ -240,9 +237,9 @@ HRESULT CRenderer::Initialize()
     d3dLight.Diffuse.r  = 0.5f;//1.0f;
     d3dLight.Diffuse.g  = 0.5f;//1.0f;
     d3dLight.Diffuse.b  = 0.5f;//1.0f;
-    d3dLight.Ambient.r  = 0.5f;//1.0f;
-    d3dLight.Ambient.g  = 0.5f;//1.0f;
-    d3dLight.Ambient.b  = 0.5f;//1.0f;
+    d3dLight.Ambient.r  = 1.0f;
+    d3dLight.Ambient.g  = 1.0f;
+    d3dLight.Ambient.b  = 1.0f;
     d3dLight.Specular.r = 0.5f;//1.0f;
     d3dLight.Specular.g = 0.5f;//1.0f;
     d3dLight.Specular.b = 0.5f;//1.0f;
@@ -251,8 +248,8 @@ HRESULT CRenderer::Initialize()
     d3dLight.Position.y = 500.0f;//1000.0f;
     d3dLight.Position.z = -10.0f;//-100.0f;
 
-    d3dLight.Attenuation0 = 0.5f; 
-    d3dLight.Range        = 700.0f;//1000.0f;
+    d3dLight.Attenuation0 = 1.0f; 
+    d3dLight.Range        = 1000.0f;//1000.0f;
 
     // Set the property information for the first light.
     hr = m_pd3dDevice->SetLight(0, &d3dLight);
@@ -467,14 +464,11 @@ void CRenderer::RenderScene()
    	    pMatrixStack->Push(); 
         pMatrixStack->LoadIdentity();
 
-	    D3DMATRIX xRot, yRot, zRot;
-	
 	    // orientation
 	    vTemp = (*it)->GetRotate();
-	    
-	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
-		pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
-		pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
+        pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
+	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
+	    pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
 	    //pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
 
         // translation
@@ -769,8 +763,8 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP );
+    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP );
+    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP );
 
     return;
 

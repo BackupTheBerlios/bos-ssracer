@@ -5,8 +5,12 @@
 #include "stl.h"
 
 #include "entity.h"
+#include "ccommandlineparser.h"
+
 
 class CScene {
+
+    friend CCommandLineParser::loadmap();
 
 public:
 

@@ -4,6 +4,7 @@
 #include "vehicle.h"
 #include "gamestatemanager.h"
 #include "macros.h"
+#include "settings.h"
 
 
 //static member declarations
@@ -39,6 +40,8 @@ int CScene::ReleaseScene()
 	return 1;
 }
 
+
+// is this old code?
 int CScene::LoadScene(string* directory, string* filename)
 {
 	char buf[512];
@@ -93,7 +96,7 @@ int CScene::LoadScene(string* directory, string* filename)
 }
 
 
-int CScene::LoadMap(FILE* fp, string* filename, string* directory)
+int CScene::LoadMap(FILE* fp, string* directory, string* filename)
 {
 	char buf[512];
 	char seps[] = " \n.";
@@ -107,7 +110,7 @@ int CScene::LoadMap(FILE* fp, string* filename, string* directory)
 			token = strtok(NULL, seps);
 
 			if(!strcmp(token, "objects")) {
-				if(!LoadEntities(filename, directory)) {
+				if(!LoadEntities(directory, filename)) {
 					return 0;
 				}
 			}
@@ -131,14 +134,16 @@ int CScene::LoadEntities(string* directory, string* filename)
 	string path;
 
 	path = directory->c_str();
-	path.append("\\");
-	path.append(filename->c_str());
+	//path.append("\\");
+	path += *filename;
+    ////
+    path += ".objects";
 
 	fp = fopen(path.c_str(), "r");
 
 	if(!fp) {
 		#ifdef _DEBUG
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "Error CScene::LoadEntities() >> Unable to open file");
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Error CScene::LoadEntities() >> Unable to open file %s", path.c_str());
 		#endif
 		return 0;
 	}
@@ -263,6 +268,18 @@ int CScene::LoadEntities(string* directory, string* filename)
 					tempSphere.Radius() = float(atof(token));
 					newObject->SetBoundingSphere(tempSphere);
 
+                    // for now assume these are all static entitites in the map file
+                    // so I know where to look for the mesh
+                    // we will need to be able to tell the difference between static and dynamic eventually to preserve the directory struture
+
+                    // look in .\media\meshes\static\*
+                    // the mesh filename is the object's name as well
+                    if(!(newObject->LoadMesh(CSettingsManager::GetSettingsManager().GetGameSetting(DIRSTATICMESH) + string(newObject->GetName()) +"\\")) ) {
+                        CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntities() >> Error loading mesh");
+                        return 0;
+                    }
+
+                    //=== add it to the entity vector ===//
 					m_vEntities.push_back(newObject);
 					break;
 				}
@@ -285,6 +302,8 @@ int CScene::LoadEntities(string* directory, string* filename)
 					CLog::GetLog().Write(LOG_MISC, "<sphereRadius> %f", newObject->getBoundingSphere().Radius());
                     #endif
 					*/
+                
+
 			}
 		}
 	}  //endwhile
