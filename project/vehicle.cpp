@@ -501,9 +501,9 @@ void CVehicle::UpdateVehiclePhysics()
 void CVehicle::TransformLocalToWorldSpace()
 {
 	// First transform the vehicle
-	// Apply transformation matrix to the
+	// Apply transformation matrix to the body of the vehicle
+	// Rotate Y(-90), X(90)
 	
-
 	// Then transform all 4 tires
 
 }
