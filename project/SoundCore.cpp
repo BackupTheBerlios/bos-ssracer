@@ -634,7 +634,7 @@ void CSoundCore::LogError( char *sErrMsg, HRESULT hr, char *sErrLoc ) {
 	strcat(sMessage, sErrLoc);
 
 #ifdef _DEBUG
-	CLog::GetLog().Write(LOG_GAMECONSOLE, sMessage);
+	CLog::GetLog().Write(LOG_MISC, sMessage);
 #endif
 
 	return;
@@ -651,7 +651,7 @@ void CSoundCore::LogError( char *sErrMsg, HRESULT hr, char *sErrLoc ) {
 void CSoundCore::LogMessage( char *sMsg ) {
 
 #ifdef _DEBUG
-	CLog::GetLog().Write(LOG_GAMECONSOLE, sMsg);
+	CLog::GetLog().Write(LOG_MISC, sMsg);
 #endif
 
 	return;
