@@ -12,10 +12,16 @@ int CScene::ReleaseScene()
 		FREE(m_vMeshes[i], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
 	}
 
+	// Clear the vector of mesh pointers
+	m_vMeshes.clear();
+
 	// Free all the entities
 	for(i=0;i<m_vEntities.size();i++) {
 		FREE(m_vEntities[i], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
 	}
+
+	// Clear the vector of entity pointers
+	m_vEntities.clear();
 
 	// Don't forget to set the player vehicle pointer to NULL
 	// Also, clean up any other pointers that use the scene
