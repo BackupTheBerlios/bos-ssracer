@@ -932,6 +932,11 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 
 		velocityTotLC = rotPos / deltaT;
 
+		if(velocityLC.X() < -0.3f) {
+			velocityTotLC *= -1.0f;
+			headingTotLC *= -1.0f;
+		}
+
 		float ABdotAprimeBprime = AB.X() * AprimeBprime.X() + AB.Y() * AprimeBprime.Y() + AB.Z() * AprimeBprime.Z();
 		float magAB = pow(AB.X(), 2) + pow(AB.Y(), 2) + pow(AB.Z(), 2);
 
