@@ -661,17 +661,17 @@ void CVehicle::CalculateLateralAcceleration()
 		angularAccelerationLC.Z() *= 0.99f;
 	}
 
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "sideSlipAngleRADS: %f", sideSlipAngleRADS);
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "slipAngleFront: %f", DEGREES(slipAngleFront));
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "slipAngleRear: %f", DEGREES(slipAngleRear));
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "FlateralFront: %f", FlateralFront);
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "FlateralRear: %f", FlateralRear);
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "accelerationLC.Y(): %f", accelerationLC.Y());
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "corneringTorque: %f", corneringTorque);
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "angularAccelerationLC.Z(): %f", angularAccelerationLC.Z());
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "angularVELOCITY.Z(): %f", DEGREES(angularVelocityLC.Z()));
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "steerAngleDEGS: %f", DEGREES(steerAngleRADS));
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "");
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "sideSlipAngleRADS: %f", sideSlipAngleRADS);
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "slipAngleFront: %f", DEGREES(slipAngleFront));
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "slipAngleRear: %f", DEGREES(slipAngleRear));
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "FlateralFront: %f", FlateralFront);
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "FlateralRear: %f", FlateralRear);
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "accelerationLC.Y(): %f", accelerationLC.Y());
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "corneringTorque: %f", corneringTorque);
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "angularAccelerationLC.Z(): %f", angularAccelerationLC.Z());
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "angularVELOCITY.Z(): %f", DEGREES(angularVelocityLC.Z()));
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "steerAngleDEGS: %f", DEGREES(steerAngleRADS));
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "");
 }
 
 //--------------------------------------------------------------
