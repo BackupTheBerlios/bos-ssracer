@@ -1000,7 +1000,7 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 		}
 	}
 	
-	
+	/*
 
 	/*
 	if(float(fabs(accelerationLC.Y())) > 0.0f) {
@@ -1012,6 +1012,7 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 		}
 	}
 	*/
+	
 	
 }
 
