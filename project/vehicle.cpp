@@ -55,6 +55,9 @@ void CVehicle::Init()
 	frontWheelAngularVelocityRADS = 0.0f;
 	frontWheelAngularAccelerationRADS = 0.0f;
 
+	steerAngleRADS = 0.0f;
+	sideSlipAngleRADS = 0.0f;
+
 	// Initialize the gear to first gear
 	gear = 1;
 
@@ -269,7 +272,7 @@ void CVehicle::CalculateLongitudinalAcceleration()
 	engineForce = (engineTorque * gearRatios[gear] * rearDiffRatio) / tireRadius;
 	driveWheelTorque = engineForce * tireRadius;
 
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "engineForce: %f", engineForce);
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "engineForce: %f", engineForce);
 
 	tractionDriveForce = CalculateDriveTraction(engineForce);
 	tractionDriveTorque = tractionDriveForce * tireRadius;
@@ -421,7 +424,7 @@ void CVehicle::CalculateEngineTorque()
 
 	if(!(inputState.gas)) {
 		engineTorque = 0.0f;
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "Gas not pressed.");
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "Gas not pressed.");
 	}
 	else if( float(rpm) <= (maximumRPM * 0.90f)) {
 		// torque varies by 50%
@@ -522,9 +525,9 @@ void CVehicle::CalculateWheelAngularAcceleration()
 	}
 
 // $$$PHYSICSLOGS
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "totalTorque: %f", totalTorque);
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "driveWheelTorque: %f", driveWheelTorque);
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "brakeTorque: %f", brakeTorque);
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "totalTorque: %f", totalTorque);
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "driveWheelTorque: %f", driveWheelTorque);
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "brakeTorque: %f", brakeTorque);
 
 	wheelInertia = (tireMass * (tireRadius * tireRadius)) / 2.0f;
 
@@ -605,9 +608,97 @@ void CVehicle::InterpolateSteeringAngle(float deltaT)
 		}
 	}
 
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "SteerAngle: %f", steerAngleRADS);
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "SteerAngle: %f", steerAngleRADS);
 }
 
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::CalculateLateralAcceleration()
+{
+	// Step 1: calculate slip angles for the front
+	// and the rear axles.
+	float slipAngleFront;
+	float slipAngleRear;
+	float FlateralRear;
+	float FlateralFront;
+	float corneringTorque;
+
+
+	if(float(fabs(velocityLC.X())) > 1.0 ) {
+		float rearAxleWeight = weightDistribution[RRTIRE] + weightDistribution[RLTIRE];
+		float frontAxleWeight = weightDistribution[FRTIRE] + weightDistribution[FLTIRE];
+
+		//sideSlipAngleRADS = float(atan2(velocityLC.Y(), velocityLC.X()));
+		//sideSlipAngleRADS = float(atan2(velocityLC.Y(), velocityLC.X()));
+
+		float mag = float(sqrt(float(pow(velocityLC.X(), 2)) + float(pow(velocityLC.Y(), 2))));
+		
+		velocityLC.X() = mag * sgn(velocityLC.X());
+		velocityLC.Y() = 0.0f;
+		velocityLC.Z() = 0.0f;
+
+		sideSlipAngleRADS = 0.0f;
+
+		slipAngleFront = sideSlipAngleRADS + ((angularVelocityLC.Z() * b) / L) - steerAngleRADS;
+		slipAngleRear = sideSlipAngleRADS + ((angularVelocityLC.Z() * c) / L);
+
+		if(float(fabs(slipAngleFront)) > 0.1f) {
+			FlateralFront = CalculateLateralForce(slipAngleFront, frontAxleWeight);
+		}
+		if(float(fabs(slipAngleRear)) > 0.1f) {
+			FlateralRear = CalculateLateralForce(slipAngleRear, rearAxleWeight);
+		}
+
+		//accelerationLC.Y() = ((float(cos(steerAngleRADS)) * FlateralFront) + FlateralRear) / vehicleMass;
+
+		
+		corneringTorque = (FlateralFront*b) - (FlateralRear*c);
+
+		// ******** should have inertia of the vehicle rather than
+		//          vehicleMass.  Use it as a quick test for now ********* //
+		angularAccelerationLC.Z() = corneringTorque / vehicleMass;
+		angularAccelerationLC.Z() *= 0.99f;
+	}
+
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "sideSlipAngleRADS: %f", sideSlipAngleRADS);
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "slipAngleFront: %f", DEGREES(slipAngleFront));
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "slipAngleRear: %f", DEGREES(slipAngleRear));
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "FlateralFront: %f", FlateralFront);
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "FlateralRear: %f", FlateralRear);
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "accelerationLC.Y(): %f", accelerationLC.Y());
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "corneringTorque: %f", corneringTorque);
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "angularAccelerationLC.Z(): %f", angularAccelerationLC.Z());
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "angularVELOCITY.Z(): %f", DEGREES(angularVelocityLC.Z()));
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "steerAngleDEGS: %f", DEGREES(steerAngleRADS));
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "");
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+float CVehicle::CalculateLateralForce(float slipAngleRADS, float axleWeight)
+{
+	// Lateral force is a byproduct of slip angle ( difference between
+	// the heading of the wheels, and the velocity vector of the vehicle ).
+
+	// Starts at zero, increases to 5500 N at 3 degrees, then decreases to
+	// 2250 N at 90 degrees linearly.
+	float normalizedForce;
+	float slipAngleDEGS = DEGREES(slipAngleRADS);
+
+	if( float(fabs(slipAngleDEGS)) <= 3.0f) {
+		normalizedForce =  (slipAngleDEGS/3.0f) * (5500.0f);
+		return ( (axleWeight / 5000.0f) * normalizedForce * sgn(slipAngleDEGS));
+	}
+	else if(float(fabs(slipAngleDEGS)) <= 90.0f) {
+		normalizedForce = ((90.0f - float(fabs(slipAngleDEGS)))/87.0f) * (5500.0f);
+		return ( ( axleWeight / 5000.0f) * normalizedForce * sgn(slipAngleDEGS));
+	}
+	else {
+		return 0.0f;
+	}
+}
 //--------------------------------------------------------------
 //
 //--------------------------------------------------------------
@@ -683,8 +774,8 @@ void CVehicle::CalculateTireAngularVelocity(float deltaT)
 
 	//driveWheelAngularVelocityRADS += driveWheelAngularAccelerationRADS * deltaT;
 	//frontWheelAngularVelocityRADS += frontWheelAngularAccelerationRADS * deltaT;
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "DriveWheelAngVelocity: %f", driveWheelAngularVelocityRADS);
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "FrontWheelAngVelocity: %f", frontWheelAngularVelocityRADS);
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "DriveWheelAngVelocity: %f", driveWheelAngularVelocityRADS);
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "FrontWheelAngVelocity: %f", frontWheelAngularVelocityRADS);
 	// $$$PHYSICSLOGS CLog::GetLog().Write(LOG_GAMECONSOLE, "WheelAngVelocity: %f", driveWheelAngularVelocityRADS);
 
 }
@@ -728,6 +819,22 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 //--------------------------------------------------------------
 //
 //--------------------------------------------------------------
+void CVehicle::CalculateVehicleAngularVelocity(float deltaT)
+{
+	angularVelocityLC = angularVelocityLC*(0.99f) + (angularAccelerationLC * deltaT);
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
+void CVehicle::CalculateVehicleRotation(float deltaT)
+{
+	rotationLC = rotationLC + (angularVelocityLC * deltaT);
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
 void CVehicle::UpdateVehiclePhysics()
 {
 	float deltaT = CTimer::GetTimer().GetTimeElapsed();
@@ -737,8 +844,8 @@ void CVehicle::UpdateVehiclePhysics()
 	InterpolateSteeringAngle(deltaT);
 
 	//	$$$PHYSICSLOGS
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "Gear: %i", gear);
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "RPM: %i", rpm);
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "Gear: %i", gear);
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "RPM: %i", rpm);
 
 	// Begin Variable Precalculation
 	CalculateEngineTorque();
@@ -750,20 +857,21 @@ void CVehicle::UpdateVehiclePhysics()
 	// End Variable Precalculation
 
 	CalculateLongitudinalAcceleration();
+	CalculateLateralAcceleration();
 	CalculateWheelAngularAcceleration();
 	CalculateRPM();
 
-
-
 	CalculateVehicleVelocity(deltaT);
 	CalculateVehiclePosition(deltaT);
+	CalculateVehicleAngularVelocity(deltaT);
+	CalculateVehicleRotation(deltaT);
 
 	// $$$PHYSICSLOGS
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "DeltaT: %f", deltaT);
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "DeltaT: %f", deltaT);
 
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "Acceleration: %f %f %f", accelerationLC.X(), accelerationLC.Y(), accelerationLC.Z());
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "Velocity: %f %f %f", velocityLC.X(), velocityLC.Y(), velocityLC.Z());
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "Position: %f %f %f", positionLC.X(), positionLC.Y(), positionLC.Z());
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "Acceleration: %f %f %f", accelerationLC.X(), accelerationLC.Y(), accelerationLC.Z());
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "Velocity: %f %f %f", velocityLC.X(), velocityLC.Y(), velocityLC.Z());
+	//CLog::GetLog().Write(LOG_GAMECONSOLE, "Position: %f %f %f", positionLC.X(), positionLC.Y(), positionLC.Z());
 
 	
 	CalculateTireAngularVelocity(deltaT);
@@ -782,7 +890,7 @@ void CVehicle::TransformLocalToWorldSpace()
 	m_translate = bodyTransWC;
 
 	// Update the car body rotation value for the renderer.
-	Vector3f bodyRotWC(rotationLC.X(), rotationLC.Z()*(-1.0f), rotationLC.Y());
+	Vector3f bodyRotWC(DEGREES(rotationLC.X()), DEGREES(rotationLC.Z()*(-1.0f)), DEGREES(rotationLC.Y()));
 	m_rotate = bodyRotWC;
 	
 	// Then transform all 4 tires
