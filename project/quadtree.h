@@ -68,7 +68,7 @@ public:
         // set the AABBox
         m_BBox.Center() = vOrigin;
         m_BBox.Extent(0) = m_BBox.Extent(2) = fHalfWidth;
-        m_BBox.Extent(1) = 100;//1.0f; // thin out the height of the box
+        m_BBox.Extent(1) = fHalfWidth;//20.0f; // thin out the height of the box
         m_BBox.Axis(0) = Vector3f(1,0,0);  // axis aligned
         m_BBox.Axis(1) = Vector3f(0,1,0);
         m_BBox.Axis(2) = Vector3f(0,0,1);

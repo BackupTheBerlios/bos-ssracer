@@ -290,8 +290,8 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 
 	// scale
 	vTemp = pEntity->GetScale();
-	pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
-    //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
+	//pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
+    pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 
 
 	m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
@@ -310,9 +310,11 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 		#endif
     }
 
+   	pMatrixStack->Pop();
+    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
+
     if (m_bDrawEntBBoxes == true)
         DrawBBox(pEntity->GetBoundingBox(), 10.0f);
-
 
 }
 
