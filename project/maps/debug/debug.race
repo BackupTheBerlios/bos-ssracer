@@ -1,15 +1,16 @@
+<newopponent>
+<cardir> mitsuEclipse\\
+<carname> mitsuEclipse.car
+<startpos> 0.000000 -5.000000 -0.497
+<ailevel> 1
+
+<newopponent>
+<cardir> acuransx\\
+<carname> acuransx.car
+<startpos> 0.000000 5.000000 -0.497
+<ailevel> 3
+
 <racedata>
-<laps> 0
-<racetype> 0
+<laps> 4
+<racetype> 1
 
-<newopponent>
-<mesh> mitsuEclipse
-<startpos> 6.000000 0.000000 0.000000
-<ailevel> 0.000000 0.000000 0.000000
-<topspeed> 1.000000 1.000000 1.000000
-
-<newopponent>
-<mesh> acuransx
-<startpos> 6.000000 0.000000 0.000000
-<ailevel> 0.000000 0.000000 0.000000
-<topspeed> 1.000000 1.000000 1.000000

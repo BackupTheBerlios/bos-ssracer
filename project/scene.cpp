@@ -7,6 +7,7 @@
 #include "settings.h"
 #include "copponentvehicle.h"
 #include "ccollisionmanager.h" // Gib's add (for LoadPlanes())
+#include "copponentai.h"
 
 //static member declarations
 std::map< std::string, CD3DMesh * > CScene::m_kMeshMap;
@@ -697,7 +698,7 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
 	}
 
 	newCar = new COpponentVehicle();
-    newCar->SetId(20001);   //temp for myself testing
+    //newCar->SetId(20001);   //temp for myself testing
 	while(fgets(buf, sizeof(buf), fp)) {
 		token = strtok(buf, seps);
 
@@ -707,8 +708,8 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
         //hardcoded id to 20001 for now, since im only dealing with one ai car
         if(!strcmp(token, "<id>")) {
 			token = strtok(NULL, seps);
-			//newCar->SetId(atoi(token));
-            newCar->SetId(20001);
+			newCar->SetId(atoi(token));
+            //newCar->SetId(20001);
 			continue;
 		}
 		if(!strcmp(token, "<BodyMesh>")) {
@@ -1116,8 +1117,6 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 
 int CScene ::LoadRace(string* directory, string* filename)
 {
-  // if your wondering i havent done a damn thing to this function yet...
-  // will do friday hopefully.
 	FILE* fp;
 	char buf[512];
 	char* token;
@@ -1129,7 +1128,7 @@ int CScene ::LoadRace(string* directory, string* filename)
 	//path.append("\\");
 	path += *filename;
     ////
-    path += ".waypoints";
+    path += ".race";
 
 	fp = fopen(path.c_str(), "r");
 
@@ -1143,18 +1142,20 @@ int CScene ::LoadRace(string* directory, string* filename)
 	float temp[3];
 	Box3f tempBox;
 	Sphere3f tempSphere;
-	CWaypoint *newObject = NULL;
+    string carDir, carName;
+	COpponentVehicle *currentOpponent = NULL;
+    std::vector<COpponentVehicle *>::iterator it;
 
 	while(fgets(buf, sizeof(buf), fp)) {
 		token = strtok(buf, seps);
 		if(token == NULL) {
 			continue;
 		}
-		if(!strcmp(token, "<newwp>")) {
+        	if(!strcmp(token, "<racedata>")) {
+              CLog::GetLog().Write(LOG_GAMECONSOLE, "In race data");
+	
 			//newObject = new CEntity;
-
-
-			NEW(newObject, CWaypoint, "Error CScene::LoadWaypoints >> new operator failed");
+			//NEW(newObject, CWaypoint, "Error CScene::LoadWaypoints >> new operator failed");
 			while(fgets(buf, sizeof(buf), fp)) {
 				token = strtok(buf, seps);
 				/*	Set the Type of the object (MAP, STATIC, DYNAMIC)
@@ -1165,69 +1166,76 @@ int CScene ::LoadRace(string* directory, string* filename)
 					continue;
 				}
 				*/
-				if(!strcmp(token, "<id>")) {
+				if(!strcmp(token, "<laps>")) {
 					token = strtok(NULL, seps);
-					newObject->SetId(atoi(token));
+					int laps = atoi(token);
+                    //TODO deal with race conditions
 					continue;
 				}
-				if(!strcmp(token, "<name>")) {
+				if(!strcmp(token, "<racetype>")) {
 					token = strtok(NULL, seps);
-					newObject->SetName(token);
-					continue;
+					int raceType = atoi(token);
+                    //TODO deal with race conditions
+                    break;
 				}
-				if(!strcmp(token, "<translate>")) {
-					for(i=0;i<3;i++) {
-						token = strtok(NULL, seps);
-						temp[i] = float(atof(token));
-					}
-					newObject->SetTranslate(Vector3f(temp[0], temp[1], temp[2]));
-					continue;
-				}
-				if(!strcmp(token, "<rotate>")) {
-					for(i=0;i<3;i++) {
-						token = strtok(NULL, seps);
-						temp[i] = float(atof(token));
-					}
-					newObject->SetRotate(Vector3f(temp[0], temp[1], temp[2]));
-					continue;
-				}
-                //To determine if waypoint is normal, branch, or conjunct or not
-                if(!strcmp(token, "<type>")) {
+            }
+            }
+				
+		if(!strcmp(token, "<newopponent>")) {
+			//newObject = new CEntity;
+			//NEW(newObject, CWaypoint, "Error CScene::LoadWaypoints >> new operator failed");
+			while(fgets(buf, sizeof(buf), fp)) {
+				token = strtok(buf, seps);
+				/*	Set the Type of the object (MAP, STATIC, DYNAMIC)
+				    NOT USED AS OF YET, MIGHT NEED IT LATER
+				if(!strcmp(token, "<type>")) {
 					token = strtok(NULL, seps);
 					newObject->setType(atoi(token));
 					continue;
-					}
-                //To differentiate the different paths and where waypoint is ultimately loaded
-                if(!strcmp(token, "<path>")) {
+				}
+				*/
+				if(!strcmp(token, "<cardir>")) {
 					token = strtok(NULL, seps);
-					newObject->setPath(atoi(token));
+					carDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+token;
 					continue;
-					}
-                //Will only have on Waypoints that are of Branch type
-                if(!strcmp(token, "<BranchToPath>")) {
-					token= strtok(NULL, seps);
-					newObject->setGoToPath(atoi(token));
-					continue;
-					}
-                //Will only have on Waypoints that are of Conjunction type
-                if(!strcmp(token, "<ConjunctIndex>")) {
-					token= strtok(NULL, seps);
-					newObject->setCIndex(atoi(token));
-					continue;
-					}
-				if(!strcmp(token, "<scale>")) {
+				}
+				if(!strcmp(token, "<carname>")) {
+					token = strtok(NULL, seps);
+					carName = token;
+                    //NOTE Absolutely requires dir before name and dir & name before other attributes in .race file!!
+                    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&carDir, &carName))) 
+                    {
+	            	CLog::GetLog().Write(LOG_GAMECONSOLE, "The Opponent Vehicle is not loaded correctly!");
+	            	return OK;
+	                }
+                    it = CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end()-1;
+                    currentOpponent = (*it);
+                    continue;
+				}
+				if(!strcmp(token, "<startpos>")) {
 					for(i=0;i<3;i++) {
 						token = strtok(NULL, seps);
 						temp[i] = float(atof(token));
 					}
-					newObject->SetScale(Vector3f(temp[0], temp[1], temp[2]));
+                    //doesnt set starting position properly .... wtf.
+					//currentOpponent->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
+					currentOpponent->SetTranslate(Vector3f(temp[0], temp[1], temp[2]));
+                    continue;
+				}
+				
+                //To determine if ailevel is dumb, med or advanced
+                if(!strcmp(token, "<ailevel>")) {
+					token = strtok(NULL, seps);
+					currentOpponent->setAILevel(atoi(token));
 					break;
-				}                
+					}
+                
+				                
 
 			}
 		}
 
-        //=== add it to the Waypoint vector ===//
+       /* //=== add it to the Waypoint vector ===//
         if ( newObject->getPath() == 1)
         {
           m_vWPShortCut1.push_back(newObject);
@@ -1236,15 +1244,28 @@ int CScene ::LoadRace(string* directory, string* filename)
         {
 		  m_vWaypoints.push_back(newObject);
         }
-
+*/
 	}  //endwhile
 
-    //Set Last Waypoint as last Waypoint
-   
-    std::vector<CWaypoint *>::iterator it = m_vWaypoints.end()-1;
+    //Go thru opponents vector and initialize waypoints (Which should be loaded in)
+    vector<COpponentVehicle *>::iterator it2;
+    for (it2=CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin();
+         it2<CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end();  it2++) {
+ 
+        currentOpponent = (*it2);
+        currentOpponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetWaypoints());
+        currentOpponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetShortCut1());
+        currentOpponent->initNext();
+	    COpponentAI::GetOpponentAIPtr()->addCar(currentOpponent);
+     
+    }
+  
+    /*std::vector<CWaypoint *>::iterator it = m_vWaypoints.end()-1;
 	(*it)->setLastWay(true);
 	fclose(fp);
-
+*///CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+    //((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle((*CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin()));
+	
 	return 1;
 
 }

@@ -964,7 +964,7 @@ int CCommandLineParser::LoadVehicleAI()
 	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
     ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle((*CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin()));
 	
-    return OK;
+    return 0;
 }
 
 //  ===== End Ram & Gibs Functions =====//
