@@ -292,6 +292,10 @@ SOURCE=.\physicstask.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\rigidbody.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\tire.cpp
 # End Source File
 # Begin Source File
@@ -588,6 +592,10 @@ SOURCE=.\physics.h
 # Begin Source File
 
 SOURCE=.\physicstask.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\rigidbody.h
 # End Source File
 # Begin Source File
 
