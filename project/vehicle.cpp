@@ -864,7 +864,91 @@ void CVehicle::CalculateVehicleVelocity(float deltaT)
 //--------------------------------------------------------------
 void CVehicle::CalculateVehiclePosition(float deltaT)
 {
-	positionLC = positionLC + (velocityLC * deltaT);
+	// Is the car trying to turn?
+//	if(float(fabs(steerAngleRADS)) > 0.0f  && float(fabs(velocityLC.X())) > 0.5f) {
+		// Yes, so calculate the effects of the steering angle
+		float R = L / float(sin(steerAngleRADS));
+		float M = float(tan(steerAngleRADS)) * L;
+		float velocityMagnitude = float(sqrt(pow(velocityLC.X(), 2) + pow(velocityLC.Y(), 2) + pow(velocityLC.Z(), 2)));
+		velocityMagnitude *= float(sin(steerAngleRADS));
+		float D = velocityMagnitude * deltaT;
+		float X = D / R;
+
+		Vector3f A = tires[FRTIRE]->GetPositionLC();
+		A.Z() = 0.0f;
+		Vector3f B = tires[RRTIRE]->GetPositionLC();
+		B.Y() = A.Y();
+		B.Z() = 0.0f;
+		Vector3f K = Vector3f(B.X(), B.Y() + M, B.Z());
+
+		Vector3f AK = A - K;
+		Vector3f BK = B - K;
+
+		Vector3f AKprime;
+		AKprime.X() = AK.X() * float(cos(X)) + AK.Y() * float(sin(X));
+		AKprime.Y() = -AK.X() * float(sin(X)) + AK.Y() * float(cos(X));
+		AKprime.Z() = AK.Z();
+
+		Vector3f Aprime = AKprime + K;
+
+
+		Vector3f BKprime;
+		BKprime.X() = BK.X() * float(cos(X)) + BK.Y() * float(sin(X));
+		BKprime.Y() = -BK.X() * float(sin(X)) + BK.Y() * float(cos(X));
+		BKprime.Z() = BK.Z();
+	
+		Vector3f Bprime = BKprime + K;
+
+		Vector3f G = A - B;
+		G = G * ( c / (c + b) );
+
+		Vector3f Gprime = Aprime - Bprime;
+		Gprime = Gprime * ( c / (c + b) );
+
+		Vector3f trans = Gprime - G;
+		
+		//Vector3f Gprime = G + Bprime;
+		//positionLC += Gprime;
+
+		Vector3f temp = velocityLC;
+
+
+		temp.X() = temp.X() * float(cos(steerAngleRADS));
+		temp.Y() = 0.0f;
+		temp.Z() = 0.0f;
+
+		temp += trans / deltaT;
+
+		Vector3f tempTrans = temp * deltaT;
+
+		//Vector3f localTrans = velocityLC * deltaT;
+		//positionLC += trans * -sgn(steerAngleRADS);
+		//positionLC.X() += velocityLC.X() * deltaT * float(cos(steerAngleRADS));
+
+		Vector3f rotPos;
+
+		rotPos.X() = tempTrans.X() * cos(-rotationLC.Z()) + tempTrans.Y() * sin(-tempTrans.Z());
+		rotPos.Y() = tempTrans.X() * -sin(-rotationLC.Z()) + tempTrans.Y() * cos(-tempTrans.Z());
+		rotPos.Z() = tempTrans.Z();
+
+		positionLC += rotPos;
+
+		Vector3f AB = A - B;
+		Vector3f AprimeBprime = Aprime - Bprime;
+
+		float ABdotAprimeBprime = AB.X() * AprimeBprime.X() + AB.Y() * AprimeBprime.Y() + AB.Z() * AprimeBprime.Z();
+		float magAB = pow(AB.X(), 2) + pow(AB.Y(), 2) + pow(AB.Z(), 2);
+
+		float rotRADS = float(acos(ABdotAprimeBprime / magAB));
+		rotationLC.Z() += rotRADS * sgn(steerAngleRADS);
+
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 41, "A: %f %f %f", A.X(), A.Y(), A.Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 42, "B: %f %f %f", B.X(), B.Y(), B.Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 50, "steerAngleDEGS: %f", DEGREES(steerAngleRADS));
+//	}
+//	else {
+//		positionLC = positionLC + (velocityLC * deltaT);
+//	}
 }
 
 //--------------------------------------------------------------
@@ -873,16 +957,6 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 void CVehicle::CalculateVehicleAngularVelocity(float deltaT)
 {
 	angularVelocityLC = angularVelocityLC + (angularAccelerationLC * deltaT);
-}
-
-//--------------------------------------------------------------
-//
-//--------------------------------------------------------------
-void CVehicle::CalculateVehicleRotation(float deltaT)
-{
-	rotationLC = rotationLC - (angularVelocityLC * deltaT);
-
-	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 106, "BodyRot: %f %f %f", rotationLC.X(), rotationLC.Y(), rotationLC.Z());
 }
 
 //--------------------------------------------------------------
@@ -910,15 +984,15 @@ void CVehicle::UpdateVehiclePhysics()
 	// End Variable Precalculation
 
 	CalculateLongitudinalAcceleration();
-	CalculateLateralAcceleration();
+	//CalculateLateralAcceleration();
 	CalculateWheelAngularAcceleration();
 	CalculateRPM();
 
 
 	CalculateVehicleVelocity(deltaT);
 	CalculateVehiclePosition(deltaT);
-	CalculateVehicleAngularVelocity(deltaT);
-	CalculateVehicleRotation(deltaT);
+	//CalculateVehicleAngularVelocity(deltaT);
+	//CalculateVehicleRotation(deltaT);
 
 
 	// $$$PHYSICSLOGS
@@ -931,6 +1005,9 @@ void CVehicle::UpdateVehiclePhysics()
 	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 101, "RPM: %d", rpm);
 	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 102, "GEAR: %d", gear);
 	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 103, "SPEED.X: %f (m/s)", velocityLC.X());
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 106, "CarPosition: %f %f %f", m_translate.X(), m_translate.Y(), m_translate.Z());
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 107, "CarRotation: %f %f %f", m_rotate.X(), m_rotate.Y(), m_rotate.Z());
+	
 	
 	
 	CalculateTireAngularVelocity(deltaT);
