@@ -21,6 +21,7 @@ using namespace Wml;
 //#include "d3dutil.h"
 //#include "game.h"
 #include "gamestatemanager.h"
+#include "settings.h"
 //#include "bosutil.h"
 #include "cinputconsole.h"
 #include "macros.h"
@@ -32,7 +33,8 @@ using namespace Wml;
 
 
 
-
+//CD3DCamera CRenderer::m_pActiveCamera; // active camera in game
+CameraType CRenderer::m_eActiveCamType = CAMERA_UNKNOWN;     // type of active cam
 CD3DSettings      CRenderer::m_d3dSettings;
 CD3DEnumeration   CRenderer::m_d3dEnumeration;
 HRESULT CRenderer::ms_hResult                = NULL;
@@ -107,11 +109,11 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 
 */
 	//--- free look camera --- //	
-	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(10.0f, 10.0f, -10.0f), 
-				                                   &D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, -5.0f), 
+    			                                   &D3DXVECTOR3(0.0f, 0.0f, 0.0f) );
 
 	// wide FOV and a large frustrum
-	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000.0f );
+	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 500.0f );
 
     // defaults to this camera
     m_pActiveCamera = m_pkCameraMap[CAMERA_FREELOOK];
@@ -204,31 +206,7 @@ HRESULT CRenderer::Initialize()
     }
 
 
-    //$$$TEMP
-    //m_kMeshMap["mercedes"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\mercedes\\mercedes.x"));
-    m_kMeshMap["mercedes"] = new CD3DMesh(_T("mercedes"));
-    //m_kMeshMap["mercedes"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\mercedes\\mercedes.x\0") );
-    m_kMeshMap["mercedes"]->Create( m_pd3dDevice, _T("C:\\Documents and Settings\\jay.ALTRON\\My Documents\\SCHOOL\\CPSC585\\CODE\\WORKING\\project\\mercedes.x") );
-    m_kMeshMap["mercedes"]->UseMeshMaterials(true);
-    m_kMeshMap["mercedes"]->RestoreDeviceObjects( m_pd3dDevice );
-
-    m_kMeshMap["f20"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0"));
-    m_kMeshMap["f20"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0") );
-    m_kMeshMap["f20"]->UseMeshMaterials(true);
-    m_kMeshMap["f20"]->RestoreDeviceObjects( m_pd3dDevice );
-
-    m_kMeshMap["lambo"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0"));
-    m_kMeshMap["lambo"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0") );
-    m_kMeshMap["lambo"]->UseMeshMaterials(true);
-    m_kMeshMap["lambo"]->RestoreDeviceObjects( m_pd3dDevice );
-    //$$$ENDTEMP
-
-
-    
-    //assert(m_pd3dDevice);  //$$$DEBUG check if its allocated first
-
     //$$$DEBUG testing lighting $$$$$$$$$$$$$$$$$$$$$$$$$$$
-    // Assume d3dDevice is a valid pointer to an IDirect3DDevice9 interface.
     D3DLIGHT9 d3dLight;
 
 
@@ -287,6 +265,32 @@ struct CUSTOMVERTEX
 //-----------------------------------------------------------------------------
 void CRenderer::CreateMeshes ()
 {
+    //$$$TEMP
+    char szCWD[1024];
+    char szFilePath[1024];
+    sprintf(szCWD, "%s", CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES).c_str());
+    sprintf(szFilePath, "%s%s", szCWD, "\\mercedes\\mercedes.x");
+    
+    m_kMeshMap["mercedes"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\mercedes\\mercedes.x"));
+    //m_kMeshMap["mercedes"] = new CD3DMesh(_T("mercedes.x"));
+    //m_kMeshMap["mercedes"]->Create( m_pd3dDevice, szFilePath );
+    //m_kMeshMap["mercedes"]->Create( m_pd3dDevice, "C:\\Documents and Settings\\jay.ALTRON\\My Documents\\SCHOOL\\CPSC585\\CODE\\WORKING\\project\\mercedes.x" );
+    //m_kMeshMap["mercedes"]->UseMeshMaterials(true);
+    //m_kMeshMap["mercedes"]->RestoreDeviceObjects( m_pd3dDevice );
+
+    m_kMeshMap["f20"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0"));
+    //m_kMeshMap["f20"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0") );
+    //m_kMeshMap["f20"]->UseMeshMaterials(true);
+    //m_kMeshMap["f20"]->RestoreDeviceObjects( m_pd3dDevice );
+
+    m_kMeshMap["lambo"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0"));
+    //m_kMeshMap["lambo"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0") );
+    //m_kMeshMap["lambo"]->UseMeshMaterials(true);
+    //m_kMeshMap["lambo"]->RestoreDeviceObjects( m_pd3dDevice );
+    //$$$ENDTEMP
+
+
+
    	HRESULT   hr;
 
     // create the meshes in the meshmap
@@ -404,10 +408,15 @@ void CRenderer::RenderScene()
 {
     InitializeState();
     m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,50,110), 1.0f, 0 );
-    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );D3DCOLOR_XRGB(0,20,50)
+    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );//D3DCOLOR_XRGB(0,20,50)
+
+    //$$$TEMP renders ALL entitites until I get the Octree up    
+    ID3DXMatrixStack* pMatrixStack;
+    D3DXCreateMatrixStack( 0, &pMatrixStack);
+    Vector3f * vTemp;
+    HRESULT hr;
 
     m_pd3dDevice->BeginScene();  // --- begin scene drawing commands
-
 
 	#ifdef _DEBUG  // show developer info
     char tMsgA[25];
@@ -415,11 +424,6 @@ void CRenderer::RenderScene()
 	m_kFontMap[FONT_SYSTEM]->DrawText( 0, 0, D3DCOLOR_ARGB(100,255,255,255), tMsgA, D3DFONT_FILTERED|D3DFONT_BOTTOM);
 	#endif
 
-    //$$$TEMP renders ALL entitites until I get the Octree up    
-    static ID3DXMatrixStack* pMatrixStack;
-    D3DXCreateMatrixStack( 0, &pMatrixStack);
-    Vector3f * vTemp;
-    HRESULT hr;
 
 /*    assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
 
@@ -478,16 +482,17 @@ void CRenderer::RenderScene()
     for(map< std::string, CD3DMesh * >::iterator it=m_kMeshMap.begin(); it!=m_kMeshMap.end(); it++ )
     {
 
+        assert(it->second);
         CD3DMesh * pTemp = it->second;
         pMatrixStack->Push(); 
         pMatrixStack->LoadIdentity();
 
 	    D3DMATRIX xRot, yRot, zRot;
 	    // orientation
-	    vTemp = &Vector3f(0,0,0);//(*it)->GetRotate();
-	    pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
-	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
-	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
+	    //vTemp = &Vector3f(0,0,0);//(*it)->GetRotate();
+	    //pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
+	    //pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
+	    //pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
 	    //pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
 	    
 	    // translation
@@ -496,7 +501,7 @@ void CRenderer::RenderScene()
         //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 
 	    // scale
-	    vTemp = &Vector3f(1,1,1);//(*it)->GetScale();
+	    vTemp = &Vector3f(0.5,0.5,0.5);//(*it)->GetScale();
 	    pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
         //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 
@@ -527,188 +532,73 @@ void CRenderer::RenderScene()
     //    goto TIMERTEST;
     //}
 
-
-    m_pd3dDevice->EndScene();  // --- end scene drawing commands     
-}
-
+    
 
 /*
-//-----------------------------------------------------------------------------
-// generic draw function
-//-----------------------------------------------------------------------------
-void CRenderer::DrawObject( CObject * pkObject)
+LPD3DXBUFFER materialBuffer;
+DWORD numMaterials; // Note: DWORD is a typedef for unsigned long
+LPD3DXMESH mesh;
+
+// Load the mesh from the specified file
+hr=D3DXLoadMeshFromX("C:\\Documents and Settings\\jay.ALTRON\\My Documents\\SCHOOL\\CPSC585\\CODE\\WORKING\\project\\mercedes.x", D3DXMESH_SYSTEMMEM, 
+                             m_pd3dDevice, NULL, 
+                             &materialBuffer,NULL, &numMaterials, 
+                             &mesh );
+
+if (FAILED(hr))
+     assert(0);//return FALSE;
+
+D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)materialBuffer->GetBufferPointer();
+
+// Create two arrays, one for our materials and one for our textures
+D3DMATERIAL9 *meshMaterials = new D3DMATERIAL9[numMaterials];
+LPDIRECT3DTEXTURE9 *meshTextures = new LPDIRECT3DTEXTURE9[numMaterials];
+
+// Loop through the material buffer extracting the data
+for (DWORD i=0; i<numMaterials; i++)
 {
-	static ID3DXMatrixStack* pMatrixStack;
-	D3DXCreateMatrixStack( 0, &pMatrixStack);
+  // Copy the material
+  meshMaterials[i] = d3dxMaterials[i].MatD3D;
 
-    static D3DXMATRIX mLast;
-
-
-	CScene * pkScene = CGame::GetGame().GetScenePtr();
-    Vector3f * vTemp;
-	HRESULT hr;
-
-    
-   	pMatrixStack->Push(); 
-    pMatrixStack->LoadIdentity();
-
-	D3DMATRIX xRot, yRot, zRot;
-	// orientation
-	vTemp = &pkObject->getRotate();
-	pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
-	pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
-	pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
-	//pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
-	
-	// translation
-	vTemp = &pkObject->getTranslate();
-	pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
-    //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-	// scale
-	vTemp = &pkObject->getScale();
-	pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
-    //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-
-	m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
-
-    if ( FAILED(hr = pkObject->getMesh()->Render( m_pd3dDevice, true, true )) )  {
-		#ifdef _DEBUG
-		CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
-        CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", pkObject->getMesh()->m_strName);
-		#endif
-	}
-	else {
-		#ifdef _DEBUG
-		//CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %d", i);
-		#endif
-    }
-
-
-   	pMatrixStack->Pop();
-
-
-    
+  // Set the ambient color for the material (D3DX does not do this)
+  meshMaterials[i].Ambient = meshMaterials[i].Diffuse;
+     
+  // Create the texture if it exists
+  meshTextures[i] = NULL;
+  if (d3dxMaterials[i].pTextureFilename)
+     D3DXCreateTextureFromFile(m_pd3dDevice, d3dxMaterials[i].pTextureFilename, &meshTextures[i]);
 }
 
-
-void CRenderer::DrawVehicle( CPlayerVehicle * pkObject) {
-
-	static ID3DXMatrixStack* pMatrixStack;
-	D3DXCreateMatrixStack( 0, &pMatrixStack);
-
-    static D3DXMATRIX mLast;
+// Done with the material buffer
+materialBuffer->Release();
 
 
-	CScene * pkScene = CGame::GetGame().GetScenePtr();
-    Vector3f * vTemp;
-	HRESULT hr;
+///
+pMatrixStack->Push(); 
+pMatrixStack->LoadIdentity();
+// translation
+pMatrixStack->Translate(0.0, 0.0,0.0);
+// scale
+pMatrixStack->Scale(0.5,0.5,0.5);
+m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
+pMatrixStack->Pop(); 
+///
 
-    
-   	pMatrixStack->Push(); 
-    pMatrixStack->LoadIdentity();
-
-	D3DMATRIX xRot, yRot, zRot;
-	// orientation
-	vTemp = &pkObject->getRotate();
-
-    
-    pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
-    pMatrixStack->Push(); // popped later
-	pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
-    pMatrixStack->Push(); // need this for wheels
-	pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
-    pMatrixStack->Push(); // popped later
-	//pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
-	
-	// translation
-	vTemp = &pkObject->getTranslate();
-	pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
-    pMatrixStack->Push(); // need this for wheels
-    //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-
-	// scale
-	vTemp = &pkObject->getScale();
-	pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
-    //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-	m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
-
-
-    if ( FAILED(hr = pkObject->getMesh()->Render( m_pd3dDevice, true, true )) )  {
-		#ifdef _DEBUG
-		CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
-        CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", pkObject->getMesh()->m_strName);
-		#endif
-	}
-	else {
-		#ifdef _DEBUG
-		//CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %d", i);
-		#endif
-    }
-
-    vTemp = &pkObject->getTranslate();
-    D3DXMATRIX mTrans;// = *pMatrixStack->GetTop();
-    D3DXMatrixTranslation(&mTrans, vTemp->X(), vTemp->Y(), vTemp->Z());
-
-    //pMatrixStack->Pop(); // remove trans
-    //pMatrixStack->Pop(); // remove z axis
-
-
-    vTemp = &pkObject->getRotate();
-    D3DXMATRIX mYaw;// = *pMatrixStack->GetTop();
-    D3DXMatrixRotationAxis(&mYaw, &D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
-
-    //pMatrixStack->Pop(); // remove y axis rot
-    //pMatrixStack->Pop(); // get trans
-
-    pMatrixStack->LoadMatrix(&mYaw);
-    pMatrixStack->MultMatrix(&mTrans);
-
-    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
-
-    
-   // draw tires
-    for (int i=0; i<4; i++)  {
-        pMatrixStack->Push(); 
-
-
-        pkObject->getTires()[i].m_translate.Y() = -0.37f;
-        vTemp = &pkObject->getTires()[i].getTranslate();
-        pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-      	vTemp = &pkObject->getTires()[i].getRotate();
-	    if (i%2)pMatrixStack->RotateAxisLocal(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(90.0));
-        else pMatrixStack->RotateAxisLocal(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(-90.0));
-	    //pMatrixStack->RotateAxisLocal(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->Y()++));
-	    //pMatrixStack->RotateAxisLocal(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(20));
-        //pMatrixStack->RotateYawPitchRollLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-
-        m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
-
-
-        if ( FAILED(hr = pkObject->getTires()[i].getMesh()->Render( m_pd3dDevice, true, true )) )  {
-		    #ifdef _DEBUG
-		    CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
-            CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", pkObject->getMesh()->m_strName);
-		    #endif
-	    }
-        pMatrixStack->Pop();
-    }
-
-
-
-
-
-
-   	pMatrixStack->Pop();
-
-
+for(i=0; i<numMaterials; i++ )
+{
+   // Set the material and texture for this subset
+  m_pd3dDevice->SetMaterial(&meshMaterials[i]);
+  m_pd3dDevice->SetTexture( 0,meshTextures[i] );
+       
+  // Draw the mesh subset
+  mesh->DrawSubset( i );
 }
 */
+
+    m_pd3dDevice->EndScene();  // --- end scene drawing commands     
+    
+}
+
 
 //-----------------------------------------------------------------------------
 // Name:
@@ -877,7 +767,8 @@ CD3DCamera * CRenderer::GetCameraPtr (CameraType eCameraName)
 void CRenderer::Click()
 {
     // set the new view matrix for the camera in the D3Ddevice
-    m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );
+    //m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );    
+    m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pkCameraMap[CAMERA_FREELOOK]->GetViewMatrix() );
 
 }
 
@@ -947,5 +838,86 @@ void CRenderer::DrawConsole()
 }
 
 
+
+
+
+
+/*
+	CObject * pkObject; 
+	CScene * pkScene = CGame::GetGame().GetScenePtr();
+
+    assert(pkScene);
+    
+    int iMaxNumObj = pkScene->GetNumObjects();
+	char strFileName[1024];
+	char strDirName[1024] = ".\\media\\meshes\\debug\\";
+	char strFullPath[1024] = "";
+
+
+    ///$$$TEMP QUICK CAR LOADING ---
+    pkObject = pkScene->GetObject(0);
+
+    CTire * cTires = ((CTire *)((CPlayerVehicle *)pkObject)->getTires());
+    // load tires
+    // car already in scene so we can just add the meshses to the mesh vector
+    for (int k=0; k<4 && pkObject; k++)  {
+        //memset(strFullPath, 0, sizeof(strFullPath));
+	    //strcpy(strFileName, ((CPlayerVehicle *)pkObject)->m_tires[j].getName());
+	    //sprintf(strFileName, "%s%s", strFileName, ".x");
+	    
+        //sprintf(strFullPath, "%s%s", strDirName, strFileName);  //something wrong with filename setting
+        sprintf( strFullPath, "%s", ".\\media\\meshes\\debug\\Wheel.x" );
+
+        //something wrong with naming
+        char * temp = ((CTire *)((CPlayerVehicle *)pkObject)->getTires())->getName();
+        
+		FILE* fp = fopen(strFullPath, "r");
+
+		if(fp) {
+            // put it in the mesh map for creation
+            if ( !m_kMeshMap[strFullPath] ) {
+                m_kMeshMap[strFullPath] = new CD3DMesh( strFullPath );
+            }            
+            cTires[k].setMesh(m_kMeshMap[strFullPath]); 
+            fclose(fp);
+        }
+        else {
+            assert(fp);
+        }
+    }
+
+    ///$$$TEMP END QUICK CAR LOADING ---
+
+
+// GIB'S MODIFICATION (JAY SAYS "MOVE THIS HERE, BITCH!!!")
+
+    // load the meshes into memory and set mesh pointers in game objects (entitites)
+    for (int j=0; j<iMaxNumObj ; j++) {
+
+		memset(strFullPath, 0, sizeof(strFullPath));
+		pkObject = pkScene->GetObject(j);
+
+		// get mesh filename
+		strcpy(strFileName, pkObject->getName());
+		sprintf(strFileName, "%s%s", strFileName, ".x");
+		sprintf(strFullPath, "%s%s", strDirName, strFileName);
+
+		FILE* fp = fopen(strFullPath, "r");
+
+		if(fp) {
+
+            // only load up one instance of this mesh
+            if ( !m_kMeshMap[strFullPath] ) {
+			    m_kMeshMap[strFullPath] = new CD3DMesh( strFullPath );
+			    assert(m_kMeshMap[strFullPath]);
+            }
+
+            pkObject->setMesh(m_kMeshMap[strFullPath]);
+			fclose(fp);
+		}
+		else {
+            assert(fp);// Model doesn't exist.
+		}
+*/
 
 //END renderer.cpp ============================================================

@@ -10,7 +10,7 @@
 #define KEYDOWN(name, key) (name[key].dwData & 0x80)
 #define BUFFER_SIZE				10
 
-#define KEY_TIME_INTERVAL		0.05f
+#define KEY_TIME_INTERVAL		0.1f
 
 class CInput {
 

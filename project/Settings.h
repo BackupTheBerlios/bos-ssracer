@@ -12,6 +12,7 @@
 
 enum GameSetting
 {
+    DIRCURRENTWORKING,
     DIRMAP,
     DIRMEDIA,
     DIRSOUND,

@@ -22,7 +22,6 @@
 #include "bosapp.h"
 #include "kernel.h"
 #include "timer.h"
-#include "game.h"
 
 #include "WmlVector3.h"
 using namespace Wml;
@@ -87,7 +86,7 @@ bool CRenderTask::Start()
     // get game settings for graphics
 
     // set up loaded map resources (textures meshes)
-    //m_pkRenderer->CreateMeshes();
+    m_pkRenderer->CreateMeshes();
 
 	return true;
 }

@@ -25,9 +25,15 @@ CSettingsManager::~CSettingsManager()
 // Desc:  Intializes default game settings for compatibility
 //-----------------------------------------------------------------------------
 void CSettingsManager::LoadDefaultSettings() {
+    TCHAR szCWD[1024];
+    GetCurrentDirectory( sizeof(szCWD), szCWD);
+
+    // get the #$!#! current working directory
+    m_settingMap[DIRCURRENTWORKING] = string(szCWD) + "\\";
+
     // root level dirs
-    m_settingMap[DIRMAP]   = ".\\maps\\";
-    m_settingMap[DIRMEDIA] = ".\\media\\";
+    m_settingMap[DIRMAP]   = m_settingMap[DIRCURRENTWORKING] + "maps\\";
+    m_settingMap[DIRMEDIA] = m_settingMap[DIRCURRENTWORKING] + "media\\";
 
     // media level
     m_settingMap[DIRSOUND] = m_settingMap[DIRMEDIA] + "sound\\";
@@ -47,6 +53,13 @@ void CSettingsManager::LoadDefaultSettings() {
    
     // debug mesh path
     m_settingMap[DIRDEBUG] = m_settingMap[DIRMEDIA] + "debug\\";
+
+    #ifdef _DEBUG
+    CLog::GetLog().Write(LOG_MISC, "GSManager:  Loaded game settings");
+    for (map<GameSetting, string>::iterator it = m_settingMap.begin(); it!=m_settingMap.end(); it++){
+        CLog::GetLog().Write(LOG_MISC, "Setting: %d value %s", (int)it->first, it->second.c_str());
+    }
+    #endif
 
 }
 

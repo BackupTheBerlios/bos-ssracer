@@ -95,7 +95,7 @@ private:
     static std::map< std::string, CD3DMesh * > m_kMeshMap;       // meshes available to this app
 
     CD3DCamera * m_pActiveCamera; // active camera in game
-    CameraType m_eActiveCamType;     // type of active camera
+    static CameraType m_eActiveCamType;     // type of active camera
 
     // renderer capabilities
     bool m_bCapMultitexture;
