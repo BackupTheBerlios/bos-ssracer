@@ -653,19 +653,20 @@ void CVehicle::UpdateVehiclePhysics()
 void CVehicle::TransformLocalToWorldSpace()
 {
 	// Apply the transformation WC(X,Y,Z) = LC(X,-Z,Y) to the position of the vehicle
-	//m_translate = Vector3f(positionLC.Y(), positionLC.Z()*(-1.0f), positionLC.X()*(-1.0f));
 	Vector3f bodyTransWC(positionLC.X(), positionLC.Z()*(-1.0f), positionLC.Y());
 	m_translate = bodyTransWC;
 
-	// Update the rotation value for the renderer.
-	m_rotate = rotationLC;
+	// Update the car body rotation value for the renderer.
+	Vector3f bodyRotWC(rotationLC.X(), rotationLC.Z()*(-1.0f), rotationLC.Y());
+	m_rotate = bodyRotWC;
 	
 	// Then transform all 4 tires
 	Vector3f tireTransformedLC;
 	Vector3f tireTransLC;
 	for(int i=0;i<4;i++) {
 		Vector3f tireRotLC = tires[i]->GetRotationLC();
-		if(i == FLTIRE || i == FRTIRE) { // We are dealing with front tires, so we need to factor in steer angle
+		if(i == FLTIRE || i == FRTIRE) {
+			// We are dealing with front tires, so we need to factor in steer angle
 			tireRotLC.Z() += steerAngleRADS;
 		}
 
