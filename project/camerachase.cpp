@@ -89,6 +89,7 @@ void CCameraChase::Update(int iInput, bool bState)
 }
 
 
+#define TIME_TO_INTERP 0.5f
 //-----------------------------------------------------------------------------
 // Name: FrameMove
 // Desc: Update the view matrix based on user input & elapsed time
@@ -117,7 +118,6 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     D3DXVECTOR3 vPosDelta;
     vPosDelta = m_vVelocity * fElapsedTime;
     
-    ////////////  CANT USE UNTIL ROTATION AND VELOCITY FIXED
     //vTemp = vVel * fElapsedTime * 0.2f;
     //vPosDelta = D3DXVECTOR3(vTemp.X(), vTemp.Y(), vTemp.Z());
     
@@ -141,71 +141,55 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 5, "pos Delta: %f %f %f", vPosDelta.x, vPosDelta.y, vPosDelta.z);    
     #endif
     
+    Vector3f vDisp;
+
     // get the camera's local ahead vector based on the vehicles heading and velocity
-    if (vVel.Length() < 5.0f)  {// if velocity is below 10 m/s use heading
-        vTemp = vHeading;
+    if (vVel.Length() < 5.0f)  {// if velocity is small use heading
+        vDisp = vHeading;
         #ifdef _DEBUG
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using car heading");    
         #endif
     }
     else  {  // interpolate between velocity and heading
-        //$$$TEMP not sure if i'm using the velocity correctly yet???
         
         // get angle between velocity and heading and make a rotation matrix
         Vector3f vVelDir = m_pkVehicle->GetVehicleVelocityWC();
         vVelDir.Normalize();
-
         
+        // get previous position and next position, set cam direction in the neg dir of translation
+        static Vector3f vPrevPos = *m_pkVehicle->GetTranslate();
+        vDisp = vPrevPos - *m_pkVehicle->GetTranslate();
+        vDisp.Normalize();            
+        vDisp *= -1.0f;
+        vPrevPos = *m_pkVehicle->GetTranslate();
         
-        if (0){//fAngle <= RADIANS(4.0f))  {
-            vTemp = vHeading;        
+
+        // interpolate between heading and displacement
+        static float fLastTime = 0.0f;
+        float fTime = DXUtil_Timer( TIMER_GETABSOLUTETIME );
+        float fTDelta = (fTime - fLastTime);
+        
+/*
+        static float fEndAngle =(float)acos(vHeading.Dot(vDisp)); // get angle between displacement and heading
+        // % of the end angle left to interpolate
+        float fCurrentAngle = fEndAngle * (1.0f - fTDelta/TIME_TO_INTERP);
+
+        // stop interpolating if desired angle reached
+        if ( fCurrentAngle <= RADIANS(0.0f)) {
+            fLastTime = fTime;  //reset the timer
+            vDisp = vHeading;
         }
-        else {
-
-            // get previous position and next position, set cam direction in the neg dir of translation
-            static Vector3f vPrevPos = *m_pkVehicle->GetTranslate();
-            vTemp = vPrevPos - *m_pkVehicle->GetTranslate();
-            vTemp.Normalize();            
-            vTemp *= -1.0f;
-
-            float fAngle = vHeading.Dot(vTemp);
-
-            vPrevPos = *m_pkVehicle->GetTranslate();
-
-            /*
-            // Keep track of the frame count
-            static FLOAT fLastTime = 0.0f;
-            static DWORD dwFrames  = 0;
-            FLOAT fTime = DXUtil_Timer( TIMER_GETABSOLUTETIME );
-            ++dwFrames;
-
-
-            Matrix3f matRot;
-
-            // Update the scene stats once per second
-            if( fTime - fLastTime > 1.0f )
-            {
-                //m_fFPS    = dwFrames / (fTime - fLastTime);
-                fLastTime = fTime;
-                dwFrames  = 0;
-                
-            }
-            else {
-                // rotate around Y to get this direction
-                matRot = Matrix3f( Vector3f(0,1,0),  RADIANS(fAngle * (fTime - fLastTime)));//fElapsedTime);
-                vTemp = matRot* vTemp;
-            }
-            */
-
-            
-                   
-            #ifdef _DEBUG
-            CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using angle %.4f degs", DEGREES(LERP(0.0f, fAngle * fElapsedTime, fAngle)));//fElapsedTime) );    
-            CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "using angle %.4f rads", fAngle);//fElapsedTime) );    
-            #endif
+        else  {
+            Matrix3f matRot = Matrix3f(Vector3f(0,1,0), fCurrentAngle);
+            vDisp = matRot * vDisp;
         }
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using current angle %f", DEGREES(fCurrentAngle));
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "using end angle %f", DEGREES(fEndAngle));
+*/
+
     }
 
+    vTemp = vDisp;
     vTemp.Y() = 0;
     vTemp.Normalize();
     D3DXVECTOR3 vLocalAhead = D3DXVECTOR3(vTemp.X(), vTemp.Y(), vTemp.Z());
@@ -244,7 +228,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     m_vEye -= vLocalAhead*5.5f*fEyeDelta;
 
     // Move the eye position 
-    //m_vEye += vPosDeltaWorld;
+    m_vEye += vPosDeltaWorld;
     //if( m_bClipToBoundary )
     //    ConstrainToBoundary( &m_vEye );
 
