@@ -28,7 +28,6 @@ private:
 
 	int LoadMap(FILE* fp, string* directory, string* filename);		// Load a new map (.map file)
 	int LoadEntities(string* directory, string* filename);	// Load the objects specified in the map file (.objects file)
-	int LoadMeshes();	// Load all the meshes in the scene
 
 	/*void LoadMap(char * cFilename = "debug", char * cDir = "./maps/debug/");*/
 };

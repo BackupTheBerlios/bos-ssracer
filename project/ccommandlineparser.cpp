@@ -293,19 +293,96 @@ int CCommandLineParser::LoadScene()
 
 int CCommandLineParser::LoadEntity()
 {
+	string file = "-file";
+	string dir = "-dir";
+
+	string filename;
+	string directory;
+
+	bool filenameSet = false;
+	bool directorySet = false;
+
+	for(unsigned int i=0;i<Tokens.size();i++) {
+		if(Tokens[i] == file) {
+			if(++i < Tokens.size()) {
+				filename = Tokens[i];
+				filenameSet = true;
+			}
+		}
+		else if(Tokens[i] == dir) {
+			if(++i < Tokens.size()) {
+				directory = Tokens[i];
+				directorySet = true;
+			}
+		}
+	}
+
+	if(!directorySet && !filenameSet) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Invalid Usage!  See help for instructions.");
+		return 0;
+	}
+
+	if(directorySet && filenameSet) {
+		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&directory, &filename))) {
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
+			return 0;
+		}
+	}
 
 	return OK;
 }
 
 int CCommandLineParser::LoadPlayerVehicle()
 {
+	/*
+	string file = "-file";
+	string dir = "-dir";
+
+	string filename;
+	string directory;
+
+	bool filenameSet = false;
+	bool directorySet = false;
+
+	for(unsigned int i=0;i<Tokens.size();i++) {
+		if(Tokens[i] == file) {
+			if(++i < Tokens.size()) {
+				filename = Tokens[i];
+				filenameSet = true;
+			}
+		}
+		else if(Tokens[i] == dir) {
+			if(++i < Tokens.size()) {
+				directory = Tokens[i];
+				directorySet = true;
+			}
+		}
+	}
+
+	if(!directorySet && !filenameSet) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Invalid Usage!  See help for instructions.");
+		return 0;
+	}
+
+	if(directorySet && filenameSet) {
+		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&directory, &filename))) {
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
+			return 0;
+		}
+	}
+	*/
+
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "Command not implemented yet, please come again!");
 
 	return OK;
 }
 
 int CCommandLineParser::ClearScene()
 {
-
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->ReleaseScene())) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not cleared successfully!");
+		return 0;
+	}
 	return OK;
 }
 

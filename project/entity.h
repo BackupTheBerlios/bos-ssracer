@@ -38,6 +38,8 @@ public:
 	Box3f* GetBoundingBox() { return &m_box; };
 	Sphere3f* GetBoundingSphere() { return &m_sphere; };
 
+	int LoadMesh();		// Load the mesh specified by m_strName, append .x to the variable
+
 protected:
 	CD3DMesh* m_pMesh;	// Mesh data structure
 	Vector3f m_translate, m_rotate, m_scale;	// World Transformed Values

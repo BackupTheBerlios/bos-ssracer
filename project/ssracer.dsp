@@ -244,6 +244,10 @@ SOURCE=.\inputtask.cpp
 # PROP Default_Filter ".cpp"
 # Begin Source File
 
+SOURCE=.\entity.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\scene.cpp
 # End Source File
 # End Group

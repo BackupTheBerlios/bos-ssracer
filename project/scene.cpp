@@ -72,10 +72,6 @@ int CScene::LoadScene(string* directory, string* filename)
 
     }
 
-	if(!LoadMeshes()) {
-		return 0;
-	}
-
 	fclose(fp);
 
 	return 1;
@@ -390,15 +386,46 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 	return 1;
 }
 
-int LoadEntity(string* directory, string* filename)
+int CScene::LoadEntity(string* directory, string* filename)
 {
+	CEntity* newEntity;
+	string path;
+	char temp[128];
 
-	return 1;
-}
+	// Construct the path of the filename
+	path = directory->c_str();
+	path.append("\\");
+	path.append(filename->c_str());
+	path.append(".x");
+
+	FILE* fp = fopen(path.c_str(), "r");
+
+	// Check to see if we can open the file for reading
+	if(!fp) {
+		CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntity >> Unable to open file for reading");
+		return 0;
+	}
+
+	// Allocate memory for the entity
+	NEW(newEntity, CEntity, "Error CScene::LoadEntity() >> new operator failed");
 
 
-int CScene::LoadMeshes()
-{
+	strcpy(temp, filename->c_str());
+	newEntity->SetName(temp);
+	newEntity->SetTranslate(Vector3f(0.0f, 0.0f, 0.0f));
+	newEntity->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
+	newEntity->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
 
+	if(!newEntity->LoadMesh()) {
+		CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntity() >> Error loading mesh");
+		FREE(newEntity, "Error CScene::LoadIdentity() >> Error releasing memory");
+		return 0;
+	}
+
+	// Calculate Bounding Box, and Bounding Sphere
+
+	// Everything went ok, so now add the entity to the scene
+	m_vEntities.push_back(newEntity);
+	m_vMeshes.push_back(newEntity->GetMesh());
 	return 1;
 }
