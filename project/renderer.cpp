@@ -457,7 +457,7 @@ void CRenderer::RenderScene()
         for (vector<Rectangle3f *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->m_vPlanes.begin();
         it != CGameStateManager::GetGameStateManager().GetScenePtr()->m_vPlanes.end();  it++)  
         {
-            DrawRect(*it, 10.0f, D3DCOLOR_ARGB( 255, 55, 55, 255 ));
+            DrawRect(*it, 3.0f, D3DCOLOR_ARGB( 255, 55, 55, 255 ));
         }
     }
     //$$$DEBUG DRAW ALL WAYPOINTS
@@ -601,6 +601,8 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
 
     // save this as the default state block
     m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_DEFAULT] );
