@@ -61,6 +61,7 @@ D3DUtil_CameraKeys CCameraFreeLook::MapKey( UINT nKey )
     return CAM_UNKNOWN;
 }
 
+
 void CCameraFreeLook::Update( int iInput, bool bState )
 {
 	HandleInputMessages( new CInputTaskMessage(iInput, bState));

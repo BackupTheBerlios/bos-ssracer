@@ -64,13 +64,20 @@ CCameraChase::CCameraChase( CVehicle * pkVehicle ) : CD3DCamera()
 }
 
 
+// just update the position;
+void CCameraChase::Update()
+{
+    FrameMove( CTimer::GetTimer().GetTimeElapsed() );
+}
+
+
 // update the vehicles position 
 // ignores user input
 void CCameraChase::Update(int iInput, bool bState)
 {
     if (!m_pkVehicle)
         return; //cant update if there is no vehicle to track!
-	FrameMove(CTimer::GetTimer().GetCurrTime());
+	FrameMove(CTimer::GetTimer().GetTimeElapsed());
 }
 
 
@@ -103,23 +110,18 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     D3DXMATRIX mCameraRot;
     D3DXMatrixRotationYawPitchRoll( &mCameraRot, m_fCameraYawAngle, m_fCameraPitchAngle, 0 );
 
+    vTemp = *m_pkVehicle->GetRotate() ; ////
+    vTemp = vTemp.Cross(Vector3f(0.0f, 0.0f, 1.0f));
+    vTemp.Normalize();    
+    
     // Transform vectors based on camera's rotation matrix
     D3DXVECTOR3 vWorldUp, vWorldAhead;
     D3DXVECTOR3 vLocalUp  = D3DXVECTOR3(0,1,0);
-
-    vTemp = *m_pkVehicle->GetRotate() ; ////
-    vTemp = vTemp.Cross(Vector3f(0.0f, 0.0f, 1.0f));
-    vTemp.Normalize();
-
-
     // get the camera's local ahead vector based on the vehicles heading and velocity
     // if velocity == 0 use heading
-
     Vector3f vHeading = m_pkVehicle->GetVehicleHeadingWC();
     vHeading.Normalize();
     D3DXVECTOR3 vLocalAhead = D3DXVECTOR3(vHeading.X(), vHeading.Y(), vHeading.Z());
-    //D3DXVECTOR3 vLocalAhead = D3DXVECTOR3(vTemp.X(), vTemp.Z(), vTemp.Y());//D3DXVECTOR3(0,0,1);  //GOOOOOD!!!!!!!
-    //D3DXVECTOR3 vLocalAhead = D3DXVECTOR3(vTemp.Y(), vTemp.Z(), vTemp.X());//D3DXVECTOR3(0,0,1);  //GOOOOOD!!!!!!!
     //D3DXVECTOR3 vLocalAhead = D3DXVECTOR3(0,0,1);
     D3DXVec3TransformCoord( &vWorldUp, &vLocalUp, &mCameraRot );
     D3DXVec3TransformCoord( &vWorldAhead, &vLocalAhead, &mCameraRot );
@@ -127,13 +129,12 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     // Transform the position delta by the camera's rotation 
     D3DXVECTOR3 vPosDeltaWorld;
     D3DXVec3TransformCoord( &vPosDeltaWorld, &vPosDelta, &mCameraRot );
-    //if( !m_bEnableYAxisMovement )
+    if( !m_bEnableYAxisMovement )
         vPosDeltaWorld.y = 0.0f;
 
-    //vTemp = Vector3f(*m_pkVehicle->GetTranslate());
-    //CLog::GetLog().Write(LOG_GAMECONSOLE, "worldpos %f %f %f", vTemp.X(), vTemp.Y() , vTemp.Z() );	
-    //m_vEye = D3DXVECTOR3(vTemp.X(), 2.5f, vTemp.Z()) - vLocalAhead*7.0f;//vWorldAhead*2.0f;  /////GOOD
-    ////m_vEye = D3DXVECTOR3(vTemp.X(), 1.5f, vTemp.Z()) - vWorldAhead*8.0f;
+    vTemp = Vector3f(*m_pkVehicle->GetTranslate());
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "worldpos %f %f %f", vTemp.X(), vTemp.Y() , vTemp.Z() );	
+    m_vEye = D3DXVECTOR3(vTemp.X(), 1.2f, vTemp.Z()) - vLocalAhead*4.5f;
 
     // Move the eye position 
     m_vEye += vPosDeltaWorld;
@@ -145,16 +146,14 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     // Update the lookAt position based on the eye position 
     //m_vLookAt = m_vEye - vWorldAhead*5.2f;
     m_vLookAt = m_vEye + vLocalAhead*5.7f;
-    m_vLookAt.y = 0.5f;
-
-    ////m_vLookAt = D3DXVECTOR3(vTemp.Z(), 0.0f, vTemp.Y());
+    //m_vLookAt = m_vEye + vWorldAhead;
+    //m_vLookAt.y ;//+= 0.5f;
 
    	CLog::GetLog().Write(LOG_GAMECONSOLE, "look %f %f %f", m_vLookAt.x, m_vLookAt.y, m_vLookAt.z );	
 
     // Update the view matrix
     D3DXMatrixLookAtLH( &m_mView, &m_vEye, &m_vLookAt, &vWorldUp );
     D3DXMatrixInverse( &m_mCameraWorld, NULL, &m_mView );
-
 
     //SetViewParams( &m_vEye, &m_vLookAt);//, D3DXVECTOR3(0.0f,1.0f,0.0f));
 

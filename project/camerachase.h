@@ -12,6 +12,7 @@ public:
 	CCameraChase();
 	CCameraChase( CVehicle * pkVehicle );
 
+    void Update();
     void Update( int iInput, bool bState );
     
     // Call these from client and use Get*Matrix() to read new matrices

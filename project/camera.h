@@ -84,6 +84,7 @@ public:
     bool IsMouseMButtonDown() { return m_bMouseMButtonDown; } 
     bool IsMouseRButtonDown() { return m_bMouseRButtonDown; } 
 
+    virtual void Update(){ /* does nothing */};
 	virtual void Update( int iInput, bool bState ) { /* does nothing */};
 
 	//void SetObject( CPlayerVehicle * pkObject ){ m_pkObject = pkObject; }

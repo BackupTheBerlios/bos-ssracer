@@ -246,12 +246,12 @@ void CVehicle::CalculateLongitudinalAcceleration()
 
 	//float brakeForce = (brakeTorque *
 
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "engineForce: %f", engineForce);
+	// $$$PHYSICSLOGS CLog::GetLog().Write(LOG_GAMECONSOLE, "engineForce: %f", engineForce);
 
 	float tractionForce = CalculateTraction(engineForce, rearAxleWeight);
 	tractionTorque = tractionForce * tireRadius;
 
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "tractionForce: %f", tractionForce);
+	// $$$PHYSICSLOGS CLog::GetLog().Write(LOG_GAMECONSOLE, "tractionForce: %f", tractionForce);
 
 	float Flongitudinal = tractionForce - drag.X() - rollingResistance.X();
 
@@ -346,7 +346,7 @@ void CVehicle::CalculateSlipRatio()
 		}
 	}
 
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "SlipRatio: %f", slipRatio);
+	// $$$PHYSICSLOGS CLog::GetLog().Write(LOG_GAMECONSOLE, "SlipRatio: %f", slipRatio);
 }
 
 //--------------------------------------------------------------
@@ -419,12 +419,12 @@ void CVehicle::CalculateDriveWheelAngularAcceleration()
 	float brakeTorque = 0.0f;
 
 	totalTorque = driveWheelTorque - tractionTorque - brakeTorque;
-
+/* $$$PHYSICSLOGS
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "totalTorque: %f", totalTorque);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "tractionTorque: %f", tractionTorque);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "driveWheelTorque: %f", driveWheelTorque);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "brakeTorque: %f", brakeTorque);
-
+*/
 	wheelInertia = (tireMass * (tireRadius * tireRadius)) / 2.0f;
 
 	// Multiply by 2 since there are 2 drive wheels
@@ -524,7 +524,7 @@ void CVehicle::CalculateAutomaticGearShifting()
 void CVehicle::CalculateTireAngularVelocity(float deltaT)
 {
 	driveWheelAngularVelocityRADS += driveWheelAngularAccelerationRADS * deltaT;
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "WheelAngVelocity: %f", driveWheelAngularVelocityRADS);
+	// $$$PHYSICSLOGS CLog::GetLog().Write(LOG_GAMECONSOLE, "WheelAngVelocity: %f", driveWheelAngularVelocityRADS);
 }
 
 //--------------------------------------------------------------
@@ -557,10 +557,10 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 void CVehicle::UpdateVehiclePhysics()
 {
 	CalculateAutomaticGearShifting();
-	
+/*	$$$PHYSICSLOGS
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "Gear: %i", gear);
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "RPM: %i", rpm);
-
+*/
 	// Begin Variable Precalculation
 	CalculateEngineTorque();
 	CalculateDrag();
@@ -576,13 +576,13 @@ void CVehicle::UpdateVehiclePhysics()
 
 	CalculateVehicleVelocity(deltaT);
 	CalculateVehiclePosition(deltaT);
-
+/* $$$PHYSICSLOGS
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "DeltaT: %f", deltaT);
 
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "Acceleration: %f %f %f", accelerationLC.X(), accelerationLC.Y(), accelerationLC.Z());
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "Velocity: %f %f %f", velocityLC.X(), velocityLC.Y(), velocityLC.Z());
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "Position: %f %f %f", positionLC.X(), positionLC.Y(), positionLC.Z());
-
+*/
 	
 	CalculateTireAngularVelocity(deltaT);
 	CalculateTireRotation(deltaT);

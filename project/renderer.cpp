@@ -110,7 +110,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 	//m_pkCameraMap[CAMERA_CHASE]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, 0.0f), 
 	//			                                &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
 	// slightly wider FOV and shorter frustrum
-	m_pkCameraMap[CAMERA_CHASE]->SetProjParams( D3DX_PI/4.5f, 1.0f ,1.0f ,100.0f );
+	m_pkCameraMap[CAMERA_CHASE]->SetProjParams( D3DX_PI/4.5f, 1.0f ,1.0f ,500.0f );
 
 
 	//--- free look camera --- //	
@@ -177,8 +177,8 @@ HRESULT CRenderer::Initialize()
     
     // fill in the settings for the d3d device
     m_d3dpp.Windowed = !m_bFullScreen;
-    m_d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-    //m_d3dpp.SwapEffect = D3DSWAPEFFECT_FLIP; // flip back buffers
+    //m_d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+    m_d3dpp.SwapEffect = D3DSWAPEFFECT_FLIP; // flip back buffers
 	m_d3dpp.BackBufferFormat = d3ddm.Format; // The color format
 	m_d3dpp.BackBufferWidth  = d3ddm.Width;  // The back buffer width
 	m_d3dpp.BackBufferHeight = d3ddm.Height; // The back buffer height
@@ -237,22 +237,22 @@ HRESULT CRenderer::Initialize()
 
     // Set up a white point light.
     d3dLight.Type = D3DLIGHT_POINT;
-    d3dLight.Diffuse.r  = 1.0f;
-    d3dLight.Diffuse.g  = 1.0f;
-    d3dLight.Diffuse.b  = 1.0f;
-    d3dLight.Ambient.r  = 1.0f;
-    d3dLight.Ambient.g  = 1.0f;
-    d3dLight.Ambient.b  = 1.0f;
-    d3dLight.Specular.r = 1.0f;
-    d3dLight.Specular.g = 1.0f;
-    d3dLight.Specular.b = 1.0f;
+    d3dLight.Diffuse.r  = 0.5f;//1.0f;
+    d3dLight.Diffuse.g  = 0.5f;//1.0f;
+    d3dLight.Diffuse.b  = 0.5f;//1.0f;
+    d3dLight.Ambient.r  = 0.5f;//1.0f;
+    d3dLight.Ambient.g  = 0.5f;//1.0f;
+    d3dLight.Ambient.b  = 0.5f;//1.0f;
+    d3dLight.Specular.r = 0.5f;//1.0f;
+    d3dLight.Specular.g = 0.5f;//1.0f;
+    d3dLight.Specular.b = 0.5f;//1.0f;
 
     d3dLight.Position.x = 0.0f;
     d3dLight.Position.y = 500.0f;//1000.0f;
     d3dLight.Position.z = -10.0f;//-100.0f;
 
-    d3dLight.Attenuation0 = 0.7f; 
-    d3dLight.Range        = 1000.0f;
+    d3dLight.Attenuation0 = 0.5f; 
+    d3dLight.Range        = 700.0f;//1000.0f;
 
     // Set the property information for the first light.
     hr = m_pd3dDevice->SetLight(0, &d3dLight);
@@ -817,6 +817,7 @@ void CRenderer::Click()
     #ifdef _DEBUG
     assert(m_pActiveCamera);
     #endif
+    m_pActiveCamera->Update();
     // set the new view matrix for the camera in the D3Ddevice
     m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, m_pActiveCamera->GetProjMatrix() );   
@@ -923,12 +924,37 @@ void CRenderer::DrawSkyBox()
     // turn lighting off
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 
-    // Center view matrix for skybox and disable zbuffer
-    D3DXMATRIXA16 matView, matViewSave;
+    // set texture filters to reduce seams
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_POINT );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT );
+
+    // save the current view matrix
+    D3DXMATRIXA16 matViewSave;
     m_pd3dDevice->GetTransform( D3DTS_VIEW, &matViewSave );
-    matView = matViewSave;
-    matView._41 = 0.0f; matView._42 = -3.0f; matView._43 = 0.0f;
-    m_pd3dDevice->SetTransform( D3DTS_VIEW,      &matView );
+
+    D3DXMATRIXA16 matWorld;
+    // scale the skybox up
+    D3DXMatrixScaling( &matWorld, 10.0f, 10.0f, 10.0f );
+
+    D3DXMATRIXA16 matView(*m_pActiveCamera->GetViewMatrix());
+    // zero out rotations so the skybox doesn't rotate
+    matView._41 = matView._42 = matView._43 = 0.0f;
+
+    m_pd3dDevice->SetTransform( D3DTS_WORLD, &matWorld );
+    m_pd3dDevice->SetTransform( D3DTS_VIEW, &matView );
+    m_pd3dDevice->SetTransform( D3DTS_PROJECTION, m_pActiveCamera->GetProjMatrix() );
+
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1 );
+    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
+    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+    if( (m_d3dCaps.TextureAddressCaps & D3DPTADDRESSCAPS_MIRROR) == D3DPTADDRESSCAPS_MIRROR )
+    {
+        m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_MIRROR );
+        m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_MIRROR );
+    }
+
     m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, FALSE );
     // Some cards do not disable writing to Z when 
     // D3DRS_ZENABLE is FALSE. So do it explicitly
@@ -942,8 +968,39 @@ void CRenderer::DrawSkyBox()
     m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
     m_pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, TRUE);
 
+    // restore the texture filters
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+
     // turn lighting back on
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
+
+/*    // Center view matrix for skybox and disable zbuffer
+    D3DXMATRIXA16 matView, matViewSave;
+    m_pd3dDevice->GetTransform( D3DTS_VIEW, &matViewSave );
+    matView = matViewSave;
+
+    // zero out rotations so the skybox doesn't rotate
+    matView._41 = 0.0f; 
+    matView._42 = -3.0f; 
+    matView._43 = 0.0f;
+
+    m_pd3dDevice->SetTransform( D3DTS_VIEW,      &matView );
+    m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, FALSE );
+    // Some cards do not disable writing to Z when 
+    // D3DRS_ZENABLE is FALSE. So do it explicitly
+    m_pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );
+
+    // Render the skybox
+    m_pSkyBox->Render( m_pd3dDevice );
+
+    // Restore the render states
+    m_pd3dDevice->SetTransform( D3DTS_VIEW,      &matViewSave );
+    m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
+    m_pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, TRUE);
+*/
+
 }
 
 
