@@ -36,11 +36,13 @@ public:
     int settimer(); // set game timer resolution
 
 
+	// === Chris' Functions === //
 	//int LoadScene();
 	int LoadEntity();
 	int LoadPlayerVehicle();
 	int ClearScene();
 	int PhysicsTest1();
+	int PhysicsTest2();
     //==== Ram & Gibs Functions ====/
     int LoadVehicleAI();
 

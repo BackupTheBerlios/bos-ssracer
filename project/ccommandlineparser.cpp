@@ -63,6 +63,7 @@ int CCommandLineParser::initKeywords()
 	Keywords.push_back(std::string("loadplayervehicle"));
 	//Keywords.push_back(std::string("clearscene"));
 	Keywords.push_back(std::string("physicstest1"));
+	Keywords.push_back(std::string("physicstest2"));
 	/*** End Chris' Commands ***/
 
     /*** Begin J's Commands ***/
@@ -136,6 +137,7 @@ int CCommandLineParser::execute()
 	if (*it == "loadplayervehicle") error = LoadPlayerVehicle();
 	//if (*it == "clearscene") error = ClearScene();
 	if (*it == "physicstest1") error = PhysicsTest1();
+	if (*it == "physicstest2") error = PhysicsTest2();
 
     if (*it == "unloadmap") error = unloadmap();
     if (*it == "loadmap") error = loadmap();
@@ -443,6 +445,28 @@ int CCommandLineParser::PhysicsTest1()
 {
     string sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
 	string sName = "mitsuEclipse.car";
+
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
+		return OK;
+	}
+
+    /*J fucken w Chris' shit*/
+
+    //set the active camera to the chase cam
+    CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+
+    //set it to chase the vehicle we just created
+    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+
+	return OK;
+
+}
+
+int CCommandLineParser::PhysicsTest2()
+{
+    string sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"acuransx\\";
+	string sName = "acuransx.car";
 
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&sDir, &sName))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");

@@ -1,0 +1,24 @@
+<BodyMesh> acuransxBody
+<WheelMesh> acuransxWheel
+<FRTireTrans> 0.942 0.553 0.277
+<RRTireTrans> -0.917 0.553 0.256
+<OverallTrans> 0.000 0.000 -0.497
+
+<Height> 0.497
+<RollCenterHeight> 0.497
+<B> 0.747
+<C> 1.121
+<TrackWidth> 1.147
+<VehicleMass> 1500
+<TireMass> 35
+<RotatingMass> 100
+<MaximumEngineTorque> 300
+<MaximumBrakeTorque> 800
+<MaximumRPM> 9000
+<DrivetrainEfficiency> 0.80
+<RearDiffRatio> 3.42
+<GearRatios> 2.9 3.2 2.1 1.5 1.3 1.0
+<TireRadius> 0.210
+<FrontalArea> 0.20
+<CoefficientOfAerodynamicFriction> 0.30
+<CoefficientOfTireFriction> 1.0
