@@ -166,7 +166,9 @@ int COpponentAI::setDirection(COpponentVehicle* Car)
 		Car->SetRTurn(false);
 		Car->SetLTurn(true);
     //  Car->SetHeadingTotLC(Vector3f(direction.X(),direction.Z(), -direction.Y()));
-	Car->setHeadingAngle(resultAngle);
+	    if (resultAngle > 3.14156/2)
+          Car->SetBrake(true);
+        Car->setHeadingAngle(resultAngle);
     }
 	if (heading_angle > heading_target_angle) {
        // CLog::GetLog().Write(LOG_MISC, "Attempting to turn Right");

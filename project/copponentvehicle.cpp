@@ -147,16 +147,34 @@ float angle = getHeadingAngle();
 
     float pi = 3.14159;
     //float newSteerAngle;
-
+    float speedScalar = 1 - velocityLC.X() / 60.0f;
+float maxTurnAngle = (MAX_STEER_ANGLE_RADS - MIN_STEER_ANGLE_RADS) * speedScalar + MIN_STEER_ANGLE_RADS; 
 	//float vehicleMaxSpeed = 60.0f;
 
-	//float speedScalar = 1 - velocityLC.X() / 60.0f;
-if(inputState.lturn)
-steerAngleRADS = angle;
-else if(inputState.rturn)
-steerAngleRADS = angle *-1; //((2*pi)-angle)*-1;
-    /*float maxTurnAngle = (MAX_STEER_ANGLE_RADS - MIN_STEER_ANGLE_RADS) * speedScalar + MIN_STEER_ANGLE_RADS; 
 	
+if(inputState.lturn)
+{
+if(angle > maxTurnAngle) {
+			steerAngleRADS = maxTurnAngle;
+             CLog::GetLog().Write(LOG_DEBUGOVERLAY, 118, "MAX LEFT HIT!");
+            //SetBrake(true);
+		}
+		else {
+          CLog::GetLog().Write(LOG_DEBUGOVERLAY, 118, "NO MAX");
+			steerAngleRADS = angle;
+		}
+}
+else if(inputState.rturn)
+{
+  if(angle < (maxTurnAngle * -1.0f)) {
+			steerAngleRADS = maxTurnAngle * (-1.0f);
+		}
+		else {
+			steerAngleRADS = angle *-1;
+		}
+} //((2*pi)-angle)*-1;
+    
+	/*
 
 	// Interpolate the wheels to steer left ( +Z rotation )
 	if(inputState.lturn) {
