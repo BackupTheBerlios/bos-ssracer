@@ -76,6 +76,7 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("loadmeshtest"));
     Keywords.push_back(std::string("loadmesh"));
     Keywords.push_back(std::string("cameratest"));
+    Keywords.push_back(std::string("setcamera")); // alias
     Keywords.push_back(std::string("loadmap"));
     Keywords.push_back(std::string("unloadmap"));
     Keywords.push_back(std::string("setres"));
@@ -83,6 +84,7 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("setviscull"));
     Keywords.push_back(std::string("drawentbbox"));
     Keywords.push_back(std::string("drawquadtree"));
+    Keywords.push_back(std::string("exit"));
     /*** End J's Commands ***/
     
     /** Begin Ram & Gib Commands **/
@@ -176,6 +178,7 @@ int CCommandLineParser::execute()
     if (*it == "setviscull") error = SetVisCull();
     if (*it == "drawentbbox") error = SetDraw();
     if (*it == "drawquadtree") error = SetDraw();
+    if (*it == "exit") error = SystemCommand();
 
     if (*it == "loadvehicleai") error = LoadVehicleAI();
 
@@ -767,7 +770,10 @@ int CCommandLineParser::ShowEntities()
     int i=0;
     for (it=CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.begin();
          it<CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.end();  it++,i++) {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "#%d  Name: %s  Id: %d  MeshName: %s Position: %f %f %f", i, (*it)->GetName(), (*it)->GetId(), (*it)->GetMesh()->m_strName, (*it)->GetTranslate()->X(), (*it)->GetTranslate()->Y(), (*it)->GetTranslate()->Z() );        
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "#%d  Name: %s  Id: %d  MeshName: %s Position: %f %f %f Rotation: %f %f %f",
+             i, (*it)->GetName(), (*it)->GetId(), (*it)->GetMesh()->m_strName, 
+             (*it)->GetTranslate()->X(), (*it)->GetTranslate()->Y(), (*it)->GetTranslate()->Z(),
+             (*it)->GetRotate()->X(), (*it)->GetRotate()->Y(), (*it)->GetRotate()->Z());        
     }
     CLog::GetLog().Write(LOG_GAMECONSOLE, "showentities:  TOTAL # of entities %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.size());
 
@@ -800,7 +806,6 @@ int CCommandLineParser::SetVisCull()
     return OK;
 
 }
-
 
 
 int CCommandLineParser::SetDraw()
@@ -841,6 +846,15 @@ int CCommandLineParser::SetDraw()
     return OK;
 
 }
+
+
+int CCommandLineParser::SystemCommand()
+{
+    if (Tokens[0] == "exit")
+        CKernel::GetKernel().KillAllTasks();  //// ****** exit the game ****** ///
+    return OK;
+}
+
 // ===== End Jay's functions ==== //
 
 

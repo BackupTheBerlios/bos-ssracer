@@ -231,10 +231,20 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 {
 
     switch ( cIMsg->m_keyValue ) {
+    #ifdef _DEBUG
+    case GAME_F11:
+        CKernel::GetKernel().KillAllTasks();  // kill the program
+        break;
+    #endif
 
 	case GAME_ESCAPE:
-        //$$$DEBUG  SHOULD SEND A SYSTEM MESSAGE TO GAME AI TELLING IT TO SHUTDOWN
-		CKernel::GetKernel().KillAllTasks();  
+        // transition to front end
+        if (!cIMsg->m_keyDown)
+            CAppStateManager::GetAppMan().SetAppState(STATE_FRONT_END);
+
+        // set the front end manager to display the options/quit screen
+        // actual game exiting is performed there
+
 		break;
 	
 	// special case for the console

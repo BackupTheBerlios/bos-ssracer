@@ -99,8 +99,8 @@ void CList::autoAdjust()
 	for (int i = 0; i < h; i++)
 		if (m_items[i].size() > w) w = m_items[i].size();
 
-	m_iHeight = h*(STD_LIST_CHAR_HEIGHT + 4); 
-	m_iWidth = w*(STD_LIST_CHAR_WIDTH + 4);
+	m_fHeight = h*(STD_LIST_CHAR_HEIGHT + 4); 
+	m_fWidth = w*(STD_LIST_CHAR_WIDTH + 4);
 }
 
 void CList::printItems(int where)

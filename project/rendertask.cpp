@@ -172,7 +172,14 @@ void CRenderTask::Update()
     case STATE_FRONT_END:
         m_pkRenderer->DrawFrontEnd();
         break;
-
+    
+    case STATE_PRE_GAME:
+        // create DX objects and initialize render states etc.
+        // draw loading screen in front end
+        break;
+    case STATE_POST_GAME:
+        // draw race stats and the win screen
+        break;
     case STATE_IN_GAME:
             //--- render HUD if we're in-game ---//
 

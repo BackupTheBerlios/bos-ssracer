@@ -5,6 +5,8 @@
 #include "stl.h"
 #include "macros.h"
 #include "log.h"
+//J's edit
+#include <d3d9types.h> //for color macros
 
 #define STD_WIDGET_WIDTH 20
 #define STD_WIDGET_HEIGHT 10
@@ -25,26 +27,40 @@ public:
 	virtual void onDeactivate()=0;
 	virtual void draw()=0;
 
-	int X() {return m_iX;}
-	int Y() {return m_iY;}
-	int Width() {return m_iWidth;}
-	int Height() {return m_iHeight;}
+    // J: XY parameters are in screen coords 
+    // 0,0 = origin 
+    // +1+1 = bottom left
+    // -1+1 = bottom right
+    // +1-1 = top left
+    // -1-1 = top right
+	float X() {return m_fX;}
+	float Y() {return m_fY;}
+
+    // J: scale is in the interval [0,1]
+    // this adjusts automatically with screen size too
+
+    float Width() {return m_fWidth;}
+	float Height() {return m_fHeight;}
 	int Type() {return m_iType;}
 	std::string* Name() {return &m_name;}
 
-	void setX(int x) {m_iX = x;}
-	void setY(int y) {m_iY = y;}
-	void setWidth(int w) {m_iWidth = w;}
-	void setHeight(int h) {m_iHeight = h;}
+	void setX(float x) {m_fX = x;}
+	void setY(float y) {m_fY = y;}
+	void setWidth(float w) {m_fWidth = w;}
+	void setHeight(float h) {m_fHeight = h;}
 	void setType(int t) {m_iType = t;}
 	void setName(std::string str) {m_name = str;}
 	void setName(char* str) {m_name.erase(); m_name.append(str);}
 
 protected:
-	int m_iX;
-	int m_iY;
-	int m_iWidth;
-	int m_iHeight;
+	float m_fX;
+	float m_fY;
+	float m_fWidth;
+	float m_fHeight;
+    DWORD m_dwDefaultColor; //J's edit needs a color attribute ARGB
+    DWORD m_dwActiveColor;
+    DWORD m_dwCurrentColor;
+
 
 	// might come in handy, but don't have to use them:
 	int m_iType;

@@ -55,6 +55,7 @@ public:
     int ShowEntities();
     int SetVisCull();
     int SetDraw();
+    int SystemCommand();
 
 	// === Rob's Functions === //
     int SoundEffectCommand();

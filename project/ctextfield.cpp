@@ -7,7 +7,7 @@ CTextField::CTextField()
 	m_buffer.reserve(STD_TF_BUF_SIZE);
 	m_buffer.erase();
 	m_bActive = false;
-	m_iHeight = STD_TF_HEIGHT;
+	m_fHeight = STD_TF_HEIGHT;
 }
 
 CTextField::~CTextField()

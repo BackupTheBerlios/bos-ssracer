@@ -5,7 +5,7 @@ CLabel::CLabel()
 	m_text.reserve(STD_TEXT_LENGTH);
 	m_text.erase();
 	m_iSize = STD_TEXT_SIZE;
-	m_iHeight = STD_TEXT_SIZE + 4; 
+	m_fHeight = STD_TEXT_SIZE + 4; 
 	m_iFont = FONT_NONE;
 	m_iBackground_color = COLOR_NONE;
 	m_iForeground_color = COLOR_BLACK;
@@ -63,8 +63,8 @@ int CLabel::setForegroundColor(int foreground_color)
 // auto adjust heigh and width to size
 int CLabel::autoAdjust()
 {
-	m_iHeight = m_iSize + 4;
-	m_iWidth = (m_iSize + 4) * m_text.length();
+	m_fHeight = m_iSize + 4;
+	m_fWidth = (m_iSize + 4) * m_text.length();
 	return OK;
 }
 

@@ -6,19 +6,36 @@
 
 CMainMenu::CMainMenu()
 {
-  
   newGame = new CButton();
   newGame->setText("New Game");
+  newGame->setX(0.0f);
+  newGame->setY(-1.0f);
+
   options = new CButton();
   options->setText("Options");
+  options->setX(-0.1f);
+  options->setY(-0.7f);
+
   bestTimes = new CButton();
   bestTimes->setText("Best Times");
+  bestTimes->setX(-0.2f);
+  bestTimes->setY(-0.5f);
+
   help = new CButton();
   help->setText("Help");
+  help->setX(-0.3f);
+  help->setY(-0.2f);
+
   credits = new CButton();
   credits->setText("Credits");
+  credits->setX(-0.4f);
+  credits->setY(0.1f);
+
   quit = new CButton();
   quit->setText("Quit");
+  quit->setX(-0.5f);
+  quit->setY(0.4f);
+
   int tempOrder[]={NEW_GAME, OPTIONS, BESTTIMES, HELP, CREDITS, QUIT};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 5;
@@ -36,7 +53,14 @@ void CMainMenu::draw()
 {
     //CRenderer::GetRendererPtr()->DrawScreenText(0,0,D3DCOLOR_ARGB(255,255,255,255), "MAIN MENU");
     //$$$TEMP just draw this for now
-    CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(255,255,255,255), "MAIN\nMENU", 0.3, 0.3);
+    CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "MAIN\nMENU", 0.3, 0.3);
+
+    static int iFade = 255, iDir = -1;
+    CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.5, 0.8f,0,D3DCOLOR_ARGB(iFade,200,0,10), "Press F11 to exit the game ESC is remapped for front end -J", 0.03, 0.03);
+    CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.5, 0.9f,0,D3DCOLOR_ARGB(iFade,200,10,0), "Relax, these fonts are just to test the FEM out", 0.03, 0.03);
+    iFade += iDir;
+    if (iFade <= 0 || iFade >= 255)  iDir *= -1;
+
     //Jay here's your stub function to draw the mainmenu
     newGame->draw();
     options->draw();
@@ -62,9 +86,9 @@ void CMainMenu::processInput(int key)
       selectedScreeni = maxScreeni;
     break;
   case GAME_RETURN:
-  case GAME_NUMPADENTER:
-	 
+  case GAME_NUMPADENTER:	 
     gotoScreen = screenOrder[selectedScreeni];
+    break;
   }
 }
 
@@ -91,6 +115,8 @@ CNewGame::~CNewGame()
 
 void CNewGame::draw()
 {
+  //$$$TEMP just draw this for now
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "NEW\nGAME", 0.3, 0.3);
 
   //Draw Screen stuff
   ok->draw();
@@ -140,6 +166,9 @@ CGarage::~CGarage()
 
 void CGarage::draw()
 {
+  //$$$TEMP just draw this for now
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "GARAGE", 0.3, 0.3);
+
   select->draw();
   cancel->draw();
   instructions->draw();
@@ -200,6 +229,9 @@ CPostGame::~CPostGame()
 
 void CPostGame::draw()
 {
+//$$$TEMP just draw this for now
+CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "POST\nGAME", 0.3, 0.3);
+
   onward->draw();
   restartRace->draw();
   mainMenu->draw();
@@ -259,6 +291,9 @@ CPauseGame::~CPauseGame()
 
 void CPauseGame::draw()
 {
+  //$$$TEMP just draw this for now
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "PAUSE", 0.3, 0.3);
+
   resume->draw();
   restartRace->draw();
   mainMenu->draw();
@@ -321,6 +356,9 @@ CHome::~CHome()
 
 void CHome::draw()
 {
+  //$$$TEMP just draw this for now
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "HOME", 0.3, 0.3);
+
   race->draw();
   performanceUpgrade->draw();
   garage->draw();
