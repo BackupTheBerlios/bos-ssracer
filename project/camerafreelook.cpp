@@ -35,7 +35,7 @@ D3DUtil_CameraKeys CCameraFreeLook::MapKey( UINT nKey )
         case ' ': //spacebar
 			return CAM_MOVE_UP;
 
-		/*case GAME_RIGHT:
+		case GAME_RIGHT:
 			return CAM_ROTATE_X_POS;
 		case GAME_LEFT:
 			return CAM_ROTATE_X_NEG;
@@ -44,7 +44,7 @@ D3DUtil_CameraKeys CCameraFreeLook::MapKey( UINT nKey )
 			return CAM_ROTATE_Y_POS;
 		case GAME_DOWN:
 			return CAM_ROTATE_Y_NEG;
-*/
+
 		//case GAME_DELETE:
 
 		//case GAME_END:

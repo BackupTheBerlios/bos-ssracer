@@ -27,6 +27,12 @@ CSettingsManager * CSettingsManager::GetSettingsManagerPtr(){ return ms_pkSettin
 // Desc:  Intializes default game settings for compatibility
 //-----------------------------------------------------------------------------
 void CSettingsManager::LoadDefaultSettings() {
+    m_settingMap[DIRMAP]   = ".\\maps\\";
+    m_settingMap[DIRMEDIA] = ".\\media\\";
+    m_settingMap[DIRSOUND] = m_settingMap[DIRMEDIA] + "sound\\";
+    m_settingMap[DIRMUSIC] = m_settingMap[DIRMEDIA] + "music\\";
+    m_settingMap[DIRMESH]  = m_settingMap[DIRMEDIA] + "meshes\\";
+    m_settingMap[DIRDEBUG] = m_settingMap[DIRMEDIA] + "debug\\";
 
 }
 

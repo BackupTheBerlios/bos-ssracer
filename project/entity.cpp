@@ -7,12 +7,24 @@
 // stored in the meshes vector of the scene
 int CEntity::LoadMesh()
 {
-    char szBuf[256];
-    sprintf(szBuf, "%s%s", m_strName, ".x");
-
     assert(CRenderer::GetRendererPtr());
     
-    if (!CRenderer::GetRenderer().CreateMesh(m_strName ,m_pMesh))
+    string strPath;/* = ".\\media\\meshes";
+    strPath.append("\\dynamic\\vehicles\\");  ///$$$TEMP  only wnat a car now
+    strPath.append(m_strName);
+    strPath.append("\\");
+    strPath += m_strName;  //should be taken from GS manager
+    strPath.append(".x");*/
+
+    strPath += m_strName;
+    strPath.append(".x");
+
+    char szPath[256];
+    sprintf(szPath,"%s", strPath.c_str());
+
+    m_pMesh = new CD3DMesh(_T(szPath));
+
+    if (!CRenderer::GetRenderer().CreateMesh( m_pMesh, szPath ))
         return 0;  // Failure
 
     return 1;  // Success

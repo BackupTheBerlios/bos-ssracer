@@ -10,6 +10,16 @@
 #include "log.h"
 
 
+enum GameSetting
+{
+    DIRMAP,
+    DIRMEDIA,
+    DIRSOUND,
+    DIRMUSIC,
+    DIRMESH,
+    DIRDEBUG
+};
+
 //-----------------------------------------------------------------------------
 // Name:  class CSettingsManager
 // Desc:  reads in game specific settings from game settings file and initializes
@@ -23,10 +33,11 @@ public:
     static CSettingsManager * GetSettingsManagerPtr();
 	virtual ~CSettingsManager();
     void LoadDefaultSettings(); // loads predefined settings into map
+    string GetGameSetting( GameSetting eGS ) { return m_settingMap[eGS]; };
 
 protected:
     static CSettingsManager * ms_pkSettingsMgr;
-    std::map< std::string, std::string > m_settingMap;
+    std::map< GameSetting, std::string > m_settingMap;
 };
 
 

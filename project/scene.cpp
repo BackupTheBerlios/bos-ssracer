@@ -3,6 +3,12 @@
 #include "log.h"
 #include "macros.h"
 
+
+//static member declarations
+vector<CD3DMesh*> CScene::m_vMeshes;
+vector<CEntity*> CScene::m_vEntities;
+
+
 int CScene::ReleaseScene()
 {
 	unsigned int i;
@@ -259,8 +265,8 @@ int CScene::LoadEntities(string* directory, string* filename)
 					break;
 				}
 
-  /*
-#ifdef _DEBUG
+                    /*
+                    #ifdef _DEBUG
 					CLog::GetLog().Write(LOG_MISC, "<id> %d", newObject->getId());
 					CLog::GetLog().Write(LOG_MISC, "<name> %s", newObject->getName());
 					CLog::GetLog().Write(LOG_MISC, "<translate> %f %f %f", newObject->getTranslate().X(), newObject->getTranslate().Y(), newObject->getTranslate().Z());
@@ -275,7 +281,7 @@ int CScene::LoadEntities(string* directory, string* filename)
 					CLog::GetLog().Write(LOG_MISC, "<OBBExtent3> %f", newObject->getBoundingBox().Extent(2));
 					CLog::GetLog().Write(LOG_MISC, "<sphereCenter> %f %f %f", newObject->getBoundingSphere().Center().X(), newObject->getBoundingSphere().Center().Y(), newObject->getBoundingSphere().Center().Z());
 					CLog::GetLog().Write(LOG_MISC, "<sphereRadius> %f", newObject->getBoundingSphere().Radius());
-#endif
+                    #endif
 					*/
 			}
 		}

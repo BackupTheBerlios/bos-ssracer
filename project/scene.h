@@ -19,10 +19,13 @@ public:
 	int LoadPlayerVehicle(string* directory, string* filename);		// Load a new player vehicle (.car file)
 	int LoadEntity(string* directory, string* filename);	// Load an entity and add it to the current scene
 
+    //$$$TEMP this is just to get access too the entities for now.
+    vector<CEntity*> * TEMPGetEntities() { return &m_vEntities; };
+
 protected:
 	
-	vector<CD3DMesh*> m_vMeshes;	// Vector containing meshes in the scene
-	vector<CEntity*> m_vEntities;	// Vector containing all entities in the scene
+	static vector<CD3DMesh*> m_vMeshes;	// Vector containing meshes in the scene
+	static vector<CEntity*> m_vEntities;	// Vector containing all entities in the scene
 
 private:
 

@@ -42,6 +42,13 @@ class CRenderTask; // forward declaration
 //class CObject;
 //class CPlayerVehicle;
 
+enum CameraType 
+{
+CAMERA_FREELOOK,
+CAMERA_CHASE,
+CAMERA_TRACK,
+};
+
 
 //-----------------------------------------------------------------------------
 // Class: CRenderer
@@ -115,7 +122,7 @@ public:
     HRESULT Initialize();
     void Cleanup();
     void CreateMeshes();
-    int CreateMesh( char * pcEntName, CD3DMesh * pMesh );
+    int CreateMesh( CD3DMesh * pMesh, char * pcFileName );
   
     void EstablishCapabilities ();
 

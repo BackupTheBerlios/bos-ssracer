@@ -19,9 +19,11 @@ using namespace Wml;
 #include "timer.h"
 #include "renderer.h"
 //#include "d3dutil.h"
-#include "game.h"
+//#include "game.h"
+#include "gamestatemanager.h"
 //#include "bosutil.h"
 #include "cinputconsole.h"
+#include "macros.h"
 
 // --- system includes --- //
 #define STL_USING_ALL
@@ -246,15 +248,15 @@ void CRenderer::CreateMeshes ()
 
 
 
-int CRenderer::CreateMesh( char * pcEntName, CD3DMesh * pMesh )
+int CRenderer::CreateMesh( CD3DMesh * pMesh, char * pcFileName )
 {
 
     HRESULT hr;
-    if ( FAILED( hr = pMesh->Create( CRenderer::GetRenderer().GetDevice(), pcEntName )) )  {
+    if ( FAILED( hr = pMesh->Create( m_pd3dDevice, pcFileName )) )  {
 	    #ifdef _DEBUG
 	    CLog::GetLog().Write(LOG_APP, IDS_RENDER_ERROR, "could not load mesh");
 	    #endif
-        DXTRACE_ERR_MSGBOX( _T("could not load single mesh"), hr );
+        //DXTRACE_ERR_MSGBOX( _T("could not load single mesh"), hr );
         return 0;  // Failure
 	}
     pMesh->UseMeshMaterials(true);
@@ -349,8 +351,60 @@ void CRenderer::RenderScene()
     }
     */
 
-    //$$$TEMP renders ALL entitites until I get the Octree up
 
+    //$$$TEMP renders ALL entitites until I get the Octree up    
+    static ID3DXMatrixStack* pMatrixStack;
+    D3DXCreateMatrixStack( 0, &pMatrixStack);
+    Vector3f * vTemp;
+    HRESULT hr;
+
+    assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
+
+    for (vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->begin();
+         it != CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->end();
+         it++)  
+      {
+    
+   	    pMatrixStack->Push(); 
+        pMatrixStack->LoadIdentity();
+
+	    D3DMATRIX xRot, yRot, zRot;
+	    // orientation
+	    vTemp = (*it)->GetRotate();
+	    pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
+	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
+	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
+	    //pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
+	    
+	    // translation
+	    vTemp = (*it)->GetTranslate();
+	    pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
+        //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
+
+	    // scale
+	    vTemp = (*it)->GetScale();
+	    pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
+        //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
+
+
+	    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
+
+          //actual drawing of the mesh
+        if ( FAILED(hr =  (*it)->GetMesh()->Render(m_pd3dDevice,true,true)) )  {
+		    #ifdef _DEBUG
+		    CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
+            CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", (*it)->GetMesh()->m_strName);
+		    #endif
+	    }
+	    else {
+		    #ifdef _DEBUG
+		    CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", (*it)->GetMesh()->m_strName);
+		    #endif
+        }
+
+   	    pMatrixStack->Pop();
+
+     }//end big ass for loop
 
     m_pd3dDevice->EndScene();  // --- end scene drawing commands
      

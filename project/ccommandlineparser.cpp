@@ -332,7 +332,6 @@ int CCommandLineParser::LoadEntity()
 		}
 	}
     
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity loaded successfully!");
 	return OK;
 }
 

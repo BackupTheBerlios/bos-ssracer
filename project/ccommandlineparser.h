@@ -40,6 +40,8 @@ public:
 	int LoadPlayerVehicle();
 	int ClearScene();
 
+    int JScript1();
+
 protected:
 	std::string deliminators;
 	int ndels;
