@@ -164,9 +164,8 @@ int COpponentAI::setDirection(COpponentVehicle* Car)
 
     // compare angles to see if lturn or rturn should be set
     CLog::GetLog().Write(LOG_DEBUGOVERLAY,65, "Vehicle Angle: %f Target Angle: %f", heading_angle, heading_target_angle);
-	//if (heading_angle < heading_target_angle) {
-    if(blah>0){ 
-    //   CLog::GetLog().Write(LOG_MISC, "Attempting to turn Left");
+	if (heading_angle < heading_target_angle) {
+     //   CLog::GetLog().Write(LOG_MISC, "Attempting to turn Left");
 	CLog::GetLog().Write(LOG_DEBUGOVERLAY,121, "When Left: %f", blah);
         Car->SetRTurn(false);
 		Car->SetLTurn(true);
@@ -175,8 +174,7 @@ int COpponentAI::setDirection(COpponentVehicle* Car)
          // Car->SetBrake(true);
         Car->setHeadingAngle(resultAngle);
     }
-    else /*if(blah<0)*/{ 
-	//if (heading_angle > heading_target_angle) {
+	if (heading_angle > heading_target_angle) {
       	CLog::GetLog().Write(LOG_DEBUGOVERLAY,121, "When Right: %f", blah);
        // CLog::GetLog().Write(LOG_MISC, "Attempting to turn Right");
 		Car->SetLTurn(false);
