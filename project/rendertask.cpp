@@ -114,6 +114,7 @@ void CRenderTask::Update()
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "");
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "");
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "");
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 18, "");
     #endif
 
     //--- update view from the camera position ---//

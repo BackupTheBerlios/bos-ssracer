@@ -306,7 +306,7 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
     m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
 
     if (m_bDrawEntBBoxes == true)
-        DrawBBox(pEntity->GetBoundingBox(), 10.0f, D3DCOLOR_ARGB(255, 200, 50, 50));
+        DrawBBox(pEntity->GetBoundingBox(), 10.0f, D3DCOLOR_ARGB(255, 220, 50, 50));
 
 }
 
@@ -507,7 +507,7 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
         }
         else {
             #ifdef _DEBUG
-            CLog::GetLog().Write(LOG_GAMECONSOLE, "Entity %d %s, is already drawn", it->second->GetId(), it->second->GetName());
+            //CLog::GetLog().Write(LOG_GAMECONSOLE, "Entity %d %s, is already drawn", it->second->GetId(), it->second->GetName());
             #endif
         }
         iTotalNodeEnt++;       
@@ -517,7 +517,7 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 18, "Drew %d of %d entities in nodes", iDrawnEnt, iTotalNodeEnt);
     #endif
 
-    if (m_bDrawQNodeBBoxes == true)// && !pQNode->m_EntMap.empty())
+    if (m_bDrawQNodeBBoxes == true)//  && !pQNode->m_EntMap.empty())
         DrawBBox(&pQNode->m_BBox, 1.0f, D3DCOLOR_ARGB(150, 50, 200, 50));
 
 /*    

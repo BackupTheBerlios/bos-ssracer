@@ -57,12 +57,12 @@ CQuadNode::CQuadNode(Vector3f vOrigin, float fHalfWidth) {
     // use diagonal of box to get bounding sphere
     //m_BSphere.Radius() = (Vector3f(max(m_BBox.Extent(0), m_BBox.Extent(2)), 0, max(m_BBox.Extent(0), m_BBox.Extent(2))) 
     //    + Vector3f(min(m_BBox.Extent(0), m_BBox.Extent(2)), 0, min(m_BBox.Extent(0), m_BBox.Extent(2)))).Length()/2.0f; 
-    m_BSphere.Radius() = fHalfWidth*1.1f;
+    //m_BSphere.Radius() = fHalfWidth*1.1f;
     //m_BSphere.Radius() = 1.0f;
     
-    //Vector3f vBox[8];
-    //m_BBox.ComputeVertices(vBox);
-    //m_BSphere = ContSphereOfAABB(8, vBox);
+    Vector3f vBox[8];
+    m_BBox.ComputeVertices(vBox);
+    m_BSphere = ContSphereOfAABB(8, vBox);
 };
 
 
@@ -153,7 +153,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     m_fNodeWidth = max( m_vfMaxExtent.X()-m_vfMinExtent.X(), m_vfMinExtent.X() - m_vfMaxExtent.X());
     m_fNodeWidth = max( m_fNodeWidth, m_vfMaxExtent.Z()-m_vfMinExtent.Z());
     m_fNodeWidth = max( m_fNodeWidth, m_vfMinExtent.Z()-m_vfMaxExtent.Z());
-    m_fNodeWidth *= 0.80f;//2.0f;   
+    m_fNodeWidth *= 1.50f;//2.0f;   
 
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE, "Quadtree root node width: %f", m_fNodeWidth);
@@ -172,7 +172,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     // assuming a uniform distribution of entities, try to compute an optimal tree depth
     // want #levels = log(#entities)/log(#subdiv at each level=4)
     //m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) ) + 1;
-    m_iLevels = 6;
+    m_iLevels = 7;
     
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE,"Quadtree depth %d", m_iLevels);
@@ -302,6 +302,9 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
 
     Vector3f vBoxVerts[8];
     bool abValid[8] = { 0,0,0,0,0,0,0,0 };//{ 1,1,1,1,1,1,1,1 };//{ 0,0,0,0,0,0,0,0 };
+    bool bEntBoxInNode = true;
+    bool bNodeInEntBox = true;
+
     switch(TestIntersection( boxTemp,  *pEntity->GetBoundingBox() ) ) 
     {
         case true:  // box intersects
@@ -314,13 +317,29 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
             boxTemp.ComputeVertices(vBoxVerts);
 
             // if entities box is contained in node box
-            if (ContOrientedBox (8, vBoxVerts, abValid, node->m_BBox))  {
+            for (int j=0; j<8; j++ ) {
+                if (!InBox( vBoxVerts[j], node->m_BBox))  {
+                    bEntBoxInNode = false;
+                }
+            }
+
+            if (bEntBoxInNode ==true)  {
+            //if (ContOrientedBox (8, vBoxVerts, abValid, node->m_BBox))  {
                 node->m_EntMap[pEntity->GetId()] = pEntity; //entity is in this node
                 bEntInQuad = true;  // find out what child quads also contain this
             }
             else { // OUTSIDE or entities box contains the bounding box!
                 node->m_BBox.ComputeVertices(vBoxVerts);
-                if (ContOrientedBox (8, vBoxVerts, abValid, boxTemp))  {
+                
+                // if node box  is contained in entities box
+                for (int j=0; j<8; j++ ) {
+                    if (!InBox( vBoxVerts[j], boxTemp))  {
+                        bNodeInEntBox = false;
+                    }
+                }
+
+                if (bNodeInEntBox == true)  {
+                //if (ContOrientedBox (8, vBoxVerts, abValid, boxTemp))  {
                     node->m_EntMap[pEntity->GetId()] = pEntity; //entity is in this node
                     bEntInQuad = true;  // find out what child quads also contain this
                 }
@@ -601,27 +620,32 @@ int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
 		for(int i = 0; i < 8; ++i) {
 
 			// test this point against the planes
-            if( plane[p].WhichSide(vCorner[i]) == Plane3f::POSITIVE_SIDE ) {
-            //if(plane[p][0] * vCorner[i].X() + plane[p][1] * vCorner[i].Y() + plane[p][2] * vCorner[i].Z() + plane[p][3] >= 0) {
+            //if( plane[p].WhichSide(vCorner[i]) == Plane3f::POSITIVE_SIDE ) {
+            if(plane[p][0] * vCorner[i].X() + plane[p][1] * vCorner[i].Y() + plane[p][2] * vCorner[i].Z() + plane[p][3] < 0) {
                 iPtIn = 0;
 				--iInCount;
 			}
 		}
 
 		// were all the points outside of plane p?
-		if(iInCount == 0)
-			return(INSIDE);
+        if(iInCount == 0)  {
+            return(OUTSIDE);
+			//return(INSIDE);  //WORKING
+        }
 
 		// check if they were all on the right side of the plane
 		iTotalIn += iPtIn;
 	}
 
 	// so if iTotalIn is 6, then all are inside the view
-	if(iTotalIn == 6)
-		return(OUTSIDE);
+    if(iTotalIn == 6)  {
+        return(INSIDE); 
+		//return(OUTSIDE);  //WORKING
+    }
 
 	// we must be partly in then otherwise
-	return(INTERSECT);
+ 
+	return(INTERSECT);  //WORKING
 
 }
 
@@ -636,7 +660,8 @@ void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTes
         if(InBox (pCamera->GetEye(), pNode->m_BBox) == false )  {
             
             // check if frustrum constains bounding sphere for node
-            switch (FrustumContainsSphere(pCamera, pNode->m_BSphere))  {
+            //switch (FrustumContainsSphere(pCamera, pNode->m_BSphere))  {
+            switch( FrustumContainsBox(pCamera, pNode->m_BBox) )  {            
                 case OUTSIDE:  // outside, so cull this node
                     return;
         
@@ -647,7 +672,7 @@ void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTes
                     break;
 
                 case INTERSECT:  // intersects, so check the AABB
-                    switch( FrustumContainsBox(pCamera, pNode->m_BBox) )  {
+                     switch( FrustumContainsBox(pCamera, pNode->m_BBox) )  {
                         case OUTSIDE:  // outside the AABB, so cull
                             return;
 
