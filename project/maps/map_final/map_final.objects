@@ -9416,42 +9416,6 @@
 <type> 0
 <id> 523
 <name> grassflat
-<translate> 200.000000 0.000000 400.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> 200.000000 -0.005000 400.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> 200.000000 -0.010000 -400.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 524
-<name> grassflat
-<translate> 400.000000 0.000000 300.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> 400.000000 -0.005000 300.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> 400.000000 -0.010000 -300.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 525
-<name> grassflat
 <translate> -200.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 <rotate> 0.000000 0.000000 0.000000
@@ -9468,7 +9432,7 @@
 
 <newObject>
 <type> 0
-<id> 526
+<id> 524
 <name> grassflat
 <translate> -200.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9486,7 +9450,7 @@
 
 <newObject>
 <type> 0
-<id> 527
+<id> 525
 <name> grassflat
 <translate> 0.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9504,7 +9468,7 @@
 
 <newObject>
 <type> 0
-<id> 528
+<id> 526
 <name> grassflat
 <translate> -200.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9522,7 +9486,7 @@
 
 <newObject>
 <type> 0
-<id> 529
+<id> 527
 <name> grassflat
 <translate> 0.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9540,7 +9504,7 @@
 
 <newObject>
 <type> 0
-<id> 530
+<id> 528
 <name> grassflat
 <translate> -400.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9558,7 +9522,7 @@
 
 <newObject>
 <type> 0
-<id> 531
+<id> 529
 <name> grassflat
 <translate> -600.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9576,7 +9540,7 @@
 
 <newObject>
 <type> 0
-<id> 532
+<id> 530
 <name> grassflat
 <translate> -400.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9594,7 +9558,7 @@
 
 <newObject>
 <type> 0
-<id> 533
+<id> 531
 <name> grassflat
 <translate> -600.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9612,7 +9576,7 @@
 
 <newObject>
 <type> 0
-<id> 534
+<id> 532
 <name> grassflat
 <translate> -600.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9630,7 +9594,7 @@
 
 <newObject>
 <type> 0
-<id> 535
+<id> 533
 <name> grassflat
 <translate> -800.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9648,7 +9612,7 @@
 
 <newObject>
 <type> 0
-<id> 536
+<id> 534
 <name> grassflat
 <translate> -800.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9666,7 +9630,7 @@
 
 <newObject>
 <type> 0
-<id> 537
+<id> 535
 <name> grassflat
 <translate> -1000.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9684,7 +9648,7 @@
 
 <newObject>
 <type> 0
-<id> 538
+<id> 536
 <name> grassflat
 <translate> -1000.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9702,7 +9666,7 @@
 
 <newObject>
 <type> 0
-<id> 539
+<id> 537
 <name> grassflat
 <translate> -1000.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9720,7 +9684,7 @@
 
 <newObject>
 <type> 0
-<id> 540
+<id> 538
 <name> grassflat
 <translate> -1200.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9738,7 +9702,7 @@
 
 <newObject>
 <type> 0
-<id> 541
+<id> 539
 <name> grassflat
 <translate> -1200.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9756,7 +9720,7 @@
 
 <newObject>
 <type> 0
-<id> 542
+<id> 540
 <name> grassflat
 <translate> -1200.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9774,7 +9738,7 @@
 
 <newObject>
 <type> 0
-<id> 543
+<id> 541
 <name> grassflat
 <translate> -1400.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9792,7 +9756,7 @@
 
 <newObject>
 <type> 0
-<id> 544
+<id> 542
 <name> grassflat
 <translate> -1400.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9810,7 +9774,7 @@
 
 <newObject>
 <type> 0
-<id> 545
+<id> 543
 <name> grassflat
 <translate> -1400.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9828,7 +9792,7 @@
 
 <newObject>
 <type> 0
-<id> 546
+<id> 544
 <name> grassflat
 <translate> -1600.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9846,7 +9810,7 @@
 
 <newObject>
 <type> 0
-<id> 547
+<id> 545
 <name> grassflat
 <translate> -1600.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9864,7 +9828,7 @@
 
 <newObject>
 <type> 0
-<id> 548
+<id> 546
 <name> grassflat
 <translate> -1600.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9882,7 +9846,7 @@
 
 <newObject>
 <type> 0
-<id> 549
+<id> 547
 <name> grassflat
 <translate> -1400.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9900,7 +9864,7 @@
 
 <newObject>
 <type> 0
-<id> 550
+<id> 548
 <name> grassflat
 <translate> -1200.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9918,7 +9882,7 @@
 
 <newObject>
 <type> 0
-<id> 551
+<id> 549
 <name> grassflat
 <translate> -1000.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9936,7 +9900,7 @@
 
 <newObject>
 <type> 0
-<id> 552
+<id> 550
 <name> grassflat
 <translate> -800.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9954,7 +9918,7 @@
 
 <newObject>
 <type> 0
-<id> 553
+<id> 551
 <name> grassflat
 <translate> -800.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9972,7 +9936,7 @@
 
 <newObject>
 <type> 0
-<id> 554
+<id> 552
 <name> grassflat
 <translate> -600.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9990,7 +9954,7 @@
 
 <newObject>
 <type> 0
-<id> 555
+<id> 553
 <name> grassflat
 <translate> -200.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10008,133 +9972,7 @@
 
 <newObject>
 <type> 0
-<id> 556
-<name> grassflat
-<translate> -1800.000000 0.000000 200.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -1800.000000 -0.005000 200.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -1800.000000 -0.010000 -200.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 557
-<name> grassflat
-<translate> -1800.000000 0.000000 0.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -1800.000000 -0.005000 0.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -1800.000000 -0.010000 0.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 558
-<name> grassflat
-<translate> -1800.000000 0.000000 -200.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -1800.000000 -0.005000 -200.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -1800.000000 -0.010000 200.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 559
-<name> grassflat
-<translate> -2000.000000 0.000000 0.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -2000.000000 -0.005000 0.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -2000.000000 -0.010000 0.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 560
-<name> grassflat
-<translate> -2000.000000 0.000000 200.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -2000.000000 -0.005000 200.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -2000.000000 -0.010000 -200.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 561
-<name> grassflat
-<translate> -2200.000000 0.000000 0.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -2200.000000 -0.005000 0.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -2200.000000 -0.010000 0.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 562
-<name> grassflat
-<translate> -2200.000000 0.000000 200.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -2200.000000 -0.005000 200.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -2200.000000 -0.010000 -200.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 563
+<id> 554
 <name> grassflat
 <translate> -2400.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10152,7 +9990,7 @@
 
 <newObject>
 <type> 0
-<id> 564
+<id> 555
 <name> grassflat
 <translate> -2400.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10170,7 +10008,7 @@
 
 <newObject>
 <type> 0
-<id> 565
+<id> 556
 <name> grassflat
 <translate> -2600.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10188,7 +10026,7 @@
 
 <newObject>
 <type> 0
-<id> 566
+<id> 557
 <name> grassflat
 <translate> -2600.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10206,7 +10044,7 @@
 
 <newObject>
 <type> 0
-<id> 567
+<id> 558
 <name> grassflat
 <translate> -2800.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10224,7 +10062,7 @@
 
 <newObject>
 <type> 0
-<id> 568
+<id> 559
 <name> grassflat
 <translate> -2800.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10242,7 +10080,7 @@
 
 <newObject>
 <type> 0
-<id> 569
+<id> 560
 <name> grassflat
 <translate> -2600.000000 0.000000 400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10260,7 +10098,7 @@
 
 <newObject>
 <type> 0
-<id> 570
+<id> 561
 <name> grassflat
 <translate> -3000.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10278,7 +10116,7 @@
 
 <newObject>
 <type> 0
-<id> 571
+<id> 562
 <name> grassflat
 <translate> -3200.000000 0.000000 600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10296,7 +10134,7 @@
 
 <newObject>
 <type> 0
-<id> 572
+<id> 563
 <name> grassflat
 <translate> -3200.000000 0.000000 800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10314,25 +10152,7 @@
 
 <newObject>
 <type> 0
-<id> 573
-<name> grassflat
-<translate> -3000.000000 0.000000 800.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -3000.000000 -0.005000 800.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -3000.000000 -0.010000 -800.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 574
+<id> 564
 <name> grassflat
 <translate> -1200.000000 0.000000 400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10350,7 +10170,7 @@
 
 <newObject>
 <type> 0
-<id> 575
+<id> 565
 <name> grassflat
 <translate> -1200.000000 0.000000 600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10368,7 +10188,7 @@
 
 <newObject>
 <type> 0
-<id> 576
+<id> 566
 <name> grassflat
 <translate> -1400.000000 0.000000 400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10386,7 +10206,7 @@
 
 <newObject>
 <type> 0
-<id> 577
+<id> 567
 <name> grassflat
 <translate> -1000.000000 0.000000 600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10404,7 +10224,7 @@
 
 <newObject>
 <type> 0
-<id> 578
+<id> 568
 <name> grassflat
 <translate> -1400.000000 0.000000 600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10422,7 +10242,7 @@
 
 <newObject>
 <type> 0
-<id> 579
+<id> 569
 <name> grassflat
 <translate> -1000.000000 0.000000 400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10440,7 +10260,7 @@
 
 <newObject>
 <type> 0
-<id> 580
+<id> 570
 <name> grassflat
 <translate> -3200.000000 0.000000 1000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10458,7 +10278,7 @@
 
 <newObject>
 <type> 0
-<id> 581
+<id> 571
 <name> grassflat
 <translate> -3000.000000 0.000000 1000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10476,7 +10296,7 @@
 
 <newObject>
 <type> 0
-<id> 582
+<id> 572
 <name> grassflat
 <translate> -2800.000000 0.000000 1000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10494,25 +10314,7 @@
 
 <newObject>
 <type> 0
-<id> 583
-<name> grassflat
-<translate> -2600.000000 0.000000 1000.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -2600.000000 -0.005000 1000.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -2600.000000 -0.010000 -1000.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 584
+<id> 573
 <name> grassflat
 <translate> -2600.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10530,7 +10332,7 @@
 
 <newObject>
 <type> 0
-<id> 585
+<id> 574
 <name> grassflat
 <translate> -2800.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10548,7 +10350,7 @@
 
 <newObject>
 <type> 0
-<id> 586
+<id> 575
 <name> grassflat
 <translate> -3000.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10566,7 +10368,7 @@
 
 <newObject>
 <type> 0
-<id> 587
+<id> 576
 <name> grassflat
 <translate> -3200.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10584,7 +10386,7 @@
 
 <newObject>
 <type> 0
-<id> 588
+<id> 577
 <name> grassflat
 <translate> -3000.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10602,7 +10404,7 @@
 
 <newObject>
 <type> 0
-<id> 589
+<id> 578
 <name> grassflat
 <translate> -2800.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10620,7 +10422,7 @@
 
 <newObject>
 <type> 0
-<id> 590
+<id> 579
 <name> grassflat
 <translate> -2600.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10638,25 +10440,7 @@
 
 <newObject>
 <type> 0
-<id> 591
-<name> grassflat
-<translate> -2400.000000 0.000000 1200.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -2400.000000 -0.005000 1200.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -2400.000000 -0.010000 -1200.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 592
+<id> 580
 <name> grassflat
 <translate> -2400.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10674,7 +10458,7 @@
 
 <newObject>
 <type> 0
-<id> 593
+<id> 581
 <name> grassflat
 <translate> -2400.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10692,7 +10476,7 @@
 
 <newObject>
 <type> 0
-<id> 594
+<id> 582
 <name> grassflat
 <translate> -2600.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10710,7 +10494,7 @@
 
 <newObject>
 <type> 0
-<id> 595
+<id> 583
 <name> grassflat
 <translate> -2800.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10728,7 +10512,7 @@
 
 <newObject>
 <type> 0
-<id> 596
+<id> 584
 <name> grassflat
 <translate> -2600.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10746,7 +10530,7 @@
 
 <newObject>
 <type> 0
-<id> 597
+<id> 585
 <name> grassflat
 <translate> -2400.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10764,7 +10548,7 @@
 
 <newObject>
 <type> 0
-<id> 598
+<id> 586
 <name> grassflat
 <translate> -2200.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10782,7 +10566,7 @@
 
 <newObject>
 <type> 0
-<id> 599
+<id> 587
 <name> grassflat
 <translate> -2200.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10800,25 +10584,7 @@
 
 <newObject>
 <type> 0
-<id> 600
-<name> grassflat
-<translate> -2200.000000 0.000000 1400.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -2200.000000 -0.005000 1400.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -2200.000000 -0.010000 -1400.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 601
+<id> 588
 <name> grassflat
 <translate> -2000.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10836,7 +10602,7 @@
 
 <newObject>
 <type> 0
-<id> 602
+<id> 589
 <name> grassflat
 <translate> -2000.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10854,7 +10620,7 @@
 
 <newObject>
 <type> 0
-<id> 603
+<id> 590
 <name> grassflat
 <translate> -2200.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10872,7 +10638,7 @@
 
 <newObject>
 <type> 0
-<id> 604
+<id> 591
 <name> grassflat
 <translate> -2000.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10890,7 +10656,7 @@
 
 <newObject>
 <type> 0
-<id> 605
+<id> 592
 <name> grassflat
 <translate> -1800.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10908,7 +10674,7 @@
 
 <newObject>
 <type> 0
-<id> 606
+<id> 593
 <name> grassflat
 <translate> -1600.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10926,7 +10692,7 @@
 
 <newObject>
 <type> 0
-<id> 607
+<id> 594
 <name> grassflat
 <translate> -1400.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10944,7 +10710,7 @@
 
 <newObject>
 <type> 0
-<id> 608
+<id> 595
 <name> grassflat
 <translate> -1200.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10962,7 +10728,7 @@
 
 <newObject>
 <type> 0
-<id> 609
+<id> 596
 <name> grassflat
 <translate> -2000.000000 0.000000 2200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10980,7 +10746,7 @@
 
 <newObject>
 <type> 0
-<id> 610
+<id> 597
 <name> grassflat
 <translate> -1800.000000 0.000000 2200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10998,7 +10764,7 @@
 
 <newObject>
 <type> 0
-<id> 611
+<id> 598
 <name> grassflat
 <translate> -1800.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11016,7 +10782,7 @@
 
 <newObject>
 <type> 0
-<id> 612
+<id> 599
 <name> grassflat
 <translate> -1800.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11034,7 +10800,7 @@
 
 <newObject>
 <type> 0
-<id> 613
+<id> 600
 <name> grassflat
 <translate> -1600.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11052,7 +10818,7 @@
 
 <newObject>
 <type> 0
-<id> 614
+<id> 601
 <name> grassflat
 <translate> -1600.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11070,7 +10836,7 @@
 
 <newObject>
 <type> 0
-<id> 615
+<id> 602
 <name> grassflat
 <translate> -1600.000000 0.000000 2200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11088,7 +10854,7 @@
 
 <newObject>
 <type> 0
-<id> 616
+<id> 603
 <name> grassflat
 <translate> -1400.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11106,7 +10872,7 @@
 
 <newObject>
 <type> 0
-<id> 617
+<id> 604
 <name> grassflat
 <translate> -1400.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11124,7 +10890,7 @@
 
 <newObject>
 <type> 0
-<id> 618
+<id> 605
 <name> grassflat
 <translate> -1400.000000 0.000000 2200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11142,7 +10908,7 @@
 
 <newObject>
 <type> 0
-<id> 619
+<id> 606
 <name> grassflat
 <translate> -1200.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11160,7 +10926,7 @@
 
 <newObject>
 <type> 0
-<id> 620
+<id> 607
 <name> grassflat
 <translate> -1200.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11178,7 +10944,7 @@
 
 <newObject>
 <type> 0
-<id> 621
+<id> 608
 <name> grassflat
 <translate> -1000.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11196,7 +10962,7 @@
 
 <newObject>
 <type> 0
-<id> 622
+<id> 609
 <name> grassflat
 <translate> -1000.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11214,7 +10980,7 @@
 
 <newObject>
 <type> 0
-<id> 623
+<id> 610
 <name> grassflat
 <translate> -800.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11232,7 +10998,7 @@
 
 <newObject>
 <type> 0
-<id> 624
+<id> 611
 <name> grassflat
 <translate> -800.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11250,7 +11016,7 @@
 
 <newObject>
 <type> 0
-<id> 625
+<id> 612
 <name> grassflat
 <translate> -600.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11268,7 +11034,7 @@
 
 <newObject>
 <type> 0
-<id> 626
+<id> 613
 <name> grassflat
 <translate> -600.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11286,7 +11052,7 @@
 
 <newObject>
 <type> 0
-<id> 627
+<id> 614
 <name> grassflat
 <translate> -800.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11304,7 +11070,7 @@
 
 <newObject>
 <type> 0
-<id> 628
+<id> 615
 <name> grassflat
 <translate> -600.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11322,7 +11088,7 @@
 
 <newObject>
 <type> 0
-<id> 629
+<id> 616
 <name> grassflat
 <translate> -400.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11340,7 +11106,7 @@
 
 <newObject>
 <type> 0
-<id> 630
+<id> 617
 <name> grassflat
 <translate> -400.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11358,7 +11124,7 @@
 
 <newObject>
 <type> 0
-<id> 631
+<id> 618
 <name> grassflat
 <translate> -400.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11376,7 +11142,7 @@
 
 <newObject>
 <type> 0
-<id> 632
+<id> 619
 <name> grassflat
 <translate> -600.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11394,7 +11160,7 @@
 
 <newObject>
 <type> 0
-<id> 633
+<id> 620
 <name> grassflat
 <translate> -200.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11412,7 +11178,7 @@
 
 <newObject>
 <type> 0
-<id> 634
+<id> 621
 <name> grassflat
 <translate> -200.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11430,7 +11196,7 @@
 
 <newObject>
 <type> 0
-<id> 635
+<id> 622
 <name> grassflat
 <translate> -200.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11448,7 +11214,7 @@
 
 <newObject>
 <type> 0
-<id> 636
+<id> 623
 <name> grassflat
 <translate> 0.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11466,7 +11232,7 @@
 
 <newObject>
 <type> 0
-<id> 637
+<id> 624
 <name> grassflat
 <translate> 0.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11484,7 +11250,7 @@
 
 <newObject>
 <type> 0
-<id> 638
+<id> 625
 <name> grassflat
 <translate> 0.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11502,7 +11268,7 @@
 
 <newObject>
 <type> 0
-<id> 639
+<id> 626
 <name> grassflat
 <translate> 0.000000 0.000000 1000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11520,25 +11286,7 @@
 
 <newObject>
 <type> 0
-<id> 640
-<name> grassflat
-<translate> 200.000000 0.000000 900.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> 200.000000 -0.005000 900.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> 200.000000 -0.010000 -900.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 641
+<id> 627
 <name> grassflat
 <translate> 200.000000 0.000000 1100.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11556,7 +11304,7 @@
 
 <newObject>
 <type> 0
-<id> 642
+<id> 628
 <name> grassflat
 <translate> 200.000000 0.000000 1300.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11574,7 +11322,7 @@
 
 <newObject>
 <type> 0
-<id> 643
+<id> 629
 <name> grassflat
 <translate> 400.000000 0.000000 900.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11592,7 +11340,7 @@
 
 <newObject>
 <type> 0
-<id> 644
+<id> 630
 <name> grassflat
 <translate> 400.000000 0.000000 1100.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11610,7 +11358,7 @@
 
 <newObject>
 <type> 0
-<id> 645
+<id> 631
 <name> grassflat
 <translate> 400.000000 0.000000 1300.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11628,7 +11376,7 @@
 
 <newObject>
 <type> 0
-<id> 646
+<id> 632
 <name> grassflat
 <translate> 600.000000 0.000000 900.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11646,7 +11394,7 @@
 
 <newObject>
 <type> 0
-<id> 647
+<id> 633
 <name> grassflat
 <translate> 600.000000 0.000000 1100.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11664,7 +11412,7 @@
 
 <newObject>
 <type> 0
-<id> 648
+<id> 634
 <name> grassflat
 <translate> 200.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11682,7 +11430,7 @@
 
 <newObject>
 <type> 0
-<id> 649
+<id> 635
 <name> buildingrect
 <translate> -18.750000 0.000000 3.500000
 <scale> 1.000000 1.000000 1.000000
@@ -11700,7 +11448,7 @@
 
 <newObject>
 <type> 0
-<id> 650
+<id> 636
 <name> buildinghex2
 <translate> -370.000000 0.000000 -255.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11718,7 +11466,7 @@
 
 <newObject>
 <type> 0
-<id> 651
+<id> 637
 <name> buildingrect
 <translate> -405.000000 0.000000 -255.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11736,7 +11484,7 @@
 
 <newObject>
 <type> 0
-<id> 652
+<id> 638
 <name> cementbridge
 <translate> 313.140991 0.000000 510.833008
 <scale> 1.000000 1.000000 1.000000
@@ -11754,7 +11502,7 @@
 
 <newObject>
 <type> 0
-<id> 653
+<id> 639
 <name> cementbridge
 <translate> 334.354004 0.000000 532.046021
 <scale> 1.000000 1.000000 1.000000
@@ -11772,7 +11520,7 @@
 
 <newObject>
 <type> 0
-<id> 654
+<id> 640
 <name> cementbridge
 <translate> 355.566986 0.000000 553.258972
 <scale> 1.000000 1.000000 1.000000
@@ -11790,7 +11538,7 @@
 
 <newObject>
 <type> 0
-<id> 655
+<id> 641
 <name> cementbridge
 <translate> 376.779999 0.000000 574.471985
 <scale> 1.000000 1.000000 1.000000
@@ -11808,7 +11556,7 @@
 
 <newObject>
 <type> 0
-<id> 656
+<id> 642
 <name> cementbridge
 <translate> 397.993011 0.000000 595.684998
 <scale> 1.000000 1.000000 1.000000
@@ -11826,7 +11574,7 @@
 
 <newObject>
 <type> 0
-<id> 657
+<id> 643
 <name> cementbridge
 <translate> 419.205994 0.000000 616.898010
 <scale> 1.000000 1.000000 1.000000
@@ -11844,7 +11592,7 @@
 
 <newObject>
 <type> 0
-<id> 658
+<id> 644
 <name> cementbridge
 <translate> 440.419006 0.000000 638.111023
 <scale> 1.000000 1.000000 1.000000
@@ -11862,7 +11610,7 @@
 
 <newObject>
 <type> 0
-<id> 659
+<id> 645
 <name> cementbridge
 <translate> 461.631989 0.000000 659.323975
 <scale> 1.000000 1.000000 1.000000
@@ -11880,7 +11628,7 @@
 
 <newObject>
 <type> 0
-<id> 660
+<id> 646
 <name> cementbridge
 <translate> 482.845001 0.000000 680.536987
 <scale> 1.000000 1.000000 1.000000
@@ -11898,7 +11646,7 @@
 
 <newObject>
 <type> 0
-<id> 661
+<id> 647
 <name> straightaway4lane2way
 <translate> -388.042999 0.000000 -240.996002
 <scale> 1.000000 1.000000 1.000000
@@ -11916,7 +11664,7 @@
 
 <newObject>
 <type> 0
-<id> 662
+<id> 648
 <name> straightaway4lane2way
 <translate> -388.042999 0.000000 -210.996002
 <scale> 1.000000 1.000000 1.000000
@@ -11934,7 +11682,7 @@
 
 <newObject>
 <type> 0
-<id> 663
+<id> 649
 <name> straightaway4lane2way
 <translate> -388.042999 0.000000 -300.996002
 <scale> 1.000000 1.000000 1.000000
@@ -11952,7 +11700,7 @@
 
 <newObject>
 <type> 0
-<id> 664
+<id> 650
 <name> straightaway4lane2way
 <translate> -388.042999 0.000000 -330.996002
 <scale> 1.000000 1.000000 1.000000
@@ -11970,7 +11718,7 @@
 
 <newObject>
 <type> 0
-<id> 665
+<id> 651
 <name> buildinghex2
 <translate> -405.053040 0.000000 -287.546692
 <scale> 1.000000 1.000000 1.000000
@@ -11988,7 +11736,7 @@
 
 <newObject>
 <type> 0
-<id> 666
+<id> 652
 <name> grassflat
 <translate> -400.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -12006,7 +11754,7 @@
 
 <newObject>
 <type> 0
-<id> 667
+<id> 653
 <name> cementmedian
 <translate> -395.200195 0.400000 -257.436401
 <scale> 1.000000 1.000000 1.000000
@@ -12024,7 +11772,7 @@
 
 <newObject>
 <type> 0
-<id> 668
+<id> 654
 <name> cementmedian
 <translate> -392.772919 0.200000 -256.849945
 <scale> 1.000000 1.000000 1.000000
@@ -12042,7 +11790,7 @@
 
 <newObject>
 <type> 0
-<id> 669
+<id> 655
 <name> cementmedian
 <translate> -390.032135 0.200000 -256.502655
 <scale> 1.000000 1.000000 1.000000
@@ -12060,7 +11808,7 @@
 
 <newObject>
 <type> 0
-<id> 670
+<id> 656
 <name> cementmedian
 <translate> -387.298126 0.200000 -256.229248
 <scale> 1.000000 1.000000 1.000000
@@ -12078,7 +11826,7 @@
 
 <newObject>
 <type> 0
-<id> 671
+<id> 657
 <name> cementmedian
 <translate> -384.632477 0.200000 -255.921677
 <scale> 1.000000 1.000000 1.000000
@@ -12096,7 +11844,7 @@
 
 <newObject>
 <type> 0
-<id> 672
+<id> 658
 <name> cementmedian
 <translate> -381.615570 0.400000 -255.556763
 <scale> 1.000000 1.000000 1.000000
@@ -12114,7 +11862,7 @@
 
 <newObject>
 <type> 0
-<id> 673
+<id> 659
 <name> cementmedian
 <translate> -999.490051 0.200000 1627.689331
 <scale> 1.000000 1.000000 1.000000
@@ -12132,7 +11880,7 @@
 
 <newObject>
 <type> 0
-<id> 674
+<id> 660
 <name> cementmedian
 <translate> -1002.925903 0.400000 1627.153442
 <scale> 1.000000 1.000000 1.000000
@@ -12150,7 +11898,7 @@
 
 <newObject>
 <type> 0
-<id> 675
+<id> 661
 <name> cementmedian
 <translate> -841.843872 0.400000 -42.227844
 <scale> 1.000000 1.000000 1.000000
@@ -12168,7 +11916,7 @@
 
 <newObject>
 <type> 0
-<id> 676
+<id> 662
 <name> cementmedian
 <translate> -839.754517 0.200000 -44.317219
 <scale> 1.000000 1.000000 1.000000
@@ -12186,7 +11934,7 @@
 
 <newObject>
 <type> 0
-<id> 677
+<id> 663
 <name> tunnel2lane
 <translate> -2454.780029 0.000000 1172.303955
 <scale> 1.000000 1.000000 1.000000
@@ -12204,7 +11952,7 @@
 
 <newObject>
 <type> 0
-<id> 678
+<id> 664
 <name> tunnel2lane
 <translate> -2480.760010 0.000000 1157.303955
 <scale> 1.000000 1.000000 1.000000
@@ -12222,7 +11970,7 @@
 
 <newObject>
 <type> 0
-<id> 679
+<id> 665
 <name> tunnel2lane
 <translate> -2506.739990 0.000000 1142.303955
 <scale> 1.000000 1.000000 1.000000
@@ -12240,7 +11988,7 @@
 
 <newObject>
 <type> 0
-<id> 680
+<id> 666
 <name> tunnel2lane
 <translate> -2532.719971 0.000000 1127.303955
 <scale> 1.000000 1.000000 1.000000
@@ -12258,7 +12006,7 @@
 
 <newObject>
 <type> 0
-<id> 681
+<id> 667
 <name> tunnel2lane
 <translate> -2558.699951 0.000000 1112.303955
 <scale> 1.000000 1.000000 1.000000
@@ -12276,7 +12024,7 @@
 
 <newObject>
 <type> 0
-<id> 682
+<id> 668
 <name> tunnel2lane
 <translate> -2584.679932 0.000000 1097.303955
 <scale> 1.000000 1.000000 1.000000
@@ -12294,7 +12042,7 @@
 
 <newObject>
 <type> 0
-<id> 683
+<id> 669
 <name> tunnel2lane
 <translate> -2610.659912 0.000000 1082.303955
 <scale> 1.000000 1.000000 1.000000
@@ -12312,7 +12060,7 @@
 
 <newObject>
 <type> 0
-<id> 684
+<id> 670
 <name> tunnel2lane
 <translate> -2636.639893 0.000000 1067.303955
 <scale> 1.000000 1.000000 1.000000
@@ -12330,7 +12078,7 @@
 
 <newObject>
 <type> 0
-<id> 685
+<id> 671
 <name> tunnel2lane
 <translate> -2662.620117 0.000000 1052.303955
 <scale> 1.000000 1.000000 1.000000
@@ -12348,7 +12096,7 @@
 
 <newObject>
 <type> 0
-<id> 686
+<id> 672
 <name> tunnel2lane
 <translate> -2688.600098 0.000000 1037.303955
 <scale> 1.000000 1.000000 1.000000
@@ -12366,7 +12114,7 @@
 
 <newObject>
 <type> 0
-<id> 687
+<id> 673
 <name> tunnel2lane
 <translate> -2714.580078 0.000000 1022.304016
 <scale> 1.000000 1.000000 1.000000
@@ -12384,7 +12132,7 @@
 
 <newObject>
 <type> 0
-<id> 688
+<id> 674
 <name> tunnel2lane
 <translate> -2740.560059 0.000000 1007.304016
 <scale> 1.000000 1.000000 1.000000
@@ -12402,7 +12150,7 @@
 
 <newObject>
 <type> 0
-<id> 689
+<id> 675
 <name> tunnel2lane
 <translate> -2766.540039 0.000000 992.304016
 <scale> 1.000000 1.000000 1.000000
@@ -12420,7 +12168,7 @@
 
 <newObject>
 <type> 0
-<id> 690
+<id> 676
 <name> tunnel2lane
 <translate> -2792.520020 0.000000 977.304016
 <scale> 1.000000 1.000000 1.000000
@@ -12438,7 +12186,7 @@
 
 <newObject>
 <type> 0
-<id> 691
+<id> 677
 <name> tunnel2lane
 <translate> -2818.500000 0.000000 962.304016
 <scale> 1.000000 1.000000 1.000000
@@ -12456,7 +12204,7 @@
 
 <newObject>
 <type> 0
-<id> 692
+<id> 678
 <name> tunnel2lane
 <translate> -2844.479980 0.000000 947.304016
 <scale> 1.000000 1.000000 1.000000
@@ -12474,7 +12222,7 @@
 
 <newObject>
 <type> 0
-<id> 693
+<id> 679
 <name> tunnel2lane
 <translate> -2870.459961 0.000000 932.304016
 <scale> 1.000000 1.000000 1.000000
@@ -12492,7 +12240,7 @@
 
 <newObject>
 <type> 0
-<id> 694
+<id> 680
 <name> tunnel2lane
 <translate> -2896.439941 0.000000 917.304016
 <scale> 1.000000 1.000000 1.000000
@@ -12510,7 +12258,7 @@
 
 <newObject>
 <type> 0
-<id> 695
+<id> 681
 <name> cementarch2lane
 <translate> -2441.790039 0.000000 1179.803955
 <scale> 1.000000 1.000000 1.000000
@@ -12528,313 +12276,7 @@
 
 <newObject>
 <type> 0
-<id> 696
-<name> cementarch2lane
-<translate> -2467.770020 0.000000 1164.803955
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2467.770020 2.745825 1164.803711
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2467.770020 2.745825 -1164.803833
-<sphereRadius> 7.862753
-
-
-<newObject>
-<type> 0
-<id> 697
-<name> cementarch2lane
-<translate> -2493.750000 0.000000 1149.803955
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2493.750000 2.745825 1149.803711
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2493.750000 2.745825 -1149.803833
-<sphereRadius> 7.862753
-
-
-<newObject>
-<type> 0
-<id> 698
-<name> cementarch2lane
-<translate> -2519.729980 0.000000 1134.803955
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2519.729980 2.745825 1134.803711
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2519.729980 2.745825 -1134.803833
-<sphereRadius> 7.862753
-
-
-<newObject>
-<type> 0
-<id> 699
-<name> cementarch2lane
-<translate> -2545.709961 0.000000 1119.803955
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2545.709961 2.745825 1119.803711
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2545.709961 2.745825 -1119.803833
-<sphereRadius> 7.862753
-
-
-<newObject>
-<type> 0
-<id> 700
-<name> cementarch2lane
-<translate> -2571.689941 0.000000 1104.803955
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2571.689941 2.745825 1104.803711
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2571.689941 2.745825 -1104.803833
-<sphereRadius> 7.862753
-
-
-<newObject>
-<type> 0
-<id> 701
-<name> cementarch2lane
-<translate> -2597.669922 0.000000 1089.803955
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2597.669922 2.745825 1089.803711
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2597.669922 2.745825 -1089.803833
-<sphereRadius> 7.862753
-
-
-<newObject>
-<type> 0
-<id> 702
-<name> cementarch2lane
-<translate> -2623.649902 0.000000 1074.803955
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2623.649902 2.745825 1074.803711
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2623.649902 2.745825 -1074.803833
-<sphereRadius> 7.862753
-
-
-<newObject>
-<type> 0
-<id> 703
-<name> cementarch2lane
-<translate> -2649.629883 0.000000 1059.803955
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2649.629883 2.745825 1059.803711
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2649.629883 2.745825 -1059.803833
-<sphereRadius> 7.862633
-
-
-<newObject>
-<type> 0
-<id> 704
-<name> cementarch2lane
-<translate> -2675.610107 0.000000 1044.803955
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2675.610107 2.745825 1044.803711
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2675.609863 2.745825 -1044.803833
-<sphereRadius> 7.862633
-
-
-<newObject>
-<type> 0
-<id> 705
-<name> cementarch2lane
-<translate> -2701.590088 0.000000 1029.803955
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2701.590088 2.745825 1029.803711
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2701.589844 2.745825 -1029.803833
-<sphereRadius> 7.862584
-
-
-<newObject>
-<type> 0
-<id> 706
-<name> cementarch2lane
-<translate> -2727.570068 0.000000 1014.804016
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2727.570068 2.745825 1014.803894
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2727.569824 2.745825 -1014.803833
-<sphereRadius> 7.862584
-
-
-<newObject>
-<type> 0
-<id> 707
-<name> cementarch2lane
-<translate> -2753.550049 0.000000 999.804016
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2753.550049 2.745825 999.803894
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2753.549805 2.745825 -999.803833
-<sphereRadius> 7.862584
-
-
-<newObject>
-<type> 0
-<id> 708
-<name> cementarch2lane
-<translate> -2779.530029 0.000000 984.804016
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2779.530029 2.745825 984.803894
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2779.529785 2.745825 -984.803833
-<sphereRadius> 7.862584
-
-
-<newObject>
-<type> 0
-<id> 709
-<name> cementarch2lane
-<translate> -2805.510010 0.000000 969.804016
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2805.510010 2.745825 969.803894
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2805.509766 2.745825 -969.803833
-<sphereRadius> 7.862584
-
-
-<newObject>
-<type> 0
-<id> 710
-<name> cementarch2lane
-<translate> -2831.489990 0.000000 954.804016
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2831.489990 2.745825 954.803894
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2831.489746 2.745825 -954.803833
-<sphereRadius> 7.862584
-
-
-<newObject>
-<type> 0
-<id> 711
-<name> cementarch2lane
-<translate> -2857.469971 0.000000 939.804016
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2857.469971 2.745825 939.803894
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2857.469727 2.745825 -939.803833
-<sphereRadius> 7.862584
-
-
-<newObject>
-<type> 0
-<id> 712
-<name> cementarch2lane
-<translate> -2883.449951 0.000000 924.804016
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 -300.000000 0.000000
-<OBBCenter> -2883.449951 2.745825 924.803894
-<OBBAxis1> 0.500000 0.000000 -0.866025
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> -0.866025 0.000000 -0.500000
-<OBBExtent1> 6.921383
-<OBBExtent2> 2.769825
-<OBBExtent3> 0.500000
-<sphereCenter> -2883.449707 2.745825 -924.803833
-<sphereRadius> 7.862584
-
-
-<newObject>
-<type> 0
-<id> 713
+<id> 682
 <name> cementarch2lane
 <translate> -2909.429932 0.000000 909.804016
 <scale> 1.000000 1.000000 1.000000
@@ -12852,7 +12294,7 @@
 
 <newObject>
 <type> 0
-<id> 714
+<id> 683
 <name> cementbridge
 <translate> 207.990005 7.000000 330.239990
 <scale> 1.000000 1.000000 1.000000
@@ -12870,7 +12312,7 @@
 
 <newObject>
 <type> 0
-<id> 715
+<id> 684
 <name> cementbridge
 <translate> 182.009995 7.000000 345.239990
 <scale> 1.000000 1.000000 1.000000
@@ -12888,7 +12330,7 @@
 
 <newObject>
 <type> 0
-<id> 716
+<id> 685
 <name> cementbridge
 <translate> 156.029999 7.000000 360.239990
 <scale> 1.000000 1.000000 1.000000
@@ -12906,7 +12348,7 @@
 
 <newObject>
 <type> 0
-<id> 717
+<id> 686
 <name> cementbridge
 <translate> 130.050003 7.000000 375.239990
 <scale> 1.000000 1.000000 1.000000
@@ -12924,7 +12366,7 @@
 
 <newObject>
 <type> 0
-<id> 718
+<id> 687
 <name> cementbridge
 <translate> 104.070000 7.000000 390.239990
 <scale> 1.000000 1.000000 1.000000
@@ -12942,7 +12384,7 @@
 
 <newObject>
 <type> 0
-<id> 719
+<id> 688
 <name> cementbridge
 <translate> 78.089996 7.000000 405.239990
 <scale> 1.000000 1.000000 1.000000
@@ -12960,7 +12402,7 @@
 
 <newObject>
 <type> 0
-<id> 720
+<id> 689
 <name> cementbridge
 <translate> 52.110001 7.000000 420.239990
 <scale> 1.000000 1.000000 1.000000
@@ -12978,7 +12420,7 @@
 
 <newObject>
 <type> 0
-<id> 721
+<id> 690
 <name> cementbridge
 <translate> 26.129999 7.000000 435.239990
 <scale> 1.000000 1.000000 1.000000
@@ -12996,7 +12438,7 @@
 
 <newObject>
 <type> 0
-<id> 722
+<id> 691
 <name> cementbridge
 <translate> 0.150000 7.000000 450.239990
 <scale> 1.000000 1.000000 1.000000
@@ -13014,7 +12456,7 @@
 
 <newObject>
 <type> 0
-<id> 723
+<id> 692
 <name> cementbridge
 <translate> -25.830000 7.000000 465.239990
 <scale> 1.000000 1.000000 1.000000
@@ -13032,7 +12474,7 @@
 
 <newObject>
 <type> 0
-<id> 724
+<id> 693
 <name> cementbridge
 <translate> -51.810001 7.000000 480.239990
 <scale> 1.000000 1.000000 1.000000
@@ -13050,7 +12492,7 @@
 
 <newObject>
 <type> 0
-<id> 725
+<id> 694
 <name> cementbridge
 <translate> -77.790001 7.000000 495.239990
 <scale> 1.000000 1.000000 1.000000
@@ -13068,7 +12510,7 @@
 
 <newObject>
 <type> 0
-<id> 726
+<id> 695
 <name> cementbridge
 <translate> 233.970001 7.000000 315.239990
 <scale> 1.000000 1.000000 1.000000
@@ -13086,7 +12528,7 @@
 
 <newObject>
 <type> 0
-<id> 727
+<id> 696
 <name> cementbridge
 <translate> 259.950012 7.000000 300.239990
 <scale> 1.000000 1.000000 1.000000
@@ -13104,7 +12546,7 @@
 
 <newObject>
 <type> 0
-<id> 728
+<id> 697
 <name> cementbridge
 <translate> 285.929993 7.000000 285.239990
 <scale> 1.000000 1.000000 1.000000
@@ -13122,7 +12564,7 @@
 
 <newObject>
 <type> 0
-<id> 729
+<id> 698
 <name> cementbridge
 <translate> 311.910004 7.000000 270.239990
 <scale> 1.000000 1.000000 1.000000
@@ -13140,7 +12582,7 @@
 
 <newObject>
 <type> 0
-<id> 730
+<id> 699
 <name> cementbridge
 <translate> 337.890015 7.000000 255.240005
 <scale> 1.000000 1.000000 1.000000
@@ -13158,7 +12600,7 @@
 
 <newObject>
 <type> 0
-<id> 731
+<id> 700
 <name> cementbridge
 <translate> 363.869995 7.000000 240.240005
 <scale> 1.000000 1.000000 1.000000
@@ -13176,7 +12618,7 @@
 
 <newObject>
 <type> 0
-<id> 732
+<id> 701
 <name> cementbridge
 <translate> 389.850006 7.000000 225.240005
 <scale> 1.000000 1.000000 1.000000
@@ -13194,7 +12636,7 @@
 
 <newObject>
 <type> 0
-<id> 733
+<id> 702
 <name> cementbridge
 <translate> 415.829987 7.000000 210.240005
 <scale> 1.000000 1.000000 1.000000
@@ -13208,5 +12650,4235 @@
 <OBBExtent3> 14.999999
 <sphereCenter> 415.830017 1.500000 -210.239990
 <sphereRadius> 25.471682
+
+
+<newObject>
+<type> 0
+<id> 703
+<name> bricktile
+<translate> -406.000000 0.000000 -253.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -406.000000 0.125000 -253.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 0.125000
+<OBBExtent3> 10.000000
+<sphereCenter> -406.000000 0.250000 253.000000
+<sphereRadius> 14.142136
+
+
+<newObject>
+<type> 0
+<id> 704
+<name> bricktile
+<translate> -406.000000 0.000000 -289.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -406.000000 0.125000 -289.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 0.125000
+<OBBExtent3> 10.000000
+<sphereCenter> -406.000000 0.250000 289.000000
+<sphereRadius> 14.142136
+
+
+<newObject>
+<type> 0
+<id> 705
+<name> bricktile
+<translate> -370.049988 0.000000 -253.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -370.049988 0.125000 -253.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 0.125000
+<OBBExtent3> 10.000000
+<sphereCenter> -370.049988 0.250000 253.000000
+<sphereRadius> 14.142136
+
+
+<newObject>
+<type> 0
+<id> 706
+<name> bricktile
+<translate> -370.049988 0.000000 -289.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -370.049988 0.125000 -289.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 0.125000
+<OBBExtent3> 10.000000
+<sphereCenter> -370.049988 0.250000 289.000000
+<sphereRadius> 14.142136
+
+
+<newObject>
+<type> 0
+<id> 707
+<name> bricktile
+<translate> -18.750000 0.000000 3.500000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -330.000000 0.000000
+<OBBCenter> -18.750000 0.125000 3.499998
+<OBBAxis1> 0.866025 0.000000 -0.500000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -0.500000 0.000000 -0.866025
+<OBBExtent1> 9.999999
+<OBBExtent2> 0.125000
+<OBBExtent3> 9.999999
+<sphereCenter> -18.750000 0.250000 -3.500000
+<sphereRadius> 19.318516
+
+
+<newObject>
+<type> 0
+<id> 708
+<name> cementbridge
+<translate> -2274.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2274.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -2274.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 709
+<name> cementbridge
+<translate> -2244.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2244.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -2244.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 710
+<name> cementbridge
+<translate> -2214.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2214.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -2214.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 711
+<name> cementbridge
+<translate> -2184.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2184.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -2184.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 712
+<name> cementbridge
+<translate> -2154.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2154.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -2154.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 713
+<name> cementbridge
+<translate> -2124.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2124.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -2124.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 714
+<name> cementbridge
+<translate> -2094.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2094.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -2094.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 715
+<name> cementbridge
+<translate> -2064.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2064.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -2064.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 716
+<name> cementbridge
+<translate> -2034.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2034.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -2034.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 717
+<name> cementbridge
+<translate> -2004.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2004.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -2004.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 718
+<name> cementbridge
+<translate> -1974.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1974.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -1974.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 719
+<name> cementbridge
+<translate> -1944.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1944.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -1944.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 720
+<name> cementbridge
+<translate> -1914.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1914.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -1914.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 721
+<name> cementbridge
+<translate> -1884.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1884.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -1884.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 722
+<name> cementbridge
+<translate> -1854.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1854.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -1854.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 723
+<name> cementbridge
+<translate> -1824.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1824.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -1824.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 724
+<name> cementbridge
+<translate> -1794.823975 0.000000 88.522003
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1794.823975 -5.500000 88.522003
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 8.000000
+<OBBExtent3> 15.000000
+<sphereCenter> -1794.823975 -5.500000 -88.522003
+<sphereRadius> 19.723087
+
+
+<newObject>
+<type> 0
+<id> 725
+<name> grassflat
+<translate> 400.000000 0.000000 300.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 400.000000 -0.005000 300.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> 400.000000 -0.010000 -300.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 726
+<name> grassflat
+<translate> 400.000000 0.000000 100.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 400.000000 -0.005000 100.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> 400.000000 -0.010000 -100.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 727
+<name> grassflat
+<translate> -1200.000000 0.000000 1100.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1200.000000 -0.005000 1100.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> -1200.000000 -0.010000 -1100.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 728
+<name> grassflat
+<translate> -1400.000000 0.000000 1100.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1400.000000 -0.005000 1100.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> -1400.000000 -0.010000 -1100.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 729
+<name> grassflat
+<translate> -1600.000000 0.000000 1100.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1600.000000 -0.005000 1100.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> -1600.000000 -0.010000 -1100.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 730
+<name> riverbankcmid
+<translate> -2050.000000 0.000000 1050.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2050.000000 -10.000000 1050.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -2050.000000 -10.000000 -1050.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 731
+<name> riverbankcjoin
+<translate> -1800.000000 0.000000 1200.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1815.000000 -10.000000 1215.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.000000
+<OBBExtent3> 14.999999
+<sphereCenter> -1815.000000 -11.000000 -1215.000000
+<sphereRadius> 23.043438
+
+
+<newObject>
+<type> 0
+<id> 732
+<name> grassflat
+<translate> -800.000000 0.000000 600.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -800.000000 -0.005000 600.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> -800.000000 -0.010000 -600.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 733
+<name> grassflat
+<translate> -800.000000 0.000000 400.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -800.000000 -0.005000 400.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> -800.000000 -0.010000 -400.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 734
+<name> riverbankcjoin
+<translate> -2300.000000 0.000000 1100.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 90.000000 0.000000
+<OBBCenter> -2285.000000 -10.000000 1085.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 -0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.000000
+<OBBExtent3> 14.999999
+<sphereCenter> -2285.000000 -11.000000 -1085.000000
+<sphereRadius> 23.043438
+
+
+<newObject>
+<type> 0
+<id> 735
+<name> riverbankcjoin
+<translate> -2900.000000 0.000000 700.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 90.000000 0.000000
+<OBBCenter> -2885.000000 -10.000000 685.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 -0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.000000
+<OBBExtent3> 14.999999
+<sphereCenter> -2885.000000 -11.000000 -685.000000
+<sphereRadius> 23.043438
+
+
+<newObject>
+<type> 0
+<id> 736
+<name> riverbankcjoin
+<translate> -3100.000000 0.000000 500.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 90.000000 0.000000
+<OBBCenter> -3085.000000 -10.000000 485.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 -0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.000000
+<OBBExtent3> 14.999999
+<sphereCenter> -3085.000000 -11.000000 -485.000000
+<sphereRadius> 23.043438
+
+
+<newObject>
+<type> 0
+<id> 737
+<name> riverbankoctr
+<translate> -2050.000000 0.000000 1350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 90.000000 0.000000
+<OBBCenter> -2070.000000 -10.002499 1350.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 30.000000
+<sphereCenter> -2070.000000 -10.004993 -1350.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 738
+<name> riverbankoctr
+<translate> -1950.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1950.000000 -10.002500 1470.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> -1950.000000 -10.004993 -1470.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 739
+<name> bankcjoin
+<translate> -950.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -950.000000 -1.000000 1450.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -950.000000 -1.000000 -1450.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 740
+<name> bankcjoin
+<translate> -750.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -750.000000 -1.000000 1250.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -750.000000 -1.000000 -1250.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 741
+<name> grassflat
+<translate> -200.000000 0.000000 1000.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -200.000000 -0.005000 1000.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> -200.000000 -0.010000 -1000.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 742
+<name> grassflat
+<translate> -2400.000000 0.000000 400.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2400.000000 -0.005000 400.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> -2400.000000 -0.010000 -400.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 743
+<name> grassflat
+<translate> -1600.000000 0.000000 400.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1600.000000 -0.005000 400.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> -1600.000000 -0.010000 -400.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 744
+<name> riverbankoctr
+<translate> -50.000000 0.000000 650.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -50.000000 -10.002500 630.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> -50.000000 -10.004993 -630.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 745
+<name> riverbankoctr
+<translate> 250.000000 0.000000 550.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 250.000000 -10.002500 530.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> 250.000000 -10.004993 -530.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 746
+<name> riverbankoctr
+<translate> 550.000000 0.000000 450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 550.000000 -10.002500 430.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> 550.000000 -10.004993 -430.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 747
+<name> riverbankoctr
+<translate> 150.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 150.000000 -10.002500 770.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> 150.000000 -10.004993 -770.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 748
+<name> riverbankoctr
+<translate> 450.000000 0.000000 650.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 450.000000 -10.002500 670.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> 450.000000 -10.004993 -670.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 749
+<name> riverbankoctr
+<translate> 750.000000 0.000000 550.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 750.000000 -10.002500 570.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> 750.000000 -10.004993 -570.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 750
+<name> riverbankcjoin
+<translate> 0.000000 0.000000 600.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 15.000001 -10.002500 615.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> 15.000002 -11.004999 -615.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 751
+<name> riverbankcjoin
+<translate> 300.000000 0.000000 500.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 315.000000 -10.002500 515.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> 315.000000 -11.004999 -515.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 752
+<name> riverbankcjoin
+<translate> 600.000000 0.000000 400.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 615.000000 -10.002500 415.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> 615.000000 -11.004999 -415.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 753
+<name> riverbankcjoin
+<translate> 700.000000 0.000000 600.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 685.000000 -10.002500 585.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> 685.000000 -11.004999 -585.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 754
+<name> riverbankcjoin
+<translate> 400.000000 0.000000 700.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 385.000000 -10.002500 685.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> 385.000000 -11.004999 -685.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 755
+<name> riverbankcjoin
+<translate> 100.000000 0.000000 800.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 85.000000 -10.002500 785.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> 85.000000 -11.004999 -785.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 756
+<name> bankbl
+<translate> -50.000000 0.000000 550.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -50.000000 -1.002500 550.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -50.000000 -1.005000 -550.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 757
+<name> bankbl
+<translate> 250.000000 0.000000 450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 250.000000 -1.002500 450.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 250.000000 -1.005000 -450.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 758
+<name> bankbl
+<translate> 550.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 550.000000 -1.002500 350.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 550.000000 -1.005000 -350.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 759
+<name> bankbl
+<translate> 750.000000 0.000000 650.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 750.000000 -1.002500 650.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 750.000000 -1.005000 -650.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 760
+<name> bankbl
+<translate> 450.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 450.000000 -1.002500 750.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 450.000000 -1.005000 -750.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 761
+<name> bankbl
+<translate> 150.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 150.000000 -1.002500 850.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 150.000000 -1.005000 -850.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 762
+<name> riverbankicbl
+<translate> 50.000000 0.000000 550.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 50.000000 -10.002500 550.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 50.000000 -10.004999 -550.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 763
+<name> riverbankicbl
+<translate> 350.000000 0.000000 450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 350.000000 -10.002500 450.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 350.000000 -10.004999 -450.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 764
+<name> riverbankicbl
+<translate> 650.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 650.000000 -10.002500 350.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 650.000000 -10.004999 -350.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 765
+<name> riverbankicbl
+<translate> 650.000000 0.000000 650.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 650.000000 -10.002500 650.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 650.000000 -10.004999 -650.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 766
+<name> riverbankicbl
+<translate> 350.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 350.000000 -10.002500 750.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 350.000000 -10.004999 -750.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 767
+<name> riverbankicbl
+<translate> 50.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> 50.000000 -10.002500 850.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 50.000000 -10.004999 -850.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 768
+<name> grassflat
+<translate> 600.000000 0.000000 200.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 600.000000 -0.005000 200.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> 600.000000 -0.010000 -200.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 769
+<name> riverbankl
+<translate> 150.000000 0.000000 550.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> 150.000000 -10.002499 530.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> 150.000000 -10.004999 -530.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 770
+<name> riverbankl
+<translate> 450.000000 0.000000 450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> 450.000000 -10.002499 430.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> 450.000000 -10.004999 -430.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 771
+<name> riverbankl
+<translate> 750.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> 750.000000 -10.002499 330.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> 750.000000 -10.004999 -330.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 772
+<name> riverbankl
+<translate> 550.000000 0.000000 650.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> 550.000000 -10.002499 670.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> 550.000000 -10.004999 -670.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 773
+<name> riverbankl
+<translate> 250.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> 250.000000 -10.002499 770.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> 250.000000 -10.004999 -770.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 774
+<name> grassflat
+<translate> 800.000000 0.000000 900.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 800.000000 -0.005000 900.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> 800.000000 -0.010000 -900.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 775
+<name> grassflat
+<translate> 800.000000 0.000000 1100.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 800.000000 -0.005000 1100.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> 800.000000 -0.010000 -1100.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 776
+<name> riverbankl
+<translate> -50.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -50.000000 -10.002499 870.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -50.000000 -10.004999 -870.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 777
+<name> riverbankl
+<translate> -750.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -750.000000 -10.002499 730.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -750.000000 -10.004999 -730.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 778
+<name> riverbankl
+<translate> -850.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -850.000000 -10.002499 730.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -850.000000 -10.004999 -730.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 779
+<name> riverbankl
+<translate> -950.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -950.000000 -10.002499 730.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -950.000000 -10.004999 -730.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 780
+<name> riverbankl
+<translate> -1050.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1050.000000 -10.002499 730.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1050.000000 -10.004999 -730.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 781
+<name> riverbankl
+<translate> -1150.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1150.000000 -10.002499 730.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1150.000000 -10.004999 -730.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 782
+<name> riverbankl
+<translate> -1250.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1250.000000 -10.002499 730.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1250.000000 -10.004999 -730.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 783
+<name> riverbankl
+<translate> -1350.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1350.000000 -10.002499 730.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1350.000000 -10.004999 -730.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 784
+<name> riverbankl
+<translate> -1450.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1450.000000 -10.002499 730.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1450.000000 -10.004999 -730.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 785
+<name> riverbankl
+<translate> -1450.000000 0.000000 1350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1450.000000 -10.002499 1330.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1450.000000 -10.004999 -1330.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 786
+<name> riverbankl
+<translate> -1350.000000 0.000000 1350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1350.000000 -10.002499 1330.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1350.000000 -10.004999 -1330.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 787
+<name> riverbankl
+<translate> -950.000000 0.000000 1050.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -970.000000 -10.002500 1050.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -970.000000 -10.004999 -1050.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 788
+<name> riverbankl
+<translate> -950.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -970.000000 -10.002500 950.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -970.000000 -10.004999 -950.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 789
+<name> riverbankl
+<translate> -1250.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1250.000000 -10.002499 970.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1250.000000 -10.004999 -970.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 790
+<name> riverbankl
+<translate> -1350.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1350.000000 -10.002499 970.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1350.000000 -10.004999 -970.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 791
+<name> riverbankl
+<translate> -1450.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1450.000000 -10.002499 970.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1450.000000 -10.004999 -970.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 792
+<name> riverbankl
+<translate> -1550.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1550.000000 -10.002499 970.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1550.000000 -10.004999 -970.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 793
+<name> riverbankl
+<translate> -1850.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1850.000000 -10.002499 870.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1850.000000 -10.004999 -870.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 794
+<name> riverbankl
+<translate> -1950.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1950.000000 -10.002499 870.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1950.000000 -10.004999 -870.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 795
+<name> riverbankl
+<translate> -2050.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2050.000000 -10.002499 870.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2050.000000 -10.004999 -870.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 796
+<name> riverbankl
+<translate> -1850.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1850.000000 -10.002499 1470.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1850.000000 -10.004999 -1470.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 797
+<name> riverbankl
+<translate> -1750.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1750.000000 -10.002499 1470.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -10.004999 -1470.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 798
+<name> riverbankl
+<translate> -1650.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1650.000000 -10.002499 1470.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1650.000000 -10.004999 -1470.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 799
+<name> riverbankl
+<translate> -1550.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1550.000000 -10.002499 1470.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1550.000000 -10.004999 -1470.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 800
+<name> riverbankl
+<translate> -1450.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1450.000000 -10.002499 1470.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1450.000000 -10.004999 -1470.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 801
+<name> riverbankl
+<translate> -1350.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1350.000000 -10.002499 1470.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1350.000000 -10.004999 -1470.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 802
+<name> riverbankl
+<translate> -1250.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1250.000000 -10.002499 1470.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1250.000000 -10.004999 -1470.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 803
+<name> riverbankl
+<translate> -1150.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1150.000000 -10.002499 1470.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1150.000000 -10.004999 -1470.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 804
+<name> riverbankcjoin
+<translate> -1000.000000 0.000000 1200.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -985.000000 -10.002500 1215.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> -985.000000 -11.004999 -1215.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 805
+<name> riverbankcjoin
+<translate> -1200.000000 0.000000 1300.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1185.000000 -10.002500 1315.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> -1185.000000 -11.004999 -1315.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 806
+<name> riverbankcjoin
+<translate> -1000.000000 0.000000 1400.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1015.000000 -10.002500 1385.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> -1015.000000 -11.004999 -1385.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 807
+<name> riverbankcjoin
+<translate> -900.000000 0.000000 1300.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -915.000000 -10.002500 1285.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> -915.000000 -11.004999 -1285.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 808
+<name> riverbankcjoin
+<translate> -800.000000 0.000000 1200.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -815.000000 -10.002500 1185.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> -815.000000 -11.004999 -1185.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 809
+<name> riverbankcjoin
+<translate> -700.000000 0.000000 1100.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -715.000000 -10.002500 1085.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> -715.000000 -11.004999 -1085.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 810
+<name> riverbankcjoin
+<translate> -1100.000000 0.000000 900.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1115.000000 -10.002500 885.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 15.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 15.000000
+<sphereCenter> -1115.000000 -11.004999 -885.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 811
+<name> riverbankcjoin
+<translate> -1600.000000 0.000000 1300.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1615.000000 -10.002499 1315.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -1615.000000 -11.004999 -1315.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 812
+<name> riverbankcjoin
+<translate> -2000.000000 0.000000 1100.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2015.000000 -10.002499 1115.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2015.000000 -11.004999 -1115.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 813
+<name> riverbankcjoin
+<translate> -2100.000000 0.000000 1000.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2115.000000 -10.002499 1015.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2115.000000 -11.004999 -1015.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 814
+<name> riverbankcjoin
+<translate> -2100.000000 0.000000 1300.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2085.000000 -10.002499 1285.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 -0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2085.000000 -11.004999 -1285.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 815
+<name> riverbankcjoin
+<translate> -2200.000000 0.000000 1200.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2185.000000 -10.002499 1185.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 -0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2185.000000 -11.004999 -1185.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 816
+<name> riverbankcjoin
+<translate> -2400.000000 0.000000 1000.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2385.000000 -10.002499 985.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 -0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2385.000000 -11.004999 -985.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 817
+<name> riverbankoctr
+<translate> -1250.000000 0.000000 1350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1250.000000 -10.002500 1330.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> -1250.000000 -10.004993 -1330.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 818
+<name> riverbankoctr
+<translate> -1050.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1050.000000 -10.002500 1230.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> -1050.000000 -10.004993 -1230.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 819
+<name> riverbankoctr
+<translate> -1650.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1650.000000 -10.002500 970.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> -1650.000000 -10.004993 -970.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 820
+<name> riverbankoctr
+<translate> -1050.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1050.000000 -10.002500 870.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000000
+<sphereCenter> -1050.000000 -10.004993 -870.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 821
+<name> riverbankoctr
+<translate> -2150.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2130.000000 -10.002499 950.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 30.000000
+<sphereCenter> -2130.000000 -10.004993 -950.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 822
+<name> bankflat
+<translate> 150.000000 0.000000 450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 150.000000 -0.002500 450.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 150.000000 -0.005000 -450.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 823
+<name> bankflat
+<translate> 150.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 150.000000 -0.002500 350.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 150.000000 -0.005000 -350.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 824
+<name> bankflat
+<translate> 250.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 250.000000 -0.002500 350.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 250.000000 -0.005000 -350.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 825
+<name> bankflat
+<translate> 150.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 150.000000 -0.002500 950.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 150.000000 -0.005000 -950.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 826
+<name> bankflat
+<translate> 250.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 250.000000 -0.002500 950.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 250.000000 -0.005000 -950.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 827
+<name> bankflat
+<translate> 250.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 250.000000 -0.002500 850.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 250.000000 -0.005000 -850.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 828
+<name> bankflat
+<translate> 550.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 550.000000 -0.002500 750.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 550.000000 -0.005000 -750.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 829
+<name> bankflat
+<translate> 650.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 650.000000 -0.002500 750.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 650.000000 -0.005000 -750.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 830
+<name> bankflat
+<translate> 750.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> 750.000000 -0.002500 750.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> 750.000000 -0.005000 -750.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 831
+<name> riverbankocrt
+<translate> -950.000000 0.000000 1150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -970.000000 -10.002500 1150.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -970.000000 -10.004993 -1150.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 832
+<name> riverbankocrt
+<translate> -1550.000000 0.000000 1350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1550.000000 -10.002499 1330.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1550.000000 -10.004993 -1330.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 833
+<name> riverbankocrt
+<translate> -1750.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1750.000000 -10.002499 1230.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -10.004993 -1230.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 834
+<name> riverbankocrt
+<translate> -1950.000000 0.000000 1150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1950.000000 -10.002499 1130.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1950.000000 -10.004993 -1130.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 835
+<name> bankbl
+<translate> -1050.000000 0.000000 1150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1050.000000 -1.002500 1150.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1050.000000 -1.005000 -1150.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 836
+<name> bankbl
+<translate> -1250.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1250.000000 -1.002500 1250.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1250.000000 -1.005000 -1250.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 837
+<name> bankbl
+<translate> -1050.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1050.000000 -1.002500 950.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1050.000000 -1.005000 -950.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 838
+<name> bankbl
+<translate> -1550.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1550.000000 -1.002500 1250.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1550.000000 -1.005000 -1250.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 839
+<name> bankbl
+<translate> -1750.000000 0.000000 1150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1750.000000 -1.002500 1150.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -1.005000 -1150.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 840
+<name> bankbl
+<translate> -1950.000000 0.000000 1050.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1950.000000 -1.002500 1050.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1950.000000 -1.005000 -1050.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 841
+<name> bankbl
+<translate> -2050.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2050.000000 -1.002500 950.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2050.000000 -1.005000 -950.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 842
+<name> bankbl
+<translate> -2150.000000 0.000000 1350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2150.000000 -1.002500 1350.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2150.000000 -1.005000 -1350.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 843
+<name> bankbl
+<translate> -2250.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2250.000000 -1.002500 1250.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2250.000000 -1.005000 -1250.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 844
+<name> bankbl
+<translate> -2450.000000 0.000000 1050.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2450.000000 -1.002500 1050.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2450.000000 -1.005000 -1050.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 845
+<name> bankbl
+<translate> -2650.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2650.000000 -1.002500 850.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2650.000000 -1.005000 -850.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 846
+<name> riverbankicbl
+<translate> -1150.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1150.000000 -10.002500 1250.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1150.000000 -10.004999 -1250.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 847
+<name> riverbankicbl
+<translate> -1150.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1150.000000 -10.002500 950.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1150.000000 -10.004999 -950.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 848
+<name> riverbankicbl
+<translate> -1750.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1750.000000 -10.002499 950.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -10.004999 -950.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 849
+<name> riverbankicbl
+<translate> -2050.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2050.000000 -10.002499 1450.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2050.000000 -10.004999 -1450.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 850
+<name> riverbankicbl
+<translate> -1050.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1050.000000 -10.002500 1450.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1050.000000 -10.004999 -1450.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 851
+<name> bankflat
+<translate> -1050.000000 0.000000 1050.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1050.000000 -0.002500 1050.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1050.000000 -0.005000 -1050.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 852
+<name> bankflat
+<translate> -1350.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1350.000000 -0.002500 1250.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1350.000000 -0.005000 -1250.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 853
+<name> bankflat
+<translate> -1450.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1450.000000 -0.002500 1250.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1450.000000 -0.005000 -1250.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 854
+<name> bankflat
+<translate> -1750.000000 0.000000 1050.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1750.000000 -0.002500 1050.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -0.005000 -1050.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 855
+<name> bankflat
+<translate> -1850.000000 0.000000 1050.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1850.000000 -0.002500 1050.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1850.000000 -0.005000 -1050.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 856
+<name> bankflat
+<translate> -1850.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1850.000000 -0.002500 950.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1850.000000 -0.005000 -950.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 857
+<name> bankflat
+<translate> -1950.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1950.000000 -0.002500 950.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1950.000000 -0.005000 -950.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 858
+<name> bankflat
+<translate> -2250.000000 0.000000 1350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2250.000000 -0.002500 1350.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2250.000000 -0.005000 -1350.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 859
+<name> bankflat
+<translate> -2250.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2250.000000 -0.002500 1450.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2250.000000 -0.005000 -1450.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 860
+<name> bankflat
+<translate> -2150.000000 0.000000 1450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2150.000000 -0.002500 1450.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2150.000000 -0.005000 -1450.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 861
+<name> riverbankcstr
+<translate> -950.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -970.000000 -10.002499 870.000000
+<OBBAxis1> -0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 29.999998
+<OBBExtent2> 10.002499
+<OBBExtent3> 30.000011
+<sphereCenter> -970.000000 -10.004999 -870.000000
+<sphereRadius> 43.588989
+
+
+<newObject>
+<type> 0
+<id> 862
+<name> riverbankcstr
+<translate> -2150.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -2130.000000 -10.002500 870.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 30.000011
+<sphereCenter> -2130.000000 -10.004999 -870.000000
+<sphereRadius> 43.588989
+
+
+<newObject>
+<type> 0
+<id> 863
+<name> riverbankcstr
+<translate> -1750.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -1770.000000 -10.002499 870.000000
+<OBBAxis1> -0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 29.999998
+<OBBExtent2> 10.002499
+<OBBExtent3> 30.000011
+<sphereCenter> -1770.000000 -10.004999 -870.000000
+<sphereRadius> 43.588989
+
+
+<newObject>
+<type> 0
+<id> 864
+<name> riverbankiclb
+<translate> -1850.000000 0.000000 1150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1850.000000 -10.002499 1150.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 -0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1850.000000 -10.004999 -1150.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 865
+<name> riverbankiclb
+<translate> -1650.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1650.000000 -10.002499 1250.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 -0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -1650.000000 -10.004999 -1250.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 866
+<name> riverbankl
+<translate> -2750.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2750.000000 -10.002499 770.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2750.000000 -10.004999 -770.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 867
+<name> riverbankl
+<translate> -2650.000000 0.000000 550.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2650.000000 -10.002499 530.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2650.000000 -10.004999 -530.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 868
+<name> riverbankocrt
+<translate> -2650.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2650.000000 -10.002499 770.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2650.000000 -10.004993 -770.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 869
+<name> riverbankocrt
+<translate> -3150.000000 0.000000 450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -3150.000000 -10.002499 470.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -3150.000000 -10.004993 -470.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 870
+<name> riverbankocrt
+<translate> -3050.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -3050.000000 -10.002499 330.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -3050.000000 -10.004993 -330.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 871
+<name> riverbankocrt
+<translate> -2750.000000 0.000000 550.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2750.000000 -10.002499 530.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 30.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2750.000000 -10.004993 -530.000000
+<sphereRadius> 59.160797
+
+
+<newObject>
+<type> 0
+<id> 872
+<name> riverbankiclb
+<translate> -2850.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2850.000000 -10.002499 750.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2850.000000 -10.004999 -750.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 873
+<name> riverbankiclb
+<translate> -3250.000000 0.000000 450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -3250.000000 -10.002499 450.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -3250.000000 -10.004999 -450.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 874
+<name> riverbankiclb
+<translate> -2950.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2950.000000 -10.002499 350.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 -0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2950.000000 -10.004999 -350.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 875
+<name> riverbankiclb
+<translate> -2550.000000 0.000000 550.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2550.000000 -10.002499 550.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 -0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2550.000000 -10.004999 -550.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 876
+<name> riverbankcmid
+<translate> -750.000000 0.000000 1150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -750.000000 -10.002500 1150.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -750.000000 -10.004999 -1150.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 877
+<name> riverbankcmid
+<translate> -850.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -850.000000 -10.002500 1250.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -850.000000 -10.004999 -1250.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 878
+<name> riverbankcmid
+<translate> -950.000000 0.000000 1350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -950.000000 -10.002500 1350.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -950.000000 -10.004999 -1350.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 879
+<name> riverbankcmid
+<translate> -2150.000000 0.000000 1250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2150.000000 -10.002499 1250.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2150.000000 -10.004999 -1250.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 880
+<name> riverbankcmid
+<translate> -2250.000000 0.000000 1150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2250.000000 -10.002499 1150.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2250.000000 -10.004999 -1150.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 881
+<name> riverbankcmid
+<translate> -2350.000000 0.000000 1050.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2350.000000 -10.002499 1050.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2350.000000 -10.004999 -1050.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 882
+<name> riverbankcmid
+<translate> -2450.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2450.000000 -10.002499 950.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2450.000000 -10.004999 -950.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 883
+<name> riverbankcmid
+<translate> -2550.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2550.000000 -10.002499 850.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2550.000000 -10.004999 -850.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 884
+<name> riverbankcjoin
+<translate> -2500.000000 0.000000 900.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2485.000000 -10.002499 885.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 -0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2485.000000 -11.004999 -885.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 885
+<name> riverbankcjoin
+<translate> -2600.000000 0.000000 800.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2585.000000 -10.002499 785.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 -0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2585.000000 -11.004999 -785.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 886
+<name> riverbankcjoin
+<translate> -3000.000000 0.000000 600.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2985.000000 -10.002499 585.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 -0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2985.000000 -11.004999 -585.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 887
+<name> riverbankcjoin
+<translate> -2900.000000 0.000000 400.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2915.000000 -10.002499 415.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2915.000000 -11.004999 -415.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 888
+<name> riverbankcjoin
+<translate> -2800.000000 0.000000 500.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2815.000000 -10.002499 515.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2815.000000 -11.004999 -515.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 889
+<name> riverbankcjoin
+<translate> -2500.000000 0.000000 600.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2515.000000 -10.002499 615.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 15.000001
+<OBBExtent2> 10.002499
+<OBBExtent3> 14.999999
+<sphereCenter> -2515.000000 -11.004999 -615.000000
+<sphereRadius> 23.043436
+
+
+<newObject>
+<type> 0
+<id> 890
+<name> bankbl
+<translate> -3050.000000 0.000000 650.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -3050.000000 -1.002500 650.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -3050.000000 -1.005000 -650.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 891
+<name> bankbl
+<translate> -2850.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2850.000000 -1.002500 350.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2850.000000 -1.005000 -350.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 892
+<name> bankbl
+<translate> -2750.000000 0.000000 450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2750.000000 -1.002500 450.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2750.000000 -1.005000 -450.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 893
+<name> riverbankcmid
+<translate> -2950.000000 0.000000 650.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2950.000000 -10.002499 650.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2950.000000 -10.004999 -650.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 894
+<name> riverbankcmid
+<translate> -3050.000000 0.000000 550.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -3050.000000 -10.002499 550.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -3050.000000 -10.004999 -550.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 895
+<name> riverbankcmid
+<translate> -2850.000000 0.000000 450.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2850.000000 -10.002499 450.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.002499
+<OBBExtent3> 50.000000
+<sphereCenter> -2850.000000 -10.004999 -450.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 896
+<name> bankflat
+<translate> -2750.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2750.000000 -0.002500 850.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2750.000000 -0.005000 -850.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 897
+<name> bankflat
+<translate> -2850.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2850.000000 -0.002500 850.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2850.000000 -0.005000 -850.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 898
+<name> bankflat
+<translate> -2750.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2750.000000 -0.002500 350.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2750.000000 -0.005000 -350.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 899
+<name> bankbl
+<translate> -2350.000000 0.000000 1150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2350.000000 -1.002500 1150.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2350.000000 -1.005000 -1150.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 900
+<name> bankbl
+<translate> -2550.000000 0.000000 950.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2550.000000 -1.002500 950.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2550.000000 -1.005000 -950.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 901
+<name> bankbl
+<translate> -2950.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2950.000000 -1.002500 750.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2950.000000 -1.005000 -750.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 902
+<name> bankflat
+<translate> -2950.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2950.000000 -0.002500 850.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2950.000000 -0.005000 -850.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 903
+<name> bankflat
+<translate> -3050.000000 0.000000 850.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -3050.000000 -0.002500 850.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -3050.000000 -0.005000 -850.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 904
+<name> bankflat
+<translate> -3050.000000 0.000000 750.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -3050.000000 -0.002500 750.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -3050.000000 -0.005000 -750.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 905
+<name> grassflat
+<translate> -2100.000000 -20.000000 100.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2100.000000 -20.005001 100.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 100.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 100.000000
+<sphereCenter> -2100.000000 -20.010000 -100.000000
+<sphereRadius> 141.421356
+
+
+<newObject>
+<type> 0
+<id> 906
+<name> bankflat
+<translate> -1950.000000 -20.000000 150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1950.000000 -20.002499 150.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1950.000000 -20.004999 -150.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 907
+<name> bankflat
+<translate> -1950.000000 -20.000000 50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1950.000000 -20.002499 50.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1950.000000 -20.004999 -50.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 908
+<name> bankflat
+<translate> -1750.000000 0.000000 50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1750.000000 -0.002500 50.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -0.005000 -50.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 909
+<name> bankflat
+<translate> -1750.000000 0.000000 150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1750.000000 -0.002500 150.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -0.005000 -150.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 910
+<name> hillcjoin
+<translate> -2150.000000 -20.000000 -50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2150.000000 -11.004999 -50.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 9.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -2150.000000 -11.004999 50.000000
+<sphereRadius> 71.281136
+
+
+<newObject>
+<type> 0
+<id> 911
+<name> hilll
+<translate> -2250.000000 -20.000000 50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2250.000000 -10.004999 49.999989
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000008
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000011
+<sphereCenter> -2250.000000 -10.004999 -49.999989
+<sphereRadius> 71.414291
+
+
+<newObject>
+<type> 0
+<id> 912
+<name> hilll
+<translate> -2250.000000 -20.000000 150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2250.000000 -10.004999 149.999985
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000008
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000011
+<sphereCenter> -2250.000000 -10.004999 -149.999985
+<sphereRadius> 71.414291
+
+
+<newObject>
+<type> 0
+<id> 913
+<name> hilll
+<translate> -1850.000000 -20.000000 150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1850.000000 -10.004999 150.000015
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000008
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000011
+<sphereCenter> -1850.000000 -10.004999 -150.000015
+<sphereRadius> 71.414291
+
+
+<newObject>
+<type> 0
+<id> 914
+<name> hilll
+<translate> -1850.000000 -20.000000 50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1850.000000 -10.004999 50.000011
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000008
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000011
+<sphereCenter> -1850.000000 -10.004999 -50.000011
+<sphereRadius> 71.414291
+
+
+<newObject>
+<type> 0
+<id> 915
+<name> hilliclb
+<translate> -2250.000000 -20.000000 -50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2250.000000 -10.004999 -50.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -2250.000000 -10.004999 50.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 916
+<name> hilliclb
+<translate> -1850.000000 -20.000000 250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1850.000000 -10.004999 250.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -1850.000000 -10.004999 -250.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 917
+<name> hillcjoin
+<translate> -1950.000000 -20.000000 250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1950.000000 -11.004999 250.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 9.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -1950.000000 -11.004999 -250.000000
+<sphereRadius> 71.281136
+
+
+<newObject>
+<type> 0
+<id> 918
+<name> bankflat
+<translate> -1750.000000 0.000000 250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1750.000000 -0.002500 250.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -0.005000 -250.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 919
+<name> hillcjoin
+<translate> -1950.000000 -20.000000 -50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1950.000000 -11.004999 -50.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 9.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -1950.000000 -11.004999 50.000000
+<sphereRadius> 71.281136
+
+
+<newObject>
+<type> 0
+<id> 920
+<name> hillcjoin
+<translate> -2150.000000 -20.000000 250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2150.000000 -11.004999 250.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 9.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -2150.000000 -11.004999 -250.000000
+<sphereRadius> 71.281136
+
+
+<newObject>
+<type> 0
+<id> 921
+<name> bankflat
+<translate> -1750.000000 0.000000 -50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1750.000000 -0.002500 -50.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -0.005000 50.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 922
+<name> bankflat
+<translate> -2050.000000 -20.000000 250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2050.000000 -20.002499 250.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2050.000000 -20.004999 -250.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 923
+<name> bankflat
+<translate> -2050.000000 -20.000000 -50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2050.000000 -20.002499 -50.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2050.000000 -20.004999 50.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 924
+<name> hilliclb
+<translate> -1950.000000 -20.000000 -150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1950.000000 -10.004999 -150.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -1950.000000 -10.004999 150.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 925
+<name> hilll
+<translate> -2050.000000 -20.000000 -150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -2050.000000 -10.004999 -150.000000
+<OBBAxis1> -0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000008
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000011
+<sphereCenter> -2050.000000 -10.004999 150.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 926
+<name> hilll
+<translate> -2050.000000 -20.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2050.000000 -10.004999 350.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000008
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000011
+<sphereCenter> -2050.000000 -10.004999 -350.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 927
+<name> hilliclb
+<translate> -2150.000000 -20.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2150.000000 -10.004999 350.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -2150.000000 -10.004999 -350.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 928
+<name> bankbl
+<translate> -2250.000000 0.000000 -150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2250.000000 -1.002500 -150.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2250.000000 -1.005000 150.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 929
+<name> bankbl
+<translate> -1850.000000 0.000000 -150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1850.000000 -1.002500 -150.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1850.000000 -1.005000 150.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 930
+<name> bankflat
+<translate> -1750.000000 0.000000 -150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1750.000000 -0.002500 -150.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -0.005000 150.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 931
+<name> bankbl
+<translate> -1850.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1850.000000 -1.002500 350.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1850.000000 -1.005000 -350.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 932
+<name> bankbl
+<translate> -2250.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2250.000000 -1.002500 350.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 1.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -2250.000000 -1.005000 -350.000000
+<sphereRadius> 70.717751
+
+
+<newObject>
+<type> 0
+<id> 933
+<name> bankflat
+<translate> -1750.000000 0.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -1750.000000 -0.002500 350.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.002500
+<OBBExtent3> 50.000000
+<sphereCenter> -1750.000000 -0.005000 -350.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 934
+<name> hillicbl
+<translate> -1850.000000 -20.000000 -50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -90.000000 0.000000
+<OBBCenter> -1850.000000 -10.004999 -50.000000
+<OBBAxis1> 0.000000 0.000000 1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -1850.000000 -10.004999 50.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 935
+<name> hillicbl
+<translate> -2250.000000 -20.000000 250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -270.000000 0.000000
+<OBBCenter> -2250.000000 -10.004999 250.000000
+<OBBAxis1> 0.000000 0.000000 -1.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -1.000000 0.000000 0.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -2250.000000 -10.004999 -250.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 936
+<name> hillicbl
+<translate> -2150.000000 -20.000000 -150.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -2150.000000 -10.004999 -150.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -2150.000000 -10.004999 150.000000
+<sphereRadius> 71.414284
+
+
+<newObject>
+<type> 0
+<id> 937
+<name> hillicbl
+<translate> -1950.000000 -20.000000 350.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -180.000000 0.000000
+<OBBCenter> -1950.000000 -10.004999 350.000000
+<OBBAxis1> -1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 10.000000
+<OBBExtent3> 50.000000
+<sphereCenter> -1950.000000 -10.004999 -350.000000
+<sphereRadius> 71.414284
 
 
