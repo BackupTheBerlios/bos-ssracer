@@ -8,7 +8,7 @@ class CPhysics {
 public:
 	
 	CPhysics(int temp);
-	~CPhysics() {};
+
 	// singleton instance get functions
     static CPhysics & GetPhysics() { return *m_physics; };
     static CPhysics * GetPhysicsPtr() { return m_physics; };
@@ -17,6 +17,7 @@ public:
 protected:
 
 	CPhysics() {};
+   	~CPhysics() {};
 	static CPhysics * m_physics;
 
 

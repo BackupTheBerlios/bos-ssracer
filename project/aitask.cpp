@@ -38,8 +38,8 @@ bool CAITask::Start() {
 	CLog::GetLog().Write(LOG_MISC, "Starting AI Task..." );
 	#endif
 
-	CScene* scenePtr = new CScene();
-	new CGameStateManager(scenePtr); // no scene to load yet
+	//CScene* scenePtr = new CScene();
+	//new CGameStateManager(scenePtr); // no scene to load yet
 
 	if(!CGameStateManager::GetGameStateManagerPtr()) {
 		return FALSE;

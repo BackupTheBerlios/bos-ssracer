@@ -27,6 +27,7 @@
 #include "rendertask.h"
 #include "consoletask.h"
 #include "physicstask.h"
+#include "gamestatemanager.h"
 
 
 //-----------------------------------------------------------------------------
@@ -239,6 +240,7 @@ HRESULT CBOSApplication::FinalCleanup()
 {
     
     // TODO: Perform any final cleanup needed
+    delete CGameStateManager::GetGameStateManagerPtr();
 
     return S_OK;
 }
@@ -299,11 +301,11 @@ void CBOSApplication::OnInit()
     //$$$DEBUG loads predefined default settings for now
     ReadSettings();
 
-    // Initialize game kernel
-    InitializeKernel();
-
     // Initialize the app's custom scene stuff
     OneTimeInit();
+
+    // Initialize game kernel
+    InitializeKernel();
 }
 
 
@@ -420,6 +422,7 @@ void CBOSApplication::InitializeKernel()
 HRESULT CBOSApplication::OneTimeInit()
 {
     // TODO: perform one time initialization
+    new CGameStateManager(NULL);
 
     // Drawing loading status message until app finishes loading
     SendMessage( ms_hWnd, WM_PAINT, 0, 0 );

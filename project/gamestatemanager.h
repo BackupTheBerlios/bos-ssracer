@@ -9,7 +9,16 @@ class CGameStateManager
 {
 
 public:
-	CGameStateManager( CScene * pkScene ) { ms_pkScene = pkScene; CGameStateManager(); };
+	CGameStateManager( CScene * pkScene ) { 
+        if (!pkScene)
+            ms_pkScene = new CScene();
+        else
+            ms_pkScene = pkScene; 
+
+        m_playerVehicle = NULL;
+        ms_pkGame = this;
+    };
+
 	static CGameStateManager & GetGameStateManager();
 	static CGameStateManager * GetGameStateManagerPtr();
 	
@@ -25,7 +34,7 @@ public:
 
 protected:
 
-	CGameStateManager(){ ms_pkGame = this; };
+	CGameStateManager(){  };
 	
 	static CGameStateManager * ms_pkGame;
 
