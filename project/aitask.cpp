@@ -81,27 +81,6 @@ void CAITask::Update() {
 
 	HandleMessages();
 
-	if (CBOSApplication::GetBOSApp().GetConsoleState() == FALSE)  {
-		
-		// continue to process any input keys 
-		map <int, bool>::iterator it;
-		for(it=m_kInputMap.begin(); it!=m_kInputMap.end();it++ ) {
-
-			// generate a input message for any keys still pressed
-			if (it->second) {
-                // free look camera controls
-                if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
-    			    CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(it->first, it->second), RENDER_TASK );
-                else  // driving controls
-
-				// TEMPORARY SHIT FOR PLAYER VEHICLE TESTING
-				CGameStateManager::GetGameStateManagerPtr()->ProcessInput( new CInputTaskMessage(it->first, it->second) );
-				// #############################################
-
-			}
-		}
-	}
-
     // update the quadtree to account for new dynamic entity positions
     CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->Update(); //$$$TODO does nothing yet...
 
@@ -130,6 +109,36 @@ void CAITask::Update() {
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 15, "# Visible Nodes: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetVisibleNodesPtr()->size());
     //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 19, "");
     #endif
+
+
+/*	// continue to process any input keys 
+  	if (CBOSApplication::GetBOSApp().GetConsoleState() == FALSE)  {
+		map <int, bool>::iterator it;
+		for(it=m_kInputMap.begin(); it!=m_kInputMap.end();it++ ) {
+
+			// generate a input message for any keys still pressed
+			if (it->second) {
+                // free look camera controls
+                if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )  {
+    			    CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(it->first, it->second), RENDER_TASK );
+                }
+                else  {// driving controls
+                    // TEMPORARY SHIT FOR PLAYER VEHICLE TESTING
+                    //$$$NOTE DO NOT GENERATE A NEW MESSAGE IF YOU ARE NOT USING THE MESSAGING SYSTEM $$$$$$$$$$$$//
+                    CInputTaskMessage * cIMsg = new CInputTaskMessage(it->first, it->second);
+		            CGameStateManager::GetGameStateManagerPtr()->ProcessInput( cIMsg );  
+                    delete cIMsg;
+		            // #############################################
+                }
+
+			}
+            else  {
+                //map <int, bool>::iterator thisIt = it; ++it;
+                //m_kInputMap.erase(thisIt);
+            }
+		}
+	}
+*/
 
 	return;
 }
@@ -177,10 +186,12 @@ void CAITask::DoMessageHandle( ITaskMessage *cMsg ) {
 // HandleInputMessage
 //---------------------------------------------------------------
 void CAITask::HandleInputMessage( CInputTaskMessage *cIMsg ) {
-	
+    // save the new state of the key
+    m_kInputMap[ cIMsg->m_keyValue ] = cIMsg->m_keyDown;
+
 	#ifdef _DEBUG
 	//CLog::GetLog().Write(LOG_MISC, "AI Task: Input message received with timestamp %f.", cIMsg->GetTimeStamp() );
-    CLog::GetLog().Write(LOG_MISC, "AI:  cIMsg->m_keyValue %c Hex %x Dec %d", cIMsg->m_keyValue, cIMsg->m_keyValue, cIMsg->m_keyValue );	
+    //CLog::GetLog().Write(LOG_MISC, "AI:  cIMsg->m_keyValue %c Hex %x Dec %d", cIMsg->m_keyValue, cIMsg->m_keyValue, cIMsg->m_keyValue );	
 	#endif
 
     switch ( CAppStateManager::GetAppMan().GetAppState() ) {
@@ -250,6 +261,7 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 	// special case for the console
     case '~':
     case '`':
+        /*
 		// see if state has changed
 		if ( m_kInputMap[ cIMsg->m_keyValue ] != cIMsg->m_keyDown )  {
 			static bool iConsoleOn = false;
@@ -270,11 +282,18 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 
 		}
         return;  // don't save the new state
+        */
+        // just check if the key is down, ignore key up
+        if ( cIMsg->m_keyDown )  {
+            m_kInputMap.clear();  // clear all input keys
+            CBOSApplication::GetBOSApp().SetConsoleState( !CBOSApplication::GetBOSApp().GetConsoleState() );
+        }
         break;
 
     #ifdef _DEBUG
     // special case for the debug overlay
     case GAME_F12:
+        /*
    		// see if state has changed
 		if ( m_kInputMap[ cIMsg->m_keyValue ] != cIMsg->m_keyDown )  {
 			static bool iDebugOverlayOn = true;
@@ -295,31 +314,37 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 
 		}
         return;  // don't save the new state
+        */
+
+        // just check if the key is down, ignore key up
+        if ( cIMsg->m_keyDown )  {
+            CBOSApplication::GetBOSApp().SetDebugOverlayState( !CBOSApplication::GetBOSApp().GetDebugOverlayState() );
+        }
         break;
     #endif
 
 
 	default:
 		// Check if we need to forward stuff off to the console
-		if ( CBOSApplication::GetBOSApp().GetConsoleState() ) {
-			// check if the key was just lifted
-			if ( m_kInputMap[ cIMsg->m_keyValue ] == cIMsg->m_keyDown ) {
+		if ( CBOSApplication::GetBOSApp().GetConsoleState() == TRUE ) {
+			// check if the key was pressed
+            if ( cIMsg->m_keyDown ) {
 				CKernel::GetKernel().DeliverMessage( new CConsoleMessage( cIMsg->m_keyValue, false, false), CONSOLE_TASK );
 			}
-            return;  // don't save the new state
 		}
-        else if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
-       		CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown), RENDER_TASK );
-
-		// TEMPORARY SHIT FOR PLAYER VEHICLE TESTING
-		CGameStateManager::GetGameStateManagerPtr()->ProcessInput( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown) );
-		// #############################################
+        else if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )  {
+                CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown), RENDER_TASK );
+        }
+        //else  {
+            // TEMPORARY SHIT FOR PLAYER VEHICLE TESTING
+            //$$$NOTE DO NOT GENERATE A NEW MESSAGE IF YOU ARE NOT USING THE MESSAGING SYSTEM
+		    CGameStateManager::GetGameStateManagerPtr()->ProcessInput( cIMsg );  
+		    // #############################################
+        //}
 
 		break;
     }
 
-    // save the new state of the key
-    m_kInputMap[ cIMsg->m_keyValue ] = cIMsg->m_keyDown;
 }
 
 

@@ -15,6 +15,7 @@ using namespace Wml;
 //class CObject;
 class CPlayerVehicle;
 
+#define CAMERA_INPUT_SPEED 1.9f;
 
 //-----------------------------------------------------------------------------
 // Name: struct CULLINFO

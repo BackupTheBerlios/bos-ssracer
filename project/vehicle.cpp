@@ -990,11 +990,11 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 	// for right now.
 	if(float(fabs(accelerationLC.X())) > 0.0f) {
 		rotationLC.Y() += RADIANS(6.0f*deltaT) * sgn(accelerationLC.X());
-		//if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
+		if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
 			if(fabs(rotationLC.Y()) > RADIANS(1.0f)) {
 				rotationLC.Y() = RADIANS(1.0f * sgn(accelerationLC.X()));
 			}
-		//}
+		}
 	}
 	
 	
@@ -1002,11 +1002,11 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 	
 	if(float(fabs(accelerationLC.Y())) > 0.0f) {
 		rotationLC.X() += RADIANS(3.0f*deltaT) * sgn(accelerationLC.Y());
-	//	if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
+		if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
 			if( fabs(rotationLC.X()) > RADIANS(20.0f)) {
 				rotationLC.X() = RADIANS(20.0f) * sgn(accelerationLC.Y());
 			}
-	//	}
+		}
 	}
 	
 	

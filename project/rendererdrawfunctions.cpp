@@ -360,6 +360,8 @@ struct D3DVertex
 
 void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize, DWORD dwColor)
 {
+    // disable texturing
+    m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 
     LPDIRECT3DVERTEXBUFFER9 theBuffer;
     //CreateVertexBuffer( 3*sizeof(CUSTOMVERTEX), 0 /* Usage */, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &g_pVB )
@@ -440,6 +442,9 @@ void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize, DWORD dwColor)
 
     // Destroy the vertex buffer
     theBuffer->Release();
+
+    // reenable texturing
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
 
 }
 

@@ -78,8 +78,5 @@ void CGameStateManager::ProcessInput(CInputTaskMessage* msg)
 			break;
 		}
 
-	}
-
-    delete msg;  //J: need to delete this here, this message was not sent using the mssaging system
-    
+	}   
 }

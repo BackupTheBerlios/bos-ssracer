@@ -71,7 +71,6 @@ void CCameraFreeLook::Update( CInputTaskMessage * pIMsg )
 }
 
 
-#define CAMERA_INPUT_SPEED 0.4f;
 //-----------------------------------------------------------------------------
 // Name: FrameMove
 // Desc: Update the view matrix based on user input & elapsed time

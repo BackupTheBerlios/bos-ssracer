@@ -673,7 +673,6 @@ void CRenderer::InitializeState ()
     
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
     m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
-    //m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00ffffff );
 
     // Set up the texture 
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );

@@ -287,7 +287,7 @@ void CD3DCamera::UpdateVelocity( float fElapsedTime )
     D3DXVec3Normalize( &vAccel, &vAccel );
 
     // Scale the acceleration vector
-    vAccel *= m_fMoveScaler;
+    vAccel *= m_fMoveScaler * CAMERA_INPUT_SPEED;;
 
     if( m_bMovementDrag )
     {
