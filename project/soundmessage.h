@@ -14,27 +14,64 @@
 
 // #defines
 #define MAX_FILENAME_LEN 260
+#define MAX_ID_LEN 32
+
+
+// Commands
 #define NO_COMMAND 0
+
 #define PLAYSOUNDEFFECTONCE_COMMAND 1
-#define PLAYMUSIC_COMMAND 2
-#define STOPMUSIC_COMMAND 3
-#define PLAYAMBIENT_COMMAND 4
-#define STOPAMBIENT_COMMAND 5
+#define LOADSOUNDEFFECT_COMMAND 2
+#define PLAYSOUNDEFFECT_COMMAND 3
+#define PAUSESOUNDEFFECT_COMMAND 4
+#define UNPAUSESOUNDEFFECT_COMMAND 5
+#define STOPSOUNDEFFECT_COMMAND 6
+#define RELEASESOUNDEFFECT_COMMAND 7
+
+#define PLAYSTREAMONCE_COMMAND 8
+#define LOADSTREAM_COMMAND 9
+#define PLAYSTREAM_COMMAND 10
+#define PAUSESTREAM_COMMAND 11
+#define UNPAUSESTREAM_COMMAND 12
+#define STOPSTREAM_COMMAND 13
+#define RELEASESTREAM_COMMAND 14
+#define FADEINSTREAM_COMMAND 15
+#define FADEOUTSTREAM_COMMAND 16
 
 
 // Forward Class Definitions
+class CSoundID;
 class CSoundMessage;
 
-//---------------------------------------------------------------------------//
-// Name: sSoundCommand
-// Desc: Convey a command to the SoundCore through a message.
-//---------------------------------------------------------------------------//
-typedef struct sSoundCommand {
+// Operators
+bool operator<(CSoundID a, CSoundID b);
+bool operator>(CSoundID a, CSoundID b);
+
+
+
+class CSoundID
+{
+private:
+	char m_str[MAX_ID_LEN];
+
+public:
+	CSoundID() { strcpy( m_str, "" ); }
+	CSoundID( char *ID ) { strcpy( m_str, ID ); }
+	char *getID() { return m_str; }
+	void setID( char *ID ) { strcpy( m_str, ID ); }
+};
+
+
+
+class CSoundMessage : public ITaskMessage
+{
+public:
+	// Public properties
 	char nCommandType;		// Type of command this is
-	char cSoundName[MAX_FILENAME_LEN];   // Name of the sound file to load
+	char cSoundID[MAX_ID_LEN];   // ID of the sound
+	char cSoundName[MAX_FILENAME_LEN];   // Name of the sound file
 	float fVolume;			// Volume to play sound at
 	bool bLooped;			// Is the sound played looped or one-shot
-	bool bIsSound;			// Type of target: TRUE=sfx, FALSE=stream
 	bool bPause;			// Pause the sound
 	bool bUnpause;			// Unpause the sound
 	bool bStop;				// Stop the sound
@@ -43,28 +80,27 @@ typedef struct sSoundCommand {
 	bool bFadeOut;			// Fade the sound out
 	int nFadeStep;			// Step size while fading in/out
 	char cCrossFade[MAX_FILENAME_LEN];	// Name of sound to crossfade with.  "" means no crossfade.
-} sSoundCommand;
-
-
-class CSoundMessage : public ITaskMessage
-{
-public:
-	// Public properties
-	sSoundCommand m_sCommand;  // Store sound command
 
 	// Constructor
 	CSoundMessage();
 	~CSoundMessage() {};
-	void SetID( char* cNewID );
-	void SetName( char* cNewName );
-	void SetFadeTo( char* cNewName );
 
 	// Predefined Actions
-    void PlaySoundEffectOnce( char* cNewName );
-	void PlayMusic( char* cNewName, bool bLooped, float fVolume );
-	void StopMusic();
-	void PlayAmbient( char* cNewName, bool bLooped, float fVolume );
-	void StopAmbient();
+    void PlaySoundEffectOnce( std::string sNewName );
+    void PlaySoundEffect( std::string sID, bool loop );
+    void LoadSoundEffect( std::string sNewName, std::string sNewID );
+    void StopSoundEffect( std::string sID );
+    void PauseSoundEffect( std::string sID );
+    void UnpauseSoundEffect( std::string sID );
+    void ReleaseSoundEffect( std::string sID );
+
+    void PlayStreamOnce( std::string sNewName );
+    void PlayStream( std::string sID, bool loop );
+    void LoadStream( std::string sNewName, std::string sNewID );
+    void StopStream( std::string sID );
+    void PauseStream( std::string sID );
+    void UnpauseStream( std::string sID );
+    void ReleaseStream( std::string sID );
 
 protected:
 private:

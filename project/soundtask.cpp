@@ -10,9 +10,6 @@ CSoundTask::CSoundTask() {
 	m_lPriority=5000;
 
 	m_nTaskType = SOUND_TASK;
-
-	music = NULL;
-	ambient = NULL;
 }
 
 //---------------------------------------------------------------------------//
@@ -26,9 +23,6 @@ bool CSoundTask::Start() {
 		CBOSApplication::GetBOSAppPtr()->GetMainWindowHandle(),
 		DSSCL_PRIORITY) ))
 		return FALSE;
-
-	
-
 
 	// If the task was stopped, resume now.
 	CSoundCore::GetSoundCore().Resume();
@@ -79,29 +73,250 @@ void CSoundTask::DoMessageHandle( ITaskMessage *cMsg ) {
 }
 
 void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
-	sSoundCommand sCmd = cSMsg->m_sCommand;
+	map<CSoundID, CSoundEffect*>::iterator it;
+	map<CSoundID, CSoundStream*>::iterator it2;
+	CSoundEffect *cSfx = NULL;
+	CSoundStream *cStr = NULL;
 
-	CLog::GetLog().Write( LOG_MISC, "****In handle sound message. %d", sCmd.nCommandType );
+	CLog::GetLog().Write( LOG_MISC, "****In handle sound message. %d", cSMsg->nCommandType );
 
-	switch ( sCmd.nCommandType ) {
+	switch ( cSMsg->nCommandType ) {
 	case PLAYSOUNDEFFECTONCE_COMMAND:
-		// Ensure the Sound Name is specified
-		if ( strcmp( sCmd.cSoundName, "" ) != 0 ) {
-			CSoundCore::GetSoundCore().GetSoundEffect( sCmd.cSoundName );
+		CLog::GetLog().Write( LOG_GAMECONSOLE, "Sound Task: Playing sound \"%s.wav\" once!", cSMsg->cSoundName );
+		CSoundCore::GetSoundCore().GetSoundEffect( cSMsg->cSoundName );
+		break;
+
+	case LOADSOUNDEFFECT_COMMAND:
+		// Check to see if the sound name is already in the map
+		it = sound.find( cSMsg->cSoundID );
+		if (it != sound.end()) {
+			// It's already present.  Display an error and do nothing.
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Sound \"%s\" already loaded!", cSMsg->cSoundID );
+
+		}
+		else {
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Loaded sound \"%s.wav\" as \"%s\".", cSMsg->cSoundName, cSMsg->cSoundID );
+
+			// Sound wasn't found, add to the hashmap
+			CSoundCore::GetSoundCore().GetSoundEffect( cSMsg->cSoundName, &cSfx );
+			if (cSfx != NULL)
+				sound.insert( pair<CSoundID, CSoundEffect*>( CSoundID( cSMsg->cSoundID ), cSfx ) );
 		}
 		break;
 
+	case PLAYSOUNDEFFECT_COMMAND:
+		// Check to see if the sound name is in the map
+		it = sound.find( cSMsg->cSoundID );
+		if (it != sound.end()) {
+			// It's there, let's play it
+			it->second->Play( cSMsg->bLooped, false );
+		}
+		else {
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Sound \"%s\" doesn't exist!", cSMsg->cSoundID );
+#endif
+		}
+		break;
+
+	case STOPSOUNDEFFECT_COMMAND:
+		// Check to see if the sound name is in the map
+		it = sound.find( cSMsg->cSoundID );
+		if (it != sound.end()) {
+			// It's there, let's stop it
+			it->second->Stop();
+
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Stopped sound \"%s\".", cSMsg->cSoundID );
+#endif
+		}
+		else {
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Sound \"%s\" doesn't exist!", cSMsg->cSoundID );
+#endif
+		}
+		break;
+
+	case PAUSESOUNDEFFECT_COMMAND:
+		// Check to see if the sound name is in the map
+		it = sound.find( cSMsg->cSoundID );
+		if (it != sound.end()) {
+			// It's there, let's pause it
+			it->second->Pause();
+
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Paused sound \"%s\".", cSMsg->cSoundID );
+#endif
+		}
+		else {
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Sound \"%s\" doesn't exist!", cSMsg->cSoundID );
+#endif
+		}
+		break;
+
+	case UNPAUSESOUNDEFFECT_COMMAND:
+		// Check to see if the sound name is in the map
+		it = sound.find( cSMsg->cSoundID );
+		if (it != sound.end()) {
+			// It's there, let's unpause it
+			it->second->Unpause();
+
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Unpaused sound \"%s\".", cSMsg->cSoundID );
+#endif
+		}
+		else {
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Sound \"%s\" doesn't exist!", cSMsg->cSoundID );
+#endif
+		}
+		break;
+
+	case RELEASESOUNDEFFECT_COMMAND:
+		// Check to see if the sound name is in the map
+		it = sound.find( cSMsg->cSoundID );
+		if (it != sound.end()) {
+			// It's there, let's release it it
+			it->second->Release();
+
+			// Erase the entry in the hashmap
+			sound.erase( it );
+
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Released sound \"%s\".", cSMsg->cSoundID );
+#endif
+		}
+		else {
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Sound \"%s\" doesn't exist!", cSMsg->cSoundID );
+#endif
+		}
+		break;
+
+	case PLAYSTREAMONCE_COMMAND:
+		CLog::GetLog().Write( LOG_GAMECONSOLE, "Sound Task: Playing stream \"%s.wav\" once!", cSMsg->cSoundName );
+		CSoundCore::GetSoundCore().GetSoundStream( cSMsg->cSoundName );
+		break;
+
+	case LOADSTREAM_COMMAND:
+		// Check to see if the sound name is already in the map
+		it2 = stream.find( cSMsg->cSoundID );
+		if (it2 != stream.end()) {
+			// It's already present.  Display an error and do nothing.
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Stream \"%s\" already loaded!", cSMsg->cSoundID );
+
+		}
+		else {
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Loaded stream \"%s.wav\" as \"%s\".", cSMsg->cSoundName, cSMsg->cSoundID );
+
+			// Sound wasn't found, add to the hashmap
+			CSoundCore::GetSoundCore().GetSoundStream( cSMsg->cSoundName, &cStr );
+			if (cStr != NULL)
+				stream.insert( pair<CSoundID, CSoundStream*>( CSoundID( cSMsg->cSoundID ), cStr ) );
+		}
+		break;
+
+	case PLAYSTREAM_COMMAND:
+		// Check to see if the sound name is in the map
+		it2 = stream.find( cSMsg->cSoundID );
+		if (it2 != stream.end()) {
+			// It's there, let's play it
+			it2->second->Play( cSMsg->bLooped, false );
+		}
+		else {
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Stream \"%s\" doesn't exist!", cSMsg->cSoundID );
+#endif
+		}
+		break;
+
+	case STOPSTREAM_COMMAND:
+		// Check to see if the sound name is in the map
+		it2 = stream.find( cSMsg->cSoundID );
+		if (it2 != stream.end()) {
+			// It's there, let's stop it
+			it2->second->Stop();
+
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Stopped stream \"%s\".", cSMsg->cSoundID );
+#endif
+		}
+		else {
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Stream \"%s\" doesn't exist!", cSMsg->cSoundID );
+#endif
+		}
+		break;
+
+	case PAUSESTREAM_COMMAND:
+		// Check to see if the sound name is in the map
+		it2 = stream.find( cSMsg->cSoundID );
+		if (it2 != stream.end()) {
+			// It's there, let's pause it
+			it2->second->Pause();
+
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Paused stream \"%s\".", cSMsg->cSoundID );
+#endif
+		}
+		else {
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Stream \"%s\" doesn't exist!", cSMsg->cSoundID );
+#endif
+		}
+		break;
+
+	case UNPAUSESTREAM_COMMAND:
+		// Check to see if the sound name is in the map
+		it2 = stream.find( cSMsg->cSoundID );
+		if (it2 != stream.end()) {
+			// It's there, let's unpause it
+			it2->second->Unpause();
+
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Unpaused stream \"%s\".", cSMsg->cSoundID );
+#endif
+		}
+		else {
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Stream \"%s\" doesn't exist!", cSMsg->cSoundID );
+#endif
+		}
+		break;
+
+	case RELEASESTREAM_COMMAND:
+		// Check to see if the sound name is in the map
+		it2 = stream.find( cSMsg->cSoundID );
+		if (it2 != stream.end()) {
+			// It's there, let's release it it
+			it2->second->Release();
+
+			// Erase the entry in the hashmap
+			stream.erase( it2 );
+
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Released stream \"%s\".", cSMsg->cSoundID );
+#endif
+		}
+		else {
+#ifdef _DEBUG
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "Stream \"%s\" doesn't exist!", cSMsg->cSoundID );
+#endif
+		}
+		break;
+
+/*
 	case PLAYMUSIC_COMMAND:
 		if ( music != NULL ) {
 			music->Release();
 		}
 
-		if ( strcmp( sCmd.cSoundName, "" ) != 0 ) {
-			CSoundCore::GetSoundCore().GetSoundStream( sCmd.cSoundName, &music );
-			//music->SetVolume( sCmd.fVolume );
-			CLog::GetLog().Write( LOG_MISC, "Music volume: %f", sCmd.fVolume );
+		if ( strcmp( cSMsg->cSoundName, "" ) != 0 ) {
+			CSoundCore::GetSoundCore().GetSoundStream( cSMsg->cSoundName, &music );
+			//music->SetVolume( cSMsg->fVolume );
+			CLog::GetLog().Write( LOG_MISC, "Music volume: %f", cSMsg->fVolume );
 			music->SetVolume( 0.8f );
-			music->Play( sCmd.bLooped, false );
+			music->Play( cSMsg->bLooped, false );
 
 		}
 		break;
@@ -117,11 +332,11 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 			ambient->Release();
 		}
 
-		if ( strcmp( sCmd.cSoundName, "" ) != 0 ) {
-			CSoundCore::GetSoundCore().GetSoundStream( sCmd.cSoundName, &ambient );
-			//ambient->SetVolume( sCmd.fVolume );
+		if ( strcmp( cSMsg->cSoundName, "" ) != 0 ) {
+			CSoundCore::GetSoundCore().GetSoundStream( cSMsg->cSoundName, &ambient );
+			//ambient->SetVolume( cSMsg->fVolume );
 			ambient->SetVolume( 0.8f );
-			ambient->Play( sCmd.bLooped, false );
+			ambient->Play( cSMsg->bLooped, false );
 
 		}
 		break;
@@ -131,9 +346,10 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 			ambient->Stop();
 			ambient->Release();
 		}
-
+*/
 	default:
 		break;
 	}
 
+	return;
 }

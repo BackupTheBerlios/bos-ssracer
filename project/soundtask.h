@@ -1,5 +1,15 @@
+//---------------------------------------------------------------------------//
+// File    : soundtask.h
+// Author  : Rob Diaz-Marino
+// Written : Mar 2004
+//---------------------------------------------------------------------------//
 #ifndef SOUNDTASK_H
 #define SOUNDTASK_H
+
+// STL crap
+#define STL_USING_ALL
+#include "stl.h"
+#include <map>
 
 #include "soundcore.h"
 #include "bosapp.h"
@@ -11,8 +21,8 @@ public:
 	// Public properties
 	bool m_bCanKill;
 	long m_lPriority; // 1 - highest, MAXINT^2 lowest
-	CSoundStream *music;
-	CSoundStream *ambient;
+	map<CSoundID, CSoundEffect*> sound;
+	map<CSoundID, CSoundStream*> stream;
 
 	// Public methods
 	CSoundTask();
