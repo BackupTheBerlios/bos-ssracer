@@ -259,6 +259,7 @@ public:
 	void SetSelfDestruct() { m_bSelfDestruct = true; }
 
 	// Actions
+	float GetTrackTime();
 	virtual HRESULT Play( BOOL bLoop, BOOL bPause ) { return ERROR_NOT_SUPPORTED; }
 	virtual HRESULT Stop() { return ERROR_NOT_SUPPORTED; }
 	virtual HRESULT Pause() { return ERROR_NOT_SUPPORTED; }
@@ -328,7 +329,6 @@ private:
 	FILE *m_fpFile;
 	CStreamThread *m_cSTRefreshCheck;	// Buffer Refresh Checker Thread
 	long m_lDataSize, m_lDataPos, m_lDataLeft;	// Used for managing stream file
-	BOOL m_bLooping;
 	float m_fFade;				// Current fade % - 0 = Normal Volume, 1 = Muted
 	float m_fFadeStep;			// Step size for fade in/out
 	unsigned long m_ulTargetFreq;	// Target frequencies for pitch bend

@@ -338,6 +338,26 @@ HRESULT CSound::GetWAVHeader( char *cFilename ) {
 }
 
 
+//---------------------------------------------------------------------------//
+// NAME: GetTrackTime
+// DESC: Calculates the track length in seconds.
+// RETURNS:
+//   int - number of seconds duration of currently loaded sound.
+//---------------------------------------------------------------------------//
+float CSound::GetTrackTime() {
+	float tracktime = 0.0f;
+
+	// If there isn't any sound data loaded, we just return 0 seconds.
+	if ( m_lpDSBuffer == NULL )
+		return tracktime;
+
+	// Calculate the time based on sample rate and data size
+	tracktime = (float) m_swHeader.lDataSize / (float) m_swHeader.lBytesPerSec;
+
+	return tracktime;
+}
+
+
 
 //===========================================================================//
 // CLASS: CSoundEffect
@@ -795,6 +815,7 @@ void CSoundEffect::Release() {
 
 	return;
 }
+
 
 
 //===========================================================================//

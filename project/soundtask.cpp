@@ -24,8 +24,10 @@ bool CSoundTask::Start() {
 		DSSCL_PRIORITY) ))
 		return FALSE;
 
-	// If the task was stopped, resume now.
-	CSoundCore::GetSoundCore().Resume();
+	// Resume the soundcore if it's suspended
+	if ( CSoundCore::GetSoundCore().IsSuspended() ) {
+		CSoundCore::GetSoundCore().Resume();
+	}
 
 	return TRUE;
 }
@@ -90,7 +92,7 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 		while ( it != sound.end() ) {
 			cSID = it->first;
 			cSfx = it->second;
-			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (play: %d, pause: %d, loop: %d, destruct: %d)", cSID.getID(), cSfx->IsPlaying(), cSfx->IsPaused(), cSfx->IsLooping(), cSfx->IsDestruct() );
+			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (time: %2.2fs, play: %d, pause: %d, loop: %d, destruct: %d)", cSID.getID(), cSfx->GetTrackTime(), cSfx->IsPlaying(), cSfx->IsPaused(), cSfx->IsLooping(), cSfx->IsDestruct() );
 			it++;
 		}
 
@@ -100,7 +102,7 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 		while ( it2 != stream.end() ) {
 			cSID = it2->first;
 			cStr = it2->second;
-			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (play: %d, pause: %d, loop: %d, destruct: %d)", cSID.getID(), cStr->IsPlaying(), cStr->IsPaused(), cStr->IsLooping(), cStr->IsDestruct() );
+			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (time: %2.2fs, play: %d, pause: %d, loop: %d, destruct: %d)", cSID.getID(), cStr->GetTrackTime(), cStr->IsPlaying(), cStr->IsPaused(), cStr->IsLooping(), cStr->IsDestruct() );
 			it2++;
 		}
 		break;
