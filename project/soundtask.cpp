@@ -81,6 +81,19 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 	CLog::GetLog().Write( LOG_MISC, "****In handle sound message. %d", cSMsg->nCommandType );
 
 	switch ( cSMsg->nCommandType ) {
+	case LISTAUDIO_COMMAND:
+		/*
+		// List all loaded sound effects
+		CLog::GetLog().Write( LOG_GAMECONSOLE, "Loaded Sound Effects:" );
+
+		it = sound.begin();
+		while ( it != sound.end() ) {
+			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (play: %d, pause: %d, loop: %d, destruct: %d)", it->first->getID(), it->second->IsPlaying, it->second->IsPaused() );
+			it++;
+		}
+*/
+		break;
+
 	case PLAYSOUNDEFFECTONCE_COMMAND:
 		CLog::GetLog().Write( LOG_GAMECONSOLE, "Sound Task: Playing sound \"%s.wav\" once!", cSMsg->cSoundName );
 		CSoundCore::GetSoundCore().GetSoundEffect( cSMsg->cSoundName );
@@ -221,7 +234,8 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 		it2 = stream.find( cSMsg->cSoundID );
 		if (it2 != stream.end()) {
 			// It's there, let's play it
-			it2->second->Play( cSMsg->bLooped, false );
+			it2->second->FadeIn( cSMsg->bLooped, 0.0f, 0.01f );
+			//it2->second->Play( cSMsg->bLooped, false );
 		}
 		else {
 #ifdef _DEBUG

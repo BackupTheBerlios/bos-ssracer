@@ -198,3 +198,10 @@ void CSoundMessage::ReleaseStream( std::string sID ) {
 
 	return;
 }
+
+
+void CSoundMessage::ListAudio() {
+	nCommandType = LISTAUDIO_COMMAND;
+
+	return;
+}

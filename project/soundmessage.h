@@ -38,6 +38,8 @@
 #define FADEINSTREAM_COMMAND 15
 #define FADEOUTSTREAM_COMMAND 16
 
+#define LISTAUDIO_COMMAND 255
+
 
 // Forward Class Definitions
 class CSoundID;
@@ -101,6 +103,8 @@ public:
     void PauseStream( std::string sID );
     void UnpauseStream( std::string sID );
     void ReleaseStream( std::string sID );
+
+	void ListAudio();
 
 protected:
 private:
