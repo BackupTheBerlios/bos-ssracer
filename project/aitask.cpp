@@ -93,6 +93,11 @@ void CAITask::Update() {
                 //if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
     			    CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(it->first, it->second), RENDER_TASK );
                 //else  // driving controls
+
+				// TEMPORARY SHIT FOR PLAYER VEHICLE TESTING
+				CGameStateManager::GetGameStateManagerPtr()->ProcessInput( new CInputTaskMessage(it->first, it->second) );
+				// #############################################
+
 			}
 		}
 	}
@@ -238,6 +243,11 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 		}
         else if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
        		CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown), RENDER_TASK );
+
+		// TEMPORARY SHIT FOR PLAYER VEHICLE TESTING
+		CGameStateManager::GetGameStateManagerPtr()->ProcessInput( new CInputTaskMessage(cIMsg->m_keyValue, cIMsg->m_keyDown) );
+		// #############################################
+
 		break;
     }
 

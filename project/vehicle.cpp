@@ -445,7 +445,7 @@ void CVehicle::CalculateWheelAngularAcceleration()
 
 	// *** Begin Front Wheel Acceleration Calculations ***
 	float accelMagnitude = float(sqrt(pow(accelerationLC.X(), 2) + pow(accelerationLC.Y(), 2) + pow(accelerationLC.Z(), 2)));
-	float angularAccelMagnitude = accelMagnitude / ((2.0f * PI_BOS`)*tireRadius);
+	float angularAccelMagnitude = accelMagnitude / ((2.0f * PI_BOS)*tireRadius);
 	frontWheelAngularAccelerationRADS = float(cos(steerAngleRADS + sideSlipAngleRADS)) * angularAccelMagnitude;
 	// *** End Front Wheel Acceleration Calculations ***
 }
