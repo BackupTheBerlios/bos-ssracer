@@ -321,6 +321,7 @@ int CCommandLineParser::help()
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> [dir] - load a map and create a scene from a .map file [dir] defaults to .\\maps\\ if omitted");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map and scene objects");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADVEHICLEAI - runs opponent vehicle AI test");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n*** Sound Engine Commands ***" );
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOAD{SOUND|STREAM} <file> as <alias> - Loads a sound effect or stream and gives it the specified alias.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAY{SOUND|STREAM} [-loop] <alias> - Plays a sound effect or stream either one-shot or looping.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAY{SOUND|STREAM} [-once] <file> - Plays a sound or stream once without assigning it an alias (not recommended).");
@@ -329,6 +330,14 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "UNPAUSE{SOUND|STREAM} <alias> - Pauses the specified sound or stream.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "RELEASE{SOUND|STREAM} <alias> - Unloads the specified sound or stream.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LISTAUDIO - Shows a list of all sounds and streams registered by the console, including their status.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n*** Playlist Commands ***" );
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADLIST <file> - Loads the <file>.slp playlist if it exists.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAYLIST <vol%%> -[no]repeat -[no]advance - Begins playing the list with specified volume (0-1) and specified autorepeat and autoadvance.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAYLIST -next - Advance to next track.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAYLIST -prev - Back to previous track.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "STOPLIST - Stops list playback.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "PAUSELIST - Pauses list playback if playing.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "UNPAUSELIST - Unpauses list playback if paused.");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------------------------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;
