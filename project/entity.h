@@ -23,9 +23,9 @@ public:
 	void SetMesh(CD3DMesh* pMesh) { m_pMesh = pMesh; };
 	CD3DMesh* GetMesh() { return m_pMesh; };
 
-	void SetTranslate(Vector3f &translate) { m_translate = translate; };
-	void SetRotate(Vector3f &rotate) { m_rotate = rotate; };
-	void SetScale(Vector3f &scale) { m_scale = scale; };
+	void SetTranslate(Vector3f translate) { m_translate = translate; };
+	void SetRotate(Vector3f rotate) { m_rotate = rotate; };
+	void SetScale(Vector3f scale) { m_scale = scale; };
 
 	Vector3f* GetTranslate() { return &m_translate; };
 	Vector3f* GetRotate() { return &m_rotate; };

@@ -6,7 +6,7 @@
 class CTire : public CEntity {
 
 public:
-	CTire() {};
+	CTire() { rotationLC = Vector3f(0.0f, 0.0f, 0.0f); positionLC = Vector3f(0.0f, 0.0f, 0.0f);};
 	~CTire() {};
 
 	Vector3f GetPositionLC() { return positionLC; };
