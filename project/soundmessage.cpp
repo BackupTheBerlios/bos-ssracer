@@ -279,3 +279,24 @@ void CSoundMessage::ListAudio() {
 
 	return;
 }
+
+
+void CSoundMessage::KillSound() {
+	nCommandType = KILLSOUND_COMMAND;
+
+	return;
+}
+
+
+void CSoundMessage::KillSoundEffects() {
+	nCommandType = KILLSOUNDEFFECTS_COMMAND;
+
+	return;
+}
+
+
+void CSoundMessage::KillSoundStreams() {
+	nCommandType = KILLSOUNDSTREAMS_COMMAND;
+
+	return;
+}

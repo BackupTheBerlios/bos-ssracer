@@ -39,6 +39,9 @@
 #define FADEOUTSTREAM_COMMAND 24
 
 #define LISTAUDIO_COMMAND 32
+#define KILLSOUND_COMMAND 33
+#define KILLSOUNDEFFECTS_COMMAND 34
+#define KILLSOUNDSTREAMS_COMMAND 35
 
 #define PLAYLIST_LOAD_COMMAND 64
 #define PLAYLIST_PLAY_COMMAND 65
@@ -121,6 +124,9 @@ public:
 	void ListPrev();
 
 	void ListAudio();
+	void KillSound();
+	void KillSoundEffects();
+	void KillSoundStreams();
 
 protected:
 private:

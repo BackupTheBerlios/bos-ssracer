@@ -106,6 +106,8 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("pauselist"));
     Keywords.push_back(std::string("unpauselist"));
 
+    Keywords.push_back(std::string("killsound"));
+
     Keywords.push_back(std::string("showaudio"));
     /*** End Rob's Commands ***/
 
@@ -186,6 +188,9 @@ int CCommandLineParser::execute()
     if (*it == "unpauselist") error = PlaylistCommand();
 
     if (*it == "showaudio") error = SoundCoreCommand();
+    if (*it == "killsound") error = SoundCoreCommand();
+    if (*it == "killsoundeffects") error = SoundCoreCommand();
+    if (*it == "killsoundstreams") error = SoundCoreCommand();
 
 	return error;
 }
@@ -335,6 +340,7 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "UNPAUSE{SOUND|STREAM} <alias> - Pauses the specified sound or stream.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "RELEASE{SOUND|STREAM} <alias> - Unloads the specified sound or stream.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "SHOWAUDIO - Shows a list of all sounds and streams registered by the console, including their status.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "KILLSOUND -all|-sfx|-streams - Kill the specified group of sounds.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n*** Playlist Commands ***" );
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADLIST <file> - Loads the <file>.slp playlist if it exists.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAYLIST <vol%%> -[no]repeat -[no]advance - Begins playing the list with specified volume (0-1) and specified autorepeat and autoadvance.");
@@ -855,6 +861,26 @@ int CCommandLineParser::SoundCoreCommand()
 
 		default:
 			CLog::GetLog().Write(LOG_GAMECONSOLE, "showaudio - invalid syntax (command takes no arguments)." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+	else if ( strcmp( Tokens[0].c_str(), "killsound" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 2:
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+
+			if ( Tokens[1] == "-all" ) cSMsg->KillSound();
+			if ( Tokens[1] == "-sfx" ) cSMsg->KillSoundEffects();
+			if ( Tokens[1] == "-streams" ) cSMsg->KillSoundStreams();
+
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "killsound - invalid syntax (command takes no arguments)." );
 			return BAD_COMMAND;
 			break;
 

@@ -95,6 +95,22 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 	CLog::GetLog().Write( LOG_MISC, "****In handle sound message. %d", cSMsg->nCommandType );
 
 	switch ( cSMsg->nCommandType ) {
+	case KILLSOUND_COMMAND:
+		sound.clear();
+		stream.clear();
+		CSoundCore::GetSoundCore().ResetAll();
+		break;
+
+	case KILLSOUNDEFFECTS_COMMAND:
+		sound.clear();
+		CSoundCore::GetSoundCore().ResetSFX();
+		break;
+
+	case KILLSOUNDSTREAMS_COMMAND:
+		stream.clear();
+		CSoundCore::GetSoundCore().ResetStreams();
+		break;
+
 	case PLAYLIST_LOAD_COMMAND:
 		cPlayList->Clear();
 		cPlayList->Load( cSMsg->cSoundName );
