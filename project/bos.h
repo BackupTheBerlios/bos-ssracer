@@ -12,7 +12,7 @@
 * Desc:  general include file for common headers
 *****************************************************************************/
 #ifndef BOS_H
-#define BOS_H
+#define BOS_H    
 
 #ifndef DIRECT3D_VERSION
 #define DIRECT3D_VERSION         0x0900
