@@ -477,6 +477,8 @@ void CD3DCamera::HandleInputMessages( CInputTaskMessage * pIMsg )
 }
 
 
+
+
 //-----------------------------------------------------------------------------
 // Name: UpdateCullInfo()
 // Desc: Sets up the frustum planes, endpoints, and center for the frustum
@@ -502,18 +504,47 @@ void CD3DCamera::UpdateCullInfo( CULLINFO* pCullInfo, D3DXMATRIX* pMatView, D3DX
     for( INT i = 0; i < 8; i++ )
         D3DXVec3TransformCoord( &pCullInfo->vecFrustum[i], &pCullInfo->vecFrustum[i], &mat );
 
-    D3DXPlaneFromPoints( &pCullInfo->planeFrustum[0], &pCullInfo->vecFrustum[0], 
+/*    D3DXPlaneFromPoints( &pCullInfo->planeFrustum[0], &pCullInfo->vecFrustum[0], 
                          &pCullInfo->vecFrustum[1], &pCullInfo->vecFrustum[2] ); // Near
+    
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[1], &pCullInfo->vecFrustum[6], 
                          &pCullInfo->vecFrustum[7], &pCullInfo->vecFrustum[5] ); // Far
+    
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[2], &pCullInfo->vecFrustum[2], 
                          &pCullInfo->vecFrustum[6], &pCullInfo->vecFrustum[4] ); // Left
+
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[3], &pCullInfo->vecFrustum[7], 
                          &pCullInfo->vecFrustum[3], &pCullInfo->vecFrustum[5] ); // Right
+    
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[4], &pCullInfo->vecFrustum[2], 
                          &pCullInfo->vecFrustum[3], &pCullInfo->vecFrustum[6] ); // Top
+    
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[5], &pCullInfo->vecFrustum[1], 
                          &pCullInfo->vecFrustum[0], &pCullInfo->vecFrustum[4] ); // Bottom
+*/
+    pCullInfo->wmlPlaneFrustum[0] = Plane3f( Vector3f(pCullInfo->vecFrustum[0].x, pCullInfo->vecFrustum[0].y, pCullInfo->vecFrustum[0].z), 
+                                             Vector3f(pCullInfo->vecFrustum[1].x, pCullInfo->vecFrustum[1].y, pCullInfo->vecFrustum[1].z), 
+                                             Vector3f(pCullInfo->vecFrustum[2].x, pCullInfo->vecFrustum[2].y, pCullInfo->vecFrustum[2].z) );  // Near
+
+    pCullInfo->wmlPlaneFrustum[1] = Plane3f( Vector3f(pCullInfo->vecFrustum[6].x, pCullInfo->vecFrustum[6].y, pCullInfo->vecFrustum[6].z), 
+                                             Vector3f(pCullInfo->vecFrustum[7].x, pCullInfo->vecFrustum[7].y, pCullInfo->vecFrustum[7].z), 
+                                             Vector3f(pCullInfo->vecFrustum[5].x, pCullInfo->vecFrustum[5].y, pCullInfo->vecFrustum[5].z) );  // Far
+
+    pCullInfo->wmlPlaneFrustum[2] = Plane3f( Vector3f(pCullInfo->vecFrustum[2].x, pCullInfo->vecFrustum[2].y, pCullInfo->vecFrustum[2].z), 
+                                             Vector3f(pCullInfo->vecFrustum[6].x, pCullInfo->vecFrustum[6].y, pCullInfo->vecFrustum[6].z), 
+                                             Vector3f(pCullInfo->vecFrustum[4].x, pCullInfo->vecFrustum[4].y, pCullInfo->vecFrustum[4].z) );  // Left
+
+    pCullInfo->wmlPlaneFrustum[3] = Plane3f( Vector3f(pCullInfo->vecFrustum[7].x, pCullInfo->vecFrustum[7].y, pCullInfo->vecFrustum[7].z), 
+                                             Vector3f(pCullInfo->vecFrustum[3].x, pCullInfo->vecFrustum[3].y, pCullInfo->vecFrustum[3].z), 
+                                             Vector3f(pCullInfo->vecFrustum[5].x, pCullInfo->vecFrustum[5].y, pCullInfo->vecFrustum[5].z) );  // Right
+
+    pCullInfo->wmlPlaneFrustum[4] = Plane3f( Vector3f(pCullInfo->vecFrustum[2].x, pCullInfo->vecFrustum[2].y, pCullInfo->vecFrustum[2].z), 
+                                             Vector3f(pCullInfo->vecFrustum[3].x, pCullInfo->vecFrustum[3].y, pCullInfo->vecFrustum[3].z), 
+                                             Vector3f(pCullInfo->vecFrustum[6].x, pCullInfo->vecFrustum[6].y, pCullInfo->vecFrustum[6].z) );  // Top
+
+    pCullInfo->wmlPlaneFrustum[5] = Plane3f( Vector3f(pCullInfo->vecFrustum[1].x, pCullInfo->vecFrustum[1].y, pCullInfo->vecFrustum[1].z), 
+                                             Vector3f(pCullInfo->vecFrustum[0].x, pCullInfo->vecFrustum[0].y, pCullInfo->vecFrustum[0].z), 
+                                             Vector3f(pCullInfo->vecFrustum[4].x, pCullInfo->vecFrustum[4].y, pCullInfo->vecFrustum[4].z) );  // Bottom
 }
 
 
@@ -521,7 +552,8 @@ void CD3DCamera::UpdateCullInfo( CULLINFO* pCullInfo, D3DXMATRIX* pMatView, D3DX
 // Name: GetFrustum
 // Desc: converts the D3DX CULLINFO to a wml frustrum 
 //-----------------------------------------------------------------------------
-Frustum3f * CD3DCamera::GetFrustum() 
+/*Frustum3f * CD3DCamera::GetFrustum() 
 {
     return &m_Frustum;
 }
+*/

@@ -717,13 +717,13 @@ bool CRenderer::DrawHUD()
     // apply HUD render states
     m_pSBMap[RENSB_HUD]->Apply();
 
-    D3DXMATRIX matOrth;
-    D3DXMatrixOrthoLH(&matOrth, 2, 2, 0, 1 );
+    //D3DXMATRIX matOrth;
+    //D3DXMatrixOrthoLH(&matOrth, 2, 2, 0, 1 );
     //
     //D3DXMatrixOrthoLH(&matOrth, (float)((float)m_iWidth/(float)m_iHeight)*2.0f, (float)((float)m_iHeight/(float)m_iWidth)*2.0f, 0, 1 );
 
-    m_pd3dDevice->SetTransform( D3DTS_VIEW, &matOrth );
-    m_pd3dDevice->SetTransform( D3DTS_PROJECTION, &matOrth );
+    //m_pd3dDevice->SetTransform( D3DTS_VIEW, &matOrth );
+    //m_pd3dDevice->SetTransform( D3DTS_PROJECTION, &matOrth );
 
 
     // Square data for its position and texture coords.
@@ -734,11 +734,12 @@ bool CRenderer::DrawHUD()
       {0.5f, -0.5f, 0.0f, 1.0, 1.0}
 	};
 */
+
   	D3DTexMappedVertex Polygon_Data[4] = {
-		{0.7f, -0.6f, 0.5f, D3DCOLOR_ARGB( 255, 255, 255, 255 ), 0.0, 0.0},  // BL -+
-        {1.0f, -0.6f, 0.5f, D3DCOLOR_ARGB( 255, 255, 255, 255 ), 1.0, 0.0},   // BR ++
-	    {0.7f, -1.0f, 0.5f, D3DCOLOR_ARGB( 255, 255, 255, 255 ), 0.0, 1.0}, // TL --
-        {1.0f, -1.0f, 0.5f, D3DCOLOR_ARGB( 255, 255, 255, 255 ), 1.0, 1.0}   // TR +-
+		{0.7f, -0.4f, 0.5f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 0.0},  // BL -+
+        {1.3f, -0.4f, 0.5f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 0.0},   // TR ++
+	    {0.7f, -1.0f, 0.5f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 0.0, 1.0}, // TL --
+        {1.3f, -1.0f, 0.5f, D3DCOLOR_ARGB( 100, 255, 255, 255 ), 1.0, 1.0}   // BR +-
 	};
 
     // Create the vertex buffer that will hold the square.
@@ -767,19 +768,20 @@ bool CRenderer::DrawHUD()
     m_pd3dDevice->SetStreamSource(0, Vertex_Buffer, 0, sizeof(D3DTexMappedVertex));
 
     // Set the vertex stream declaration.
-    m_pd3dDevice->SetFVF(D3DFVF_D3DTMVertex);
-
-    // SetTexture will add the image in the Texture object to all things draw after this.
-    //m_pd3dDevice->SetTexture(0, m_pTextureMap["mpg_gear.bmp"]);
-
-    // This will draw everything in the buffer (the square we created in InitializeObject().
-    //m_pd3dDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+    //m_pd3dDevice->SetFVF(D3DFVF_D3DTMVertex);
 
     // SetTexture will add the image in the Texture object to all things draw after this.
     m_pd3dDevice->SetTexture(0, m_pTextureMap["rpm_gauge.bmp"]);
 
     // This will draw everything in the buffer (the square we created in InitializeObject().
     m_pd3dDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
+    // SetTexture will add the image in the Texture object to all things draw after this.
+    m_pd3dDevice->SetTexture(0, m_pTextureMap["mpg_gear.bmp"]);
+
+    // This will draw everything in the buffer (the square we created in InitializeObject().
+    m_pd3dDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
 
 
     SAFE_RELEASE(Vertex_Buffer);

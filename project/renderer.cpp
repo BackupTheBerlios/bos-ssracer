@@ -649,16 +649,17 @@ void CRenderer::OnDeviceLost ()
 void CRenderer::InitializeState ()
 {
     //--- set up the default state block ---//
-    m_pd3dDevice->BeginStateBlock();
 
+    // BEGIN default info state block //
+    m_pd3dDevice->BeginStateBlock();
     // z-buffering
     m_pd3dDevice->SetRenderState(D3DRS_ZENABLE,TRUE);
     m_pd3dDevice->SetRenderState(D3DRS_ZFUNC,D3DCMP_LESSEQUAL);
     m_pd3dDevice->SetRenderState(D3DRS_ZWRITEENABLE,TRUE);
-
     m_pd3dDevice->SetRenderState( D3DRS_CLIPPING, TRUE );
     m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
-    
+ 
+    // simple ambient light
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
     //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
     m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
@@ -668,7 +669,6 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
-
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
@@ -681,15 +681,16 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,FALSE);
     m_pd3dDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_ONE);
     m_pd3dDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_ZERO);
-
-    // save this as the default state block
+    
     m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_DEFAULT] );
-    m_pDefaultSB = m_pSBMap[RENSB_DEFAULT];
+    // END default info state block //
+    
+    m_pDefaultSB = m_pSBMap[RENSB_DEFAULT];  // save this as the default state block
 
     
     //--- set up other utility state blocks ---//
 
-    // set up the debug info state block //
+    // BEGIN debug info state block //
     m_pd3dDevice->BeginStateBlock();
     m_pd3dDevice->SetRenderState(D3DRS_ZENABLE,TRUE);
     m_pd3dDevice->SetRenderState(D3DRS_ZFUNC,D3DCMP_LESSEQUAL);
@@ -698,8 +699,6 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
     m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
-
-    // Set up the texture 
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
@@ -714,28 +713,44 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
     m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
     m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_DEBUGSTATE] );
+    // END debug info state block //
 
 
-    // set up the HUD state block //
+    // BEGIN HUD state block //
     m_pd3dDevice->BeginStateBlock();
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );  //no lighting
     m_pd3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);      // Enable depth testing.
+
+    // get orthographic view matrix
+    D3DXMATRIX matOrth;
+    D3DXMatrixOrthoLH(&matOrth, 2.6f, 2.0f, 0, 1 );
+    //D3DXMatrixOrthoLH(&matOrth, (float)((float)m_iWidth/(float)m_iHeight)*2.0f, (float)((float)m_iHeight/(float)m_iWidth)*2.0f, 0, 1 );
+    m_pd3dDevice->SetTransform( D3DTS_VIEW, &matOrth );
+    D3DXMatrixOrthoLH(&matOrth, 2.0f, 2.0f, 0, 1 );
+    m_pd3dDevice->SetTransform( D3DTS_PROJECTION, &matOrth );
+
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE );
+
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP ); 
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP ); 
     // for transparencies
     m_pd3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);
     m_pd3dDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);
     m_pd3dDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
     m_pd3dDevice->SetFVF( D3DFVF_D3DTMVertex );
     m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_HUD] );
+    // END HUD state block //
+
 
     // initialize the saved state block for use
     m_pd3dDevice->CreateStateBlock( D3DSBT_ALL, &m_pSavedSB);
@@ -818,7 +833,7 @@ CD3DCamera * CRenderer::SetCamera( CD3DCamera* pkCamera, CameraType eCameraName)
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, pkCamera->GetProjMatrix() );    
 
     // re-compute the frustrum of the new camera
-
+    pkCamera->UpdateCullInfo();
 
     return m_pkCameraMap[eCameraName]; 
 }
@@ -883,6 +898,9 @@ bool CRenderer::SetActiveCamera( CameraType eCameraName )  {
     // set the new view matrix for the active camera in the D3Ddevice
     m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, m_pActiveCamera->GetProjMatrix() );   
+
+    // re-compute the frustrum of the new camera
+    m_pActiveCamera->UpdateCullInfo();
 
     return 1;
 };

@@ -8,7 +8,8 @@
 #include "inputmessage.h"
 
 #include "WmlVector3.h"
-#include "WmlFrustum3.h"
+//#include "WmlFrustum3.h"
+#include "WmlPlane3.h"
 
 using namespace Wml;
 
@@ -26,6 +27,7 @@ struct CULLINFO
 {
     D3DXVECTOR3 vecFrustum[8];    // corners of the view frustum
     D3DXPLANE planeFrustum[6];    // planes of the view frustum
+    Plane3f wmlPlaneFrustum[6];
 };
 
 
@@ -112,7 +114,7 @@ public:
     // defaults to matrices used by this camera
     void UpdateCullInfo(CULLINFO* pCullInfo = &m_CullInfo, D3DXMATRIX* pMatView = &m_mView, D3DXMATRIX* pMatProj = &m_mProj);
 
-    Frustum3f * GetFrustum();
+    //Frustum3f * GetFrustum();
 
     Vector3f GetEye() { return Vector3f(m_vEye.x, m_vEye.y, m_vEye.z); };
     Vector3f GetLookAt() { return Vector3f(m_vLookAt.x, m_vLookAt.y, m_vLookAt.z); };
@@ -177,7 +179,7 @@ protected:
 
     bool                  m_bResetCursorAfterMove;// If true, the class will reset the cursor position so that the cursor always has space to move 
 
-    Frustum3f             m_Frustum;  // wml frustum information for this camera
+    //Frustum3f             m_Frustum;  // wml frustum information for this camera
 private:
 
 };

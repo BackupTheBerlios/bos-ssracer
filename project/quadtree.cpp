@@ -46,8 +46,7 @@ CQuadNode::CQuadNode(Vector3f vOrigin, float fHalfWidth) {
 
     // set the AABBox
     m_BBox.Center() = vOrigin;
-    m_BBox.Extent(0) = m_BBox.Extent(2) = fHalfWidth;
-    m_BBox.Extent(1) = fHalfWidth;//20.0f; // thin out the height of the box
+    m_BBox.Extent(0) = m_BBox.Extent(1) = m_BBox.Extent(2) = fHalfWidth;
     m_BBox.Axis(0) = Vector3f(1,0,0);  // axis aligned
     m_BBox.Axis(1) = Vector3f(0,1,0);
     m_BBox.Axis(2) = Vector3f(0,0,1);
@@ -104,7 +103,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     if (!pvEntities)  {
 
         // Construct a quadtree of m_iLevels levels deep
-	    m_pkQRoot = new CQuadNode( Vector3f(0, 0, 0), m_fNodeWidth/2.0f );
+	    m_pkQRoot = new CQuadNode( Vector3f(0, 0, 0), m_fNodeWidth );
     
         // save the root node for deletion later
         m_vpNodes.push_back(m_pkQRoot);
@@ -155,7 +154,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     m_fNodeWidth = max( m_fNodeWidth, abs(m_vfMinExtent.Z()-m_vfMaxExtent.Z()));
     m_fNodeWidth *= 0.9f;//0.75f;//2.0f;   
 
-    //$$$TEMP for map_final only
+    //$$$TEMP optimal for map_final only
     //m_fNodeWidth = 2200.0f;  
 
     #ifdef _DEBUG
@@ -241,7 +240,9 @@ void CQuadTree::AddReference( Vector3f vOrigin, CEntity * pEntity )
 	CQuadNode	*node;
 	CQuadNode	*prev;		// to point to parent of node
 
+    #ifdef _DEBUG
     assert( m_iLevels > 1 ); 
+    #endif
 
 	// Search in quadtree for the node this entity should be in
 	node = m_pkQRoot;
@@ -470,12 +471,7 @@ int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
     Vector3f vCorner[8];
 	int iTotalIn = 0;
 
-    //$$$TEMP get the frustum planes from the camera's CULLINFO
-    Plane3f plane[6];
-    CULLINFO *cInfo = pCamera->GetCullInfo();
-    for (int j=0; j<6; j++)
-        plane[j] = Plane3f( Vector3f(cInfo->planeFrustum[j].a,  cInfo->planeFrustum[j].b,  cInfo->planeFrustum[j].c), cInfo->planeFrustum[j].d);
-
+    Plane3f * plane = pCamera->GetCullInfo()->wmlPlaneFrustum;
 
 	// get the corners of the box into the vCorner array
 	BBox.ComputeVertices(vCorner);
@@ -491,8 +487,7 @@ int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
 		for(int i = 0; i < 8; ++i) {
 
 			// test this point against the planes
-            //if( plane[p].WhichSide(vCorner[i]) == Plane3f::POSITIVE_SIDE ) {
-            if(plane[p][0] * vCorner[i].X() + plane[p][1] * vCorner[i].Y() + plane[p][2] * vCorner[i].Z() + plane[p][3] < 0) {
+            if( plane[p].WhichSide(vCorner[i]) == Plane3f::NEGATIVE_SIDE ) {
                 iPtIn = 0;
 				--iInCount;
 			}
@@ -501,7 +496,6 @@ int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
 		// were all the points outside of plane p?
         if(iInCount == 0)  {
             return(OUTSIDE);
-			//return(INSIDE);  //WORKING
         }
 
 		// check if they were all on the right side of the plane
@@ -511,7 +505,6 @@ int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
 	// so if iTotalIn is 6, then all are inside the view
     if(iTotalIn == 6)  {
         return(INSIDE); 
-		//return(OUTSIDE);  //WORKING
     }
 
 	// we must be partly in then otherwise
@@ -531,8 +524,8 @@ void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTes
         if(InBox (pCamera->GetEye(), pNode->m_BBox) == false )  {
             
             // check if frustrum constains bounding sphere for node
-            //switch (FrustumContainsSphere(pCamera, pNode->m_BSphere))  {
-            switch( FrustumContainsBox(pCamera, pNode->m_BBox) )  {            
+            switch (FrustumContainsSphere(pCamera, pNode->m_BSphere))  {
+            //switch( FrustumContainsBox(pCamera, pNode->m_BBox) )  {            
                 case OUTSIDE:  // outside, so cull this node
                     return;
         
