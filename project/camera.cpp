@@ -361,6 +361,7 @@ VOID CD3DCamera::Reset()
 //-----------------------------------------------------------------------------
 D3DUtil_CameraKeys CD3DCamera::MapKey( UINT nKey )
 {
+    /*
     switch( nKey )
     {
         case 'A':  
@@ -394,7 +395,7 @@ D3DUtil_CameraKeys CD3DCamera::MapKey( UINT nKey )
         case GAME_HOME:   
 			return CAM_RESET;
     }
-
+*/
     return CAM_UNKNOWN;
 }
 

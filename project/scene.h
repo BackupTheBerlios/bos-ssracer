@@ -8,15 +8,17 @@
 #include "cwaypoint.h"
 #include "ccommandlineparser.h"
 #include "quadtree.h"
+#include "renderer.h"
 
 class CAITask;  //forward declaration
 
-
 class CScene {
 
-    friend CCommandLineParser::loadmap();      //needed to access the LoadMap function from console
-    friend CCommandLineParser::ShowEntities(); //needed to access the entities from console
-    friend CCommandLineParser::LoadVehicleAI(); // Ram's Addition needed to axs entities from console
+    friend int CCommandLineParser::loadmap();      //needed to access the LoadMap function from console
+    friend int CCommandLineParser::ShowEntities(); //needed to access the entities from console
+    friend int CCommandLineParser::LoadVehicleAI(); // Ram's Addition needed to axs entities from console
+    
+    friend void CRenderer::RenderScene();  // need to access static & dynamic entities for rendering
     friend CAITask; // to print debugging info only
 
 public:
@@ -35,7 +37,7 @@ public:
     int LoadWaypoints(string* directory, string* filename);
     int LoadWaypoint(CWaypoint* waypoint){m_vWaypoints.push_back(waypoint); return 1;}; //Temp just for my own testing
     //$$$TEMP this is just to get access too the entities for now.
-    vector<CEntity*> * TEMPGetEntities() { return &m_vEntities; };
+    vector<CEntity*> * TEMPGetEntities() { return &m_vEntities; };  //$$$TEMP this function will not exist soon....
     
     //Ramits Add
     vector<CWaypoint*> * GetWaypoints() { return &m_vWaypoints; };

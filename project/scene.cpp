@@ -627,7 +627,7 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 	m_vEntities.push_back(newCar);
 
     // add body to the quadtree
-    m_kQuadTree->Add(newCar);
+    //m_kQuadTree->Add(newCar);
 
 
 	// Add 1 tire mesh (assuming they all look the same)
@@ -639,7 +639,7 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 	for(i=0;i<4;i++) {
 		m_vEntities.push_back(newCar->GetTire(i));
         // add tire to the quadtree
-        m_kQuadTree->Add(newCar->GetTire(i));
+        //m_kQuadTree->Add(newCar->GetTire(i));
 	}
 
 	// Set the playerVehicle pointer for the gamestatemanager,
@@ -874,7 +874,7 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
 	m_vEntities.push_back(newCar);
 
     // add body to the quadtree
-    m_kQuadTree->Add(newCar);
+    //m_kQuadTree->Add(newCar);
 
 
 	// Add 1 tire mesh (assuming they all look the same)
@@ -886,7 +886,7 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
 	for(i=0;i<4;i++) {
 		m_vEntities.push_back(newCar->GetTire(i));
         // add tire to the quadtree
-        m_kQuadTree->Add(newCar->GetTire(i));
+        //m_kQuadTree->Add(newCar->GetTire(i));
 	}
 
 

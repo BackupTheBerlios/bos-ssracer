@@ -205,6 +205,8 @@ protected:
     void DrawEntity( CEntity * pEntity );
     void DrawQuadTreeNode( CQuadNode * pQNode );
     void DrawBBox( Box3f * pBBox, float fPointSize = 1.0f, DWORD dwColor = D3DCOLOR_ARGB( 255, 155, 155, 155 ));
+    void DrawVehicle( CVehicle * pVehicle );
+
 
 private:
 };

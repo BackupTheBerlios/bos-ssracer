@@ -553,3 +553,25 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
 */
     return;
 }
+
+
+
+//-----------------------------------------------------------------------------
+// Name:  DrawVehicle()
+// Desc:  Draw a vehicle with effects if any
+//-----------------------------------------------------------------------------
+void CRenderer::DrawVehicle( CVehicle * pVehicle )
+{
+    // draw body
+    DrawEntity( pVehicle );
+
+    // draw tires
+    for (int i=0; i<4; i++)
+        DrawEntity( pVehicle->GetTire(i) );
+
+    //$$$TODO draw exhaust
+    // get position of exhaust in local coords
+
+    //$$$TODO draw headlights
+    // get position of headlights in local coords
+}

@@ -186,8 +186,10 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
 
     // add renderable game entities to the quadtree
     for (it = pvEntities->begin(); it!=pvEntities->end(); it++)  {
-        //$$$TEMP for now, just add all entities
-        Add(*it);
+        
+        // only add static and renderable entities
+        if ((*it)->getIsStatic() && (*it)->getIsRenderable())
+            Add(*it);
     }
 
 
@@ -209,8 +211,7 @@ void CQuadTree::Add(CEntity *pEntity)
     // for now, use the position of the entity to place in the tree
     //AddReference(*pEntity->GetTranslate(), pEntity);
 
-    //$$$TEMP once entity bounding boxes are fixed, I'll use this code
-
+    /*
     Vector3f vBox[8];
     pEntity->GetBoundingBox()->ComputeVertices(vBox);
     // zero out the y to keep these boxes on the ground plane
@@ -218,18 +219,15 @@ void CQuadTree::Add(CEntity *pEntity)
         vBox[i].Y() = 0.0f;
     }
 
-    // Add references for each corner of the bounding box
+    // Add references for each corner of the bounding box  <-- not accurate
   	//AddReference( vBox[0], pEntity);  // NE +z +x
     //AddReference( vBox[1], pEntity);  // NW +z -x
     //AddReference( vBox[4], pEntity);  // SE -z +x
     //AddReference( vBox[5], pEntity);  // SW -z -x
-
+    */
 
     // add reference to each box that this intersects
-    AddReference( m_pkQRoot->m_BBox, pEntity, m_pkQRoot); ////$$$$$$$ still debugging
-    
-    //AddReference( m_pkQRoot->m_BBox, pEntity); ////$$$$$$$ still debugging
-
+    AddReference( m_pkQRoot->m_BBox, pEntity, m_pkQRoot);
     return;
 }
 
@@ -376,92 +374,6 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
     return;
 }
 
-
-
-//////////////////////
-
-void CQuadTree::AddReference( Box3f box, CEntity * pEntity)  {
-
-    assert( m_iLevels > 1 ); 
-
-    CQuadNode	*node = m_pkQRoot;
-    CQuadNode	*prev;
-
-    bool bEntInQuad = false;
-
-
-    Vector3f vBoxVerts[8];
-    bool abValid[8] = { 0,0,0,0,0,0,0,0 };//{ 1,1,1,1,1,1,1,1 };//
-
-    for (int i=0; i<m_iLevels; i++)  {
-        prev = node;
-        
-        switch(TestIntersection( *pEntity->GetBoundingBox(), node->m_BBox) )  
-        {
-            case true:  // box intersects
-                bEntInQuad = true;  // find if the children intersect too
-                break;
-
-            case false:  // box is INSIDE or OUTSIDE the node
-                // get vertices for the bounding box                
-                pEntity->GetBoundingBox()->ComputeVertices(vBoxVerts);
-
-                // if entities box is contained in node box
-                if (ContOrientedBox (8, vBoxVerts, abValid, node->m_BBox))  {
-                    bEntInQuad = true;  // find out what child quads also contain this
-                }
-                else { // entity is outside, so don't add
-                    bEntInQuad = false;
-                    break;//return
-                }
-                break;
-        }
-
-        // now this box will also intersect/be contained in the children as well
-        if (bEntInQuad == true )  {
-            node->m_EntMap[pEntity->GetId()] = pEntity;
-
-            if (node->m_pChildNode[NE] != NULL)  {
-                node = node->m_pChildNode[NE];
-            }
-            else {
-                prev->m_EntMap[pEntity->GetId()] = pEntity;
-            }
-
-            if (node->m_pChildNode[NW] != NULL)  {
-                //node->m_pChildNode[NW]->m_EntMap[pEntity->GetId()] = pEntity;
-                node = node->m_pChildNode[NW];
-            }
-            else {
-                prev->m_EntMap[pEntity->GetId()] = pEntity;
-            }
-
-            if (node->m_pChildNode[SE] != NULL)  {
-                //node->m_pChildNode[SE]->m_EntMap[pEntity->GetId()] = pEntity;
-                node = node->m_pChildNode[SE];
-            }
-            else {
-                prev->m_EntMap[pEntity->GetId()] = pEntity;
-            }
-
-            if (node->m_pChildNode[SW] != NULL)  {
-                //node->m_pChildNode[SW]->m_EntMap[pEntity->GetId()] = pEntity;
-                node = node->m_pChildNode[SW];
-            }        
-            else {
-                prev->m_EntMap[pEntity->GetId()] = pEntity;
-            }
-        }
-        else 
-            node = prev;
-
-    }
-
-    return;
-}
-
-
-//////////////////////
 
 
 

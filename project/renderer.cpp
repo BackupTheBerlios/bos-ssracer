@@ -104,17 +104,17 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 	// eye 5 back, 3 up from objects position
 	// look at car position
 	// up is Y
-	m_pkCameraMap[CAMERA_CHASE]->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
+	((CCameraChase *)m_pkCameraMap[CAMERA_CHASE])->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
                                                 &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
 	// slightly wider FOV and shorter frustrum
-	m_pkCameraMap[CAMERA_CHASE]->SetProjParams( D3DX_PI/6.5f, 1.0f ,1.0f ,500.0f );
+	((CCameraChase *)m_pkCameraMap[CAMERA_CHASE])->SetProjParams( CAMERA_CHASE_DEFAULT_FOV, 1.0f ,1.0f ,800.0f );
 
 
 	//--- free look camera --- //	
-	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
+	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
     			                                   &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
 	// wide FOV and a large frustrum
-	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000.0f );
+	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000.0f );
 
 
     // defaults to this camera
@@ -365,20 +365,17 @@ int iDrawnEnt = 0, iTotalNodeEnt=0;
 //-----------------------------------------------------------------------------
 void CRenderer::RenderScene()
 {
-    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
-    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(100,100,150), 1.0f, 0 );
+    // clear the previous frame   
+    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
+    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(20,10,70), 1.0f, 0 );
     //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );//D3DCOLOR_XRGB(0,20,50)
 
     m_pd3dDevice->BeginScene();  // --- begin scene drawing commands
 
-    InitializeState();
+    //InitializeState();
 
     // render the skybox first
     DrawSkyBox();
-
-    //InitializeState();
-
-
 
 	#ifdef _DEBUG  // show developer info
     char tMsgA[25];
@@ -387,31 +384,32 @@ void CRenderer::RenderScene()
 	#endif
 
 
+    // if culling enabled draw only renderable & static entities in the currently visible nodes
     if (m_bVisCullingEnabled && CGameStateManager::GetGameStateManager().GetScenePtr()->GetQuadTree()->IsInitialized())  {
-        // clear drawn entities map
+        // clear drawn entities map so we dont overdraw
         m_kDrawnEntIDs.clear();
 
         // get visible quadtree nodes
-        /*
-        vector<CQuadNode *> * pvVisible = CGameStateManager::GetGameStateManager().GetScenePtr()->GetQuadTree()->GetVisibleNodesPtr();
-        for (vector<CQuadNode *>::iterator it2 = pvVisible->begin();  it2 != pvVisible->end(); it2++)  {
-            DrawQuadTreeNode(*it2);// render this visible nodes contents
-        }
-        */
-        iDrawnEnt = iTotalNodeEnt=0;
+        iDrawnEnt = iTotalNodeEnt = 0;  // init stat counters
         std::map <Vector3f, CQuadNode *> * pvVisible = CGameStateManager::GetGameStateManager().GetScenePtr()->GetQuadTree()->GetVisibleNodesPtr();
         for (std::map <Vector3f, CQuadNode *>::iterator it2 = pvVisible->begin();  it2 != pvVisible->end(); it2++)  {
             DrawQuadTreeNode(it2->second);// render this visible nodes contents
         }
 
-    }
-    
-    else {  //just draw all renderable entities
+        // draw dynamic entities that are visible in the frustum
+        //$$$ TEMP just draw all vehicles for now
+        std::vector <COpponentVehicle *>::iterator itVehicle;
+        for (itVehicle = CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin(); itVehicle != CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end(); itVehicle++)  {
+            DrawVehicle(*itVehicle);
+        }
+        // draw player vehicle
+        if ( CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle() )
+            DrawVehicle(CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle());
+    }    
+    else {  //just draw all entities if culling is disabled
 
-        assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
-
-        for (vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->begin();
-             it != CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->end();  it++)  
+        for (vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.begin();
+             it != CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.end();  it++)  
         {
             if ((*it)->getIsRenderable())
                 DrawEntity(*it);
@@ -692,6 +690,7 @@ CD3DCamera * CRenderer::SetCamera( CD3DCamera* pkCamera, CameraType eCameraName)
 
     // re-compute the frustrum of the new camera
 
+
     return m_pkCameraMap[eCameraName]; 
 }
 
@@ -720,7 +719,7 @@ void CRenderer::Click()
     #endif    
 
     // get next frame from camera
-    m_pActiveCamera->FrameMove(CTimer::GetTimer().GetTimeElapsed());  //m_pActiveCamera->Update();
+    m_pActiveCamera->FrameMove(CTimer::GetTimer().GetTimeElapsed());
 
     // set the new view matrix for the camera in the D3Ddevice
     m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );

@@ -144,7 +144,7 @@ void CRenderTask::Update()
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 3, "Cam Velocity %f %f %f", vVel->x, vVel->y, vVel->z);
 
 
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "Cam viscull state%d", m_pkRenderer->IsVisCullingEnabled());
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "Cam viscull state %d", m_pkRenderer->IsVisCullingEnabled());
     #endif
 
 
@@ -159,7 +159,7 @@ void CRenderTask::Update()
 
     #ifdef _DEBUG
     if ( CBOSApplication::GetBOSApp().GetDebugOverlayState() == TRUE ) {
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "press F12 to hide all this");
+        //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "press F12 to hide all this");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 19, "J:  got lines 0-19");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 20, "line 20");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 30, "line 30");

@@ -51,6 +51,11 @@ public:
     // Rams add for isRenderable
     bool getIsRenderable() {return m_isRenderable;};
     void setIsRenderable(bool r) {m_isRenderable = r;};
+    // J - dynamic/static flag
+    bool getIsDynamic() {return m_bIsDynamic;};
+    void setIsDynamic(bool r) {m_bIsDynamic = r;};
+    bool getIsStatic() {return !m_bIsDynamic;};
+    void setIsStatic(bool r) {m_bIsDynamic = !r;};
 
 
 protected:
