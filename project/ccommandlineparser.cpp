@@ -323,7 +323,7 @@ int CCommandLineParser::LoadEntity()
 
 	if(directorySet && filenameSet) {
 		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&directory, &filename))) {
-			CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity was not loaded successfully!");
 			return 0;
 		}
 	}
