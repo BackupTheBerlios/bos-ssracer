@@ -25,7 +25,7 @@ void CScreen::processInput(int key)
   case GAME_RETURN:
   case GAME_NUMPADENTER:
     gotoScreen = screenOrder[selectedScreeni];
-    if (screenOrder[gotoScreen] == QUIT)  // QUIT screen
+    if (screenOrder[selectedScreeni] == EXIT_GAME)  // after QUIT screen
         CKernel::GetKernel().KillAllTasks();  //exit the game 
   }
 }
@@ -356,13 +356,10 @@ CQuit::CQuit()
   mainMenu->setX(-0.5f);
   mainMenu->setY(0.0f);
 
-
-  int tempOrder[]={MAIN_MENU,  QUIT};
+  // exit game isn't actually a screen, its so we know when to exit the game after the quit screen
+  int tempOrder[]={MAIN_MENU, EXIT_GAME};  
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 1;
-
-  //$$$NOTE: you guys forgot to set this!!!!
-  selectedScreeni = 0;
 }
 
 
@@ -611,7 +608,7 @@ void CDealership::draw()
   cancel->draw();
   instructions->draw();
 }
-
+/*  //J: I think this is what the merge did?
 void CDealership::processInput(int key)
 {
   switch(key)
@@ -636,3 +633,4 @@ void CDealership::processInput(int key)
         CKernel::GetKernel().KillAllTasks();  //exit the game 
   }
 }
+*/

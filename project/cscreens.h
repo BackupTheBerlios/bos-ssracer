@@ -23,6 +23,7 @@
 #define DEALERSHIP 14
 #define PRE_GAME 15
 #define MAX_STATES 15
+#define EXIT_GAME 16
 
 class CScreen
 {
