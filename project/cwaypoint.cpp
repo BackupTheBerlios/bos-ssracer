@@ -6,7 +6,8 @@ CWaypoint::CWaypoint()
 	m_Neighbors.reserve(WP_NEIGHBOR_SIZE);
 	m_Neighbors.clear();
     m_isLastWay = false;
-    m_isBranch = false;
+    m_Type = NORMALWP;
+    m_Path = 0;
 }
 
 CWaypoint::~CWaypoint()

@@ -4,10 +4,12 @@
 
 COpponentVehicle::COpponentVehicle()
 {
-	m_vWPSequence.clear();
+	m_vWPSequence[0].clear();
+    m_vWPSequence[1].clear();
+    m_vWPShort1.clear();
 	m_vHeadingTargetWC = Vector3f(0.0f, 0.0f, 0.0f);
 	m_vVelocityTargetWC = Vector3f(0.0f, 0.0f, 0.0f);
-	m_Next = m_vWPSequence.begin();
+	m_Next = m_vWPSequence[0].begin();
 
 	Init();
 
@@ -20,21 +22,37 @@ COpponentVehicle::COpponentVehicle()
 
 COpponentVehicle::~COpponentVehicle()
 {
-	m_vWPSequence.clear();
+	m_vWPSequence[0].clear();
+    m_vWPSequence[1].clear();
+    m_vWPShort1.clear();
+
+
 }
 
 int COpponentVehicle::incNext()
 {
-	if (m_Next == m_vWPSequence.end()-1)
+	if (m_Next == m_vWPSequence[0].end()-1)
 		return GENERAL_ERROR;
-
+    if ((*m_Next)->getType()==1) //If Branch Waypoint
+    {
+      if(getAILevel() == ADVANCED_AI)
+      {
+      m_Next = m_vWPSequence[(*m_Next)->getGoToPath()].begin(); 
+      }
+      else m_Next++;
+    }
+    else if((*m_Next)->getType()==3) //If Conjunction
+    {
+      m_Next = &m_vWPSequence[0][(*m_Next)->getCIndex()]; //Can only get here if in branch
+    }
+    else
 	m_Next++;
 	return OK;
 }
 
 int COpponentVehicle::decNext()
 {
-	if (m_Next == m_vWPSequence.begin())
+	if (m_Next == m_vWPSequence[0].begin())
 		return GENERAL_ERROR;
 
 	m_Next--;
@@ -67,9 +85,12 @@ int COpponentVehicle::setNext(std::vector<CWaypoint*>::iterator next)
 int COpponentVehicle::setWPSequence(std::vector<CWaypoint*>* WPSeq)
 {
 	if (!WPSeq) return NULL_POINTER;
-
-	m_vWPSequence.clear();
-	m_vWPSequence = *WPSeq;
+    CWaypoint * temp;
+    temp = *WPSeq->begin();
+    int path = temp->getPath();
+    CLog::GetLog().Write(LOG_MISC, "Setting Path Sequence : %i", path);
+	m_vWPSequence[path].clear();
+	m_vWPSequence[path] = *WPSeq;
 	return OK;
 }
 

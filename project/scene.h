@@ -41,6 +41,7 @@ public:
     
     //Ramits Add
     vector<CWaypoint*> * GetWaypoints() { return &m_vWaypoints; };
+    vector<CWaypoint*> * GetShortCut1() { return &m_vWPShortCut1; };
 
     // misc get functions
     int GetNumEntities() { return m_vEntities.size(); };
@@ -58,6 +59,7 @@ protected:
     CQuadTree *                                  m_kQuadTree;	// quadtree for visibility culling
     //Ram's Add to hold me Waypoints
     static vector<CWaypoint*>                    m_vWaypoints;	// Vector containing all waypoints in the scene
+    static vector<CWaypoint*>                    m_vWPShortCut1;	// Short Cut Vector 1 MAke more as needed
 
 private:
 

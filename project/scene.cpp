@@ -15,7 +15,7 @@ vector<CEntity*> CScene::m_vEntities;
 
 //Rams Add
 vector<CWaypoint*> CScene::m_vWaypoints;
-
+vector<CWaypoint*> CScene::m_vWPShortCut1;
 
 
 CScene::CScene()  
@@ -25,6 +25,7 @@ CScene::CScene()
     m_kMeshMap.clear();
     m_vEntities.clear();
     m_vWaypoints.clear();
+    m_vWPShortCut1.clear();
     m_kQuadTree = new CQuadTree();
 }
 
@@ -35,6 +36,7 @@ CScene::~CScene()
     m_kMeshMap.clear();
     m_vEntities.clear();
     m_vWaypoints.clear();
+    m_vWPShortCut1.clear();
     delete m_kQuadTree;
 };
 
@@ -103,6 +105,14 @@ int CScene::ReleaseScene()
 
 	// Clear the vector of entity pointers
 	m_vWaypoints.clear();
+
+    for(j=0;j<m_vWPShortCut1.size();j++) {
+		FREE(m_vWPShortCut1[j], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
+	}
+
+	// Clear the vector of entity pointers
+	m_vWPShortCut1.clear();
+
 
 	// set player vehicle pointer to NULL
     CGameStateManager::GetGameStateManager().SetPlayerVehicle(NULL);
@@ -406,7 +416,7 @@ int CScene::LoadEntities(string* directory, string* filename)
 	}  //endwhile
 
 	fclose(fp);
-
+  //CLog::GetLog().Write(LOG_MISC, "Size of Entities: %i",m_vEntities.size() );
 	return 1;
 }
 
@@ -955,7 +965,7 @@ int CScene::LoadEntity(string* directory, string* filename)
 //other than that exactly LoadEntitys
 int CScene ::LoadWaypoints(string* directory, string* filename)
 {
-  CLog::GetLog().Write(LOG_MISC, "In Load Waypoints");
+  
 	FILE* fp;
 	char buf[512];
 	char* token;
@@ -1029,9 +1039,28 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 					newObject->SetRotate(Vector3f(temp[0], temp[1], temp[2]));
 					continue;
 				}
-                if(!strcmp(token, "<Branch>")) {
+                //To determine if waypoint is normal, branch, or conjunct or not
+                if(!strcmp(token, "<type>")) {
 					token = strtok(NULL, seps);
-					newObject->setBranch(atoi(token));
+					newObject->setType(atoi(token));
+					continue;
+					}
+                //To differentiate the different paths and where waypoint is ultimately loaded
+                if(!strcmp(token, "<path>")) {
+					token = strtok(NULL, seps);
+					newObject->setPath(atoi(token));
+					continue;
+					}
+                //Will only have on Waypoints that are of Branch type
+                if(!strcmp(token, "<BranchToPath>")) {
+					token= strtok(NULL, seps);
+					newObject->setGoToPath(atoi(token));
+					continue;
+					}
+                //Will only have on Waypoints that are of Conjunction type
+                if(!strcmp(token, "<ConjunctIndex>")) {
+					token= strtok(NULL, seps);
+					newObject->setCIndex(atoi(token));
 					continue;
 					}
 				if(!strcmp(token, "<scale>")) {
@@ -1148,8 +1177,14 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
         AddMesh( newObject->GetMesh() );
         */
         //=== add it to the Waypoint vector ===//
-		m_vWaypoints.push_back(newObject);
-
+        if ( newObject->getPath() == 1)
+        {
+          m_vWPShortCut1.push_back(newObject);
+        }
+        else
+        {
+		  m_vWaypoints.push_back(newObject);
+        }
 	}  //endwhile
 
     //Set Last Waypoint as last Waypoint

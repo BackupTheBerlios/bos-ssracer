@@ -10,6 +10,12 @@
 #define WP_NEIGHBOR_SIZE 10
 #define WP_RADIUS 5.0f // idunno
 
+// Different Waypoint Types
+#define NORMALWP 0
+#define BRANCHWP 1
+#define CONJUNCTWP 2
+
+
 using namespace Wml;
 
 class CWaypoint : public CEntity {
@@ -28,14 +34,24 @@ class CWaypoint : public CEntity {
         //Rams's Add
         int setLastWay(bool b) {m_isLastWay=b; return OK;};
         bool getLastWay(){return m_isLastWay;};
-        int setBranch(int b) {m_isBranch=b; return OK;};
-        int getBranch(){return m_isBranch;};
+        int setType(int t) {m_Type=t; return OK;};
+        int getType(){return m_Type;};
+        int setPath(int p) {m_Path=p; return OK;};
+        int getPath(){return m_Path;};
+        int setCIndex(int c) {m_conjunctIndex=c; return OK;};
+        int getCIndex(){return m_conjunctIndex;};
+        int setGoToPath(int p) {m_gotoPath=p; return OK;};
+        int getGoToPath(){return m_gotoPath;};
 
 	protected:
         bool m_isLastWay;
 		float m_fRadius;
-        int m_isBranch;
-		std::vector<CWaypoint*> m_Neighbors;
+        int m_Type;                    //look at top for different types
+        int m_Path;                     //Which path it is on 0 for main all else for Shortcuts
+		//Kinda Ugly for now, Perhaps make subclass later
+        int m_gotoPath;                 //if branch taken gotopath
+        int m_conjunctIndex;             //when conjoining index on main path to goto
+        std::vector<CWaypoint*> m_Neighbors;
 
 	private:
 };

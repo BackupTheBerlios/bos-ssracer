@@ -25,10 +25,10 @@ public:
 
 	int incNext();
 	int decNext();
-	int initNext() {m_Next = m_vWPSequence.begin(); return OK;}
+	int initNext() {m_Next = m_vWPSequence[0].begin(); return OK;}
 	bool reachedHeadingTarget();
 
-	std::vector<CWaypoint*>* WPSequence() {return &m_vWPSequence;}
+	//std::vector<CWaypoint*>* WPSequence() {return &m_vWPSequence;}
 	CWaypoint* Next() {return *m_Next;}
 	Vector3f* HeadingTarget() {return &m_vHeadingTargetWC;}
 	Vector3f* VelocityTarget() {return &m_vVelocityTargetWC;}
@@ -42,7 +42,10 @@ public:
     int getAILevel(){return m_aiLevel;};
     void setAILevel(int lev){m_aiLevel = lev;}; 
 protected:
-	std::vector<CWaypoint*> m_vWPSequence;
+  std::vector<CWaypoint*> m_vWPSequence[2];
+    //ShortCut Vectors
+    std::vector<CWaypoint*> m_vWPShort1;
+
 	std::vector<CWaypoint*>::iterator m_Next;
 	Vector3f m_vHeadingTargetWC;
 	Vector3f m_vVelocityTargetWC;

@@ -10,7 +10,7 @@
 
 #define VAI_CARS_SIZE 20
 #define VAI_WP_SIZE 100
-#define VAI_CARS_VEL 100.0f // don't know if this is to scale
+#define VAI_CARS_VEL 30.0f // don't know if this is to scale
 #define VAI_CARS_ACCEL 10.0f // ""
 
 #define DUMB_AI 1
@@ -31,8 +31,6 @@ public:
 	int removeCar(int i);
 	bool isAtWaypoint(COpponentVehicle* Car);
 	int setDirection(COpponentVehicle* Car);
-	// This function is F**KED!!! Use the one in COpponentVehicle
-	bool reachedHeadingTarget(std::vector<COpponentVehicle*>::iterator thisCar);
 
 	// inherited virtual functions
 	bool Start();

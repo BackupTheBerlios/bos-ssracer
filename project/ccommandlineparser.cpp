@@ -895,17 +895,39 @@ int CCommandLineParser::LoadVehicleAI()
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
 	}
     CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon5 loaded the mesh %s Sucessfully!", sName.c_str() );    
-    
+    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
+	}
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon5 loaded the mesh %s Sucessfully!", sName.c_str() );    
+    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
+	}
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon5 loaded the mesh %s Sucessfully!", sName.c_str() );    
+    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
+	}
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon5 loaded the mesh %s Sucessfully!", sName.c_str() );    
+    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
+	}
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon5 loaded the mesh %s Sucessfully!", sName.c_str() );    
+    //create iterator
     std::vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()
 						->end()-1;
 
+   //9 pylons
 
 	//translate pylons to desired locations
 	(*it)->SetTranslate(Vector3f(6.0f, 0.0f, 0.0f));
     (*--it)->SetTranslate(Vector3f(30.0f, 0.0f, -5.0f));
-	(*--it)->SetTranslate(Vector3f(100.0f, 0.0f, 0.0f));
-    (*--it)->SetTranslate(Vector3f(150.0f, 0.0f, -10.0f));
-    (*--it)->SetTranslate(Vector3f(250.0f, 0.0f, 50.0f));
+	(*--it)->SetTranslate(Vector3f(60.0f, 0.0f, -5.0f));
+    (*--it)->SetTranslate(Vector3f(150.0f, 0.0f, -5.0f));
+    (*--it)->SetTranslate(Vector3f(30.0f, 0.0f, 0.0f));
+    (*--it)->SetTranslate(Vector3f(60.0f, 0.0f, 0.0f));
+    (*--it)->SetTranslate(Vector3f(150.0f, 0.0f, 0.0f));
+    (*--it)->SetTranslate(Vector3f(250.0f, 0.0f, 5.0f));
+    (*--it)->SetTranslate(Vector3f(350.0f, 0.0f, 10.0f));
+    
 
     //load mitsu opponent
 	  if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&carDir, &carName))) {
@@ -932,11 +954,12 @@ int CCommandLineParser::LoadVehicleAI()
  
         opponent = (*it2);
         opponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetWaypoints());
+        opponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetShortCut1());
         opponent->initNext();
 	    COpponentAI::GetOpponentAIPtr()->addCar(opponent);
      
     }
-    
+    opponent->setAILevel(ADVANCED_AI);
       //set Cam to last vehicle set in 
 	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
     ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle((*CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin()));
