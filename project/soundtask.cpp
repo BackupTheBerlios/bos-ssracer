@@ -94,6 +94,35 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 	CLog::GetLog().Write( LOG_MISC, "****In handle sound message. %d", cSMsg->nCommandType );
 
 	switch ( cSMsg->nCommandType ) {
+	case PLAYLIST_LOAD_COMMAND:
+		cPlayList->Clear();
+		cPlayList->Load( cSMsg->cSoundName );
+		break;
+
+	case PLAYLIST_PLAY_COMMAND:
+		cPlayList->Play( cSMsg->fVolume, cSMsg->bLooped, cSMsg->bPause );
+		break;
+
+	case PLAYLIST_STOP_COMMAND:
+		cPlayList->Stop();
+		break;
+
+	case PLAYLIST_PAUSE_COMMAND:
+		cPlayList->Pause();
+		break;
+
+	case PLAYLIST_UNPAUSE_COMMAND:
+		cPlayList->Unpause();
+		break;
+
+	case PLAYLIST_NEXT_COMMAND:
+		cPlayList->Next();
+		break;
+
+	case PLAYLIST_PREV_COMMAND:
+		cPlayList->Prev();
+		break;
+
 	case LISTAUDIO_COMMAND:
 		// List all loaded sound effects
 		CLog::GetLog().Write( LOG_GAMECONSOLE, "------ Loaded Sound Effects: ------" );

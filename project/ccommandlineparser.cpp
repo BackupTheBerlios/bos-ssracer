@@ -98,7 +98,11 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("pausestream"));
     Keywords.push_back(std::string("unpausestream"));
 
+    Keywords.push_back(std::string("loadlist"));
     Keywords.push_back(std::string("playlist"));
+    Keywords.push_back(std::string("stoplist"));
+    Keywords.push_back(std::string("pauselist"));
+    Keywords.push_back(std::string("unpauselist"));
 
     Keywords.push_back(std::string("showaudio"));
     /*** End Rob's Commands ***/

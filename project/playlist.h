@@ -37,6 +37,7 @@ private:
 
 	// Control data
 	bool m_bPlaying;
+	bool m_bPaused;
 	int m_nCurrentPos;
 	bool m_bAutoAdvance;
 	bool m_bAutoRepeat;
@@ -62,12 +63,14 @@ public:
 	void Next();
 	void Prev();
 	void Shuffle();
+	void Clear();
 
 	// Status update
 	void Update();
 
 	// Properties
 	bool IsPlaying() { return m_bPlaying; }
+	bool IsPaused() { return m_bPaused; }
 	bool IsAutoAdvance() { return m_bAutoAdvance; }
 	bool IsAutoRepeat() { return m_bAutoRepeat; }
 	int GetTrackNum() { return m_nCurrentPos; }

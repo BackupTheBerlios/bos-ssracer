@@ -130,7 +130,7 @@ void CPlayList::Play( float fVol, bool bAutoRepeat, bool bAutoAdvance ) {
 	}
 
 	// Loop until either we find a valid track, or we get back to where we started.
-	while ( (nFailed < m_vPlayEntry.size()) && (hr != NO_ERROR) ) {
+	while ( (nFailed < (int) m_vPlayEntry.size()) && (hr != NO_ERROR) ) {
 		hr = CSoundCore::GetSoundCore().GetSoundStream( m_vPlayEntry[ m_nCurrentPos ].c_str(), &m_cStrm );
 
 		if ( hr != NO_ERROR ) {
@@ -147,7 +147,7 @@ void CPlayList::Play( float fVol, bool bAutoRepeat, bool bAutoAdvance ) {
 	}
 
 	// All tracks in playlist failed!!
-	if (nFailed == m_vPlayEntry.size()) {
+	if (nFailed == (int) m_vPlayEntry.size()) {
 #ifdef _DEBUG
 		CLog::GetLog().Write( LOG_GAMECONSOLE, "Playlist: Could not find ANY files to play.  Screw you guys, I'm going home." );
 #endif
@@ -185,6 +185,40 @@ void CPlayList::Stop() {
 	// Reset the play position
 	m_nCurrentPos = 0;
 	m_bPlaying = false;
+
+	return;
+}
+
+
+//---------------------------------------------------------------------------//
+// NAME: Pause
+// DESC: Begins playing the playlist.
+//---------------------------------------------------------------------------//
+void CPlayList::Pause() {
+	if (m_cStrm == NULL) return;
+	if (m_bPaused == true) return;
+
+	// Pause the current sound stream
+	m_cStrm->Pause();
+
+	m_bPaused = true;
+
+	return;
+}
+
+
+//---------------------------------------------------------------------------//
+// NAME: Unpause
+// DESC: Begins playing the playlist.
+//---------------------------------------------------------------------------//
+void CPlayList::Unpause() {
+	if (m_cStrm == NULL) return;
+	if (m_bPaused == false) return;
+
+	// Pause the current sound stream
+	m_cStrm->Unpause();
+
+	m_bPaused = false;
 
 	return;
 }
@@ -284,6 +318,23 @@ void CPlayList::Shuffle() {
 		m_vPlayEntry[i] = sTmp;
 
 	}
+
+	return;
+}
+
+
+//---------------------------------------------------------------------------//
+// NAME: Clear
+// DESC: Clean out the entire playlist
+//---------------------------------------------------------------------------//
+void CPlayList::Clear() {
+	// Stop the playlist if it is currently playing
+	if (m_bPlaying == true) {
+		Stop();
+	}
+
+	// Clear the vector
+	m_vPlayEntry.clear();
 
 	return;
 }
