@@ -28,9 +28,10 @@
 #include "consoletask.h"
 #include "physicstask.h"
 #include "gamestatemanager.h"
-// Gib's modification (adding frontendmanager to task list)
+// Gib's includes
 #include "cfrontendmanager.h"
 #include "copponentai.h"
+#include "ccollisionmanager.h"
 
 //-----------------------------------------------------------------------------
 // static member intitialization 
@@ -401,11 +402,6 @@ void CBOSApplication::InitializeKernel()
     AITask.m_lPriority = 1000;
     CKernel::GetKernel().AddTask(&AITask);
 
-    // Opponent AI Task
-	static COpponentAI OpponentAITask;
-	OpponentAITask.m_lPriority = 600; // idunno
-	CKernel::GetKernel().AddTask(&OpponentAITask);
-
     // renderer task
     static CRenderTask RenderTask;
     RenderTask.m_lPriority = 10000;
@@ -416,12 +412,22 @@ void CBOSApplication::InitializeKernel()
 	ConsoleTask.m_lPriority = 100;
 	CKernel::GetKernel().AddTask(&ConsoleTask);
 
-	// Gib's modification (adding FrontendManager task)
+	// Gib's tasks:
+	// Opponent AI Task
+	static COpponentAI OpponentAITask;
+	OpponentAITask.m_lPriority = 600; // idunno
+	CKernel::GetKernel().AddTask(&OpponentAITask);
+
 	// Frontend Manager task
 	static CFrontendManager FrontendManager;
 	FrontendManager.m_lPriority = 3000;//300; // idunno
 	CKernel::GetKernel().AddTask(&FrontendManager);
-	// end Gib's modifications
+
+	// Collision Manager task
+	static CCollisionManager CollisionManager;
+	CollisionManager.m_lPriority = 500; // good?
+	CKernel::GetKernel().AddTask(&CollisionManager);
+	// end Gib's tasks
 
     // test task
     //static CTestTask TTask;  
