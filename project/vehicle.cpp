@@ -999,7 +999,7 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 	
 	
 
-	
+	/*
 	if(float(fabs(accelerationLC.Y())) > 0.0f) {
 		rotationLC.X() += RADIANS(3.0f*deltaT) * sgn(accelerationLC.Y());
 		if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
@@ -1008,7 +1008,7 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 			}
 		}
 	}
-	
+	*/
 	
 }
 

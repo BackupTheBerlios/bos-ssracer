@@ -73,7 +73,6 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     GetWindowRect(hWnd, &m_rcWindow );
 	ms_pkRenderer = this;
     m_bCursorVisible = false;
-    m_bVisCullingEnabled = false;
     
     //Create a structure to hold the settings for our device
     ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
@@ -123,8 +122,13 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     m_pActiveCamera = m_pkCameraMap[CAMERA_FREELOOK];
     m_eActiveCamType = CAMERA_FREELOOK;
 
+    //$$$TEMP will be enabled by default once fully tested with map
+    m_bVisCullingEnabled = false;
+
     // set debugging flags
-    m_bDrawQNodeBBoxes = m_bDrawEntBBoxes = false;
+    m_bDrawQNodeBBoxes = false;
+    m_bDrawEntBBoxes = false;
+    m_bDrawRects = false;
 }
 
 
@@ -435,6 +439,17 @@ void CRenderer::RenderScene()
                 DrawEntity(*it);
         } 
     }
+
+    #ifdef _DEBUG
+    //$$$NOTE normally we wouldn't draw ALL the planes but we don't have a BSP tree as of yet to cut this down...
+    if (m_bDrawRects == true)  {
+        for (vector<Rectangle3f *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->m_vPlanes.begin();
+        it != CGameStateManager::GetGameStateManager().GetScenePtr()->m_vPlanes.end();  it++)  
+        {
+            DrawRect(*it, 10.0f, D3DCOLOR_ARGB( 255, 55, 55, 255 ));
+        }
+    }
+    #endif
 }
 
 /*

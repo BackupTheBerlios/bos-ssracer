@@ -19,6 +19,7 @@
 #include <D3D9.h>
 #define STL_USING_ALL
 #include "stl.h"
+#include "WmlRectangle3.h"
 
 // --- internal library includes --- //
 #include "camerafreelook.h"
@@ -91,7 +92,8 @@ protected:
 
     bool              m_bVisCullingEnabled; // enable culling
     bool              m_bDrawEntBBoxes;     //$$$DEBUG show bounding boxed for entities
-    bool              m_bDrawQNodeBBoxes;     //$$$DEBUG show bounding boxed for quadtree nodes
+    bool              m_bDrawQNodeBBoxes;   //$$$DEBUG show bounding boxed for quadtree nodes
+    bool              m_bDrawRects;         //$$$DEBUG show bounding planes for coll det 
 
     static HRESULT ms_hResult;
 	static CRenderer * ms_pkRenderer;
@@ -167,6 +169,9 @@ public:
     bool IsQNodeBBoxesEnabled() {return m_bDrawQNodeBBoxes;};
     void SetDrawQNodeBBoxes( bool bState) { m_bDrawQNodeBBoxes = bState;};
 
+    bool IsDrawRectsEnabled() { return m_bDrawRects; };
+    void SetDrawRects( bool bState ) { m_bDrawRects = bState;};
+
 
     void InitializeState();
     //void SetState (const RenderStatePtr aspkState[]);
@@ -215,6 +220,7 @@ protected:
     void DrawEntity( CEntity * pEntity );
     void DrawQuadTreeNode( CQuadNode * pQNode );
     void DrawBBox( Box3f * pBBox, float fPointSize = 1.0f, DWORD dwColor = D3DCOLOR_ARGB( 255, 155, 155, 155 ));
+    void DrawRect( Rectangle3f * pRect, float fPointSize = 10.0f, DWORD dwColor = D3DCOLOR_ARGB( 255, 155, 155, 255 ));
     void DrawVehicle( CVehicle * pVehicle );
 
 

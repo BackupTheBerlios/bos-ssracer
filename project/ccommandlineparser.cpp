@@ -84,6 +84,7 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("setviscull"));
     Keywords.push_back(std::string("drawentbbox"));
     Keywords.push_back(std::string("drawquadtree"));
+    Keywords.push_back(std::string("drawplanes"));
     Keywords.push_back(std::string("exit"));
     /*** End J's Commands ***/
     
@@ -178,6 +179,7 @@ int CCommandLineParser::execute()
     if (*it == "setviscull") error = SetVisCull();
     if (*it == "drawentbbox") error = SetDraw();
     if (*it == "drawquadtree") error = SetDraw();
+    if (*it == "drawplanes") error = SetDraw();
     if (*it == "exit") error = SystemCommand();
 
     if (*it == "loadvehicleai") error = LoadVehicleAI();
@@ -812,7 +814,7 @@ int CCommandLineParser::SetDraw()
 {
     // default to ON
     if (Tokens.size()<2)  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "drawentbbox: no arguments");
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "draw: no arguments");
 		return OK;
     }
     else if (Tokens.size() == 2)  {
@@ -825,6 +827,10 @@ int CCommandLineParser::SetDraw()
             else if (Tokens[0] == "drawquadtree")  {
                 CRenderer::GetRenderer().SetDrawQNodeBBoxes(true);
             }
+            else if (Tokens[0] == "drawplanes")  {
+                CRenderer::GetRenderer().SetDrawRects(true);
+            }
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: state set to %d", Tokens[0].c_str(), 1);
         }
         else if (Tokens[1] == "OFF" || Tokens[1] == "off" || Tokens[1] == "0")  {
             // drawentbbox command
@@ -834,12 +840,15 @@ int CCommandLineParser::SetDraw()
             else if (Tokens[0] == "drawquadtree")  {
                 CRenderer::GetRenderer().SetDrawQNodeBBoxes(false);
             }
+            else if (Tokens[0] == "drawplanes")  {
+                CRenderer::GetRenderer().SetDrawRects(false);
+            }
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: state set to %d", Tokens[0].c_str(), 0);
         }
         else  {
-            CLog::GetLog().Write(LOG_GAMECONSOLE, "drawentbox: invalid syntax");
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "draw: invalid syntax");
             return OK;
         }
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: state set to %d", Tokens[0].c_str(), CRenderer::GetRenderer().IsDrawEntBBoxesEnabled());
         return OK;
     }
 
