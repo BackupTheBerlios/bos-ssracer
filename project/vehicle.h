@@ -14,6 +14,9 @@ enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
 // Number of seconds for the tires to get from 0 - MAX_STEER_ANGLE_RADS
 #define STEER_ANGLE_TIME		1.0f
 
+// RPM that the vehicle idles at
+#define IDLE_RPM	1000
+
 
 
 typedef struct ___X___ {
@@ -88,7 +91,7 @@ private:
 	void CalculateSlipRatio();
 	void CalculateEngineTorque();
 	void CalculateRPM();
-	void CalculateDriveWheelAngularAcceleration();
+	void CalculateWheelAngularAcceleration();
 	void CalculateVehicleVelocity(float deltaT);
 	void CalculateVehiclePosition(float deltaT);
 	void CalculateTireAngularVelocity(float deltaT);
@@ -152,8 +155,10 @@ private:
 	float brakeTorque;		// Torque generated on the drive wheel due to application of the brakes. (opposes driveWheelTorque)
 	float slipRatio;	// Slip ratio between the tire and the road
 
-	float driveWheelAngularVelocityRADS; // angular velocity of the drive wheel (RADS/s)
-	float driveWheelAngularAccelerationRADS;	// angular acceleration of the drive wheel (RADS/s)
+	float driveWheelAngularVelocityRADS; // angular velocity of the drive wheels (RADS/s)
+	float driveWheelAngularAccelerationRADS;	// angular acceleration of the drive wheels (RADS/s)
+	float frontWheelAngularAccelerationRADS;	// angular acceleration of the front wheels (RADS/s)
+	float frontWheelAngularVelocityRADS;	// angular velocity of the front wheels (RADS/s)
 
 	Vector3f accelerationLC;	// acceleration of the vehicle in local coordinate space
 	Vector3f velocityLC;	// velocity of the vehicle in local coordinate space

@@ -49,8 +49,11 @@ void CVehicle::Init()
 
 	// Calculate the weight of the vehicle.  W = mass * gravity
 	vehicleWeight = vehicleMass * 9.81f;
-	rpm = 1000;
+	rpm = IDLE_RPM;
 	driveWheelAngularVelocityRADS = 0.0f;
+	driveWheelAngularAccelerationRADS = 0.0f;
+	frontWheelAngularVelocityRADS = 0.0f;
+	frontWheelAngularAccelerationRADS = 0.0f;
 
 	// Initialize the gear to first gear
 	gear = 1;
@@ -267,7 +270,9 @@ float CVehicle::CalculateTraction(float engineForce, float rearAxleWeight)
 	// force that the tires can put to the ground.  This
 	// value is affected by the amount of weight on the rear
 	// axle, which transfers into the weight on the rear tires.
-	float maximumTractionForce = CalculateMaxTraction(rearAxleWeight);
+	
+	//float maximumTractionForce = CalculateMaxTraction(rearAxleWeight);
+	float maximumTractionForce = 6000.0f;
 
 	// Modulate the maximum amount of tractive force that the tires
 	// are able to generate based on the type of tire.  Average street
@@ -278,7 +283,7 @@ float CVehicle::CalculateTraction(float engineForce, float rearAxleWeight)
 		maximumTractionForce *= coefficientOfTireFriction;
 	}
 	else {
-		maximumTractionForce *= (coefficientOfTireFriction * 0.5f);
+		maximumTractionForce *= (coefficientOfTireFriction * 0.7f);
 	}
 
 	if(engineForce <= maximumTractionForce) {
@@ -407,15 +412,18 @@ void CVehicle::CalculateRPM()
 }
 
 //--------------------------------------------------------------
-//
+//  Note: The values calculated by this function require that
+//		  the acceleration of the vehicle be calculated first.
 //--------------------------------------------------------------
-void CVehicle::CalculateDriveWheelAngularAcceleration()
+void CVehicle::CalculateWheelAngularAcceleration()
 {
 	float totalTorque;
 	float rearAxleInertia;
 	float wheelInertia;
 
 	// NOT IMPLEMENTED YET.  ON THE TO DO LIST
+
+	// *** Begin Rear Wheel (Drive Wheel) Acceleration Calculations ***
 	float brakeTorque = 0.0f;
 
 	totalTorque = driveWheelTorque - tractionTorque - brakeTorque;
@@ -433,6 +441,13 @@ void CVehicle::CalculateDriveWheelAngularAcceleration()
 	rearAxleInertia = wheelInertia * 2;
 
 	driveWheelAngularAccelerationRADS = totalTorque / rearAxleInertia;
+	// *** End Rear Wheel Acceleration Calculations ***
+
+	// *** Begin Front Wheel Acceleration Calculations ***
+	float accelMagnitude = float(sqrt(pow(accelerationLC.X(), 2) + pow(accelerationLC.Y(), 2) + pow(accelerationLC.Z(), 2)));
+	float angularAccelMagnitude = accelMagnitude / ((2.0f * PI_BOS`)*tireRadius);
+	frontWheelAngularAccelerationRADS = float(cos(steerAngleRADS + sideSlipAngleRADS)) * angularAccelMagnitude;
+	// *** End Front Wheel Acceleration Calculations ***
 }
 
 //--------------------------------------------------------------
@@ -524,7 +539,11 @@ void CVehicle::CalculateAutomaticGearShifting()
 void CVehicle::CalculateTireAngularVelocity(float deltaT)
 {
 	driveWheelAngularVelocityRADS += driveWheelAngularAccelerationRADS * deltaT;
+	frontWheelAngularVelocityRADS += frontWheelAngularAccelerationRADS * deltaT;
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "DriveWheelAngVelocity: %f", driveWheelAngularVelocityRADS);
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "FrontWheelAngVelocity: %f", frontWheelAngularVelocityRADS);
 	// $$$PHYSICSLOGS CLog::GetLog().Write(LOG_GAMECONSOLE, "WheelAngVelocity: %f", driveWheelAngularVelocityRADS);
+
 }
 
 //--------------------------------------------------------------
@@ -565,11 +584,11 @@ void CVehicle::UpdateVehiclePhysics()
 	CalculateEngineTorque();
 	CalculateDrag();
 	CalculateRollingResistance();
-	CalculateSlipRatio();
+	//CalculateSlipRatio();
 	// End Variable Precalculation
 
 	CalculateLongitudinalAcceleration();
-	CalculateDriveWheelAngularAcceleration();
+	CalculateWheelAngularAcceleration();
 	CalculateRPM();
 
 	float deltaT = CTimer::GetTimer().GetTimeElapsed();
