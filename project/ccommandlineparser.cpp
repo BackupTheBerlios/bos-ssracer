@@ -62,6 +62,10 @@ int CCommandLineParser::initKeywords()
 	Keywords.push_back(std::string("clearscene"));
 	/*** End Chris' Commands ***/
 
+    /*** Begin J's Commands ***/
+    Keywords.push_back(std::string("jscript1"));
+    /*** End J's Commands ***/
+
 
 	return OK;
 }
@@ -91,18 +95,18 @@ int CCommandLineParser::execute()
 /*	if (*it == "setvol") error = setvol();
 	if (*it == "loadmap") error = loadmap();
 	if (*it == "pause") error = pause();
-	
+	if (*it == "stop") error = stop();
 	if (*it == "play") error = play();
     */
     if (*it == "help") error = help();
 	if (*it == "clear") error = clear();
-    if (*it == "echo") error = echo();
-	if (*it == "stop") error = stop();
+    if (*it == "echo") error = echo();	
     if (*it == "settimer") error = settimer();
 	if (*it == "loadscene") error = LoadScene();
 	if (*it == "loadentity") error = LoadEntity();
 	if (*it == "loadplayervehicle") error = LoadPlayerVehicle();
 	if (*it == "clearscene") error = ClearScene();
+    if (*it == "jscript1") error = JScript1();
 
 
 	return error;
@@ -327,7 +331,8 @@ int CCommandLineParser::LoadEntity()
 			return 0;
 		}
 	}
-
+    
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity loaded successfully!");
 	return OK;
 }
 
@@ -386,6 +391,16 @@ int CCommandLineParser::ClearScene()
 }
 
 /*** End Chris' Functions ***/
+
+
+
+int CCommandLineParser::JScript1()
+{
+    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(new string("."), new string("nsx")))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity was not loaded successfully!");
+		return 0;
+	}
+}
 
 
 
