@@ -150,10 +150,13 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
 
     // compute width of root node quadtree will cover
     m_vfMinExtent.Y() = m_vfMaxExtent.Y() = 0.0f;
-    m_fNodeWidth = max( m_vfMaxExtent.X()-m_vfMinExtent.X(), m_vfMinExtent.X() - m_vfMaxExtent.X());
-    m_fNodeWidth = max( m_fNodeWidth, m_vfMaxExtent.Z()-m_vfMinExtent.Z());
-    m_fNodeWidth = max( m_fNodeWidth, m_vfMinExtent.Z()-m_vfMaxExtent.Z());
-    m_fNodeWidth *= 0.75f;//2.0f;   
+    m_fNodeWidth = max( abs(m_vfMaxExtent.X()-m_vfMinExtent.X()), abs(m_vfMinExtent.X() - m_vfMaxExtent.X()));
+    m_fNodeWidth = max( m_fNodeWidth, abs(m_vfMaxExtent.Z()-m_vfMinExtent.Z()));
+    m_fNodeWidth = max( m_fNodeWidth, abs(m_vfMinExtent.Z()-m_vfMaxExtent.Z()));
+    m_fNodeWidth *= 0.9f;//0.75f;//2.0f;   
+
+    //$$$TEMP for map_final only
+    //m_fNodeWidth = 2200.0f;  
 
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE, "Quadtree root node width: %f", m_fNodeWidth);
@@ -172,7 +175,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     // assuming a uniform distribution of entities, try to compute an optimal tree depth
     // want #levels = log(#entities)/log(#subdiv at each level=4)
     m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) ) +2 ;
-    //m_iLevels = 7;
+    //m_iLevels = 6;//m_iLevels = 7;///GOOD
     
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE,"Quadtree depth %d", m_iLevels);

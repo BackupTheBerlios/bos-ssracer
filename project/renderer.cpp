@@ -85,19 +85,17 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 	//$$$TODO
 	
 	//--- chase camera --- //
-	// eye 5 back, 3 up from objects position
-	// look at car position
-	// up is Y
+
 	((CCameraChase *)m_pkCameraMap[CAMERA_CHASE])->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
                                                 &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
-	// slightly wider FOV and shorter frustrum
-	((CCameraChase *)m_pkCameraMap[CAMERA_CHASE])->SetProjParams( CAMERA_CHASE_DEFAULT_FOV, 1.0f ,1.0f ,8000.0f );
+	// slightly wider FOV and short frustrum
+	((CCameraChase *)m_pkCameraMap[CAMERA_CHASE])->SetProjParams( CAMERA_CHASE_DEFAULT_FOV, 1.0f ,1.0f ,15.0f );
 
 
 	//--- free look camera --- //	
 	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
     			                                   &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
-	// wide FOV and a large frustrum
+	// wide FOV and a large frustrum for debugging purposes
 	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000000.0f );
 
 
@@ -259,8 +257,8 @@ bool CRenderer::InitializeStaticLighting()
     d3dLight.Specular.b = 1.0f;
 
     d3dLight.Position.x = 0.0f;
-    d3dLight.Position.y = 500.0f;
-    d3dLight.Position.z = -10.0f;//-100.0f;
+    d3dLight.Position.y = 10000.0f;
+    d3dLight.Position.z = 0.0f;//-100.0f;
 
     d3dLight.Attenuation0 = 1.0f; 
     d3dLight.Range        = 50000.0f;//1000.0f;
@@ -271,6 +269,46 @@ bool CRenderer::InitializeStaticLighting()
         return false;// Handle failure
     
     hr = m_pd3dDevice->LightEnable(0, TRUE);
+    if (hr == D3DERR_INVALIDCALL )
+        return false;// Handle failure
+
+    // Initialize the structure.
+    ZeroMemory(&d3dLight, sizeof(d3dLight));
+
+    // set up moonlight
+    d3dLight.Type = D3DLIGHT_DIRECTIONAL;
+    d3dLight.Diffuse.r  = 1.0f;
+    d3dLight.Diffuse.g  = 1.0f;
+    d3dLight.Diffuse.b  = 1.0f;
+    d3dLight.Ambient.r  = 1.0f;
+    d3dLight.Ambient.g  = 1.0f;
+    d3dLight.Ambient.b  = 1.0f;
+    d3dLight.Specular.r = 1.0f;
+    d3dLight.Specular.g = 1.0f;
+    d3dLight.Specular.b = 1.0f;
+
+    /*
+    d3dLight.Position.x = 5000.0f;
+    d3dLight.Position.y = 10000.0f;
+    d3dLight.Position.z = 10000.0f;//-100.0f;
+    */
+    d3dLight.Position.x = 0.0f;
+    d3dLight.Position.y = 0.0f;
+    d3dLight.Position.z = 0.0f;
+
+    d3dLight.Direction.x = -0.5f;
+    d3dLight.Direction.y = -0.1f;
+    d3dLight.Direction.z = -0.5f;
+
+    d3dLight.Attenuation0 = 1.0f; 
+    d3dLight.Range        = 20000.0f;//1000.0f;
+
+    // Set the property information for the first light.
+    hr = m_pd3dDevice->SetLight(1, &d3dLight);
+    if (hr == D3DERR_INVALIDCALL )
+        return false;// Handle failure
+    
+    hr = m_pd3dDevice->LightEnable(1, TRUE);
     if (hr == D3DERR_INVALIDCALL )
         return false;// Handle failure
 
@@ -622,6 +660,7 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
     
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
+    //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
     m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
 
     // Set up the texture 

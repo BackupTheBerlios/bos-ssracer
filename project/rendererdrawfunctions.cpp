@@ -648,6 +648,8 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
 //-----------------------------------------------------------------------------
 void CRenderer::DrawVehicle( CVehicle * pVehicle )
 {
+    //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
+
     // draw body
     DrawEntity( pVehicle );
 

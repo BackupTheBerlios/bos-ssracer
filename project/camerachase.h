@@ -5,7 +5,8 @@
 #include "camera.h"
 #include "vehicle.h"
 
-#define CAMERA_CHASE_DEFAULT_FOV D3DX_PI/2.8f
+//#define CAMERA_CHASE_DEFAULT_FOV D3DX_PI/2.8f
+#define CAMERA_CHASE_DEFAULT_FOV D3DX_PI/3.5f
 
 class CCameraChase : public CD3DCamera
 {
