@@ -60,6 +60,8 @@ CPlayList::~CPlayList() {
 // DESC: Load playlist from a file
 //---------------------------------------------------------------------------//
 void CPlayList::Load( char* cListName ) {
+	m_sListfile = "";
+
 	// Complete the path and filename
 	std::string sListName = cListName;
 	sListName = MUSIC_PATH + sListName + ".spl";
@@ -86,6 +88,7 @@ void CPlayList::Load( char* cListName ) {
 
 	// Close the input stream
 	ifsListIn.close();
+	m_sListfile = cListName;
 
 	return;
 }
@@ -335,6 +338,35 @@ void CPlayList::Clear() {
 
 	// Clear the vector
 	m_vPlayEntry.clear();
+
+	// Release the Stream Object
+	if ( m_cStrm != NULL ) {
+		m_cStrm->Release();
+	}
+
+	return;
+}
+
+
+//---------------------------------------------------------------------------//
+// NAME: Show
+// DESC: Display the list to the specified log file.
+//---------------------------------------------------------------------------//
+void CPlayList::Show( int nLog ) {
+	char cPlay = ' ';
+	int nTrackNum = 1;
+
+	CLog::GetLog().Write( nLog, "---- Playlist: \"%s\" ----", m_sListfile.c_str() );
+
+	for ( int i = 0; i < (int) m_vPlayEntry.size(); i++ ) {
+		// Indicator to mark currently playing track
+		if ( m_nCurrentPos == i ) cPlay = '*';
+		else cPlay = ' ';
+
+		CLog::GetLog().Write( nLog, "%d) %s %c", i+1, m_vPlayEntry[i].c_str(), cPlay );
+	}
+
+	CLog::GetLog().Write( nLog, "--------------------------" );
 
 	return;
 }

@@ -271,6 +271,14 @@ void CSoundMessage::ListPrev() {
 }
 
 
+void CSoundMessage::ShowList() {
+	// Set command properties
+	nCommandType = PLAYLIST_SHOW_COMMAND;
+
+	return;
+}
+
+
 //---------------------------------------------------------------------------//
 // SOUNDCORE COMMANDS
 //---------------------------------------------------------------------------//

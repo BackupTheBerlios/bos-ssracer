@@ -6,8 +6,8 @@
 // *************************************************************************** //
 
 CSoundTask::CSoundTask() {
-	m_bCanKill=true;
-	m_lPriority=5000;
+	m_bCanKill = true;
+	m_lPriority = 5000;
 
 	m_nTaskType = SOUND_TASK;
 	cPlayList = NULL;
@@ -95,8 +95,13 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 	CLog::GetLog().Write( LOG_MISC, "****In handle sound message. %d", cSMsg->nCommandType );
 
 	switch ( cSMsg->nCommandType ) {
+	case PLAYLIST_SHOW_COMMAND:
+		cPlayList->Show( LOG_GAMECONSOLE );
+		break;
+
 	case KILLSOUND_COMMAND:
 		sound.clear();
+		cPlayList->Clear();
 		stream.clear();
 		CSoundCore::GetSoundCore().ResetAll();
 		break;
@@ -107,6 +112,7 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 		break;
 
 	case KILLSOUNDSTREAMS_COMMAND:
+		cPlayList->Clear();
 		stream.clear();
 		CSoundCore::GetSoundCore().ResetStreams();
 		break;
@@ -142,7 +148,7 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 
 	case LISTAUDIO_COMMAND:
 		// List all loaded sound effects
-		CLog::GetLog().Write( LOG_GAMECONSOLE, "------ Loaded Sound Effects: ------" );
+		CLog::GetLog().Write( LOG_GAMECONSOLE, "------ Loaded Sound Effects: (%d of %d) ------", sound.size(), CSoundCore::GetSoundCore().GetFreeSoundEffects() );
 
 		it = sound.begin();
 		while ( it != sound.end() ) {
@@ -152,7 +158,7 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 			it++;
 		}
 
-		CLog::GetLog().Write( LOG_GAMECONSOLE, "------ Loaded Sound Streams: ------" );
+		CLog::GetLog().Write( LOG_GAMECONSOLE, "------ Loaded Sound Streams: (%d of %d) ------", stream.size(), CSoundCore::GetSoundCore().GetFreeSoundStreams() );
 
 		it2 = stream.begin();
 		while ( it2 != stream.end() ) {

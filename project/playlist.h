@@ -33,6 +33,7 @@ private:
 	vector<std::string> m_vPlayEntry;
 
 	// Stream data
+	std::string m_sListfile;
 	CSoundStream *m_cStrm;
 
 	// Control data
@@ -64,6 +65,7 @@ public:
 	void Prev();
 	void Shuffle();
 	void Clear();
+	void Show( int nLog );
 
 	// Status update
 	void Update();

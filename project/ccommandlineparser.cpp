@@ -105,10 +105,10 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("stoplist"));
     Keywords.push_back(std::string("pauselist"));
     Keywords.push_back(std::string("unpauselist"));
-
-    Keywords.push_back(std::string("killsound"));
+    Keywords.push_back(std::string("showlist"));
 
     Keywords.push_back(std::string("showaudio"));
+    Keywords.push_back(std::string("killsound"));
     /*** End Rob's Commands ***/
 
 	return OK;
@@ -186,11 +186,10 @@ int CCommandLineParser::execute()
     if (*it == "stoplist") error = PlaylistCommand();
     if (*it == "pauselist") error = PlaylistCommand();
     if (*it == "unpauselist") error = PlaylistCommand();
+    if (*it == "showlist") error = PlaylistCommand();
 
     if (*it == "showaudio") error = SoundCoreCommand();
     if (*it == "killsound") error = SoundCoreCommand();
-    if (*it == "killsoundeffects") error = SoundCoreCommand();
-    if (*it == "killsoundstreams") error = SoundCoreCommand();
 
 	return error;
 }
@@ -349,6 +348,7 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "STOPLIST - Stops list playback.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "PAUSELIST - Pauses list playback if playing.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "UNPAUSELIST - Unpauses list playback if paused.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "SHOWLIST - Displays the currently loaded playlist.");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------------------------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;
@@ -894,7 +894,7 @@ int CCommandLineParser::SoundCoreCommand()
 int CCommandLineParser::PlaylistCommand()
 {
 	std::string sSoundFile;
-	float fVol = 1.0f;
+	int nVol = 100;
 	bool bAutoRep = true;
 	bool bAutoAdv = true;
 
@@ -944,7 +944,10 @@ int CCommandLineParser::PlaylistCommand()
 			break;
 
 		case 4:
-			fVol = (float) atof( Tokens[1].c_str() );
+			nVol = atoi( Tokens[1].c_str() );
+
+			// Ensure the volume is within the valid range
+			if ( (nVol > 100) || (nVol < 0) ) return BAD_COMMAND;
 
 			// Autorepeat?
 			if ( Tokens[2] == "-repeat" ) {
@@ -966,7 +969,7 @@ int CCommandLineParser::PlaylistCommand()
 
 			// Send the sound message
 			cSMsg = new CSoundMessage();
-			cSMsg->PlayList( fVol, bAutoRep, bAutoAdv );
+			cSMsg->PlayList( (float) nVol / (float) 100, bAutoRep, bAutoAdv );
 			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
 			break;
 
@@ -1026,6 +1029,24 @@ int CCommandLineParser::PlaylistCommand()
 
 		default:
 			CLog::GetLog().Write(LOG_GAMECONSOLE, "unpauselist - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** SHOW command ** //
+	else if ( strcmp( Tokens[0].c_str(), "showlist" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->ShowList();
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "showlist - invalid syntax." );
 			return BAD_COMMAND;
 			break;
 

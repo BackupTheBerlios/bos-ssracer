@@ -50,6 +50,7 @@
 #define PLAYLIST_UNPAUSE_COMMAND 68
 #define PLAYLIST_NEXT_COMMAND 69
 #define PLAYLIST_PREV_COMMAND 70
+#define PLAYLIST_SHOW_COMMAND 71
 
 
 // Forward Class Definitions
@@ -122,6 +123,7 @@ public:
     void UnpauseList();
 	void ListNext();
 	void ListPrev();
+	void ShowList();
 
 	void ListAudio();
 	void KillSound();
