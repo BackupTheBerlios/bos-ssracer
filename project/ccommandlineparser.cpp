@@ -86,12 +86,14 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("drawentbbox"));
     Keywords.push_back(std::string("drawquadtree"));
     Keywords.push_back(std::string("drawplanes"));
+    Keywords.push_back(std::string("drawwaypoints"));
     Keywords.push_back(std::string("exit"));
     /*** End J's Commands ***/
     
-    /** Begin Ram & Gib Commands **/
+    /** Begin Rams Commands **/
     Keywords.push_back(std::string("loadvehicleai"));
-    /*** End Ram & Gib Commands ***/
+    Keywords.push_back(std::string("loadrace"));
+    /*** End Rams Commands ***/
 
     /*** Begin Rob's Commands ***/
     Keywords.push_back(std::string("playsound"));
@@ -121,7 +123,7 @@ int CCommandLineParser::initKeywords()
 
 	/*** Begin Gib's commands ***/
 	Keywords.push_back(std::string("loadcollisiontest"));
-	Keywords.push_back(std::string("CT"));
+    Keywords.push_back(std::string("CT"));
 	/*** End Gib's commands ***/
 
 	return OK;
@@ -182,9 +184,11 @@ int CCommandLineParser::execute()
     if (*it == "drawentbbox") error = SetDraw();
     if (*it == "drawquadtree") error = SetDraw();
     if (*it == "drawplanes") error = SetDraw();
+    if (*it == "drawwaypoints") error = SetDraw();
     if (*it == "exit") error = SystemCommand();
 
     if (*it == "loadvehicleai") error = LoadVehicleAI();
+    if (*it == "loadrace") error = loadrace();
 
     if (*it == "playsound") error = SoundEffectCommand();
     if (*it == "stopsound") error = SoundEffectCommand();
@@ -349,12 +353,13 @@ int CCommandLineParser::help()
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESH <file> <dir> - load a mesh at some directory (leave .x extension off");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "SETVISCULL <0|1> - turn on visibility culling");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "DRAW{ENTBBOX|QUADTREE} <0|1> - draw debug information for AI");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "DRAW{ENTBBOX|QUADTREE|PLANES|WAYPOINTS} <0|1> - draw debug information for AI");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> [dir] - load a map and create a scene from a .map file [dir] defaults to .\\maps\\ if omitted");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map and scene objects");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADVEHICLEAI - runs opponent vehicle AI test");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADCOLLISIONTEST - loads a scene with collidable objects and a player vehicle.");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADRACE - loads a race baby! (map, WPS, opponent, race cond.)");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n*** Sound Engine Commands ***" );
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOAD{SOUND|STREAM} <file> as <alias> - Loads a sound effect or stream and gives it the specified alias.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAY{SOUND|STREAM} [-loop] <alias> - Plays a sound effect or stream either one-shot or looping.");
@@ -832,6 +837,9 @@ int CCommandLineParser::SetDraw()
             else if (Tokens[0] == "drawplanes")  {
                 CRenderer::GetRenderer().SetDrawRects(true);
             }
+            else if (Tokens[0] == "drawwaypoints")  {
+                CRenderer::GetRenderer().SetDrawWayPoints(true);
+            }
             CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: state set to %d", Tokens[0].c_str(), 1);
         }
         else if (Tokens[1] == "OFF" || Tokens[1] == "off" || Tokens[1] == "0")  {
@@ -845,6 +853,10 @@ int CCommandLineParser::SetDraw()
             else if (Tokens[0] == "drawplanes")  {
                 CRenderer::GetRenderer().SetDrawRects(false);
             }
+            else if (Tokens[0] == "drawwaypoints")  {
+                CRenderer::GetRenderer().SetDrawWayPoints(false);
+            }
+
             CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: state set to %d", Tokens[0].c_str(), 0);
         }
         else  {
@@ -869,7 +881,8 @@ int CCommandLineParser::SystemCommand()
 // ===== End Jay's functions ==== //
 
 
-// ===== Begin Ram & Gib Functions ==== //
+// ===== Begin Ram's FunctionsFunctions ==== //
+
 int CCommandLineParser::LoadVehicleAI()
 {
     //just temporary TODO cut and paste properly 
@@ -978,7 +991,63 @@ int CCommandLineParser::LoadVehicleAI()
     return 0;
 }
 
-//  ===== End Ram & Gibs Functions =====//
+//Kinda like loadmap... but different :)
+int CCommandLineParser::loadrace()
+{
+    string sDir, sName;
+    FILE *fp;
+
+    // if only 'loadrace' was entered
+    if (Tokens.size() == 1)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading race from debug.race");
+        sName = "debug";
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + sName + "\\";
+    }
+    // if only 'loadrace <racename>' was entered
+    else if (Tokens.size() == 2)  {
+        sName = Tokens[1];
+        // look in the .\maps directory
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + sName + "\\";
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadrace:  looking in %s for race", sDir.c_str());
+    }
+    // if 'loadrace <racename> <dir>' was entered
+    else if (Tokens[2].find(".\\", 0) == 0)  { // check if they used that .\ dir shortcut
+        sName = Tokens[1];
+        sDir = Tokens[2];
+        sDir.replace(0, 2, CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING));
+    }
+
+    //check if the file exists
+    fp = fopen( (sDir+sName+".race").c_str(), "r");
+    if (!fp)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadrace Error: File does not exist: %s", (sDir+sName+".race").c_str());
+        return OK;
+    }
+
+    // first unload the current map & scene if any
+    if (CGameStateManager::GetGameStateManager().GetScenePtr()->IsLoaded() == true )  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Releasing current scene");
+        if (CGameStateManager::GetGameStateManager().GetScenePtr()->ReleaseScene()){
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "Scene released sucessfully");
+        }
+        else {
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR: Scene was not released sucessfully");
+        }
+    }
+
+    // load the new map and scene
+    if (CGameStateManager::GetGameStateManager().GetScenePtr()->LoadRace( fp, &sDir, &sName ))  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Successfully loaded Race: %s%s%s", sDir.c_str(), sName.c_str(), ".race");
+    }
+    else  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR: Failed to load race: %s%s%s", sDir.c_str(), sName.c_str(), ".race");
+    }
+    CLog::GetLog().Write(LOG_MISC, "Done Command Line");
+	            
+    return OK;
+}
+
+//  ===== End Rams Functions =====//
 
 
 // ===== Begin Rob's Functions ==== ///

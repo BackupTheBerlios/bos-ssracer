@@ -128,7 +128,7 @@ protected:
 	float CalculateMaxTraction(float rearAxleWeight);
 	float CalculateLateralForce(float slipAngleRADS, float axleWeight);
 
-	void InterpolateSteeringAngle(float deltaT);
+	virtual void InterpolateSteeringAngle(float deltaT);
 	void CalculateAutomaticGearShifting();
 
 	void TransformLocalToWorldSpace();
