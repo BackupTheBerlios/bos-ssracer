@@ -657,4 +657,86 @@ void CSoundCore::LogMessage( char *sMsg ) {
 	return;
 }
 
+
+
+//---------------------------------------------------------------------------//
+// NAME: GetFreeSoundEffects
+// DESC:
+//   Get a count of the number of sound effects that are unused.
+// RETURNS:
+//   int - number of free sound effects.
+//---------------------------------------------------------------------------//
+int CSoundCore::GetFreeSoundEffects() {
+	int i = 0, freecount = 0;
+
+	for( i = 0; i < MAX_SOUND_VOICES; i++ ) {
+		if ( m_sfx[i].IsLocked() == TRUE ) freecount++;
+	}
+
+	return freecount;
+}
+
+
+//---------------------------------------------------------------------------//
+// NAME: GetFreeSoundStreams
+// DESC:
+//   Get a count of the number of sound streams that are unused.
+// RETURNS:
+//   int - number of free sound streams.
+//---------------------------------------------------------------------------//
+int CSoundCore::GetFreeSoundStreams() {
+	int i = 0, freecount = 0;
+
+	for( i = 0; i < MAX_SOUND_STREAMS; i++ ) {
+		if ( m_stream[i].IsLocked() == TRUE ) freecount++;
+	}
+
+	return freecount;
+}
+
+
+
+//---------------------------------------------------------------------------//
+// NAME: ResetSFX
+// DESC:
+//   Release all sound effects (DANGER: This may leave pointers still
+//   referring to the uninitialized object!!)
+//---------------------------------------------------------------------------//
+void CSoundCore::ResetSFX() {
+	// Loop through all sound effects and release all that are locked
+	for( int i = 0; i < MAX_SOUND_VOICES; i++ ) {
+		if ( m_sfx[i].IsLocked() == TRUE ) m_sfx[i].Release();
+	}
+	return;
+}
+
+
+//---------------------------------------------------------------------------//
+// NAME: ResetStreams
+// DESC:
+//   Release all sound streams (DANGER: This may leave pointers still
+//   referring to the uninitialized object!!)
+//---------------------------------------------------------------------------//
+void CSoundCore::ResetStreams() {
+	// Loop through all sound streams and release all that are locked
+	for( int i = 0; i < MAX_SOUND_STREAMS; i++ ) {
+		if ( m_stream[i].IsLocked() == TRUE ) m_stream[i].Release();
+	}
+	return;
+}
+
+
+//---------------------------------------------------------------------------//
+// NAME: ResetAll
+// DESC:
+//   Release everything (DANGER: This may leave pointers still
+//   referring to the uninitialized object!!)
+//---------------------------------------------------------------------------//
+void CSoundCore::ResetAll() {
+	ResetSFX();
+	ResetStreams();
+
+	return;
+}
+
 //----------------------------------- EOF ------------------------------------//

@@ -172,6 +172,8 @@ public:
 	long GetMasterVolume() { return m_lVolume; }
 	HRESULT SetMasterVolume(long lTargetVolume);
 	BOOL IsSuspended() { return m_bSuspended; }
+	int GetFreeSoundEffects();
+	int GetFreeSoundStreams();
 
 	// Static getters and setters
 	static CSoundCore &GetSoundCore();
@@ -182,6 +184,9 @@ public:
 	void Destroy();
 	void Suspend();
 	void Resume();
+	void ResetSFX();
+	void ResetStreams();
+	void ResetAll();
 
 	HRESULT GetSoundEffect( const char *cSoundName, CSoundEffect **ref = NULL );
 	HRESULT GetSoundStream( const char *cMusicName, CSoundStream **ref = NULL );
