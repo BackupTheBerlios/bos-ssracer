@@ -874,7 +874,7 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
     //$$$NOTE then set the active camera to the chase cam -J
 	
     // Set the playerVehicle pointer for the gamestatemanager,
-	//CGameStateManager::GetGameStateManagerPtr()->SetPlayerVehicle(newCar);  //please fix
+	CGameStateManager::GetGameStateManagerPtr()->SetPlayerVehicle(newCar);  //please fix
 
 	return 1;
 }
