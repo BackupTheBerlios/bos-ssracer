@@ -270,6 +270,13 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 
 	//--- orientation ---//
 	vTemp = pEntity->GetRotate();
+
+//	pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
+//	pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
+//    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
+
+	//pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
+
         
     /* 1) alternate rotation method
     D3DXMATRIX temp;
@@ -300,6 +307,7 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
     
     //$$$NOTE this also works too, but note the rotations I'm using here in each parameter...
     //pMatrixStack->RotateYawPitchRollLocal(RADIANS(vTemp->Y()), RADIANS(vTemp->X()), RADIANS(vTemp->Z())); /// 2 ALSO WORKING
+
 
     
     //--- translation ---//

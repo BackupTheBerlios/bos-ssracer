@@ -985,6 +985,7 @@ void CVehicle::CalculateVehicleAngularVelocity(float deltaT)
 void CVehicle::CalculatePitchAndRoll(float deltaT)
 {
 	
+	
 	// Body rolls 2 degrees per G of acceleration
 	// for right now.
 	if(float(fabs(accelerationLC.X())) > 0.0f) {
@@ -996,6 +997,7 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 		//}
 	}
 	
+	
 
 	
 	if(float(fabs(accelerationLC.Y())) > 0.0f) {
@@ -1006,6 +1008,7 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 			}
 	//	}
 	}
+	
 	
 }
 
