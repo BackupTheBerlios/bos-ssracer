@@ -68,7 +68,7 @@ public:
         // set the AABBox
         m_BBox.Center() = vOrigin;
         m_BBox.Extent(0) = m_BBox.Extent(2) = fHalfWidth;
-        m_BBox.Extent(1) = 0.01f; // thin out the height of the box
+        m_BBox.Extent(1) = 100;//1.0f; // thin out the height of the box
         m_BBox.Axis(0) = Vector3f(1,0,0);  // axis aligned
         m_BBox.Axis(1) = Vector3f(0,1,0);
         m_BBox.Axis(2) = Vector3f(0,0,1);
@@ -76,8 +76,8 @@ public:
         // set the bounding sphere
         m_BSphere.Center() = vOrigin;
         // use diagonal of box to get bounding sphere
-        m_BSphere.Radius() = (Vector3f(m_BBox.Extent(0),0,m_BBox.Extent(2)) - Vector3f(-m_BBox.Extent(0),0,-m_BBox.Extent(2))).Length()/2.0f; 
-        //m_BSphere.Radius() = fHalfWidth;
+        //m_BSphere.Radius() = (Vector3f(m_BBox.Extent(0),0,m_BBox.Extent(2)) - Vector3f(-m_BBox.Extent(0),0,-m_BBox.Extent(2))).Length()/2.0f; 
+        m_BSphere.Radius() = fHalfWidth;
     };
 
     

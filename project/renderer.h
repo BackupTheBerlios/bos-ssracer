@@ -85,6 +85,8 @@ protected:
     RECT              m_rcWindow;
 
     bool              m_bVisCullingEnabled; // enable culling
+    bool              m_bDrawEntBBoxes;     //$$$DEBUG show bounding boxed for entities
+    bool              m_bDrawQNodeBBoxes;     //$$$DEBUG show bounding boxed for quadtree nodes
 
     static HRESULT ms_hResult;
 	static CRenderer * ms_pkRenderer;
@@ -152,6 +154,13 @@ public:
     bool IsVisCullingEnabled() {return m_bVisCullingEnabled;};
     void SetVisCulling( bool bState) { m_bVisCullingEnabled = bState;};
 
+    bool IsDrawEntBBoxesEnabled() {return m_bDrawEntBBoxes;};
+    void SetDrawEntBBoxes( bool bState) { m_bDrawEntBBoxes = bState;};
+
+    bool IsQNodeBBoxesEnabled() {return m_bDrawQNodeBBoxes;};
+    void SetDrawQNodeBBoxes( bool bState) { m_bDrawQNodeBBoxes = bState;};
+
+
     void InitializeState();
     //void SetState (const RenderStatePtr aspkState[]);
 
@@ -193,6 +202,7 @@ protected:
     void DrawDebugOverlay();
     void DrawEntity( CEntity * pEntity );
     void DrawQuadTreeNode( CQuadNode * pQNode );
+    void DrawBBox( Box3f * pBBox, float fPointSize = 1.0f);
 
 private:
 };

@@ -249,6 +249,18 @@ void CRenderer::DrawDebugOverlay()
 
 
 
+struct D3DVertex
+{
+    FLOAT x, y, z;//, w;
+    FLOAT psize;
+    DWORD color;
+};
+
+//#define D3DFVF_D3DVertex (D3DFVF_XYZW|D3DFVF_PSIZE|D3DFVF_DIFFUSE)
+#define D3DFVF_D3DVertex (D3DFVF_XYZ|D3DFVF_PSIZE|D3DFVF_DIFFUSE)
+//#define D3DFVF_D3DVertex (D3DFVF_XYZ|D3DFVF_DIFFUSE)
+
+
 //-----------------------------------------------------------------------------
 // Name:  DrawEntity()
 // Desc:  generic draw funciton for an entity
@@ -298,6 +310,90 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 		#endif
     }
 
+    if (m_bDrawEntBBoxes == true)
+        DrawBBox(pEntity->GetBoundingBox(), 10.0f);
+
+
+}
+
+
+void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize)
+{
+    LPDIRECT3DVERTEXBUFFER9 theBuffer;
+    //CreateVertexBuffer( 3*sizeof(CUSTOMVERTEX), 0 /* Usage */, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &g_pVB )
+
+    if( FAILED( m_pd3dDevice->CreateVertexBuffer( 24*sizeof(D3DVertex), 0, D3DFVF_D3DVertex, D3DPOOL_DEFAULT, &theBuffer, NULL) ) )
+    {
+        return;
+    }
+
+    D3DVertex myBox[24];  // 8 points + 4 points to complete the line list
+
+    Vector3f vBBox[8];
+    //pEntity->GetBoundingBox()->ComputeVertices(vBBox);
+    pBBox->ComputeVertices(vBBox);
+
+    // copy the vertices of the bounding box for rendering
+    // top edges
+    int j;
+    for(j=0; j<8; j++)  {
+        myBox[j].x = vBBox[j].X();
+        myBox[j].y = vBBox[j].Y();
+        myBox[j].z = vBBox[j].Z();
+        //myBox[j].w = 1.0f;
+        myBox[j].psize = fPointSize;
+        myBox[j].color = D3DCOLOR_ARGB( 100, 255, 255, 255 );
+    }
+
+    //top edges
+    myBox[8] = myBox[2];
+    myBox[9] = myBox[6];
+    myBox[10] = myBox[3];
+    myBox[11] = myBox[7];
+
+    // bottom edges
+    myBox[12] = myBox[1];
+    myBox[13] = myBox[5];
+    myBox[14] = myBox[4];
+    myBox[15] = myBox[0];
+
+    // front side edges
+    myBox[16] = myBox[7];
+    myBox[17] = myBox[4];
+    myBox[18] = myBox[6];
+    myBox[19] = myBox[5];
+
+    // back side edges
+    myBox[20] = myBox[3];
+    myBox[21] = myBox[0];
+    myBox[22] = myBox[2];
+    myBox[23] = myBox[1];
+
+
+    // Copy box vertices into the buffer
+    VOID* pVertices;
+    if( FAILED( theBuffer->Lock( 0, sizeof(myBox), (void**)&pVertices, 0 ) ) )
+        return;// E_FAIL;
+    memcpy( pVertices, myBox, sizeof(myBox) );
+    theBuffer->Unlock();
+
+
+    // Draw the vertex buffer
+    m_pd3dDevice->SetStreamSource( 0, theBuffer, 0,  sizeof(D3DVertex) );
+    m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
+
+    // turn lighting off
+    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
+
+    m_pd3dDevice->DrawPrimitive( D3DPT_POINTLIST, 0, 8 );
+    m_pd3dDevice->DrawPrimitive( D3DPT_LINELIST, 0, 12 );
+    //m_pd3dDevice->DrawPrimitiveUP( D3DPT_LINELIST, 12, pVertices, sizeof(D3DVertex));
+
+    // turn lighting back on
+    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
+
+    // Destroy the vertex buffer
+    theBuffer->Release();
 }
 
 
@@ -380,6 +476,7 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 */
 
 
+
 //-----------------------------------------------------------------------------
 // Name:  DrawQuadTreeNode()
 // Desc:  recursively draws all entities within a quad tree node
@@ -392,8 +489,13 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
         DrawEntity(it->second);
     }
 
-    if (!pQNode->m_pChildNode[NE]) 
+    if (!pQNode->m_pChildNode[NE])  {
         return; // no children to draw
+    }
+
+    if (m_bDrawQNodeBBoxes == true)
+        DrawBBox(&pQNode->m_BBox);
+
 
     // recursively draw the child nodes
     DrawQuadTreeNode(pQNode->m_pChildNode[NE]);

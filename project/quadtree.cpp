@@ -121,13 +121,14 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     m_fNodeWidth = max( m_vfMaxExtent.X()-m_vfMinExtent.X(), m_vfMinExtent.X() - m_vfMaxExtent.X());
     m_fNodeWidth = max( m_fNodeWidth, m_vfMaxExtent.Z()-m_vfMinExtent.Z());
     m_fNodeWidth = max( m_fNodeWidth, m_vfMinExtent.Z()-m_vfMaxExtent.Z());
+    m_fNodeWidth /= 2.0f;
 
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE, "Quadtree root node width: %f", m_fNodeWidth);
     #endif
 
     // create the quadtree based on these statistics
-    m_pkQRoot = new CQuadNode( m_vfMapOrigin, m_fNodeWidth/2.0f );
+    m_pkQRoot = new CQuadNode( m_vfMapOrigin, m_fNodeWidth );
     
     // save the root node for deletion later
     m_vpNodes.push_back(m_pkQRoot);
@@ -139,7 +140,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     // assuming a uniform distribution of entities, try to compute an optimal tree depth
     // want #levels = log(#entities)/log(#subdiv at each level=4)
     //m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) );
-    m_iLevels = 5;
+    m_iLevels = 6;
     
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE,"Quadtree depth %d", m_iLevels);
@@ -189,10 +190,10 @@ void CQuadTree::Add(CEntity *pEntity)
     for (int i=0; i<8; i++)  {
         vBox[i].Y() = 0.0f;
     }
-  	AddReference( vBox[6], pEntity);  // +x +z
+  	AddReference( vBox[0], pEntity);  // -x -z
     AddReference( vBox[1], pEntity);  // +x -z
     AddReference( vBox[4], pEntity);  // -x +z
-    AddReference( vBox[0], pEntity);  // -x -z
+    AddReference( vBox[5], pEntity);  // +x -z
 
     return;
 }

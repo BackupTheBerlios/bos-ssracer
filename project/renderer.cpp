@@ -121,6 +121,13 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     //this->SetActiveCamera(CAMERA_FREELOOK);  //device isn't even set up yet so we can't use this funciton
     m_pActiveCamera = m_pkCameraMap[CAMERA_FREELOOK];
     m_eActiveCamType = CAMERA_FREELOOK;
+
+    // set debugging flags
+    #ifdef _DEBUG
+    m_bDrawQNodeBBoxes = m_bDrawEntBBoxes = true;
+    #else
+    m_bDrawQNodeBBoxes = m_bDrawEntBBoxes = false;
+    #endif
 }
 
 
@@ -269,13 +276,7 @@ HRESULT CRenderer::Initialize()
 
 
 
-struct CUSTOMVERTEX
-{
-    D3DXVECTOR3 position; // The 3-D position for the vertex.
-    D3DXVECTOR3 normal;   // The surface normal for the vertex.
-};
-// Custom flexible vertex format (FVF).
-#define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_NORMAL)
+
 //-----------------------------------------------------------------------------
 // Name: CreateMesh()
 // Desc: creates a mesh object for an entity
