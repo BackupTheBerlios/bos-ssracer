@@ -46,6 +46,7 @@ private:
 	CPostGame* m_PostGame;
 	CPauseGame* m_PauseGame;
 	CHome* m_Home;
+    CQuit* m_Quit;
 };
 
 #endif

@@ -233,13 +233,18 @@ void COpponentAI::Update()
 			if ((*thisCar)->GetVehicleVelocityWC().Length() > VAI_CARS_VEL) {
 				(*thisCar)->SetBrake(true); (*thisCar)->SetGas(false);
 			}
-
+            // NOTE: vehicle current velocity will rarely ever be EXACTLY VAI_CARS_VEL
+			// Therefore, gas and brake are probably going to alternate.
+			// This can be fixed if necessary bay testing to see if current velocity falls
+			// within a range rather than an exact value.
+			// ALSO: we can give each Opponent vehicle its own standard velocity if desired.
             //Rams add to brake at last waypoint (after reaching it)
             if (isAtWaypoint((*thisCar)) && (*thisCar)->Next()->getLastWay()) {
                 (*thisCar)->lastWPReached = true;
             }
             //Kind of shitty way to do this, but hey it works-> will fix later
             CLog::GetLog().Write(LOG_DEBUGOVERLAY,112, "Vehicle Velocity: %f", (*thisCar)->GetVehicleVelocityWC().Length());
+            
             if ((*thisCar)->lastWPReached){ 
             (*thisCar)->SetBrake(true); (*thisCar)->SetGas(false);
             
@@ -248,11 +253,7 @@ void COpponentAI::Update()
             }
             if((*thisCar)->raceOver){
               (*thisCar)->SetBrake(false); (*thisCar)->SetGas(false);}
-			// NOTE: vehicle current velocity will rarely ever be EXACTLY VAI_CARS_VEL
-			// Therefore, gas and brake are probably going to alternate.
-			// This can be fixed if necessary bay testing to see if current velocity falls
-			// within a range rather than an exact value.
-			// ALSO: we can give each Opponent vehicle its own standard velocity if desired.
+			
 		}
 		break;
 	default:; // Program should never get here

@@ -22,6 +22,7 @@ CFrontendManager::CFrontendManager()
 	m_PostGame = NULL;
 	m_PauseGame = NULL;
 	m_Home = NULL;
+    m_Quit = NULL;
 
 	m_pkFrontendManager = this;
 }
@@ -35,6 +36,7 @@ CFrontendManager::~CFrontendManager()
 	SAFE_DELETE(m_PostGame);
 	SAFE_DELETE(m_PauseGame);
 	SAFE_DELETE(m_Home);
+    SAFE_DELETE(m_Quit);
 }
 
 bool CFrontendManager::Start()
@@ -44,8 +46,8 @@ bool CFrontendManager::Start()
 	m_Garage = new CGarage();
 	m_PostGame = new CPostGame();
 	m_PauseGame = new CPauseGame();
-	m_Home = new CHome();
-
+  	m_Home = new CHome();
+    m_Quit = new CQuit();
 	m_curScreen = m_MainMenu;
 	m_iState = MAIN_MENU;
 
@@ -118,6 +120,7 @@ int CFrontendManager::Transition()
 	case HELP:
 	case CREDITS:
 	case QUIT:
+        m_curScreen = m_Quit; m_iState = QUIT; break;
 	case PERFORMANCE:
 	case DEALERSHIP:
 #ifdef _DEBUG

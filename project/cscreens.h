@@ -177,5 +177,20 @@ class CHome : public CScreen
 
 };
 
+class CQuit : public CScreen
+{
+  public:
+    //buttons
+  CButton * quit;
+  CButton * mainMenu;
 
+  int screenOrder[2];
+
+  //functions
+  CQuit();          //constructor where all widgets are set 
+  ~CQuit();         //destructor
+  void draw();          //Jay's stub to render screen
+  void processInput(int key);
+
+};
 #endif

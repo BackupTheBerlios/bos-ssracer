@@ -390,3 +390,54 @@ void CHome::processInput(int key)
   }
 }
 
+//Quit Screen SCREEN
+CQuit::CQuit()
+{
+  quit = new CButton();
+  quit->setText("Quit");
+  mainMenu = new CButton();
+  mainMenu->setText("Back to Main Menu");
+
+  int tempOrder[]={QUIT, MAIN_MENU};
+  memcpy(screenOrder, tempOrder, sizeof(tempOrder));
+  maxScreeni = 1;
+}
+
+
+CQuit::~CQuit()
+{
+  //Do something here
+}
+
+void CQuit::draw()
+{
+  //$$$TEMP just draw this for now
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "QUIT", 0.3, 0.3);
+
+  quit->draw();
+  mainMenu->draw();
+}
+
+void CQuit::processInput(int key)
+{
+  switch(key)
+  {
+  case GAME_TAB:
+  case GAME_DOWN:
+    selectedScreeni++;
+    if (selectedScreeni > maxScreeni)
+    selectedScreeni =0;
+    break;
+  case GAME_UP:
+    selectedScreeni--;
+    if (selectedScreeni < 0)
+      selectedScreeni = maxScreeni;
+    break;
+  case GAME_LEFT:
+  case GAME_RIGHT:
+    break;
+  case GAME_RETURN:
+  case GAME_NUMPADENTER:
+    gotoScreen = selectedScreeni;
+  }
+}
