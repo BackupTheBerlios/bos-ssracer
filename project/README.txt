@@ -1,16 +1,34 @@
 Super Street Racer
-BETA 4.0 Release Documentation -- Readme.txt
+BETA 5.0 Release Documentation -- Readme.txt
 https://developer.berlios.de/projects/bos-ssracer/
 
-BETA 4.0 *********** CURRENT VERSION PLEASE FILL THIS IN **************
+
+BETA 5.0 
 --------
 [DD.MM.2004]
+
+Added basic coll response
+Added render state management
+Added .waypoints file
+Added .planes file
+Added .race file
+
+Bug Fixes:
+
+Known Bugs:
+
+
+BETA 4.0 
+--------
+[31.3.2004]
 
 Added basic opponent AI
 Added FPS counter
 Added playlist functionality
 Added sound management
+Added front end
 Changed Entity management
+Changed mesh directory structure
 
 Bug Fixes:
 - skybox rendering no longer clobbers render states

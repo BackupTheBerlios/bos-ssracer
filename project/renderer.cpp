@@ -18,6 +18,7 @@ using namespace Wml;
 // --- internal library includes --- //
 #include "timer.h"
 #include "renderer.h"
+#include "renderervertexformats.h"
 #include "gamestatemanager.h"
 #include "settings.h"
 #include "cinputconsole.h"
@@ -33,14 +34,14 @@ using namespace Wml;
 // static member declarations
 //-----------------------------------------------------------------------------
 //CD3DCamera CRenderer::m_pActiveCamera; // active camera in game
-CameraType CRenderer::m_eActiveCamType = CAMERA_UNKNOWN;     // type of active cam
-CD3DSettings      CRenderer::m_d3dSettings;
-CD3DEnumeration   CRenderer::m_d3dEnumeration;
-HRESULT CRenderer::ms_hResult                = NULL;
-LPDIRECT3D9       CRenderer::m_pD3D          = NULL;
-LPDIRECT3DDEVICE9 CRenderer::m_pd3dDevice    = NULL;
+//CameraType CRenderer::m_eActiveCamType = CAMERA_UNKNOWN;     // type of active cam
+//CD3DSettings      CRenderer::m_d3dSettings;
+//CD3DEnumeration   CRenderer::m_d3dEnumeration;
+//HRESULT CRenderer::ms_hResult                = NULL;
+//LPDIRECT3D9       CRenderer::m_pD3D          = NULL;
+//LPDIRECT3DDEVICE9 CRenderer::m_pd3dDevice    = NULL;
 //std::map<std::string, CD3DMesh *> CRenderer::m_kMeshMap;       // meshes available to this app
-std::map< unsigned int, CD3DCamera * > CRenderer::m_pkCameraMap;  // cameras used by this renderer
+//std::map< unsigned int, CD3DCamera * > CRenderer::m_pkCameraMap;  // cameras used by this renderer
 CRenderer * CRenderer::ms_pkRenderer = NULL; 
 
 
@@ -129,6 +130,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     m_bDrawQNodeBBoxes = false;
     m_bDrawEntBBoxes = false;
     m_bDrawRects = false;
+
 }
 
 
@@ -230,17 +232,29 @@ HRESULT CRenderer::Initialize()
     if (!SetCurrentDirectory(CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING).c_str()))
         return E_FAIL;
 
+    if (!InitStaticLighting())
+        return E_FAIL;
 
-    //$$$DEBUG testing lighting $$$$$$$$$$$$$$$$$$$$$$$$$$$
+    return S_OK;
+}
+
+
+
+//-----------------------------------------------------------------------------
+// Name: InitStaticLighting()
+// Desc: Initialize static lighting for the scene
+//-----------------------------------------------------------------------------
+bool CRenderer::InitStaticLighting()
+{
+    HRESULT hr;
+
     D3DLIGHT9 d3dLight;
-
 
     // Initialize the structure.
     ZeroMemory(&d3dLight, sizeof(d3dLight));
 
-    //D3DUtil_InitLight( &d3dLight );
-
-    // Set up a white point light.
+    //$$$TEMP Set up a white point light for now
+    // I'll fake the moonlight using the actual position of the moon on the skybox -J
     d3dLight.Type = D3DLIGHT_POINT;
     d3dLight.Diffuse.r  = 1.0f;
     d3dLight.Diffuse.g  = 1.0f;
@@ -261,20 +275,15 @@ HRESULT CRenderer::Initialize()
 
     // Set the property information for the first light.
     hr = m_pd3dDevice->SetLight(0, &d3dLight);
-    if (SUCCEEDED(hr))
-	    ;// Handle Success
-    else
-        assert(0);// Handle failure
+    if (hr == D3DERR_INVALIDCALL )
+        return false;// Handle failure
     
     hr = m_pd3dDevice->LightEnable(0, TRUE);
-        if (SUCCEEDED(hr))
-	    ;// Handle Success
-    else
-	    assert(0);// Handle failure
+    if (hr == D3DERR_INVALIDCALL )
+        return false;// Handle failure
 
-    return S_OK;
+    return true;
 }
-
 
 
 
@@ -396,10 +405,11 @@ int iDrawnEnt = 0, iTotalNodeEnt=0;
 //-----------------------------------------------------------------------------
 void CRenderer::RenderScene()
 {
-    //InitializeState();
-
     // render the skybox first
     DrawSkyBox();
+
+    // load the default render state
+    m_pDefaultSB->Apply();
 
 	#ifdef _DEBUG  // show developer info
     char tMsgA[25];
@@ -452,128 +462,6 @@ void CRenderer::RenderScene()
     #endif
 }
 
-/*
-
-    assert(m_pd3dDevice);
-    int iTemp=0;//$$$TEMP  should slow down the timer
-
-//TIMERTEST:
-    for(map< std::string, CD3DMesh * >::iterator it=m_kMeshMap.begin(); it!=m_kMeshMap.end(); it++ )
-    {
-
-        assert(it->second);
-        CD3DMesh * pTemp = it->second;
-        pMatrixStack->Push(); 
-        pMatrixStack->LoadIdentity();
-
-	    D3DMATRIX xRot, yRot, zRot;
-	    // orientation
-	    //vTemp = &Vector3f(0,0,0);//(*it)->GetRotate();
-	    //pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
-	    //pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
-	    //pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
-	    //pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
-	    
-	    // translation
-	    vTemp = &Vector3f(0,0,0);//(*it)->GetTranslate();		
-	    pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
-        //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-	    // scale
-	    vTemp = &Vector3f(0.1,0.1,0.1);//(*it)->GetScale();
-	    pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
-        //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-
-	    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
-
-        //actual drawing of the mesh
-        assert(m_pd3dDevice);
-        if ( FAILED(hr =  it->second->Render(m_pd3dDevice)) )  {
-        //if ( FAILED(hr =  m_kMeshMap[(*it)->GetMesh()->m_strName]->Render(m_pd3dDevice)) )  {
-		    #ifdef _DEBUG
-		    //CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
-            CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", it->second->m_strName);
-		    #endif
-	    }
-	    else {
-		    #ifdef _DEBUG
-		    CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", it->second->m_strName);
-		    #endif
-        }
-
-   	    pMatrixStack->Pop();
-    }
-
-    //$$$TEMP
-    //if (iTemp < 100) {
-    //    iTemp++;
-    //    goto TIMERTEST;
-    //}
-
-*/
-
-/*
-LPD3DXBUFFER materialBuffer;
-DWORD numMaterials; // Note: DWORD is a typedef for unsigned long
-LPD3DXMESH mesh;
-
-// Load the mesh from the specified file
-hr=D3DXLoadMeshFromX("C:\\Documents and Settings\\jay.ALTRON\\My Documents\\SCHOOL\\CPSC585\\CODE\\WORKING\\project\\mercedes.x", D3DXMESH_SYSTEMMEM, 
-                             m_pd3dDevice, NULL, 
-                             &materialBuffer,NULL, &numMaterials, 
-                             &mesh );
-
-if (FAILED(hr))
-     assert(0);//return FALSE;
-
-D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)materialBuffer->GetBufferPointer();
-
-// Create two arrays, one for our materials and one for our textures
-D3DMATERIAL9 *meshMaterials = new D3DMATERIAL9[numMaterials];
-LPDIRECT3DTEXTURE9 *meshTextures = new LPDIRECT3DTEXTURE9[numMaterials];
-
-// Loop through the material buffer extracting the data
-for (DWORD i=0; i<numMaterials; i++)
-{
-  // Copy the material
-  meshMaterials[i] = d3dxMaterials[i].MatD3D;
-
-  // Set the ambient color for the material (D3DX does not do this)
-  meshMaterials[i].Ambient = meshMaterials[i].Diffuse;
-     
-  // Create the texture if it exists
-  meshTextures[i] = NULL;
-  if (d3dxMaterials[i].pTextureFilename)
-     D3DXCreateTextureFromFile(m_pd3dDevice, d3dxMaterials[i].pTextureFilename, &meshTextures[i]);
-}
-
-// Done with the material buffer
-materialBuffer->Release();
-
-
-///
-pMatrixStack->Push(); 
-pMatrixStack->LoadIdentity();
-// translation
-pMatrixStack->Translate(0.0, 0.0,0.0);
-// scale
-pMatrixStack->Scale(0.5,0.5,0.5);
-m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
-pMatrixStack->Pop(); 
-///
-
-for(i=0; i<numMaterials; i++ )
-{
-   // Set the material and texture for this subset
-  m_pd3dDevice->SetMaterial(&meshMaterials[i]);
-  m_pd3dDevice->SetTexture( 0,meshTextures[i] );
-       
-  // Draw the mesh subset
-  mesh->DrawSubset( i );
-}
-*/
-
 
 
 //-----------------------------------------------------------------------------
@@ -602,8 +490,7 @@ void CRenderer::Cleanup()
         m_pd3dDevice->Release();
     if( m_pD3D != NULL)
         m_pD3D->Release();
-
-    //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ NEED TO DE FINAL CLEANUP TO CALL RELEASE EVERYTHING!!!!
+   
 }
 
 
@@ -655,7 +542,7 @@ void CRenderer::ToggleFullScreen( int  riNewWidth, int riNewHeight )
 
 void CRenderer::ResetDevice ()
 {
-    ms_hResult = m_pd3dDevice->Reset(&m_d3dpp);
+    m_hResult = m_pd3dDevice->Reset(&m_d3dpp);
     
     //m_pqDefaultFont->OnResetDevice();
     InitializeState();
@@ -672,11 +559,12 @@ void CRenderer::OnDeviceLost ()
 
 //-----------------------------------------------------------------------------
 // Name:  IntitializeState()
-// Desc:  sets up the default rendering state
+// Desc:  sets up the default rendering state and commonly used state blocks
 //-----------------------------------------------------------------------------
 void CRenderer::InitializeState ()
 {
-    // Set miscellaneous render states
+    // set up commonly used state blocks //
+    m_pd3dDevice->BeginStateBlock();
 
     // z-buffering
     m_pd3dDevice->SetRenderState(D3DRS_ZENABLE,TRUE);
@@ -700,8 +588,24 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
 
-    return;
+    // save this as the default state block
+    m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_DEFAULT] );
+    m_pDefaultSB = m_pSBMap[RENSB_DEFAULT];
 
+    // set up other utility state blocks
+    m_pd3dDevice->BeginStateBlock();
+    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
+    m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+    m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
+    m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_DEBUGSTATE] );
+
+    // initialize the saved state block for use
+    m_pd3dDevice->CreateStateBlock( D3DSBT_ALL, &m_pSavedSB);
+
+    // restore the default renderstate
+    m_pDefaultSB->Apply();
+
+    return;
 }
 
 

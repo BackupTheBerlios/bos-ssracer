@@ -24,6 +24,8 @@ using namespace Wml;
 #include "macros.h"
 #include "quadtree.h"
 #include "cfrontendmanager.h"
+#include "renderervertexformats.h"
+
 
 // --- system includes --- //
 #define STL_USING_ALL
@@ -119,14 +121,6 @@ void CRenderer::DrawSkyBox()
     m_pd3dDevice->SetTransform( D3DTS_VIEW, &matView );
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, m_pActiveCamera->GetProjMatrix() );
 
-    //m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-    //m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1 );
-
-    // set texture filters to reduce seams
-    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_POINT );
-    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT );
-    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT );
-
     // use linear filtering with clamping to produce smoothed texture with no seams
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR ); //
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR ); //
@@ -149,18 +143,6 @@ void CRenderer::DrawSkyBox()
     // Restore the render states
     m_pd3dDevice->SetTransform( D3DTS_WORLD,    &matWorldSave );
     m_pd3dDevice->SetTransform( D3DTS_VIEW,      &matViewSave );
-    m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
-    m_pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, TRUE);
-
-    // restore the texture filters
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
-
-    // turn lighting back on
-    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
 
 /*    // Center view matrix for skybox and disable zbuffer
     D3DXMATRIXA16 matView, matViewSave;
@@ -341,32 +323,22 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 
     pMatrixStack->Release();
 
-    if (m_bDrawEntBBoxes == true)
+    if (m_bDrawEntBBoxes == true)  {
         DrawBBox(pEntity->GetBoundingBox(), 10.0f, D3DCOLOR_ARGB(255, 220, 50, 50));
+    }
 
 }
 
 
 
-struct D3DVertex
-{
-    FLOAT x, y, z;//, w;
-    FLOAT nx,ny,nz;
-    FLOAT psize;
-    DWORD color;
-};
 
-//#define D3DFVF_D3DVertex (D3DFVF_XYZW|D3DFVF_PSIZE|D3DFVF_DIFFUSE)
-#define D3DFVF_D3DVertex (D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_PSIZE|D3DFVF_DIFFUSE)
-//#define D3DFVF_D3DVertex (D3DFVF_XYZ|D3DFVF_DIFFUSE)
 
 void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize, DWORD dwColor)
 {
-    // disable texturing
-    m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+    // load debug renderstates
+    m_pSBMap[RENSB_DEBUGSTATE]->Apply();
 
     LPDIRECT3DVERTEXBUFFER9 theBuffer;
-    //CreateVertexBuffer( 3*sizeof(CUSTOMVERTEX), 0 /* Usage */, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &g_pVB )
 
     if( FAILED( m_pd3dDevice->CreateVertexBuffer( 24*sizeof(D3DVertex), 0, D3DFVF_D3DVertex, D3DPOOL_DEFAULT, &theBuffer, NULL) ) )
     {
@@ -432,21 +404,13 @@ void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize, DWORD dwColor)
     m_pd3dDevice->SetStreamSource( 0, theBuffer, 0,  sizeof(D3DVertex) );
     m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
 
-    // turn lighting off
-    //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
-
     m_pd3dDevice->DrawPrimitive( D3DPT_POINTLIST, 0, 8 );
     m_pd3dDevice->DrawPrimitive( D3DPT_LINELIST, 0, 12 );
-    //m_pd3dDevice->DrawPrimitiveUP( D3DPT_LINELIST, 12, pVertices, sizeof(D3DVertex));
-
-    // turn lighting back on
-    //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
 
     // Destroy the vertex buffer
     theBuffer->Release();
 
-    // reenable texturing
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
+    m_pDefaultSB->Apply();  // restore default states
 
 }
 
@@ -454,8 +418,8 @@ void CRenderer::DrawBBox(Box3f * pBBox, float fPointSize, DWORD dwColor)
 
 void CRenderer::DrawRect( Rectangle3f * pRect, float fPointSize, DWORD dwColor)
 {
-    // disable texturing
-    m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+    // load debug renderstates
+    m_pSBMap[RENSB_DEBUGSTATE]->Apply();
 
     LPDIRECT3DVERTEXBUFFER9 theBuffer;
 
@@ -501,15 +465,6 @@ void CRenderer::DrawRect( Rectangle3f * pRect, float fPointSize, DWORD dwColor)
     // to close the rectangle
     myRect[4] = myRect[0];
 
-    //origin
-    /*vecPt = vecOrigin;
-    myRect[5].x = vecPt.X();
-    myRect[5].y = vecPt.Y();
-    myRect[5].z = vecPt.Z();  
-    myRect[5].psize = fPointSize;
-    myRect[5].color = dwColor;
-*/
-
     // Copy rect vertices into the buffer
     VOID* pVertices;
     if( FAILED( theBuffer->Lock( 0, sizeof(myRect), (void**)&pVertices, 0 ) ) )
@@ -517,110 +472,24 @@ void CRenderer::DrawRect( Rectangle3f * pRect, float fPointSize, DWORD dwColor)
     memcpy( pVertices, myRect, sizeof(myRect) );
     theBuffer->Unlock();
 
-    // turn lighting off
-    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
-
-
     // Draw the vertex buffer
     m_pd3dDevice->SetStreamSource( 0, theBuffer, 0,  sizeof(D3DVertex) );
-    m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
+    //m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
 
     m_pd3dDevice->DrawPrimitive( D3DPT_POINTLIST, 0, 4 );
     //m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 4 );
     m_pd3dDevice->DrawPrimitive( D3DPT_LINESTRIP, 0, 4 );
     
-    // turn lighting on
-    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
-
-
     // Destroy the vertex buffer
     theBuffer->Release();
 
-    // reenable texturing
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
-
+    m_pDefaultSB->Apply();  // restore default states
 }
 
-/*
-	CObject * pkObject; 
-	CScene * pkScene = CGame::GetGame().GetScenePtr();
 
-    assert(pkScene);
-    
-    int iMaxNumObj = pkScene->GetNumObjects();
-	char strFileName[1024];
-	char strDirName[1024] = ".\\media\\meshes\\debug\\";
-	char strFullPath[1024] = "";
-
-
-    ///$$$TEMP QUICK CAR LOADING ---
-    pkObject = pkScene->GetObject(0);
-
-    CTire * cTires = ((CTire *)((CPlayerVehicle *)pkObject)->getTires());
-    // load tires
-    // car already in scene so we can just add the meshses to the mesh vector
-    for (int k=0; k<4 && pkObject; k++)  {
-        //memset(strFullPath, 0, sizeof(strFullPath));
-	    //strcpy(strFileName, ((CPlayerVehicle *)pkObject)->m_tires[j].getName());
-	    //sprintf(strFileName, "%s%s", strFileName, ".x");
-	    
-        //sprintf(strFullPath, "%s%s", strDirName, strFileName);  //something wrong with filename setting
-        sprintf( strFullPath, "%s", ".\\media\\meshes\\debug\\Wheel.x" );
-
-        //something wrong with naming
-        char * temp = ((CTire *)((CPlayerVehicle *)pkObject)->getTires())->getName();
-        
-		FILE* fp = fopen(strFullPath, "r");
-
-		if(fp) {
-            // put it in the mesh map for creation
-            if ( !m_kMeshMap[strFullPath] ) {
-                m_kMeshMap[strFullPath] = new CD3DMesh( strFullPath );
-            }            
-            cTires[k].setMesh(m_kMeshMap[strFullPath]); 
-            fclose(fp);
-        }
-        else {
-            assert(fp);
-        }
-    }
-
-    ///$$$TEMP END QUICK CAR LOADING ---
-
-
-// GIB'S MODIFICATION (JAY SAYS "MOVE THIS HERE, BITCH!!!")
-
-    // load the meshes into memory and set mesh pointers in game objects (entitites)
-    for (int j=0; j<iMaxNumObj ; j++) {
-
-		memset(strFullPath, 0, sizeof(strFullPath));
-		pkObject = pkScene->GetObject(j);
-
-		// get mesh filename
-		strcpy(strFileName, pkObject->getName());
-		sprintf(strFileName, "%s%s", strFileName, ".x");
-		sprintf(strFullPath, "%s%s", strDirName, strFileName);
-
-		FILE* fp = fopen(strFullPath, "r");
-
-		if(fp) {
-
-            // only load up one instance of this mesh
-            if ( !m_kMeshMap[strFullPath] ) {
-			    m_kMeshMap[strFullPath] = new CD3DMesh( strFullPath );
-			    assert(m_kMeshMap[strFullPath]);
-            }
-
-            pkObject->setMesh(m_kMeshMap[strFullPath]);
-			fclose(fp);
-		}
-		else {
-            assert(fp);// Model doesn't exist.
-		}
-*/
-
-
+#ifdef _DEBUG
 extern int iDrawnEnt, iTotalNodeEnt;
+#endif
 
 //-----------------------------------------------------------------------------
 // Name:  DrawQuadTreeNode()
@@ -634,22 +503,27 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
         if (!m_kDrawnEntIDs[it->second->GetId()])  {
             DrawEntity(it->second);
             m_kDrawnEntIDs[it->second->GetId()] = true;
+            #ifdef _DEBUG
             iDrawnEnt++;
+            #endif
         }
         else {
             #ifdef _DEBUG
             //CLog::GetLog().Write(LOG_GAMECONSOLE, "Entity %d %s, is already drawn", it->second->GetId(), it->second->GetName());
             #endif
         }
+        #ifdef _DEBUG
         iTotalNodeEnt++;       
+        #endif
     }
 
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 18, "Drew %d of %d entities in nodes", iDrawnEnt, iTotalNodeEnt);
     #endif
 
-    if (m_bDrawQNodeBBoxes == true)//  && !pQNode->m_EntMap.empty())
+    if (m_bDrawQNodeBBoxes == true)  {//  && !pQNode->m_EntMap.empty())
         DrawBBox(&pQNode->m_BBox, 1.0f, D3DCOLOR_ARGB(150, 50, 200, 50));
+    }
 
 /*    
     //$$$TEMP THE FOLLOWING DRAWS CHILD NODES EVEN IF EMPTY

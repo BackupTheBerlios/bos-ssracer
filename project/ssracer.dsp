@@ -479,6 +479,10 @@ SOURCE=.\renderer.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\renderervertexformats.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\rendermessage.h
 # End Source File
 # Begin Source File

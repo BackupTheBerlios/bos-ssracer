@@ -26,7 +26,7 @@
 #define DIRECTSOUND_VERSION      0x0900
 #endif
 
-#define BOSAPPVERSION "BETA 4.0"
+#define BOSAPPVERSION "BETA 5.0"
 
 /*
  * Disable following warnings when including Windows headers

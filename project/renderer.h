@@ -54,6 +54,16 @@ enum CameraType
     CAMERA_UNKNOWN = 0xFF
 };
 
+// state blocks renderer uses
+enum StateBlockType
+{
+    RENSB_DEFAULT = 0,
+    RENSB_NOLIGHTING,
+    RENSB_NOTEXTURE,
+    RENSB_DEBUGSTATE,  // disable lighting and texturing
+    RENSB_MESH
+};
+
 class CQuadNode;
 
 //-----------------------------------------------------------------------------
@@ -70,15 +80,15 @@ protected:
     BOOL              m_bFullScreen;
     BOOL              m_bConsoleDown;      // indicates if console overlay is to be drawn
     
-    static CD3DSettings      m_d3dSettings;
-    static CD3DEnumeration   m_d3dEnumeration;
+    CD3DSettings      m_d3dSettings;
+    CD3DEnumeration   m_d3dEnumeration;
 
     D3DPRESENT_PARAMETERS m_d3dpp;         // Parameters for CreateDevice/Reset
     HWND              m_hWnd;              // The main app window
     //HWND              m_hWndFocus;         // The D3D focus window (usually same as m_hWnd)
     //HMENU             m_hMenu;             // App menu bar (stored here when fullscreen)
-    static LPDIRECT3D9       m_pD3D;              // The main D3D object
-    static LPDIRECT3DDEVICE9 m_pd3dDevice;        // The D3D rendering device
+    LPDIRECT3D9       m_pD3D;              // The main D3D object
+    LPDIRECT3DDEVICE9 m_pd3dDevice;        // The D3D rendering device
     D3DCAPS9          m_d3dCaps;           // Caps for the device
     D3DSURFACE_DESC   m_d3dsdBackBuffer;   // Surface desc of the backbuffer
     DWORD             m_dwCreateFlags;     // Indicate sw or hw vertex processing
@@ -95,7 +105,7 @@ protected:
     bool              m_bDrawQNodeBBoxes;   //$$$DEBUG show bounding boxed for quadtree nodes
     bool              m_bDrawRects;         //$$$DEBUG show bounding planes for coll det 
 
-    static HRESULT ms_hResult;
+    HRESULT           m_hResult;
 	static CRenderer * ms_pkRenderer;
 
 private:
@@ -103,13 +113,13 @@ private:
     UINT m_iXpos, m_iYpos, m_iWidth, m_iHeight, m_iQuantity;
 
     std::map< unsigned int, CD3DFont * > m_kFontMap;       // fonts available to this app    
-    static std::map< unsigned int, CD3DCamera * > m_pkCameraMap;  // cameras used by this renderer
+    std::map< unsigned int, CD3DCamera * > m_pkCameraMap;  // cameras used by this renderer
     //static std::map< std::string, CD3DMesh * > m_kMeshMap;       // meshes available to this app
 
     std::map< int, bool > m_kDrawnEntIDs;
 
     CD3DCamera * m_pActiveCamera; // active camera in game
-    static CameraType m_eActiveCamType;     // type of active camera
+    CameraType m_eActiveCamType;     // type of active camera
 
     CD3DMesh * m_pSkyBox;
 
@@ -200,12 +210,10 @@ public:
     int GetWidth () const;
     int GetHeight () const;
 
-    //void DrawObject( CObject * pkObject );    
-    //void DrawVehicle( CPlayerVehicle * pkObject);
-
     void DrawScreenText(  FLOAT fXPos, FLOAT fYPos, DWORD dwColor, char * szText, DWORD dwFlags=D3DFONT_FILTERED, FontType eFType = FONT_FRONT_END );
     void Draw3DTextScaled( FLOAT fXPos, FLOAT fYPos, FLOAT fZPos, DWORD dwColor, char * szText, FLOAT fXScale, FLOAT fYScale, DWORD dwFlags=D3DFONT_FILTERED, FontType eFType = FONT_FRONT_END );
 
+    bool InitStaticLighting();
 
 protected:
     CRenderer();
@@ -213,7 +221,7 @@ protected:
     void ClearBackBuffer();
     void DisplayBackBuffer ();
     
-    // draw functions
+    // draw functions (see rendererdrawfunctions.cpp)
     void DrawConsole();
     void DrawSkyBox();
     void DrawDebugOverlay();
@@ -229,6 +237,14 @@ protected:
 
 
 private:
+	HRESULT SetStateBlock( StateBlockType eSBtype ); //$$$DEBUG only for debugging purposes
+
+	map <StateBlockType, LPDIRECT3DSTATEBLOCK9>  m_pSBMap;  // commonly used state blocks in this app
+	LPDIRECT3DSTATEBLOCK9           m_pDefaultSB;
+	LPDIRECT3DSTATEBLOCK9           m_pSavedSB;
+
+
+
 };
 #endif
 //end renderer.h ==============================================================
