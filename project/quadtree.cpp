@@ -47,7 +47,7 @@ CQuadNode::CQuadNode(Vector3f vOrigin, float fHalfWidth) {
     // set the AABBox
     m_BBox.Center() = vOrigin;
     m_BBox.Extent(0) = m_BBox.Extent(2) = fHalfWidth;
-    m_BBox.Extent(1) = 20.0f;//fHalfWidth;//20.0f; // thin out the height of the box
+    m_BBox.Extent(1) = fHalfWidth;//20.0f; // thin out the height of the box
     m_BBox.Axis(0) = Vector3f(1,0,0);  // axis aligned
     m_BBox.Axis(1) = Vector3f(0,1,0);
     m_BBox.Axis(2) = Vector3f(0,0,1);
@@ -55,9 +55,10 @@ CQuadNode::CQuadNode(Vector3f vOrigin, float fHalfWidth) {
     // set the bounding sphere
     //m_BSphere.Center() = vOrigin;
     // use diagonal of box to get bounding sphere
-    m_BSphere.Radius() = (Vector3f(max(m_BBox.Extent(0), m_BBox.Extent(2)), 0, max(m_BBox.Extent(0), m_BBox.Extent(2))) 
-        + Vector3f(min(m_BBox.Extent(0), m_BBox.Extent(2)), 0, min(m_BBox.Extent(0), m_BBox.Extent(2)))).Length()/2.0f; 
+    //m_BSphere.Radius() = (Vector3f(max(m_BBox.Extent(0), m_BBox.Extent(2)), 0, max(m_BBox.Extent(0), m_BBox.Extent(2))) 
+    //    + Vector3f(min(m_BBox.Extent(0), m_BBox.Extent(2)), 0, min(m_BBox.Extent(0), m_BBox.Extent(2)))).Length()/2.0f; 
     //m_BSphere.Radius() = fHalfWidth;
+    //m_BSphere.Radius() = 1.0f;
     
     //Vector3f vBox[8];
     //m_BBox.ComputeVertices(vBox);
@@ -152,7 +153,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     m_fNodeWidth = max( m_vfMaxExtent.X()-m_vfMinExtent.X(), m_vfMinExtent.X() - m_vfMaxExtent.X());
     m_fNodeWidth = max( m_fNodeWidth, m_vfMaxExtent.Z()-m_vfMinExtent.Z());
     m_fNodeWidth = max( m_fNodeWidth, m_vfMinExtent.Z()-m_vfMaxExtent.Z());
-    m_fNodeWidth *= 10.50f;//2.0f;   
+    m_fNodeWidth *= 0.80f;//2.0f;   
 
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE, "Quadtree root node width: %f", m_fNodeWidth);
@@ -223,8 +224,15 @@ void CQuadTree::Add(CEntity *pEntity)
     AddReference( vBox[4], pEntity);  // SE -z +x
     AddReference( vBox[5], pEntity);  // SW -z -x
 
+    Box3f tempBox = *pEntity->GetBoundingBox();
+    tempBox.Center().Y() = 0.0f;
+
     // add reference to each box that this intersects
     //AddReference( m_pkQRoot->m_BBox, pEntity, m_pkQRoot); ////$$$$$$$ still debugging
+    //AddReference( tempBox, pEntity, m_pkQRoot); ////$$$$$$$ still debugging
+    
+    AddReference( m_pkQRoot->m_BBox, pEntity); ////$$$$$$$ still debugging
+    //AddReference( tempBox, pEntity); ////$$$$$$$ still debugging
 
     return;
 }
@@ -244,7 +252,7 @@ void CQuadTree::AddReference( Vector3f vOrigin, CEntity * pEntity )
     // copy this entity into each child node
     for (int i=0; i<m_iLevels; i++)  {
         prev = node;
-        node->m_EntMap[pEntity->GetId()] = pEntity;
+        //node->m_EntMap[pEntity->GetId()] = pEntity;
         //#ifdef _DEBUG
         //CLog::GetLog().Write(LOG_MISC, "quadtree:  entity %s ID %d added to node with origin at: %f %f %f", pEntity->GetName(), pEntity->GetId(), node->m_vOrigin.X(), node->m_vOrigin.Y(), node->m_vOrigin.Z());
         //#endif
@@ -292,7 +300,7 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
     bool bEntInQuad = false;
 
     Vector3f vBoxVerts[8];
-    bool abValid[8] = { 0,0,0,0,0,0,0,0 };
+    bool abValid[8] = { 1,1,1,1,1,1,1,1 };//{ 1,0,0,0,0,0,0,0 };
     switch(TestIntersection( *pEntity->GetBoundingBox(), node->m_BBox) )  
     {
         case true:  // box intersects
@@ -338,6 +346,80 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
 
     return;
 }
+
+
+
+//////////////////////
+
+void CQuadTree::AddReference( Box3f box, CEntity * pEntity)  {
+
+    assert( m_iLevels > 1 ); 
+
+    CQuadNode	*node = m_pkQRoot;
+    CQuadNode	*prev;
+
+    bool bEntInQuad = false;
+
+
+    Vector3f vBoxVerts[8];
+    bool abValid[8] = { 1,1,1,1,1,1,1,1 };//{ 0,0,0,0,0,0,0,0 };
+
+    for (int i=0; i<m_iLevels; i++)  {
+        prev = node;
+        
+        switch(TestIntersection( *pEntity->GetBoundingBox(), node->m_BBox) )  
+        {
+            case true:  // box intersects
+                bEntInQuad = true;  // find if the children intersect too
+                break;
+
+            case false:  // box is INSIDE or OUTSIDE the node
+                // get vertices for the bounding box                
+                pEntity->GetBoundingBox()->ComputeVertices(vBoxVerts);
+
+                // if entities box is contained in node box
+                if (ContOrientedBox (8, vBoxVerts, abValid, node->m_BBox))  {
+                    bEntInQuad = true;  // find out what child quads also contain this
+                }
+                else { // entity is outside, so don't add
+                    bEntInQuad = false;
+                    break;//return
+                }
+                break;
+        }
+
+        // now this box will also intersect/be contained in the children as well
+        if (bEntInQuad == true )  {
+            node->m_EntMap[pEntity->GetId()] = pEntity;
+
+            if (node->m_pChildNode[NE] != NULL)  {
+                //node->m_pChildNode[NE]->m_EntMap[pEntity->GetId()] = pEntity;
+                node = node->m_pChildNode[NE];
+            }
+            if (node->m_pChildNode[NW] != NULL)  {
+                //node->m_pChildNode[NW]->m_EntMap[pEntity->GetId()] = pEntity;
+                node = node->m_pChildNode[NW];
+            }
+            if (node->m_pChildNode[SE] != NULL)  {
+                //node->m_pChildNode[SE]->m_EntMap[pEntity->GetId()] = pEntity;
+                node = node->m_pChildNode[SE];
+            }
+            if (node->m_pChildNode[SW] != NULL)  {
+                //node->m_pChildNode[SW]->m_EntMap[pEntity->GetId()] = pEntity;
+                node = node->m_pChildNode[SW];
+            }        
+        }
+        else 
+            node = prev;
+
+    }
+
+    return;
+}
+
+
+//////////////////////
+
 
 
 
@@ -524,12 +606,13 @@ int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
 // recursively cull nodes that are not visible to the camera
 void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTestChildren)
 {
+    bool bInt = false;
 	// do we need to check for clipping?
-	if(bTestChildren) {
+	//if(bTestChildren) {
         // check if we are inside this node first
         //if(InSphere (pCamera->GetEye(), pNode->m_BSphere) == false) { //== true )  {
         if(InBox (pCamera->GetEye(), pNode->m_BBox) == false) { //true )  {
-                    
+            /*
             // check if frustrum constains bounding sphere for node
             switch (FrustumContainsSphere(pCamera, pNode->m_BSphere))  {
 
@@ -565,40 +648,73 @@ void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTes
                 default:
                     assert(0);
             }// end switch (
+            */
+            
+                switch( FrustumContainsBox(pCamera, pNode->m_BBox) )  {
+                    case INSIDE:   // inside the AABB, so render
+                        #ifdef _DEBUG
+                        //CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "INSIDE AABB");
+                        #endif
+                        m_vpVisibleNodes.push_back(pNode);  
+                        bTestChildren = false;
+                        bInt = false;
+                        break;
+                    case OUTSIDE:  // outside the AABB, so cull
+                        #ifdef _DEBUG
+                        //CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "OUTSIDE AABB");
+                        #endif
+                        bInt = false;
+                        return;
+                    case INTERSECT:
+                        bTestChildren = true;  // need to test the children                            
+                        bInt = true;
+                        break;
+                    default:
+                        assert(0);
+                }
+
         }// end if (InSphere ...
-	}// end if (bTestChildren ...
+        else {
+            bTestChildren = true;  // need to test the children   
+            bInt = true;
+        }
+	//}// end if (bTestChildren ...
     
 
     // check the children if this node intersects or camera intersects the bounding box for this node
     if (bTestChildren)  {
-        if (pNode->m_pChildNode[NE] )
+        if (pNode->m_pChildNode[NE] )  {
             CullVisibility( pCamera, pNode->m_pChildNode[NE], true);
-        else
-            m_vpVisibleNodes.push_back(pNode);  
 
-        if (pNode->m_pChildNode[NW])
+        }
+        else{
+            if(bInt == true)  m_vpVisibleNodes.push_back(pNode);  
+        }
+
+        if (pNode->m_pChildNode[NW])  {
             CullVisibility( pCamera, pNode->m_pChildNode[NW], true);
-        else
-            m_vpVisibleNodes.push_back(pNode);  
+
+        }
+        else{
+            if(bInt == true)  m_vpVisibleNodes.push_back(pNode);  
+        }
        
-        if (pNode->m_pChildNode[SE])
+        if (pNode->m_pChildNode[SE])  {
             CullVisibility( pCamera, pNode->m_pChildNode[SE], true);
-        else
-            m_vpVisibleNodes.push_back(pNode);  
 
-        if (pNode->m_pChildNode[SW])
+        }
+        else{
+            if(bInt == true)  m_vpVisibleNodes.push_back(pNode);  
+        }
+
+        if (pNode->m_pChildNode[SW])  {
             CullVisibility( pCamera, pNode->m_pChildNode[SW], true);
-        else
-            m_vpVisibleNodes.push_back(pNode);  
 
+        }
+        else{
+            if(bInt == true)  m_vpVisibleNodes.push_back(pNode);  
+        }
     }
-    else  {  // put this node in the renderable list
-        #ifdef _DEBUG
-        CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "visible node at %f %f %f", pNode->m_BBox.Center().X(), pNode->m_BBox.Center().Y(), pNode->m_BBox.Center().Z());
-        #endif
-        m_vpVisibleNodes.push_back(pNode);  
-    }
-
 
     return;
 }

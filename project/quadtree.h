@@ -98,6 +98,7 @@ private:
 	void SubDivide( CQuadNode * pQNode, int iLevel );
 	void AddReference( Vector3f vOrigin, CEntity * pEntity);
     void AddReference( Box3f box, CEntity * pEntity,  CQuadNode * node );
+    void AddReference( Box3f box, CEntity * pEntity );
 	static CQuadNode	* m_pkQRoot;
 	int			m_iTraversalCount;
     float       m_fNodeWidth;

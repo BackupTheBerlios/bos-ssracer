@@ -298,7 +298,7 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
 	}
 	else {
 		#ifdef _DEBUG
-		//CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", pEntity->GetMesh()->m_strName);
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", pEntity->GetMesh()->m_strName);
 		#endif
     }
 
@@ -511,6 +511,10 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
 
     }
 
+    if (m_bDrawQNodeBBoxes == true && !pQNode->m_EntMap.empty())
+        DrawBBox(&pQNode->m_BBox, 1.0f, D3DCOLOR_ARGB(150, 50, 200, 50));
+
+    
     //$$$TEMP THE FOLLOWING DRAWS CHILD NODES EVEN IF EMPTY
     // recursively draw the child nodes
     if (!pQNode->m_pChildNode[NE])  {
@@ -540,11 +544,6 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
     else {
         DrawQuadTreeNode(pQNode->m_pChildNode[SW]);
     }
-
-
-    if (m_bDrawQNodeBBoxes == true && !pQNode->m_EntMap.empty())
-        DrawBBox(&pQNode->m_BBox, 1.0f, D3DCOLOR_ARGB(150, 50, 200, 50));
-
 
     return;
 }
