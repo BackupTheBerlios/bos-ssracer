@@ -423,7 +423,6 @@ int CScene::LoadEntity(string* directory, string* filename)
 	// Allocate memory for the entity
 	NEW(newEntity, CEntity, "Error CScene::LoadEntity() >> new operator failed");
 
-
 	strcpy(temp, filename->c_str());
 	newEntity->SetName(temp);
 	newEntity->SetId(m_vEntities.size());
