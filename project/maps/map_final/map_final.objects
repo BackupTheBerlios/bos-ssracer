@@ -9560,24 +9560,6 @@
 <type> 0
 <id> 531
 <name> grassflat
-<translate> -400.000000 0.000000 -200.000000
-<scale> 1.000000 1.000000 1.000000
-<rotate> 0.000000 0.000000 0.000000
-<OBBCenter> -400.000000 -0.005000 -200.000000
-<OBBAxis1> 1.000000 0.000000 0.000000
-<OBBAxis2> 0.000000 1.000000 0.000000
-<OBBAxis3> 0.000000 0.000000 -1.000000
-<OBBExtent1> 100.000000
-<OBBExtent2> 0.005000
-<OBBExtent3> 100.000000
-<sphereCenter> -400.000000 -0.010000 200.000000
-<sphereRadius> 141.421356
-
-
-<newObject>
-<type> 0
-<id> 532
-<name> grassflat
 <translate> -600.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
 <rotate> 0.000000 0.000000 0.000000
@@ -9594,7 +9576,7 @@
 
 <newObject>
 <type> 0
-<id> 533
+<id> 532
 <name> grassflat
 <translate> -400.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9612,7 +9594,7 @@
 
 <newObject>
 <type> 0
-<id> 534
+<id> 533
 <name> grassflat
 <translate> -600.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9630,7 +9612,7 @@
 
 <newObject>
 <type> 0
-<id> 535
+<id> 534
 <name> grassflat
 <translate> -600.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9648,7 +9630,7 @@
 
 <newObject>
 <type> 0
-<id> 536
+<id> 535
 <name> grassflat
 <translate> -800.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9666,7 +9648,7 @@
 
 <newObject>
 <type> 0
-<id> 537
+<id> 536
 <name> grassflat
 <translate> -800.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9684,7 +9666,7 @@
 
 <newObject>
 <type> 0
-<id> 538
+<id> 537
 <name> grassflat
 <translate> -1000.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9702,7 +9684,7 @@
 
 <newObject>
 <type> 0
-<id> 539
+<id> 538
 <name> grassflat
 <translate> -1000.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9720,7 +9702,7 @@
 
 <newObject>
 <type> 0
-<id> 540
+<id> 539
 <name> grassflat
 <translate> -1000.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9738,7 +9720,7 @@
 
 <newObject>
 <type> 0
-<id> 541
+<id> 540
 <name> grassflat
 <translate> -1200.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9756,7 +9738,7 @@
 
 <newObject>
 <type> 0
-<id> 542
+<id> 541
 <name> grassflat
 <translate> -1200.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9774,7 +9756,7 @@
 
 <newObject>
 <type> 0
-<id> 543
+<id> 542
 <name> grassflat
 <translate> -1200.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9792,7 +9774,7 @@
 
 <newObject>
 <type> 0
-<id> 544
+<id> 543
 <name> grassflat
 <translate> -1400.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9810,7 +9792,7 @@
 
 <newObject>
 <type> 0
-<id> 545
+<id> 544
 <name> grassflat
 <translate> -1400.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9828,7 +9810,7 @@
 
 <newObject>
 <type> 0
-<id> 546
+<id> 545
 <name> grassflat
 <translate> -1400.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9846,7 +9828,7 @@
 
 <newObject>
 <type> 0
-<id> 547
+<id> 546
 <name> grassflat
 <translate> -1600.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9864,7 +9846,7 @@
 
 <newObject>
 <type> 0
-<id> 548
+<id> 547
 <name> grassflat
 <translate> -1600.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9882,7 +9864,7 @@
 
 <newObject>
 <type> 0
-<id> 549
+<id> 548
 <name> grassflat
 <translate> -1600.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9900,7 +9882,7 @@
 
 <newObject>
 <type> 0
-<id> 550
+<id> 549
 <name> grassflat
 <translate> -1400.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9918,7 +9900,7 @@
 
 <newObject>
 <type> 0
-<id> 551
+<id> 550
 <name> grassflat
 <translate> -1200.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9936,7 +9918,7 @@
 
 <newObject>
 <type> 0
-<id> 552
+<id> 551
 <name> grassflat
 <translate> -1000.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9954,7 +9936,7 @@
 
 <newObject>
 <type> 0
-<id> 553
+<id> 552
 <name> grassflat
 <translate> -800.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9972,7 +9954,7 @@
 
 <newObject>
 <type> 0
-<id> 554
+<id> 553
 <name> grassflat
 <translate> -800.000000 0.000000 -400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -9990,7 +9972,7 @@
 
 <newObject>
 <type> 0
-<id> 555
+<id> 554
 <name> grassflat
 <translate> -600.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10008,7 +9990,7 @@
 
 <newObject>
 <type> 0
-<id> 556
+<id> 555
 <name> grassflat
 <translate> -200.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10026,7 +10008,7 @@
 
 <newObject>
 <type> 0
-<id> 557
+<id> 556
 <name> grassflat
 <translate> -1800.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10044,7 +10026,7 @@
 
 <newObject>
 <type> 0
-<id> 558
+<id> 557
 <name> grassflat
 <translate> -1800.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10062,7 +10044,7 @@
 
 <newObject>
 <type> 0
-<id> 559
+<id> 558
 <name> grassflat
 <translate> -1800.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10080,7 +10062,7 @@
 
 <newObject>
 <type> 0
-<id> 560
+<id> 559
 <name> grassflat
 <translate> -2000.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10098,7 +10080,7 @@
 
 <newObject>
 <type> 0
-<id> 561
+<id> 560
 <name> grassflat
 <translate> -2000.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10116,7 +10098,7 @@
 
 <newObject>
 <type> 0
-<id> 562
+<id> 561
 <name> grassflat
 <translate> -2200.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10134,7 +10116,7 @@
 
 <newObject>
 <type> 0
-<id> 563
+<id> 562
 <name> grassflat
 <translate> -2200.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10152,7 +10134,7 @@
 
 <newObject>
 <type> 0
-<id> 564
+<id> 563
 <name> grassflat
 <translate> -2400.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10170,7 +10152,7 @@
 
 <newObject>
 <type> 0
-<id> 565
+<id> 564
 <name> grassflat
 <translate> -2400.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10188,7 +10170,7 @@
 
 <newObject>
 <type> 0
-<id> 566
+<id> 565
 <name> grassflat
 <translate> -2600.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10206,7 +10188,7 @@
 
 <newObject>
 <type> 0
-<id> 567
+<id> 566
 <name> grassflat
 <translate> -2600.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10224,7 +10206,7 @@
 
 <newObject>
 <type> 0
-<id> 568
+<id> 567
 <name> grassflat
 <translate> -2800.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10242,7 +10224,7 @@
 
 <newObject>
 <type> 0
-<id> 569
+<id> 568
 <name> grassflat
 <translate> -2800.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10260,7 +10242,7 @@
 
 <newObject>
 <type> 0
-<id> 570
+<id> 569
 <name> grassflat
 <translate> -2600.000000 0.000000 400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10278,7 +10260,7 @@
 
 <newObject>
 <type> 0
-<id> 571
+<id> 570
 <name> grassflat
 <translate> -3000.000000 0.000000 200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10296,7 +10278,7 @@
 
 <newObject>
 <type> 0
-<id> 572
+<id> 571
 <name> grassflat
 <translate> -3200.000000 0.000000 600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10314,7 +10296,7 @@
 
 <newObject>
 <type> 0
-<id> 573
+<id> 572
 <name> grassflat
 <translate> -3200.000000 0.000000 800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10332,7 +10314,7 @@
 
 <newObject>
 <type> 0
-<id> 574
+<id> 573
 <name> grassflat
 <translate> -3000.000000 0.000000 800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10350,7 +10332,7 @@
 
 <newObject>
 <type> 0
-<id> 575
+<id> 574
 <name> grassflat
 <translate> -1200.000000 0.000000 400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10368,7 +10350,7 @@
 
 <newObject>
 <type> 0
-<id> 576
+<id> 575
 <name> grassflat
 <translate> -1200.000000 0.000000 600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10386,7 +10368,7 @@
 
 <newObject>
 <type> 0
-<id> 577
+<id> 576
 <name> grassflat
 <translate> -1400.000000 0.000000 400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10404,7 +10386,7 @@
 
 <newObject>
 <type> 0
-<id> 578
+<id> 577
 <name> grassflat
 <translate> -1000.000000 0.000000 600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10422,7 +10404,7 @@
 
 <newObject>
 <type> 0
-<id> 579
+<id> 578
 <name> grassflat
 <translate> -1400.000000 0.000000 600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10440,7 +10422,7 @@
 
 <newObject>
 <type> 0
-<id> 580
+<id> 579
 <name> grassflat
 <translate> -1000.000000 0.000000 400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10458,7 +10440,7 @@
 
 <newObject>
 <type> 0
-<id> 581
+<id> 580
 <name> grassflat
 <translate> -3200.000000 0.000000 1000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10476,7 +10458,7 @@
 
 <newObject>
 <type> 0
-<id> 582
+<id> 581
 <name> grassflat
 <translate> -3000.000000 0.000000 1000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10494,7 +10476,7 @@
 
 <newObject>
 <type> 0
-<id> 583
+<id> 582
 <name> grassflat
 <translate> -2800.000000 0.000000 1000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10512,7 +10494,7 @@
 
 <newObject>
 <type> 0
-<id> 584
+<id> 583
 <name> grassflat
 <translate> -2600.000000 0.000000 1000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10530,7 +10512,7 @@
 
 <newObject>
 <type> 0
-<id> 585
+<id> 584
 <name> grassflat
 <translate> -2600.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10548,7 +10530,7 @@
 
 <newObject>
 <type> 0
-<id> 586
+<id> 585
 <name> grassflat
 <translate> -2800.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10566,7 +10548,7 @@
 
 <newObject>
 <type> 0
-<id> 587
+<id> 586
 <name> grassflat
 <translate> -3000.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10584,7 +10566,7 @@
 
 <newObject>
 <type> 0
-<id> 588
+<id> 587
 <name> grassflat
 <translate> -3200.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10602,7 +10584,7 @@
 
 <newObject>
 <type> 0
-<id> 589
+<id> 588
 <name> grassflat
 <translate> -3000.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10620,7 +10602,7 @@
 
 <newObject>
 <type> 0
-<id> 590
+<id> 589
 <name> grassflat
 <translate> -2800.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10638,7 +10620,7 @@
 
 <newObject>
 <type> 0
-<id> 591
+<id> 590
 <name> grassflat
 <translate> -2600.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10656,7 +10638,7 @@
 
 <newObject>
 <type> 0
-<id> 592
+<id> 591
 <name> grassflat
 <translate> -2400.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10674,7 +10656,7 @@
 
 <newObject>
 <type> 0
-<id> 593
+<id> 592
 <name> grassflat
 <translate> -2400.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10692,7 +10674,7 @@
 
 <newObject>
 <type> 0
-<id> 594
+<id> 593
 <name> grassflat
 <translate> -2400.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10710,7 +10692,7 @@
 
 <newObject>
 <type> 0
-<id> 595
+<id> 594
 <name> grassflat
 <translate> -2600.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10728,7 +10710,7 @@
 
 <newObject>
 <type> 0
-<id> 596
+<id> 595
 <name> grassflat
 <translate> -2800.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10746,7 +10728,7 @@
 
 <newObject>
 <type> 0
-<id> 597
+<id> 596
 <name> grassflat
 <translate> -2600.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10764,7 +10746,7 @@
 
 <newObject>
 <type> 0
-<id> 598
+<id> 597
 <name> grassflat
 <translate> -2400.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10782,7 +10764,7 @@
 
 <newObject>
 <type> 0
-<id> 599
+<id> 598
 <name> grassflat
 <translate> -2200.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10800,7 +10782,7 @@
 
 <newObject>
 <type> 0
-<id> 600
+<id> 599
 <name> grassflat
 <translate> -2200.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10818,7 +10800,7 @@
 
 <newObject>
 <type> 0
-<id> 601
+<id> 600
 <name> grassflat
 <translate> -2200.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10836,7 +10818,7 @@
 
 <newObject>
 <type> 0
-<id> 602
+<id> 601
 <name> grassflat
 <translate> -2000.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10854,7 +10836,7 @@
 
 <newObject>
 <type> 0
-<id> 603
+<id> 602
 <name> grassflat
 <translate> -2000.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10872,7 +10854,7 @@
 
 <newObject>
 <type> 0
-<id> 604
+<id> 603
 <name> grassflat
 <translate> -2200.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10890,7 +10872,7 @@
 
 <newObject>
 <type> 0
-<id> 605
+<id> 604
 <name> grassflat
 <translate> -2000.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10908,7 +10890,7 @@
 
 <newObject>
 <type> 0
-<id> 606
+<id> 605
 <name> grassflat
 <translate> -1800.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10926,7 +10908,7 @@
 
 <newObject>
 <type> 0
-<id> 607
+<id> 606
 <name> grassflat
 <translate> -1600.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10944,7 +10926,7 @@
 
 <newObject>
 <type> 0
-<id> 608
+<id> 607
 <name> grassflat
 <translate> -1400.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10962,7 +10944,7 @@
 
 <newObject>
 <type> 0
-<id> 609
+<id> 608
 <name> grassflat
 <translate> -1200.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10980,7 +10962,7 @@
 
 <newObject>
 <type> 0
-<id> 610
+<id> 609
 <name> grassflat
 <translate> -2000.000000 0.000000 2200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -10998,7 +10980,7 @@
 
 <newObject>
 <type> 0
-<id> 611
+<id> 610
 <name> grassflat
 <translate> -1800.000000 0.000000 2200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11016,7 +10998,7 @@
 
 <newObject>
 <type> 0
-<id> 612
+<id> 611
 <name> grassflat
 <translate> -1800.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11034,7 +11016,7 @@
 
 <newObject>
 <type> 0
-<id> 613
+<id> 612
 <name> grassflat
 <translate> -1800.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11052,7 +11034,7 @@
 
 <newObject>
 <type> 0
-<id> 614
+<id> 613
 <name> grassflat
 <translate> -1600.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11070,7 +11052,7 @@
 
 <newObject>
 <type> 0
-<id> 615
+<id> 614
 <name> grassflat
 <translate> -1600.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11088,7 +11070,7 @@
 
 <newObject>
 <type> 0
-<id> 616
+<id> 615
 <name> grassflat
 <translate> -1600.000000 0.000000 2200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11106,7 +11088,7 @@
 
 <newObject>
 <type> 0
-<id> 617
+<id> 616
 <name> grassflat
 <translate> -1400.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11124,7 +11106,7 @@
 
 <newObject>
 <type> 0
-<id> 618
+<id> 617
 <name> grassflat
 <translate> -1400.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11142,7 +11124,7 @@
 
 <newObject>
 <type> 0
-<id> 619
+<id> 618
 <name> grassflat
 <translate> -1400.000000 0.000000 2200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11160,7 +11142,7 @@
 
 <newObject>
 <type> 0
-<id> 620
+<id> 619
 <name> grassflat
 <translate> -1200.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11178,7 +11160,7 @@
 
 <newObject>
 <type> 0
-<id> 621
+<id> 620
 <name> grassflat
 <translate> -1200.000000 0.000000 2000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11196,7 +11178,7 @@
 
 <newObject>
 <type> 0
-<id> 622
+<id> 621
 <name> grassflat
 <translate> -1000.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11214,7 +11196,7 @@
 
 <newObject>
 <type> 0
-<id> 623
+<id> 622
 <name> grassflat
 <translate> -1000.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11232,7 +11214,7 @@
 
 <newObject>
 <type> 0
-<id> 624
+<id> 623
 <name> grassflat
 <translate> -800.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11250,7 +11232,7 @@
 
 <newObject>
 <type> 0
-<id> 625
+<id> 624
 <name> grassflat
 <translate> -800.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11268,7 +11250,7 @@
 
 <newObject>
 <type> 0
-<id> 626
+<id> 625
 <name> grassflat
 <translate> -600.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11286,7 +11268,7 @@
 
 <newObject>
 <type> 0
-<id> 627
+<id> 626
 <name> grassflat
 <translate> -600.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11304,7 +11286,7 @@
 
 <newObject>
 <type> 0
-<id> 628
+<id> 627
 <name> grassflat
 <translate> -800.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11322,7 +11304,7 @@
 
 <newObject>
 <type> 0
-<id> 629
+<id> 628
 <name> grassflat
 <translate> -600.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11340,7 +11322,7 @@
 
 <newObject>
 <type> 0
-<id> 630
+<id> 629
 <name> grassflat
 <translate> -400.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11358,7 +11340,7 @@
 
 <newObject>
 <type> 0
-<id> 631
+<id> 630
 <name> grassflat
 <translate> -400.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11376,7 +11358,7 @@
 
 <newObject>
 <type> 0
-<id> 632
+<id> 631
 <name> grassflat
 <translate> -400.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11394,7 +11376,7 @@
 
 <newObject>
 <type> 0
-<id> 633
+<id> 632
 <name> grassflat
 <translate> -600.000000 0.000000 1800.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11412,7 +11394,7 @@
 
 <newObject>
 <type> 0
-<id> 634
+<id> 633
 <name> grassflat
 <translate> -200.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11430,7 +11412,7 @@
 
 <newObject>
 <type> 0
-<id> 635
+<id> 634
 <name> grassflat
 <translate> -200.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11448,7 +11430,7 @@
 
 <newObject>
 <type> 0
-<id> 636
+<id> 635
 <name> grassflat
 <translate> -200.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11466,7 +11448,7 @@
 
 <newObject>
 <type> 0
-<id> 637
+<id> 636
 <name> grassflat
 <translate> 0.000000 0.000000 1200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11484,7 +11466,7 @@
 
 <newObject>
 <type> 0
-<id> 638
+<id> 637
 <name> grassflat
 <translate> 0.000000 0.000000 1400.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11502,7 +11484,7 @@
 
 <newObject>
 <type> 0
-<id> 639
+<id> 638
 <name> grassflat
 <translate> 0.000000 0.000000 1600.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11520,7 +11502,7 @@
 
 <newObject>
 <type> 0
-<id> 640
+<id> 639
 <name> grassflat
 <translate> 0.000000 0.000000 1000.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11538,7 +11520,7 @@
 
 <newObject>
 <type> 0
-<id> 641
+<id> 640
 <name> grassflat
 <translate> 200.000000 0.000000 900.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11556,7 +11538,7 @@
 
 <newObject>
 <type> 0
-<id> 642
+<id> 641
 <name> grassflat
 <translate> 200.000000 0.000000 1100.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11574,7 +11556,7 @@
 
 <newObject>
 <type> 0
-<id> 643
+<id> 642
 <name> grassflat
 <translate> 200.000000 0.000000 1300.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11592,7 +11574,7 @@
 
 <newObject>
 <type> 0
-<id> 644
+<id> 643
 <name> grassflat
 <translate> 400.000000 0.000000 900.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11610,7 +11592,7 @@
 
 <newObject>
 <type> 0
-<id> 645
+<id> 644
 <name> grassflat
 <translate> 400.000000 0.000000 1100.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11628,7 +11610,7 @@
 
 <newObject>
 <type> 0
-<id> 646
+<id> 645
 <name> grassflat
 <translate> 400.000000 0.000000 1300.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11646,7 +11628,7 @@
 
 <newObject>
 <type> 0
-<id> 647
+<id> 646
 <name> grassflat
 <translate> 600.000000 0.000000 900.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11664,7 +11646,7 @@
 
 <newObject>
 <type> 0
-<id> 648
+<id> 647
 <name> grassflat
 <translate> 600.000000 0.000000 1100.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11682,7 +11664,7 @@
 
 <newObject>
 <type> 0
-<id> 649
+<id> 648
 <name> grassflat
 <translate> 200.000000 0.000000 -200.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11700,7 +11682,7 @@
 
 <newObject>
 <type> 0
-<id> 650
+<id> 649
 <name> buildingrect
 <translate> -20.000000 0.000000 5.000000
 <scale> 1.000000 1.000000 1.000000
@@ -11714,5 +11696,239 @@
 <OBBExtent3> 5.000000
 <sphereCenter> -20.000000 17.000000 -5.000000
 <sphereRadius> 20.346991
+
+
+<newObject>
+<type> 0
+<id> 650
+<name> buildinghex2
+<translate> -370.000000 0.000000 -255.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -370.000000 5.000000 -255.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 10.000000
+<OBBExtent2> 5.000000
+<OBBExtent3> 7.500000
+<sphereCenter> -370.000000 5.000000 255.000000
+<sphereRadius> 13.462912
+
+
+<newObject>
+<type> 0
+<id> 651
+<name> buildingrect
+<translate> -405.000000 0.000000 -255.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -15.000000 0.000000
+<OBBCenter> -405.000000 17.000000 -255.000000
+<OBBAxis1> 0.965926 0.000000 0.258819
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.258819 0.000000 -0.965926
+<OBBExtent1> 7.500001
+<OBBExtent2> 17.000000
+<OBBExtent3> 5.000000
+<sphereCenter> -405.000000 17.000000 255.000000
+<sphereRadius> 20.192825
+
+
+<newObject>
+<type> 0
+<id> 652
+<name> bricktile1x1
+<translate> -350.000000 0.000000 -250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -350.000000 -0.005000 -250.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 50.000000
+<sphereCenter> -350.000000 -0.010000 250.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 653
+<name> bricktile1x1
+<translate> -450.000000 0.000000 -250.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<OBBCenter> -450.000000 -0.005000 -250.000000
+<OBBAxis1> 1.000000 0.000000 0.000000
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> 0.000000 0.000000 -1.000000
+<OBBExtent1> 50.000000
+<OBBExtent2> 0.005000
+<OBBExtent3> 50.000000
+<sphereCenter> -450.000000 -0.010000 250.000000
+<sphereRadius> 70.710678
+
+
+<newObject>
+<type> 0
+<id> 654
+<name> cementbridge
+<translate> 313.140991 0.000000 510.833008
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -315.000000 0.000000
+<OBBCenter> 313.140991 -5.500000 510.833038
+<OBBAxis1> 0.707107 0.000000 -0.707107
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -0.707107 0.000000 -0.707107
+<OBBExtent1> 9.999999
+<OBBExtent2> 8.000000
+<OBBExtent3> 14.999999
+<sphereCenter> 313.140991 -5.500000 -510.833008
+<sphereRadius> 26.248816
+
+
+<newObject>
+<type> 0
+<id> 655
+<name> cementbridge
+<translate> 334.354004 0.000000 532.046021
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -315.000000 0.000000
+<OBBCenter> 334.354004 -5.500000 532.046021
+<OBBAxis1> 0.707107 0.000000 -0.707107
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -0.707107 0.000000 -0.707107
+<OBBExtent1> 9.999999
+<OBBExtent2> 8.000000
+<OBBExtent3> 14.999999
+<sphereCenter> 334.354004 -5.500000 -532.046021
+<sphereRadius> 26.248816
+
+
+<newObject>
+<type> 0
+<id> 656
+<name> cementbridge
+<translate> 355.566986 0.000000 553.258972
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -315.000000 0.000000
+<OBBCenter> 355.566986 -5.500000 553.258972
+<OBBAxis1> 0.707107 0.000000 -0.707107
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -0.707107 0.000000 -0.707107
+<OBBExtent1> 9.999999
+<OBBExtent2> 8.000000
+<OBBExtent3> 14.999999
+<sphereCenter> 355.567017 -5.500000 -553.259033
+<sphereRadius> 26.248795
+
+
+<newObject>
+<type> 0
+<id> 657
+<name> cementbridge
+<translate> 376.779999 0.000000 574.471985
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -315.000000 0.000000
+<OBBCenter> 376.779999 -5.500000 574.471985
+<OBBAxis1> 0.707107 0.000000 -0.707107
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -0.707107 0.000000 -0.707107
+<OBBExtent1> 9.999999
+<OBBExtent2> 8.000000
+<OBBExtent3> 14.999999
+<sphereCenter> 376.779999 -5.500000 -574.471985
+<sphereRadius> 26.248816
+
+
+<newObject>
+<type> 0
+<id> 658
+<name> cementbridge
+<translate> 397.993011 0.000000 595.684998
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -315.000000 0.000000
+<OBBCenter> 397.993011 -5.500000 595.684998
+<OBBAxis1> 0.707107 0.000000 -0.707107
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -0.707107 0.000000 -0.707107
+<OBBExtent1> 9.999999
+<OBBExtent2> 8.000000
+<OBBExtent3> 14.999999
+<sphereCenter> 397.993011 -5.500000 -595.684998
+<sphereRadius> 26.248816
+
+
+<newObject>
+<type> 0
+<id> 659
+<name> cementbridge
+<translate> 419.205994 0.000000 616.898010
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -315.000000 0.000000
+<OBBCenter> 419.205994 -5.500000 616.898010
+<OBBAxis1> 0.707107 0.000000 -0.707107
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -0.707107 0.000000 -0.707107
+<OBBExtent1> 9.999999
+<OBBExtent2> 8.000000
+<OBBExtent3> 14.999999
+<sphereCenter> 419.205994 -5.500000 -616.898010
+<sphereRadius> 26.248816
+
+
+<newObject>
+<type> 0
+<id> 660
+<name> cementbridge
+<translate> 440.419006 0.000000 638.111023
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -315.000000 0.000000
+<OBBCenter> 440.419006 -5.500000 638.111023
+<OBBAxis1> 0.707107 0.000000 -0.707107
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -0.707107 0.000000 -0.707107
+<OBBExtent1> 9.999999
+<OBBExtent2> 8.000000
+<OBBExtent3> 14.999999
+<sphereCenter> 440.419006 -5.500000 -638.111023
+<sphereRadius> 26.248816
+
+
+<newObject>
+<type> 0
+<id> 661
+<name> cementbridge
+<translate> 461.631989 0.000000 659.323975
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -315.000000 0.000000
+<OBBCenter> 461.631989 -5.500000 659.323975
+<OBBAxis1> 0.707107 0.000000 -0.707107
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -0.707107 0.000000 -0.707107
+<OBBExtent1> 9.999999
+<OBBExtent2> 8.000000
+<OBBExtent3> 14.999999
+<sphereCenter> 461.632019 -5.500000 -659.323975
+<sphereRadius> 26.248795
+
+
+<newObject>
+<type> 0
+<id> 662
+<name> cementbridge
+<translate> 482.845001 0.000000 680.536987
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 -315.000000 0.000000
+<OBBCenter> 482.845001 -5.500000 680.536987
+<OBBAxis1> 0.707107 0.000000 -0.707107
+<OBBAxis2> 0.000000 1.000000 0.000000
+<OBBAxis3> -0.707107 0.000000 -0.707107
+<OBBExtent1> 9.999999
+<OBBExtent2> 8.000000
+<OBBExtent3> 14.999999
+<sphereCenter> 482.845001 -5.500000 -680.536987
+<sphereRadius> 26.248816
 
 
