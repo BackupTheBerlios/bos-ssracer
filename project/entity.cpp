@@ -32,3 +32,24 @@ int CEntity::LoadMesh()
 
     return 1;  // Success
 }
+
+
+// load a mesh in a certain directory
+int CEntity::LoadMesh( string strDir )
+{
+    assert(CRenderer::GetRendererPtr());
+    
+    string strPath = strDir;
+    strPath += m_strName;
+    strPath.append(".x\0");
+
+    char szPath[512];
+    sprintf(szPath,"%s", strPath.c_str());
+
+    m_pMesh = new CD3DMesh(_T(m_strName));
+
+    if (!CRenderer::GetRenderer().CreateMesh( m_pMesh, szPath ))
+        return 0;  // Failure
+
+    return 1;  // Success
+}

@@ -464,12 +464,12 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 	}
 	
 	// Load the vehicle mesh
-	if(!newCar->LoadMesh()) {
+	if(!newCar->LoadMesh( *directory )) {
 		CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadPlayerVehicle() >> Error loading vehicle body mesh");
 		return 0;
 	}
 	// Load the mesh for the first tire
-	if(!newCar->GetTire(0)->LoadMesh()) {
+	if(!newCar->GetTire(0)->LoadMesh( *directory )) {
 		CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadPlayerVehicle() >> Error loading tire mesh");
 		return 0;
 	}

@@ -32,7 +32,9 @@ using namespace Wml;
 
 
 
-
+//-----------------------------------------------------------------------------
+// static member declarations
+//-----------------------------------------------------------------------------
 //CD3DCamera CRenderer::m_pActiveCamera; // active camera in game
 CameraType CRenderer::m_eActiveCamType = CAMERA_UNKNOWN;     // type of active cam
 CD3DSettings      CRenderer::m_d3dSettings;
@@ -114,8 +116,6 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 
 	// wide FOV and a large frustrum
 	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000.0f );
-
-
 
 
     // defaults to this camera
@@ -334,13 +334,19 @@ void CRenderer::CreateMeshes ()
 
 
 
+//-----------------------------------------------------------------------------
+// Name: CreateMesh()
+// Desc: creates a mesh object for an entity
+//      pMesh = mesh object to create D3DX mesh object for 
+//      pcFileName = full path to mesh and mesh filename with .x extension
+//-----------------------------------------------------------------------------
 int CRenderer::CreateMesh( CD3DMesh * pMesh, char * pcFileName )
 {
 
     FILE* fp = fopen(pcFileName, "r");
 
     if (!fp)  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, IDS_RENDER_ERROR, "could not load mesh, path invalid");
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "could not load mesh, path invalid %s", pcFileName);
         return 0;
     }
 
@@ -352,16 +358,15 @@ int CRenderer::CreateMesh( CD3DMesh * pMesh, char * pcFileName )
         //DXTRACE_ERR_MSGBOX( _T("could not load single mesh"), hr );
         return 0;  // Failure
 	}
-    //pMesh->InvalidateDeviceObjects();
     pMesh->UseMeshMaterials(true);
     pMesh->RestoreDeviceObjects( m_pd3dDevice );
  
 
     //$$$ TEMP store a local copy
-    m_kMeshMap[pMesh->m_strName] = new CD3DMesh(_T(pcFileName));
-    m_kMeshMap[pMesh->m_strName]->Create( m_pd3dDevice, _T(pcFileName) );
-    m_kMeshMap[pMesh->m_strName]->UseMeshMaterials(true);
-    m_kMeshMap[pMesh->m_strName]->RestoreDeviceObjects( m_pd3dDevice );
+    //m_kMeshMap[pMesh->m_strName] = new CD3DMesh(_T(pcFileName));
+    //m_kMeshMap[pMesh->m_strName]->Create( m_pd3dDevice, _T(pcFileName) );
+    //m_kMeshMap[pMesh->m_strName]->UseMeshMaterials(true);
+    //m_kMeshMap[pMesh->m_strName]->RestoreDeviceObjects( m_pd3dDevice );
     //$$$TEMP
 
     return 1;
@@ -765,7 +770,7 @@ CD3DCamera * CRenderer::SetCamera( CD3DCamera* pkCamera, CameraType eCameraName)
     m_pd3dDevice->SetTransform( D3DTS_VIEW, pkCamera->GetViewMatrix() );
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, pkCamera->GetProjMatrix() );    
 
-    return pkCamera; 
+    return m_pkCameraMap[eCameraName]; 
 }
 
 
@@ -788,11 +793,10 @@ CD3DCamera * CRenderer::GetCameraPtr (CameraType eCameraName)
 //-----------------------------------------------------------------------------
 void CRenderer::Click()
 {
-    // set the new view matrix for the camera in the D3Ddevice
-    //m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );    
     #ifdef _DEBUG
     assert(m_pActiveCamera);
     #endif
+    // set the new view matrix for the camera in the D3Ddevice
     m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, m_pActiveCamera->GetProjMatrix() );   
 

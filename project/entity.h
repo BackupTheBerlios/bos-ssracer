@@ -1,10 +1,15 @@
 #ifndef _CENTITY_H
 #define _CENTITY_H
 
+
 #include "d3dfile.h"
 #include "WmlVector3.h"
 #include "WmlBox3.h"
 #include "WmlSphere3.h"
+
+#define STL_USING_ALL
+#include "stl.h"
+
 
 using namespace Wml;
 
@@ -39,6 +44,7 @@ public:
 	Sphere3f* GetBoundingSphere() { return &m_sphere; };
 
 	int LoadMesh();		// Load the mesh specified by m_strName, append .x to the variable
+    int LoadMesh( string strDir );  // load a mesh in a certain directory
 
 protected:
 	CD3DMesh* m_pMesh;	// Mesh data structure

@@ -11,6 +11,7 @@
 #include "soundmessage.h"
 #include "gamestatemanager.h"
 #include "renderer.h"
+#include "settings.h"
 
 // TO ADD COMMANDS AND FUNCTIONS, SEE initKeywords()
 
@@ -283,13 +284,13 @@ int CCommandLineParser::LoadScene()
 
 	if(!directorySet && !filenameSet) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Invalid Usage!  See help for instructions.");
-		return GENERAL_ERROR;
+		return OK;
 	}
 
 	if(directorySet && filenameSet) {
 		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadScene(&directory, &filename))) {
 			CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
-			return GENERAL_ERROR;
+			return OK;
 		}
 	}
 		
@@ -324,13 +325,13 @@ int CCommandLineParser::LoadEntity()
 
 	if(!directorySet && !filenameSet) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Invalid Usage!  See help for instructions.");
-		return GENERAL_ERROR;
+		return OK;
 	}
 
 	if(directorySet && filenameSet) {
 		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&directory, &filename))) {
 			CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity was not loaded successfully!");
-			return GENERAL_ERROR;
+			return OK;
 		}
 	}
     
@@ -385,14 +386,14 @@ int CCommandLineParser::ClearScene()
 {
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->ReleaseScene())) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not cleared successfully!");
-		return GENERAL_ERROR;
+		return OK;
 	}
 	return OK;
 }
 
 int CCommandLineParser::PhysicsTest1()
 {
-	string sDir = "C:\\Chris\\Current\\project\\media\\meshes\\dynamic\\vehicles\\mitsuEclipse\\";
+    string sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
 	string sName = "mitsuEclipse.car";
 
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&sDir, &sName))) {
@@ -416,7 +417,7 @@ int CCommandLineParser::JScript1()
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity was not loaded successfully!");
 		return GENERAL_ERROR;
 	}
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "J's script 1 loaded the entity %s Sucessfully!", sName.c_str() );
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "J's script 1 loaded the mesh %s Sucessfully!", sName.c_str() );
     return OK;
 }
 
