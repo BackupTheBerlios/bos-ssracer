@@ -12,11 +12,11 @@
 <VehicleMass> 1500
 <TireMass> 35
 <RotatingMass> 100
-<MaximumTorque> 300
+<MaximumTorque> 200
 <MaximumRPM> 6500
 <DrivetrainEfficiency> 0.75
 <RearDiffRatio> 3.42
-<GearRatios> 2.9 1.78 1.30 1.0 0.74 0.50
+<GearRatios> 2.9 3.2 2.1 1.5 1.3 1.0
 <TireRadius> 0.215
 <FrontalArea> 0.25
 <CoefficientOfAerodynamicFriction> 0.40

@@ -81,7 +81,7 @@ void CVehicle::Init()
 	//		- frontalArea = 2.2
 	float airDensity = 1.29f;
 
-	coefficientOfDrag = coefficientOfAerodynamicFriction * frontalArea * airDensity ;
+	coefficientOfDrag = 0.5f * coefficientOfAerodynamicFriction * frontalArea * airDensity ;
 	coefficientOfRollingResistance = coefficientOfDrag * 30.0f;
 }
 
@@ -209,8 +209,16 @@ void CVehicle::CalculateWeightDistribution()
 void CVehicle::CalculateDrag()
 {
 	float velocityMagnitude = float(sqrt( pow(velocityLC.X(), 2) + pow(velocityLC.Y(), 2) + pow(velocityLC.Z(), 2)));
+	Vector3f normalizedVelocityLC;
 
-	drag = coefficientOfDrag * velocityMagnitude * velocityLC;
+	if(velocityMagnitude < 1.0f) {
+		drag = Vector3f(0.0f, 0.0f, 0.0f);
+		return;
+	}
+	else {
+		normalizedVelocityLC = velocityLC / velocityMagnitude;
+	}
+	drag = normalizedVelocityLC * coefficientOfDrag * velocityMagnitude * velocityMagnitude;
 }
 
 //--------------------------------------------------------------
@@ -218,7 +226,17 @@ void CVehicle::CalculateDrag()
 //--------------------------------------------------------------
 void CVehicle::CalculateRollingResistance()
 {
-	rollingResistance = coefficientOfRollingResistance * velocityLC;
+	float velocityMagnitude = float(sqrt( pow(velocityLC.X(), 2) + pow(velocityLC.Y(), 2) + pow(velocityLC.Z(), 2)));
+	Vector3f normalizedVelocityLC;
+
+	if(velocityMagnitude < 1.0f) {
+		rollingResistance = Vector3f(0.0f, 0.0f, 0.0f);
+		return;
+	}
+	else {
+		normalizedVelocityLC = velocityLC / velocityMagnitude;
+	}
+	rollingResistance = normalizedVelocityLC * coefficientOfRollingResistance * velocityMagnitude * velocityMagnitude;
 }
 
 //--------------------------------------------------------------
@@ -272,7 +290,7 @@ float CVehicle::CalculateTraction(float engineForce, float rearAxleWeight)
 	// axle, which transfers into the weight on the rear tires.
 	
 	//float maximumTractionForce = CalculateMaxTraction(rearAxleWeight);
-	float maximumTractionForce = 6000.0f;
+	float maximumTractionForce = 8000.0f;
 
 	// Modulate the maximum amount of tractive force that the tires
 	// are able to generate based on the type of tire.  Average street
@@ -403,7 +421,7 @@ void CVehicle::CalculateRPM()
 		rpm = IDLE_RPM;
 	}
 	else {
-		rpm = int(driveWheelAngularVelocityRADS * gearRatios[gear] * rearDiffRatio * 60.0f / (2.0f * PI_BOS));
+		rpm = int(driveWheelAngularVelocityRADS * gearRatios[gear] * rearDiffRatio * 60.0f / (2.0f * PI_BOS)) + IDLE_RPM;
 
 		if(rpm > maximumRPM) {
 			rpm = int(maximumRPM);
@@ -442,7 +460,8 @@ void CVehicle::CalculateWheelAngularAcceleration()
 
 	// acceleration due to the acceleration of the vehicle along
 	// the X axis
-	driveWheelAngularAccelerationRADS = (accelerationLC.X() / ((2.0f * PI_BOS) * tireRadius));
+	driveWheelAngularAccelerationRADS = accelerationLC.X() / tireRadius;
+	
 	// extra acceleration due to the wheels slipping
 	driveWheelAngularAccelerationRADS += (totalTorque / rearAxleInertia);
  
@@ -450,7 +469,7 @@ void CVehicle::CalculateWheelAngularAcceleration()
 
 	// *** Begin Front Wheel Acceleration Calculations ***
 	float accelMagnitude = float(sqrt(pow(accelerationLC.X(), 2) + pow(accelerationLC.Y(), 2) + pow(accelerationLC.Z(), 2)));
-	float angularAccelMagnitude = accelMagnitude / ((2.0f * PI_BOS)*tireRadius);
+	float angularAccelMagnitude = accelMagnitude / tireRadius;
 	frontWheelAngularAccelerationRADS = float(cos(steerAngleRADS + sideSlipAngleRADS)) * angularAccelMagnitude;
 	// *** End Front Wheel Acceleration Calculations ***
 }
@@ -601,6 +620,7 @@ void CVehicle::UpdateVehiclePhysics()
 	CalculateEngineTorque();
 	CalculateDrag();
 	CalculateRollingResistance();
+	CalculateWeightDistribution();
 	//CalculateSlipRatio();
 	// End Variable Precalculation
 
