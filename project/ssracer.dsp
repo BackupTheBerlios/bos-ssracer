@@ -203,6 +203,18 @@ SOURCE=.\entity.cpp
 SOURCE=.\scene.cpp
 # End Source File
 # End Group
+# Begin Group "Vehicle AI Sources"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\copponentai.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\cwaypoint.cpp
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=.\aimessage.cpp
@@ -463,6 +475,18 @@ SOURCE=.\entity.h
 # Begin Source File
 
 SOURCE=.\scene.h
+# End Source File
+# End Group
+# Begin Group "Vehicle AI Headers"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\copponentai.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\cwaypoint.h
 # End Source File
 # End Group
 # Begin Source File

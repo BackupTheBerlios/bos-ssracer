@@ -30,7 +30,7 @@
 #include "gamestatemanager.h"
 // Gib's modification (adding frontendmanager to task list)
 #include "cfrontendmanager.h"
-
+#include "copponentai.h"
 
 //-----------------------------------------------------------------------------
 // static member intitialization 
@@ -400,6 +400,11 @@ void CBOSApplication::InitializeKernel()
 	static CAITask AITask;
     AITask.m_lPriority = 1000;
     CKernel::GetKernel().AddTask(&AITask);
+
+    // Opponent AI Task
+	static COpponentAI OpponentAITask;
+	OpponentAITask.m_lPriority = 600; // idunno
+	CKernel::GetKernel().AddTask(&OpponentAITask);
 
     // renderer task
     static CRenderTask RenderTask;
