@@ -84,7 +84,7 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 	switch ( cSMsg->nCommandType ) {
 	case LISTAUDIO_COMMAND:
 		// List all loaded sound effects
-		CLog::GetLog().Write( LOG_GAMECONSOLE, "Loaded Sound Effects:" );
+		CLog::GetLog().Write( LOG_GAMECONSOLE, "------ Loaded Sound Effects: ------" );
 
 		it = sound.begin();
 		while ( it != sound.end() ) {
@@ -94,7 +94,7 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 			it++;
 		}
 
-		CLog::GetLog().Write( LOG_GAMECONSOLE, "\nLoaded Sound Streams:" );
+		CLog::GetLog().Write( LOG_GAMECONSOLE, "------ Loaded Sound Streams: ------" );
 
 		it2 = stream.begin();
 		while ( it2 != stream.end() ) {
@@ -104,6 +104,8 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 			it2++;
 		}
 		break;
+
+		CLog::GetLog().Write( LOG_GAMECONSOLE, "-----------------------------------" );
 
 	case PLAYSOUNDEFFECTONCE_COMMAND:
 		CLog::GetLog().Write( LOG_GAMECONSOLE, "Sound Task: Playing sound \"%s.wav\" once!", cSMsg->cSoundName );
