@@ -103,7 +103,7 @@ private:
 
 	void TransformLocalToWorldSpace();
 
-	// Required from .car file
+	  // Required from .car file
 	// Following data is what gives each car its driving characteristics
 	float L;			// L = b + c = wheelbase of the vehicle
 	float b;			// b = distance from center of gravity to from axle

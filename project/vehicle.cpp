@@ -522,7 +522,7 @@ void CVehicle::UpdateVehiclePhysics()
 void CVehicle::TransformLocalToWorldSpace()
 {
 	// Apply the transformation Rotx(90)Roty(-90) to the position of the vehicle
-	m_translate = Vector3f(position.Z()*(-1), position.X(), position.Y()*(-1));
+	m_translate = Vector3f(positionLC.Z()*(-1), positionLC.X(), positionLC.Y()*(-1));
 
 	// 
 
