@@ -98,6 +98,9 @@
 #define CAP_NULL 15
 #define BAD_COMMAND 16
 #define EMPTY_VECTOR 17
+#define NEGATIVE_VALUE 18
+#define NO_SUCH_FONT 19
+
 static int global_error; // for functions that don't return ints but can encounter errors
 // global_error not working properly
 // end error codes
