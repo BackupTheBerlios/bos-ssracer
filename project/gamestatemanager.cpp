@@ -64,9 +64,6 @@ void CGameStateManager::Initialize()
     m_pkActiveCamera = m_pkCameraMap[CAMERA_FREE];
 
   */
-
-	
-
 }
 
 void CGameStateManager::Shutdown()

@@ -502,9 +502,10 @@ void CVehicle::TransformLocalToWorldSpace()
 {
 	// First transform the vehicle
 	// Apply transformation matrix to the
-
+	
 
 	// Then transform all 4 tires
+
 }
 
 

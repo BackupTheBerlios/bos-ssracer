@@ -109,15 +109,33 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 
 */
 	//--- free look camera --- //	
-	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, -5.0f), 
+	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, -1.0f), 
     			                                   &D3DXVECTOR3(0.0f, 0.0f, 0.0f) );
 
 	// wide FOV and a large frustrum
 	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 500.0f );
 
+
+
     // defaults to this camera
     m_pActiveCamera = m_pkCameraMap[CAMERA_FREELOOK];
     m_eActiveCamType = CAMERA_FREELOOK;
+
+
+	/*
+		//--- free look camera --- //	
+	// HAVE TO FIX UPDATE FUNCTION TO USE PRESET VIEW MATRIX
+	m_pkCameraMap[CAMERA_FREE]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, -1.0f), 
+				                               &D3DXVECTOR3(0.0f, 0.0f, 0.0f));//,
+									           //D3DXVECTOR3(0.0f, 1.0f, 0.0f) );
+
+	// wide FOV and a large frustrum
+	m_pkCameraMap[CAMERA_FREE]->SetProjParams( D3DX_PI/4.0f, 1.0f ,1.0f ,1000.0f );
+
+  	//m_pkCameraMap[CAMERA_FREE]->m_trans = D3DXVECTOR3(0.0f, 10.0f, -10.0f);
+	//m_pkCameraMap[CAMERA_FREE]->m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+  */
 
 }
 

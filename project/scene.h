@@ -27,6 +27,8 @@ protected:
 	static vector<CD3DMesh*> m_vMeshes;	// Vector containing meshes in the scene
 	static vector<CEntity*> m_vEntities;	// Vector containing all entities in the scene
 
+	
+
 private:
 
 	int LoadMap(FILE* fp, string* directory, string* filename);		// Load a new map (.map file)
