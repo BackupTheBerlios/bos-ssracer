@@ -203,8 +203,9 @@ void CAITask::HandleInputMessage( CInputTaskMessage *cIMsg ) {
 		}
 
 		// temporary (to be removed when we've got frontend rendering)
-		if (!cIMsg->m_keyDown && cIMsg->m_keyValue == GAME_ESCAPE)  
+        if (!cIMsg->m_keyDown && cIMsg->m_keyValue == GAME_ESCAPE)  {
 			CAppStateManager::GetAppManPtr()->SetAppState(STATE_IN_GAME);
+        }
 		break;
 		// end Gib's modification
 	

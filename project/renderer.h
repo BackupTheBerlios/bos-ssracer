@@ -28,6 +28,7 @@
 #include "d3dsettings.h"
 #include "d3dfont.h"
 #include "d3dfile.h"
+#include "cscreens.h"
 
 // --- defines and constants --- //
 // fonts available to render
@@ -35,7 +36,7 @@ enum FontType
 {
     FONT_DEFAULT=0,
     FONT_SYSTEM,
-    FONT_MENU = FONT_SYSTEM,  // just use this one for now
+    FONT_FRONT_END,  // just use this one for now
     FONT_SMALL
 };
 
@@ -170,15 +171,14 @@ public:
     void InitializeState();
     //void SetState (const RenderStatePtr aspkState[]);
 
+    // scene drawing commands
     void RenderScene();
-    //virtual bool BeginScene ();
-    //virtual void EndScene ();
+    bool BeginScene ();
+    void EndScene ();
 
     void ToggleFullScreen (int  riNewWidth, int  riNewHeight);
     bool IsWindowed () { return m_d3dSettings.IsWindowed; }; 
     void ShowCursor (bool bShow){  m_pd3dDevice->ShowCursor(bShow); };
-
-    void DisplayBackBuffer ();
 
     void Click();  // update the view from the active camera(s)
 
@@ -198,10 +198,16 @@ public:
     //void DrawObject( CObject * pkObject );    
     //void DrawVehicle( CPlayerVehicle * pkObject);
 
+    void DrawScreenText(  FLOAT fXPos, FLOAT fYPos, DWORD dwColor, char * szText, DWORD dwFlags=D3DFONT_FILTERED, FontType eFType = FONT_FRONT_END );
+    void Draw3DTextScaled( FLOAT fXPos, FLOAT fYPos, FLOAT fZPos, DWORD dwColor, char * szText, FLOAT fXScale, FLOAT fYScale, DWORD dwFlags=D3DFONT_FILTERED, FontType eFType = FONT_FRONT_END );
+
+
 protected:
     CRenderer();
     ~CRenderer ();
-
+    void ClearBackBuffer();
+    void DisplayBackBuffer ();
+    
     // draw functions
     void DrawConsole();
     void DrawSkyBox();
@@ -211,10 +217,9 @@ protected:
     void DrawBBox( Box3f * pBBox, float fPointSize = 1.0f, DWORD dwColor = D3DCOLOR_ARGB( 255, 155, 155, 155 ));
     void DrawVehicle( CVehicle * pVehicle );
 
-    void DrawScreenText(  FLOAT fXPos, FLOAT fYPos, DWORD dwColor, char * szText, DWORD dwFlags=0L, FontType eFType = FONT_MENU );
-    void Draw3DTextScaled( FLOAT fXPos, FLOAT fYPos, FLOAT fZPos, DWORD dwColor, char * szText, FLOAT fXScale, FLOAT fYScale, DWORD dwFlags=0L, FontType eFType = FONT_MENU );
 
     void DrawFrontEnd();
+    void DrawScreen( CScreen * pScreen );
 
 
 private:

@@ -22,6 +22,7 @@
 #include "bosapp.h"
 #include "kernel.h"
 #include "timer.h"
+#include "appstate.h"
 
 #include "WmlVector3.h"
 using namespace Wml;
@@ -162,17 +163,45 @@ void CRenderTask::Update()
     #endif
 
 
-    //--- render HUD if we're in-game ---//
+    m_pkRenderer->ClearBackBuffer();  // clear the back buffer
+    m_pkRenderer->BeginScene();  // ----- begin drawing commands ----------- //
 
-    //--- render current scene ---//
-    m_pkRenderer->RenderScene(); 
-    
-    //--- draw the console if down ---//
-    if ( CBOSApplication::GetBOSApp().GetConsoleState() == TRUE ) 
-        m_pkRenderer->DrawConsole(); 
+    // render the scene based on the current app state
+    switch(CAppStateManager::GetAppManPtr()->GetAppState())  
+    {
+    case STATE_FRONT_END:
+        m_pkRenderer->DrawFrontEnd();
+        break;
 
+    case STATE_IN_GAME:
+            //--- render HUD if we're in-game ---//
+
+            //--- render current scene ---//
+            m_pkRenderer->RenderScene(); 
+            
+            //--- draw the console if down ---//
+            if ( CBOSApplication::GetBOSApp().GetConsoleState() == TRUE ) 
+                m_pkRenderer->DrawConsole(); 
+        break;
+
+    default:
+        #ifdef _DEBUG
+        CLog::GetLog().Write(LOG_ALL, "Render Task: Cannot determine state!");
+        #endif
+        break;
+    }
+
+    //$$$DEBUG always draw the debugging overlay regardless of current app state
     #ifdef _DEBUG
     if ( CBOSApplication::GetBOSApp().GetDebugOverlayState() == TRUE ) {
+
+        // draw some screen calibration stuff
+        CRenderer::GetRendererPtr()->Draw3DTextScaled(-1,-1, 0, D3DCOLOR_ARGB(100,255,255,255), "--", 0.05, 0.05, D3DFONT_FILTERED, FONT_DEFAULT);
+        CRenderer::GetRendererPtr()->Draw3DTextScaled(0.9,0.9, 0, D3DCOLOR_ARGB(100,255,255,255), "++", 0.05, 0.05, D3DFONT_FILTERED, FONT_DEFAULT);
+        CRenderer::GetRendererPtr()->Draw3DTextScaled(-1,0.9, 0, D3DCOLOR_ARGB(100,255,255,255), "-+", 0.05, 0.05, D3DFONT_FILTERED, FONT_DEFAULT);
+        CRenderer::GetRendererPtr()->Draw3DTextScaled(0.9,-1, 0, D3DCOLOR_ARGB(100,255,255,255), "+-", 0.05, 0.05, D3DFONT_FILTERED, FONT_DEFAULT);
+
+
         //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "press F12 to hide all this");
         //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 20, "line 20");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 30, "line 30");
@@ -181,7 +210,9 @@ void CRenderTask::Update()
         m_pkRenderer->DrawDebugOverlay();  // draw the debugging overlay
     }
     #endif
-        
+
+    m_pkRenderer->EndScene();  //---------- end drawing commands ------------ //
+    
     //--- swap buffers to display rendered image ---//
     m_pkRenderer->DisplayBackBuffer();  
 }

@@ -1,6 +1,9 @@
 #include "cscreens.h"
 #include "input.h"
 
+// J's edit
+#include "renderer.h"
+
 CMainMenu::CMainMenu()
 {
   
@@ -30,15 +33,17 @@ CMainMenu::~CMainMenu()
 }
 
 void CMainMenu::draw()
-
 {
-//Jay here's your stub function to draw the mainmenu
-  newGame->draw();
-  options->draw();
-  bestTimes->draw();
-  help->draw();
-  credits->draw();
-  quit->draw();
+    //CRenderer::GetRendererPtr()->DrawScreenText(0,0,D3DCOLOR_ARGB(255,255,255,255), "MAIN MENU");
+    //$$$TEMP just draw this for now
+    CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(255,255,255,255), "MAIN\nMENU", 0.3, 0.3);
+    //Jay here's your stub function to draw the mainmenu
+    newGame->draw();
+    options->draw();
+    bestTimes->draw();
+    help->draw();
+    credits->draw();
+    quit->draw();
 }
 
 void CMainMenu::processInput(int key)

@@ -23,6 +23,7 @@ using namespace Wml;
 #include "cinputconsole.h"
 #include "macros.h"
 #include "quadtree.h"
+#include "cfrontendmanager.h"
 
 // --- system includes --- //
 #define STL_USING_ALL
@@ -602,3 +603,12 @@ void CRenderer::Draw3DTextScaled( FLOAT fXPos, FLOAT fYPos, FLOAT fZPos, DWORD d
     return;
 }
 
+void CRenderer::DrawFrontEnd()
+{    
+    DrawScreen(CFrontendManager::GetFrontendManagerPtr()->CurScreen());
+}
+
+void CRenderer::DrawScreen(CScreen * pScreen)
+{
+    pScreen->draw();
+}

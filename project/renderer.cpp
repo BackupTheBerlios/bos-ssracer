@@ -79,9 +79,10 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
 
     // set up some utility fonts
-    m_kFontMap[FONT_DEFAULT] = new CD3DFont( _T("Arial"), 12, D3DFONT_BOLD );
-    m_kFontMap[FONT_SYSTEM]  = new CD3DFont( _T("System"), 12, D3DFONT_BOLD|D3DFONT_ITALIC|D3DFONT_ZENABLE );
-    m_kFontMap[FONT_SMALL]   = new CD3DFont( _T("Arial"), 8 );
+    m_kFontMap[FONT_DEFAULT]    = new CD3DFont( _T("Times"), 12, D3DFONT_BOLD );
+    m_kFontMap[FONT_SYSTEM]     = new CD3DFont( _T("System"), 12, D3DFONT_BOLD|D3DFONT_ITALIC|D3DFONT_ZENABLE );
+    m_kFontMap[FONT_SMALL]      = new CD3DFont( _T("Arial"), 8 );
+    m_kFontMap[FONT_FRONT_END]  = new CD3DFont( _T("Arial"), 48 );
 
     // set up the skybox
     m_pSkyBox = new CD3DMesh(_T("skybox"));
@@ -358,6 +359,32 @@ bool CRenderer::CheckDevice()
 }
 
 
+
+//-----------------------------------------------------------------------------
+// Name:
+// Desc:
+//-----------------------------------------------------------------------------
+void CRenderer::ClearBackBuffer()  
+{
+    // clear the previous frame   
+    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
+    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,20,100), 1.0f, 0 );
+    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );//D3DCOLOR_XRGB(0,20,50)
+    return;
+}
+
+bool CRenderer::BeginScene()  
+{
+    m_pd3dDevice->BeginScene();  // --- begin scene drawing commands
+    return true;
+}
+
+void CRenderer::EndScene()  
+{
+    m_pd3dDevice->EndScene();  // --- end scene drawing commands     
+}
+
+
 int iDrawnEnt = 0, iTotalNodeEnt=0;
 //-----------------------------------------------------------------------------
 // Name:  RenderScene()
@@ -365,13 +392,6 @@ int iDrawnEnt = 0, iTotalNodeEnt=0;
 //-----------------------------------------------------------------------------
 void CRenderer::RenderScene()
 {
-    // clear the previous frame   
-    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 );
-    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,20,100), 1.0f, 0 );
-    //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );//D3DCOLOR_XRGB(0,20,50)
-
-    m_pd3dDevice->BeginScene();  // --- begin scene drawing commands
-
     //InitializeState();
 
     // render the skybox first
@@ -415,8 +435,6 @@ void CRenderer::RenderScene()
                 DrawEntity(*it);
         } 
     }
-
-    m_pd3dDevice->EndScene();  // --- end scene drawing commands     
 }
 
 /*
