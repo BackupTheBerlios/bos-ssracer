@@ -32,8 +32,11 @@ CInputConsole::CInputConsole(char* str)
     archives.push_back("cameratest CAMERA_CHASE");
     archives.push_back("loadmeshtest ferrarif20 .\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\");
     archives.push_back("loadmap debug .\\maps\\debug\\");
-    archives.push_back("physicstest1");
-	archives.push_back("physicstest2");
+    //archives.push_back("physicstest1");
+	//archives.push_back("physicstest2");
+    archives.push_back("loadpv mitsueclipse");
+    archives.push_back("loadplayervehicle acuransx");
+
     #endif
 
 	archiveIterator = archives.end();

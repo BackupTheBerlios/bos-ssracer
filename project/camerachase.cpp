@@ -17,7 +17,7 @@ void CCameraChase::SetVehicle( CVehicle * pkVehicle )
 	Vector3f vOrigin = Vector3f(*pkVehicle->GetTranslate());
 //    CLog::GetLog().Write(LOG_GAMECONSOLE, "worldpos of vehicle %f %f %f", vOrigin.X(), vOrigin.Y() , vOrigin.Z() );	
     Vector3f vTemp = vOrigin + vHeading*1.2f; //need to know the length of the car to set the offset properly
-    vTemp.Y() += 0.5f;  //raise the look at point a little
+    vTemp.Y() += 0.7f;  //raise the look at point a little
 
 	m_vDefaultLookAt = D3DXVECTOR3( vTemp.X(), vTemp.Y() , vTemp.Z()) ;
 	m_vLookAt = m_vDefaultLookAt;
@@ -155,7 +155,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
 
     vTemp = Vector3f(*m_pkVehicle->GetTranslate());
 //    CLog::GetLog().Write(LOG_GAMECONSOLE, "worldpos %f %f %f", vTemp.X(), vTemp.Y() , vTemp.Z() );	
-    m_vEye = D3DXVECTOR3(vTemp.X(), 1.2f, vTemp.Z()) - vLocalAhead*7.5f;
+    m_vEye = D3DXVECTOR3(vTemp.X(), 2.1f, vTemp.Z()) - vLocalAhead*7.5f;
 
     // Move the eye position 
     m_vEye += vPosDeltaWorld;
@@ -166,9 +166,9 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
 
     // Update the lookAt position based on the eye position 
     //m_vLookAt = m_vEye - vWorldAhead*5.2f;
-    m_vLookAt = m_vEye + vLocalAhead*5.7f;
+    m_vLookAt = m_vEye + vLocalAhead*9.5f; /////
     //m_vLookAt = m_vEye + vWorldAhead;
-    //m_vLookAt.y ;//+= 0.5f;
+    m_vLookAt.y = 0.5f;
 
 //   	CLog::GetLog().Write(LOG_GAMECONSOLE, "look %f %f %f", m_vLookAt.x, m_vLookAt.y, m_vLookAt.z );	
 

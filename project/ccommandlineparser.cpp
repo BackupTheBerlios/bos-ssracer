@@ -65,9 +65,11 @@ int CCommandLineParser::initKeywords()
 	Keywords.push_back(std::string("loadscene"));
 	Keywords.push_back(std::string("loadentity"));
 	Keywords.push_back(std::string("loadplayervehicle"));
+    Keywords.push_back(std::string("loadpv"));  //alias
+
 	//Keywords.push_back(std::string("clearscene"));
-	Keywords.push_back(std::string("physicstest1"));
-	Keywords.push_back(std::string("physicstest2"));
+	//Keywords.push_back(std::string("physicstest1"));
+	//Keywords.push_back(std::string("physicstest2"));
 	/*** End Chris' Commands ***/
 
     /*** Begin J's Commands ***/
@@ -138,10 +140,13 @@ int CCommandLineParser::execute()
     if (*it == "settimer") error = settimer();
 	//if (*it == "loadscene") error = LoadScene();
 	if (*it == "loadentity") error = LoadEntity();
+
 	if (*it == "loadplayervehicle") error = LoadPlayerVehicle();
+    if (*it == "loadpv") error = LoadPlayerVehicle();  // alias
+
 	//if (*it == "clearscene") error = ClearScene();
-	if (*it == "physicstest1") error = PhysicsTest1();
-	if (*it == "physicstest2") error = PhysicsTest2();
+	//if (*it == "physicstest1") error = PhysicsTest1();
+	//if (*it == "physicstest2") error = PhysicsTest2();
 
     if (*it == "unloadmap") error = unloadmap();
     if (*it == "loadmap") error = loadmap();
@@ -285,8 +290,8 @@ int CCommandLineParser::help()
 {
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "AVAILABLE COMMANDS ARE:");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "general command syntax:  command <arg> [optional arg]");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "general command syntax:  command | alias <arg> [optional arg]");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------------------------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "HELP - Display this list.");				
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "ECHO <text> - echoes the text entered.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEAR - clear the console.");
@@ -297,12 +302,12 @@ int CCommandLineParser::help()
 //	CLog::GetLog().Write(LOG_GAMECONSOLE, "                                 <directory> is the directory where the map is located");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADENTITY <params> - load a new entity and add it to the current scene");
 //	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEARSCENE - clear the current scene");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADPLAYERVEHICLE <params> - load a new player vehicle");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADPLAYERVEHICLE | LOADPV <file> - load a new player vehicle from file (leave .car extension off)");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESHTEST <file> <dir> - load a mesh at some directory (leave .x extension off");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> [dir] - load a map and create a scene from a .map file [dir] defaults to .\\maps\\ if omitted");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map and scene objects");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------------------------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;
 }
@@ -392,8 +397,11 @@ int CCommandLineParser::LoadEntity()
 	return OK;
 }
 
+
+//$$$NOTE Chris I made this function because this is basically what physicstest[1,2] does
 int CCommandLineParser::LoadPlayerVehicle()
 {
+    /*
 	string file = "-file";
 	string dir = "-dir";
 
@@ -434,6 +442,53 @@ int CCommandLineParser::LoadPlayerVehicle()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "Command not implemented yet, please come again!");
 
 	return OK;
+    */
+
+    string sDir, sName;
+    FILE *fp;
+
+    // if only 'loadplayervehicle' was entered default to the mitsu eclipse
+    if (Tokens.size() == 1)  {
+        sName = "mitsuEclipse";
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading default player vehicle from %s.car", sName.c_str());
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES) + sName + "\\";
+    }
+    // if only 'loadplayervehicle <vehiclename>' was entered
+    else if (Tokens.size() == 2)  {
+        sName = Tokens[1];
+        // look in the .\media\meshes\dynamic\vehicles\ directory
+        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES) + sName + "\\";
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadmap:  looking in %s for vehicle", sDir.c_str());
+    }
+    // if 'loadplayervehicle <vehiclename> <dir>' was entered
+    else if (Tokens[2].find(".\\", 0) == 0)  { // check if they used that .\ dir shortcut
+        sName = Tokens[1];
+        sDir = Tokens[2];
+        sDir.replace(0, 2, CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING));
+    }
+
+    sName.append(".car");  // build the actual filename we want to load
+
+    //check if the file exists
+    fp = fopen( (sDir+sName).c_str(), "r");
+    if (!fp)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadplayervehicle Error: File does not exist: %s", (sDir+sName).c_str());
+        return OK;
+    }
+
+    // load the player vehicle into the current scene
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
+		return OK;
+	}
+
+    //set the active camera to the chase cam
+    CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+
+    //set it to chase the vehicle we just created
+    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+    
+    return OK;
 }
 
 
@@ -446,6 +501,7 @@ int CCommandLineParser::ClearScene()
 	return OK;
 }
 
+/*
 int CCommandLineParser::PhysicsTest1()
 {
     string sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
@@ -456,7 +512,6 @@ int CCommandLineParser::PhysicsTest1()
 		return OK;
 	}
 
-    /*J fucken w Chris' shit*/
 
     //set the active camera to the chase cam
     CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
@@ -478,7 +533,6 @@ int CCommandLineParser::PhysicsTest2()
 		return OK;
 	}
 
-    /*J fucken w Chris' shit*/
 
     //set the active camera to the chase cam
     CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
@@ -489,6 +543,7 @@ int CCommandLineParser::PhysicsTest2()
 	return OK;
 
 }
+*/
 /*** End Chris' Functions ***/
 
 
@@ -604,8 +659,10 @@ int CCommandLineParser::loadmeshtest()
 
 int CCommandLineParser::cameratest()
 {
+    // default to free look cam if no camera is entered
     if (Tokens.size()<2)  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements to cameratest");
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements to cameratest loading CAMERA_FREELOOK");
+        CRenderer::GetRenderer().SetActiveCamera(CAMERA_FREELOOK);
 		return OK;
     }
 

@@ -41,8 +41,8 @@ public:
 	int LoadEntity();
 	int LoadPlayerVehicle();
 	int ClearScene();
-	int PhysicsTest1();
-	int PhysicsTest2();
+	//int PhysicsTest1();
+	//int PhysicsTest2();
     //==== Ram & Gibs Functions ====/
     int LoadVehicleAI();
 

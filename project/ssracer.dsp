@@ -191,7 +191,7 @@ SOURCE=.\inputtask.cpp
 # Begin Group "AI Sources"
 
 # PROP Default_Filter ".cpp"
-# Begin Group "ChrisSceneConstruct Sources"
+# Begin Group "World AI Sources"
 
 # PROP Default_Filter ".cpp"
 # Begin Source File
@@ -469,7 +469,7 @@ SOURCE=.\inputtask.h
 # Begin Group "AI Headers"
 
 # PROP Default_Filter ".h"
-# Begin Group "ChrisSceneConstruct Headers"
+# Begin Group "World AI Headers"
 
 # PROP Default_Filter ".h"
 # Begin Source File
