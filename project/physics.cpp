@@ -7,12 +7,12 @@ CPhysics * CPhysics::m_physics = NULL;
 CPhysics::CPhysics(int temp)
 { 
 	m_physics = this; 
-	m_playerCar = NULL; 
+//	m_playerCar = NULL; 
 }
 
 void CPhysics::Update(int iInput, bool test)
 {
-	if(m_playerCar) {
+/*	if(m_playerCar) {
 		switch(iInput)
 		{
 			
@@ -61,6 +61,7 @@ void CPhysics::Update(int iInput, bool test)
 		m_playerCar->interpolateSteering(CTimer::GetTimer().GetTimeElapsed());
 		m_playerCar->updatePhysics(CTimer::GetTimer().GetTimeElapsed());
 	}
+	*/
 }
 
 /*

@@ -1,4 +1,5 @@
 #include "physicstask.h"
+#include "physics.h"
 
 CPhysicsTask::CPhysicsTask()
 { 

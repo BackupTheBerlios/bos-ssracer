@@ -20,7 +20,7 @@ public:
 protected:
 
 	CPhysics() {};
-	CPlayerVehicle* m_playerCar;
+//	CPlayerVehicle* m_playerCar;
 	static CPhysics * m_physics;
 
 
