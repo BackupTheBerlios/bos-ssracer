@@ -27,7 +27,6 @@ COpponentAI::COpponentAI()
     
 	m_pkOpponentAI = this;
 
-    lastWPReached = false;
 }
 
 COpponentAI::~COpponentAI()
@@ -145,29 +144,34 @@ int COpponentAI::setDirection(COpponentVehicle* Car)
 	// angle for HeadingWC
 	Vector3f NormalizedHeadingWC = Car->GetVehicleHeadingWC();
 	NormalizedHeadingWC.Normalize();
+    //CLog::GetLog().Write(LOG_DEBUGOVERLAY,60, "Vehicle HEading: %f %f %f", NormalizedHeadingWC.X(), NormalizedHeadingWC.Y(),NormalizedHeadingWC.Z());
 	float heading_angle = asin(NormalizedHeadingWC.Z());
 
 	// Set heading target to the vector from car to waypoint
 	CWaypoint* WP = Car->Next();
 	Vector3f direction = *WP->GetTranslate() - *Car->GetTranslate();
-	Car->setHeadingTarget(&direction);
+   	Car->setHeadingTarget(&direction);
 
 	// angle for HeadingTargetWC
 	Vector3f NormalizedHeadingTargetWC = *Car->HeadingTarget();
 	NormalizedHeadingTargetWC.Normalize();
+   // CLog::GetLog().Write(LOG_DEBUGOVERLAY,64, "Normalized Heading: %f %f %f", NormalizedHeadingTargetWC.X(), NormalizedHeadingTargetWC.Y(),NormalizedHeadingTargetWC.Z());
 	float heading_target_angle = asin(NormalizedHeadingTargetWC.Z());
 
 	// compare angles to see if lturn or rturn should be set
-	if (heading_angle > heading_target_angle) {
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY,65, "Vehicle Angle: %f Target Angle: %f", heading_angle, heading_target_angle);
+	if (heading_angle < heading_target_angle) {
+     //   CLog::GetLog().Write(LOG_MISC, "Attempting to turn Left");
 		Car->SetRTurn(false);
 		Car->SetLTurn(true);
 	}
-	if (heading_angle < heading_target_angle) {
+	if (heading_angle > heading_target_angle) {
+       // CLog::GetLog().Write(LOG_MISC, "Attempting to turn Right");
 		Car->SetLTurn(false);
 		Car->SetRTurn(true);
 	}
 	// if angles are =, no need to turn
-
+    
 	return OK;
 }
 
@@ -207,19 +211,24 @@ void COpponentAI::Update()
 		for (thisCar = m_pCars.begin(); thisCar != m_pCars.end(); thisCar++) {
 			// turning:
 			if ((*thisCar)->reachedHeadingTarget()) {
+                CLog::GetLog().Write(LOG_MISC, "Heading Target Reached");
 				(*thisCar)->SetLTurn(false);
 				(*thisCar)->SetRTurn(false);
 			}
-			if (isAtWaypoint((*thisCar)) || 
-				((*thisCar)->GetLTurn() || (*thisCar)->GetRTurn())) {
+            
+            if((*thisCar)->GetLTurn() || (*thisCar)->GetRTurn()) {
 				setDirection(*thisCar);
-				(*thisCar)->incNext(); // new next target waypoint
+			}
+
+            if (isAtWaypoint(*thisCar)) 
+              {
+                (*thisCar)->incNext(); // new next target waypoint
+				setDirection(*thisCar);	
 			}
 
 			// accelerate/decelerate:
 			if ((*thisCar)->GetVehicleVelocityWC().Length() < VAI_CARS_VEL) {
 				(*thisCar)->SetGas(true); (*thisCar)->SetBrake(false);
-                CLog::GetLog().Write(LOG_MISC, "Attempting to set Gas");
 			}
 			if ((*thisCar)->GetVehicleVelocityWC().Length() > VAI_CARS_VEL) {
 				(*thisCar)->SetBrake(true); (*thisCar)->SetGas(false);
@@ -227,18 +236,18 @@ void COpponentAI::Update()
 
             //Rams add to brake at last waypoint (after reaching it)
             if (isAtWaypoint((*thisCar)) && (*thisCar)->Next()->getLastWay()) {
-                lastWPReached = true;
+                (*thisCar)->lastWPReached = true;
             }
-
-            if (lastWPReached){
-            (*thisCar)->SetBrake(false); (*thisCar)->SetGas(false);
+            //Kind of shitty way to do this, but hey it works-> will fix later
+            CLog::GetLog().Write(LOG_DEBUGOVERLAY,112, "Vehicle Velocity: %f", (*thisCar)->GetVehicleVelocityWC().Length());
+            if ((*thisCar)->lastWPReached){ 
+            (*thisCar)->SetBrake(true); (*thisCar)->SetGas(false);
             
-            /* //just coasting to stop for now, must figure out range to stop braking and
-            //get to complete stop
-             if ((*thisCar)->GetVehicleVelocityWC().Length()<=0)
-              (*thisCar)->SetBrake(false); (*thisCar)->SetGas(false);
-              */
+             if ((*thisCar)->GetVehicleVelocityWC().Length()<=0.2)
+               (*thisCar)->raceOver = true; 
             }
+            if((*thisCar)->raceOver){
+              (*thisCar)->SetBrake(false); (*thisCar)->SetGas(false);}
 			// NOTE: vehicle current velocity will rarely ever be EXACTLY VAI_CARS_VEL
 			// Therefore, gas and brake are probably going to alternate.
 			// This can be fixed if necessary bay testing to see if current velocity falls
@@ -268,8 +277,8 @@ int COpponentAI::setWaypoints(std::vector<CWaypoint*> Waypoints)
 }
 
 // DON'T USE THIS. DOESN'T WORK!!! (see COpponentVehicle for another version of this function)
-bool COpponentAI::reachedHeadingTarget(std::vector<COpponentVehicle*>::iterator thisCar)
-{
+//bool COpponentAI::reachedHeadingTarget(std::vector<COpponentVehicle*>::iterator thisCar)
+//{
 	/*
 	CLog::GetLog().Write(LOG_USER, "lturn = %d\nrturn = %d",
 		(*thisCar)->GetLTurn(), (*thisCar)->GetRTurn);
@@ -307,8 +316,8 @@ bool COpponentAI::reachedHeadingTarget(std::vector<COpponentVehicle*>::iterator 
 	// Note: assuming that if neither lturn or rturn = true, 
 	// target heading already reached.
 */
-	return true;
-}
+//	return true;
+//}
 
 void COpponentAI::DoMessageHandle(ITaskMessage* cMsg)
 {

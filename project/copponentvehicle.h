@@ -36,12 +36,15 @@ public:
 	int setNext(std::vector<CWaypoint*>::iterator next);
 	int setHeadingTarget(Vector3f* HT);
 	int setVelocityTarget(Vector3f* VT);
-
+    //Ram's Add 
+    bool lastWPReached;
+    bool raceOver;
 protected:
 	std::vector<CWaypoint*> m_vWPSequence;
 	std::vector<CWaypoint*>::iterator m_Next;
 	Vector3f m_vHeadingTargetWC;
 	Vector3f m_vVelocityTargetWC;
+
 
 private:
 

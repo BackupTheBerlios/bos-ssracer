@@ -11,6 +11,8 @@ COpponentVehicle::COpponentVehicle()
 	Init();
 
 	m_strEntityType = "COpponentVehicle";
+    lastWPReached = false;
+    raceOver = false;
 }
 
 COpponentVehicle::~COpponentVehicle()
@@ -93,10 +95,13 @@ bool COpponentVehicle::reachedHeadingTarget()
 	//			if current heading WC angle will be greater than target untill target reached.
 	//		 if turning right then
 	//		    if current heading WC angle will be less than target untill target reached.
-	if ((GetLTurn() && heading_angle > heading_target_angle) ||
-		(GetRTurn() && heading_angle < heading_target_angle))
+	if ((GetLTurn() && heading_angle < heading_target_angle) ||
+		(GetRTurn() && heading_angle > heading_target_angle))
 		return false;
-	else return true;
+	//else return true;
+    else if (heading_angle==heading_target_angle)
+      return true;
+    else return false;
 	// Note: assuming that if neither lturn or rturn = true, 
 	// target heading already reached.
 }

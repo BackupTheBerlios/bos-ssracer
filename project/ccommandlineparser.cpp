@@ -822,20 +822,33 @@ int CCommandLineParser::LoadVehicleAI()
 	}
     CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon3 loaded the mesh %s Sucessfully!", sName.c_str() );    
     
+    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
+	}
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon4 loaded the mesh %s Sucessfully!", sName.c_str() );    
+    
+    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity for this mesh was not loaded successfully!");
+	}
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "pylon5 loaded the mesh %s Sucessfully!", sName.c_str() );    
+    
     std::vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()
 						->end()-1;
 
 
 	//translate pylons to desired locations
-	(*it)->SetTranslate(Vector3f(10.0f, 0.0f, 0.0f));
-    (*--it)->SetTranslate(Vector3f(30.0f, 0.0f, 0.0f));
+	(*it)->SetTranslate(Vector3f(6.0f, 0.0f, 0.0f));
+    (*--it)->SetTranslate(Vector3f(30.0f, 0.0f, -5.0f));
 	(*--it)->SetTranslate(Vector3f(100.0f, 0.0f, 0.0f));
+    (*--it)->SetTranslate(Vector3f(150.0f, 0.0f, -10.0f));
+    (*--it)->SetTranslate(Vector3f(250.0f, 0.0f, 50.0f));
 
     //load mitsu opponent
-	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&carDir, &carName))) {
+	  if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&carDir, &carName))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The Opponent Vehicle is not loaded correctly!");
 		return OK;
-	}
+      }
+    
 
     //load 2nd opponent (nsx)
     carDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"acuransx\\";
@@ -860,9 +873,9 @@ int CCommandLineParser::LoadVehicleAI()
      
     }
     
-    //set Cam to last vehicle set in 
+      //set Cam to last vehicle set in 
 	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
-    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(opponent);
+    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle((*CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin()));
 	
     return OK;
 }

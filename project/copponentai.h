@@ -36,9 +36,6 @@ public:
 	//void OnSuspend();
 	//void OnResume();
 	//void Stop();
-    
-    //Ram's Add 
-    bool lastWPReached;
 
 	std::vector<COpponentVehicle*>* Cars() {return &m_pCars;}
 	std::vector<CWaypoint*>* Waypoints() {return &m_pWaypoints;}

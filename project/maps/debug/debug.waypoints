@@ -1,8 +1,17 @@
 <newObject>
 <type> 0
-<id> 11200
+<id> 11999
 <name> waypoint1
-<translate> 10.000000 0.000000 0.000000
+<translate> 0.000000 0.000000 0.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<sphereRadius> 0.525454
+
+<newObject>
+<type> 0
+<id> 11200
+<name> waypoint2
+<translate> 6.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 <rotate> 0.000000 0.000000 0.000000
 <sphereRadius> 0.525454
@@ -10,8 +19,8 @@
 <newObject>
 <type> 0
 <id> 11201
-<name> waypoint2
-<translate> 30.000000 0.000000 0.000000
+<name> waypoint3
+<translate> 30.000000 0.000000 -5.000000
 <scale> 1.000000 1.000000 1.000000
 <rotate> 0.000000 0.000000 0.000000
 <sphereRadius> 0.525454
@@ -19,9 +28,26 @@
 <newObject>
 <type> 0
 <id> 11202
-<name> waypoint3
+<name> waypoint4
 <translate> 100.000000 0.000000 0.000000
 <scale> 1.000000 1.000000 1.000000
 <rotate> 0.000000 0.000000 0.000000
 <sphereRadius> 0.525454
 
+<newObject>
+<type> 0
+<id> 11203
+<name> waypoint5
+<translate> 150.000000 0.000000 -10.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<sphereRadius> 0.525454
+
+<newObject>
+<type> 0
+<id> 11204
+<name> waypoint6
+<translate> 250.000000 0.000000 50.000000
+<scale> 1.000000 1.000000 1.000000
+<rotate> 0.000000 0.000000 0.000000
+<sphereRadius> 0.525454
