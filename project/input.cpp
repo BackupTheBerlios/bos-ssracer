@@ -108,6 +108,7 @@ unsigned int extended_keymap[] = { 0x00, 0x00, '!' , '@' , '#' , '$' , '%' , '^'
                                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  //0xf8-0xff
                          };
 
+
 unsigned int joystick_map[] = { GAME_BUTTON0, GAME_BUTTON1, GAME_BUTTON2, GAME_BUTTON3,
 								GAME_BUTTON4, GAME_BUTTON5, GAME_BUTTON6, GAME_BUTTON7,
 								GAME_BUTTON8, GAME_BUTTON9, GAME_BUTTON10, 0x000000000,
@@ -423,6 +424,7 @@ void CInput::parseJoystick(DIDEVICEOBJECTDATA *buffer, int numButtonsPressed)
 			}
 		}
 
+		/*
 		if(buffer[i].dwOfs == DIJOFS_X) {
 			if(buffer[i].dwData > (GAMEPAD_UPPER_RANGE * 0.8f)) {
 				cIMsg = new CInputTaskMessage(GAME_RIGHT, true);
@@ -456,6 +458,44 @@ void CInput::parseJoystick(DIDEVICEOBJECTDATA *buffer, int numButtonsPressed)
 				CKernel::GetKernel().DeliverMessage(cIMsg, AI_TASK);
 			}
 		}
+		*/
+/*********** TEMPORARY SO THAT THE CAMERA DOESN"T TAKE THE INPUT ****************/
+		if(buffer[i].dwOfs == DIJOFS_X) {
+			if(buffer[i].dwData > (GAMEPAD_UPPER_RANGE * 0.8f)) {
+				cIMsg = new CInputTaskMessage(GAME_NUMPAD6, true);
+				CKernel::GetKernel().DeliverMessage(cIMsg, AI_TASK);
+			}
+			else if(buffer[i].dwData < (GAMEPAD_LOWER_RANGE + GAMEPAD_UPPER_RANGE * 0.2f)) {
+				cIMsg = new CInputTaskMessage(GAME_NUMPAD4, true);
+				CKernel::GetKernel().DeliverMessage(cIMsg, AI_TASK);
+			}
+			else {
+				cIMsg = new CInputTaskMessage(GAME_NUMPAD4, false);
+				CKernel::GetKernel().DeliverMessage(cIMsg, AI_TASK);
+				cIMsg = new CInputTaskMessage(GAME_NUMPAD6, false);
+				CKernel::GetKernel().DeliverMessage(cIMsg, AI_TASK);
+			}
+		}
+
+		if(buffer[i].dwOfs == DIJOFS_Y) {
+			if(buffer[i].dwData > (GAMEPAD_UPPER_RANGE * 0.8f)) {
+				cIMsg = new CInputTaskMessage(GAME_UP, true);
+				CKernel::GetKernel().DeliverMessage(cIMsg, AI_TASK);
+			}
+			else if(buffer[i].dwData < (GAMEPAD_LOWER_RANGE + GAMEPAD_UPPER_RANGE * 0.2f)) {
+				cIMsg = new CInputTaskMessage(GAME_DOWN, true);
+				CKernel::GetKernel().DeliverMessage(cIMsg, AI_TASK);
+			}
+			else {
+				cIMsg = new CInputTaskMessage(GAME_UP, false);
+				CKernel::GetKernel().DeliverMessage(cIMsg, AI_TASK);
+				cIMsg = new CInputTaskMessage(GAME_DOWN, false);
+				CKernel::GetKernel().DeliverMessage(cIMsg, AI_TASK);
+			}
+		}
+
+/********************* CAR DRIVING TESTING *******************************/
+
 	}
 }
 
