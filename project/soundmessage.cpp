@@ -40,6 +40,9 @@ CSoundMessage::CSoundMessage() {
 }
 
 
+//---------------------------------------------------------------------------//
+// SOUND EFFECT COMMANDS
+//---------------------------------------------------------------------------//
 void CSoundMessage::PlaySoundEffectOnce( std::string sNewName ) {
 	if ( sNewName.size() > MAX_FILENAME_LEN ) return;
 
@@ -120,6 +123,9 @@ void CSoundMessage::ReleaseSoundEffect( std::string sID ) {
 }
 
 
+//---------------------------------------------------------------------------//
+// STREAM COMMANDS
+//---------------------------------------------------------------------------//
 void CSoundMessage::PlayStreamOnce( std::string sNewName ) {
 	if ( sNewName.size() > MAX_FILENAME_LEN ) return;
 
@@ -200,6 +206,58 @@ void CSoundMessage::ReleaseStream( std::string sID ) {
 }
 
 
+//---------------------------------------------------------------------------//
+// PLAYLIST COMMANDS
+//---------------------------------------------------------------------------//
+void CSoundMessage::LoadList( std::string sListFile ) {
+	if ( sListFile.size() > MAX_FILENAME_LEN ) return;
+
+	// Set command properties
+	nCommandType = PLAYLIST_LOAD_COMMAND
+	strcpy( cSoundName, sListFile.c_str() );
+
+	return;
+}
+
+
+void CSoundMessage::PlayList( float fNewVolume, bool bAutoRepeat, bool bAutoAdvance ) {
+	// Set command properties
+	nCommandType = PLAYLIST_PLAY_COMMAND
+	fVolume = fNewVolume;
+	bLooped = bAutoRepeat;
+	bPause = bAutoAdvance;
+
+	return;
+}
+
+
+void CSoundMessage::StopList() {
+	// Set command properties
+	nCommandType = PLAYLIST_STOP_COMMAND
+
+	return;
+}
+
+
+void CSoundMessage::PauseList() {
+	// Set command properties
+	nCommandType = PLAYLIST_PAUSE_COMMAND
+
+	return;
+}
+
+
+void CSoundMessage::UnpauseList() {
+	// Set command properties
+	nCommandType = PLAYLIST_UNPAUSE_COMMAND
+
+	return;
+}
+
+
+//---------------------------------------------------------------------------//
+// SOUNDCORE COMMANDS
+//---------------------------------------------------------------------------//
 void CSoundMessage::ListAudio() {
 	nCommandType = LISTAUDIO_COMMAND;
 

@@ -28,17 +28,23 @@
 #define STOPSOUNDEFFECT_COMMAND 6
 #define RELEASESOUNDEFFECT_COMMAND 7
 
-#define PLAYSTREAMONCE_COMMAND 8
-#define LOADSTREAM_COMMAND 9
-#define PLAYSTREAM_COMMAND 10
-#define PAUSESTREAM_COMMAND 11
-#define UNPAUSESTREAM_COMMAND 12
-#define STOPSTREAM_COMMAND 13
-#define RELEASESTREAM_COMMAND 14
-#define FADEINSTREAM_COMMAND 15
-#define FADEOUTSTREAM_COMMAND 16
+#define PLAYSTREAMONCE_COMMAND 16
+#define LOADSTREAM_COMMAND 17
+#define PLAYSTREAM_COMMAND 18
+#define PAUSESTREAM_COMMAND 19
+#define UNPAUSESTREAM_COMMAND 20
+#define STOPSTREAM_COMMAND 21
+#define RELEASESTREAM_COMMAND 22
+#define FADEINSTREAM_COMMAND 23
+#define FADEOUTSTREAM_COMMAND 24
 
 #define LISTAUDIO_COMMAND 32
+
+#define PLAYLIST_LOAD_COMMAND 64
+#define PLAYLIST_PLAY_COMMAND 65
+#define PLAYLIST_STOP_COMMAND 66
+#define PLAYLIST_PAUSE_COMMAND 67
+#define PLAYLIST_UNPAUSE_COMMAND 68
 
 
 // Forward Class Definitions
@@ -103,6 +109,12 @@ public:
     void PauseStream( std::string sID );
     void UnpauseStream( std::string sID );
     void ReleaseStream( std::string sID );
+
+    void PlayList( float fVolume, bool bAutoRepeat, bool bAutoAdvance );
+    void LoadList( std::string sListFile );
+    void StopList();
+    void PauseList();
+    void UnpauseList();
 
 	void ListAudio();
 
