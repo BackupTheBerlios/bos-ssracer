@@ -365,9 +365,9 @@ D3DUtil_CameraKeys CD3DCamera::MapKey( UINT nKey )
 			return CAM_MOVE_BACKWARD;
 
         case GAME_UP: 
-			return CAM_MOVE_UP;        // pgup
+			return CAM_MOVE_UP;        
         case GAME_DOWN:  
-			return CAM_MOVE_DOWN;      // pgdn
+			return CAM_MOVE_DOWN;      
 
         case 'c':
 		case 'C':

@@ -39,7 +39,7 @@ CD3DEnumeration   CRenderer::m_d3dEnumeration;
 HRESULT CRenderer::ms_hResult                = NULL;
 LPDIRECT3D9       CRenderer::m_pD3D          = NULL;
 LPDIRECT3DDEVICE9 CRenderer::m_pd3dDevice    = NULL;
-std::map<std::string, CD3DMesh *> CRenderer::m_kMeshMap;       // meshes available to this app
+//std::map<std::string, CD3DMesh *> CRenderer::m_kMeshMap;       // meshes available to this app
 std::map< unsigned int, CD3DCamera * > CRenderer::m_pkCameraMap;  // cameras used by this renderer
 CRenderer * CRenderer::ms_pkRenderer = NULL; 
 
@@ -103,17 +103,15 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 	// eye 5 back, 3 up from objects position
 	// look at car position
 	// up is Y
-    //$$$J THESE PARAMETERS ARE NOW SET WHEN THE CAMERA IS SET TO CHASE A CAR
-	//m_pkCameraMap[CAMERA_CHASE]->SetViewParams( &D3DXVECTOR3(0.0f, 0.0f, 0.0f), 
-	//			                                &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
+	m_pkCameraMap[CAMERA_CHASE]->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
+                                                &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
 	// slightly wider FOV and shorter frustrum
-	m_pkCameraMap[CAMERA_CHASE]->SetProjParams( D3DX_PI/4.5f, 1.0f ,1.0f ,500.0f );
+	m_pkCameraMap[CAMERA_CHASE]->SetProjParams( D3DX_PI/5.5f, 1.0f ,1.0f ,500.0f );
 
 
 	//--- free look camera --- //	
 	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(-5.0f, 0.0f, 0.0f), 
-    			                                   &D3DXVECTOR3(0.0f, 0.0f, 0.0f) );
-
+    			                                   &D3DXVECTOR3( 0.0f, 0.0f, 0.0f) );
 	// wide FOV and a large frustrum
 	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000.0f );
 
@@ -277,62 +275,6 @@ struct CUSTOMVERTEX
 // Custom flexible vertex format (FVF).
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_NORMAL)
 //-----------------------------------------------------------------------------
-// Name:
-// Desc:
-//-----------------------------------------------------------------------------
-void CRenderer::CreateMeshes ()
-{
-    //$$$TEMP
-    char szCWD[1024];
-    char szFilePath[1024];
-    sprintf(szCWD, "%s", CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES).c_str());
-    sprintf(szFilePath, "%s%s", szCWD, "\\mercedes\\mercedes.x");
-    
-    //m_kMeshMap["mercedes"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\mercedes\\mercedes.x"));
-    //m_kMeshMap["mercedes"] = new CD3DMesh(_T("mercedes.x"));
-    //m_kMeshMap["mercedes"]->Create( m_pd3dDevice, szFilePath );
-    //m_kMeshMap["mercedes"]->Create( m_pd3dDevice, "C:\\Documents and Settings\\jay.ALTRON\\My Documents\\SCHOOL\\CPSC585\\CODE\\WORKING\\project\\mercedes.x" );
-    //m_kMeshMap["mercedes"]->UseMeshMaterials(true);
-    //m_kMeshMap["mercedes"]->RestoreDeviceObjects( m_pd3dDevice );
-
-    //m_kMeshMap["f20"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0"));
-    //m_kMeshMap["f20"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0") );
-    //m_kMeshMap["f20"]->UseMeshMaterials(true);
-    //m_kMeshMap["f20"]->RestoreDeviceObjects( m_pd3dDevice );
-
-    //m_kMeshMap["lambo"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0"));
-    //m_kMeshMap["lambo"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0") );
-    //m_kMeshMap["lambo"]->UseMeshMaterials(true);
-    //m_kMeshMap["lambo"]->RestoreDeviceObjects( m_pd3dDevice );
-    //$$$ENDTEMP
-
-	//m_kMeshMap["corvette"] = new CD3DMesh(_T(".\\corvetteBody.x\0"));
-
-
-
-   	HRESULT   hr;
-
-    // create the meshes in the meshmap
-    std::map< std::string, CD3DMesh * >::iterator it;
-    int i=0;
-    for ( it=m_kMeshMap.begin(); it!=m_kMeshMap.end(); it++)  {
-        i++;
-		if ( FAILED( hr = it->second->Create( m_pd3dDevice, it->second->m_strName )) )  {
-	        #ifdef _DEBUG
-			CLog::GetLog().Write(LOG_APP, IDS_RENDER_ERROR, "could not load mesh");
-	        #endif
-			DXTRACE_ERR_MSGBOX( _T(it->second->m_strName), hr );
-		}
-		it->second->UseMeshMaterials(true);
-		it->second->RestoreDeviceObjects( m_pd3dDevice );
-
-	}
-
-}
-
-
-
-//-----------------------------------------------------------------------------
 // Name: CreateMesh()
 // Desc: creates a mesh object for an entity
 //      pMesh = mesh object to create D3DX mesh object for 
@@ -359,14 +301,6 @@ int CRenderer::CreateMesh( CD3DMesh * pMesh, char * pcFileName )
     pMesh->UseMeshMaterials(true);
     pMesh->RestoreDeviceObjects( m_pd3dDevice );
  
-
-    //$$$ TEMP store a local copy
-    //m_kMeshMap[pMesh->m_strName] = new CD3DMesh(_T(pcFileName));
-    //m_kMeshMap[pMesh->m_strName]->Create( m_pd3dDevice, _T(pcFileName) );
-    //m_kMeshMap[pMesh->m_strName]->UseMeshMaterials(true);
-    //m_kMeshMap[pMesh->m_strName]->RestoreDeviceObjects( m_pd3dDevice );
-    //$$$TEMP
-
     return 1;
 
 }
@@ -647,15 +581,6 @@ void CRenderer::Cleanup()
            DXTRACE_ERR_MSGBOX( "m_kFontMap::it->DeleteDeviceObjects", hr );
     }
 
-    // destroy any loaded meshes
-    std::map< std::string, CD3DMesh * >::iterator it2;
-    for ( it2=m_kMeshMap.begin(); it2!=m_kMeshMap.end(); it2++)  {
-        hr = it2->second->InvalidateDeviceObjects();
-        if( FAILED( hr ) )
-           DXTRACE_ERR_MSGBOX( "m_kMeshMap::it2->DeleteDeviceObjects", hr );
-        it2->second->Destroy();
-    }
-
     // destroy the skybox
     m_pSkyBox->InvalidateDeviceObjects();
     m_pSkyBox->Destroy();
@@ -766,8 +691,6 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
-    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP );
-    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP );
 
     return;
 

@@ -86,7 +86,7 @@ bool CRenderTask::Start()
     // get game settings for graphics
 
     // set up loaded map resources (textures meshes)
-    m_pkRenderer->CreateMeshes();
+    //m_pkRenderer->CreateMeshes();
 
 	return true;
 }

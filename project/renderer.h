@@ -92,7 +92,7 @@ private:
 
     std::map< unsigned int, CD3DFont * > m_kFontMap;       // fonts available to this app    
     static std::map< unsigned int, CD3DCamera * > m_pkCameraMap;  // cameras used by this renderer
-    static std::map< std::string, CD3DMesh * > m_kMeshMap;       // meshes available to this app
+    //static std::map< std::string, CD3DMesh * > m_kMeshMap;       // meshes available to this app
 
     CD3DCamera * m_pActiveCamera; // active camera in game
     static CameraType m_eActiveCamType;     // type of active camera
@@ -122,7 +122,6 @@ public:
 
     HRESULT Initialize();
     void Cleanup();
-    void CreateMeshes();
     int CreateMesh( CD3DMesh * pMesh, char * pcFileName );
   
     void EstablishCapabilities ();
@@ -134,6 +133,7 @@ public:
 
     // set a camera to use a different model
     CD3DCamera * SetCamera ( CD3DCamera* pkCamera, CameraType eCameraName = CAMERA_FREELOOK );
+    
     // get a camera by type
     CD3DCamera * GetCameraPtr ( CameraType eCameraName = CAMERA_FREELOOK );
 

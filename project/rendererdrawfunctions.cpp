@@ -51,10 +51,7 @@ void CRenderer::DrawConsole()
 
     // draw the blinking prompt if buffer is empty
     if ( ( (int)CTimer::GetTimer().GetCurrTime() % 2) || ( *strInBuf != std::string("")) )  {
-        m_kFontMap[FONT_SMALL]->DrawText( 0, iConsoleLine, 
-                                          D3DCOLOR_ARGB(255,255,255,20),
-                                          ">> ",
-                                          D3DFONT_FILTERED);
+        m_kFontMap[FONT_SMALL]->DrawText( 0, iConsoleLine, D3DCOLOR_ARGB(255,255,255,20), ">> ", D3DFONT_FILTERED);
     }
 
     // display contents of the current command buffer
@@ -103,11 +100,6 @@ void CRenderer::DrawSkyBox()
     // turn lighting off
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 
-    // set texture filters to reduce seams
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_POINT );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT );
-    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT );
-
     // save the current view matrix
     D3DXMATRIXA16 matViewSave;
     m_pd3dDevice->GetTransform( D3DTS_VIEW, &matViewSave );
@@ -126,8 +118,17 @@ void CRenderer::DrawSkyBox()
 
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1 );
-    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
-    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+
+    // set texture filters to reduce seams
+    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_POINT );
+    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT );
+    //m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT );
+
+    // use linear filtering with clamping to produce smoothed texture with no seams
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR ); //
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR ); //
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP ); //
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP ); //
     if( (m_d3dCaps.TextureAddressCaps & D3DPTADDRESSCAPS_MIRROR) == D3DPTADDRESSCAPS_MIRROR )
     {
         m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_MIRROR );
@@ -151,6 +152,8 @@ void CRenderer::DrawSkyBox()
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
 
     // turn lighting back on
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );

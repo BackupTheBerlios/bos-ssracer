@@ -8,24 +8,81 @@
 
 
 //static member declarations
-vector<CD3DMesh*> CScene::m_vMeshes;
+std::map< std::string, CD3DMesh * > CScene::m_kMeshMap;
+//vector<CD3DMesh*> CScene::m_vMeshes;
+
 vector<CEntity*> CScene::m_vEntities;
+
+
+
+
+CScene::CScene()  
+{
+    bMapIsLoaded = false; 
+    //m_vMeshes.clear();
+    m_kMeshMap.clear();
+    m_vEntities.clear();
+}
+
+
+CScene::~CScene() 
+{
+    //m_vMeshes.clear();
+    m_kMeshMap.clear();
+    m_vEntities.clear();
+};
+
+
+int CScene::AddMesh( CD3DMesh * pMesh ) 
+{
+    // null pointer?
+    if (!pMesh) {
+        CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "ERROR: CScene::AddMesh tried to add a NULL mesh to the mesh map");
+        return 0;
+    }
+    // check if we already have this mesh loaded
+    //if ( m_kMeshMap[string(pMesh->m_strName)])  {
+    if (IsMeshLoaded( string(pMesh->m_strName)) ) {
+        #ifdef _DEBUG
+        CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "WARNING CScene::AddMesh: Mesh %s already in the mesh map!", pMesh->m_strName);
+        #endif
+        return 1;
+    }
+    else {
+        // add it to the meshmap
+        m_kMeshMap[string(pMesh->m_strName)] = pMesh;
+    }
+
+    return 1;
+}
 
 
 int CScene::ReleaseScene()
 {
-	unsigned int i;
-
-	// Free all the meshes
+/*	// Free all the meshes
 	for(i=0;i<m_vMeshes.size();i++) {
+        m_vMeshes[i]->InvalidateDeviceObjects();
+        m_vMeshes[i]->Destroy();
 		FREE(m_vMeshes[i], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
 	}
 
 	// Clear the vector of mesh pointers
 	m_vMeshes.clear();
+*/
+    // destroy any loaded meshes
+    for (std::map< std::string, CD3DMesh * >::iterator it=m_kMeshMap.begin(); it!=m_kMeshMap.end(); it++)  {
+        if (it->second)  {
+            HRESULT hr = it->second->InvalidateDeviceObjects();
+            if( FAILED( hr ) )
+                CLog::GetLog().Write(LOG_USER|LOG_MISC, "could not release mesh %s", it->second->m_strName);
+            it->second->Destroy();
+            FREE(it->second, "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
+        }
+    }
+    m_kMeshMap.clear();
 
 	// Free all the entities
-	for(i=0;i<m_vEntities.size();i++) {
+	for(unsigned int i=0;i<m_vEntities.size();i++) {
 		FREE(m_vEntities[i], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
 	}
 
@@ -274,19 +331,7 @@ int CScene::LoadEntities(string* directory, string* filename)
 					tempSphere.Radius() = float(atof(token));
 					newObject->SetBoundingSphere(tempSphere);
 
-                    // for now assume these are all static entitites in the map file
-                    // so I know where to look for the mesh
-                    // we will need to be able to tell the difference between static and dynamic eventually to preserve the directory struture
 
-                    // look in .\media\meshes\static\*
-                    // the mesh filename is the object's name as well
-                    if(!(newObject->LoadMesh(CSettingsManager::GetSettingsManager().GetGameSetting(DIRSTATICMESH) + string(newObject->GetName()) +"\\")) ) {
-                        CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntities() >> Error loading mesh");
-//                        return 0; //if you comment this line out, The entity will still load but will not render
-                    }
-
-                    //=== add it to the entity vector ===//
-					m_vEntities.push_back(newObject);
 					break;
 				}
 
@@ -312,6 +357,24 @@ int CScene::LoadEntities(string* directory, string* filename)
 
 			}
 		}
+
+        // for now assume these are all static entitites in the map file
+        // so I know where to look for the mesh
+        // we will need to be able to tell the difference between static and dynamic eventually to preserve the directory struture
+
+        // look in .\media\meshes\static\
+        // the mesh filename is the object's name as well: .\media\meshes\static\meshname\meshname.x .
+        if(!(newObject->LoadMesh(CSettingsManager::GetSettingsManager().GetGameSetting(DIRSTATICMESH) + string(newObject->GetName()) +"\\")) ) {
+            CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntities() >> Error loading mesh");
+//                        return 0; //if you comment this line out, The entity will still load but will not render
+        }
+
+        //=== add it to the mesh map ===//
+        AddMesh( newObject->GetMesh() );
+
+        //=== add it to the entity vector ===//
+		m_vEntities.push_back(newObject);
+
 	}  //endwhile
 
 	fclose(fp);
@@ -528,12 +591,20 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 	// space for the renderer to use.
 	newCar->Init();
 
-	// Add the mesh, and the vehicle to the scene
-	m_vMeshes.push_back(newCar->GetMesh());
+	// Add the mesh, 
+	//m_vMeshes.push_back(newCar->GetMesh());
+    if(!AddMesh(newCar->GetMesh()))
+        return 0;
+
+    // add the vehicle to the scene
 	m_vEntities.push_back(newCar);
 
-	// Add the tires to the scene
-	m_vMeshes.push_back(newCar->GetTire(0)->GetMesh());
+	// Add 1 tire mesh (assuming they all look the same)
+	//m_vMeshes.push_back(newCar->GetTire(0)->GetMesh());
+    if (!AddMesh(newCar->GetTire(0)->GetMesh()))
+        return 0;
+
+    // Add the tires to the scene
 	for(i=0;i<4;i++) {
 		m_vEntities.push_back(newCar->GetTire(i));
 	}
@@ -582,10 +653,14 @@ int CScene::LoadEntity(string* directory, string* filename)
 		return 0;
 	}
 
-	// Calculate Bounding Box, and Bounding Sphere
+	//$$$TODO Calculate Bounding Box, and Bounding Sphere
 
 	// Everything went ok, so now add the entity to the scene
 	m_vEntities.push_back(newEntity);
-	m_vMeshes.push_back(newEntity->GetMesh());
+	
+    // add the mesh
+    //m_vMeshes.push_back(newEntity->GetMesh());
+    if (!AddMesh(newEntity->GetMesh()))
+        return 0;
 	return 1;
 }

@@ -13,6 +13,7 @@ CEntity::CEntity()
 // stored in the meshes vector of the scene
 int CEntity::LoadMesh()
 {
+    assert(0);  //SHOULD NEVER BE CALLED
 
     /*********** THIS CODE IS KIND OF FUCKED ***************/
 
@@ -49,6 +50,15 @@ int CEntity::LoadMesh( string strDir )
     char szPath[512];
     sprintf(szPath,"%s", strPath.c_str());
 
+    // check if this mesh is already loaded in the meshmap
+    if (CGameStateManager::GetGameStateManager().GetScenePtr()->IsMeshLoaded( string(m_strName) )) {
+        CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "WARNING CEntity::LoadMesh: Mesh %s is already loaded in the mesh map", m_strName);
+        // set the mesh to the loaded one
+        m_pMesh = CGameStateManager::GetGameStateManager().GetScenePtr()->GetMeshPtrFromMap(string(m_strName));
+        return 1;
+    }
+
+    // mesh isn't loaded yet so create a new one
     m_pMesh = new CD3DMesh(_T(m_strName));
 
     // use the current working directory trick to make DX load the textures from the same dir
