@@ -308,6 +308,14 @@ int CCommandLineParser::help()
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> [dir] - load a map and create a scene from a .map file [dir] defaults to .\\maps\\ if omitted");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map and scene objects");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADVEHICLEAI - runs opponent vehicle AI test");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOAD{SOUND|STREAM} <file> as <alias> - Loads a sound effect or stream and gives it the specified alias.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAY{SOUND|STREAM} [-loop] <alias> - Plays a sound effect or stream either one-shot or looping.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAY{SOUND|STREAM} [-once] <file> - Plays a sound or stream once without assigning it an alias (not recommended).");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "STOP{SOUND|STREAM} <alias> - Stops the specified sound or stream.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "PAUSE{SOUND|STREAM} <alias> - Pauses the specified sound or stream if playing.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "RESUME{SOUND|STREAM} <alias> - Pauses the specified sound or stream.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "RELEASE{SOUND|STREAM} <alias> - Unloads the specified sound or stream.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "LISTAUDIO - Shows a list of all sounds and streams registered by the console, including their status.");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------------------------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;
