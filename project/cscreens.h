@@ -5,8 +5,18 @@
 #include "cbutton.h"
 #include "ctextfield.h"
 
+class CScreen
+{
+public:
+  virtual void draw()=0;
+  //not much else in base class for now
+  CScreen(){}
+  ~CScreen(){}
+};
+
+
 //Main Menu
-class CMainMenu 
+class CMainMenu : public CScreen 
 {
   public:
     //buttons
@@ -25,7 +35,7 @@ class CMainMenu
 };
 
 //New Game Screen
-class CNewGame 
+class CNewGame : public CScreen
 {
   public:
     //buttons
@@ -45,7 +55,7 @@ class CNewGame
 
 };
 
-class CSelectCar
+class CSelectCar : public CScreen
 {
   public:
     //buttons
@@ -64,7 +74,7 @@ class CSelectCar
 
 };
 
-class CWinGame
+class CWinGame : public CScreen
 {
   public:
     //buttons
@@ -84,7 +94,7 @@ class CWinGame
 
 };
 
-class CLoseGame
+class CLoseGame : public CScreen
 {
   public:
     //buttons
