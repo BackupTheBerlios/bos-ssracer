@@ -555,24 +555,16 @@ int CCommandLineParser::cameratest()
 // ===== Begin Ram & Gib Functions ==== //
 int CCommandLineParser::LoadVehicleAI()
 {
-  //Hey Gibs, this is literally just Chris's physics test 1 right now
-  //of course we'll change this in due time :)
-    string sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
-	string sName = "mitsuEclipse.car";
+    //use defaults, all good for us
+    //start pylon
+    loadmeshtest();
+    //end pylon
+    loadmeshtest();
 
-	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&sDir, &sName))) {
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "The Vehicle AI was not loaded successfully");
-		return OK;
-	}
+    //TODO Load Entities for waypoints
+    //TODO Translate existing pylons to same positions as waypoints
 
-    /*J fucken w Chris' shit*/
-
-    //set the active camera to the chase cam
-    CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
-
-    //set it to chase the vehicle we just created
-    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
-
+    loadmap();
 	return OK;
 
 }
