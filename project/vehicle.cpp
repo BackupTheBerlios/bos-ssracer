@@ -89,6 +89,14 @@ void CVehicle::Init()
 
 	coefficientOfDrag = 0.5f * coefficientOfAerodynamicFriction * frontalArea * airDensity ;
 	coefficientOfRollingResistance = coefficientOfDrag * 30.0f;
+
+	// Init sound stuff
+	CSoundCore::GetSoundCore().GetSoundEffect("car_idle", &engineIdle);
+	CSoundCore::GetSoundCore().GetSoundEffect("car_engine", &engineRev);
+	CSoundCore::GetSoundCore().GetSoundEffect("car_skid", &tireSkid);
+	oldFreq = engineRev->GetFrequency();
+	engineIdle->SetFrequency( engineIdle->GetFrequency() * 1.5 );
+
 }
 
 
@@ -929,6 +937,36 @@ void CVehicle::UpdateVehiclePhysics()
 	CalculateTireRotation(deltaT);
 	
 	TransformLocalToWorldSpace();
+
+/*
+	// Sound adjustment
+	if ( rpm < 1100 ) {
+		engineRev->Stop();
+
+		// Engine Idle
+		if(engineIdle->IsPlaying() == false) {
+			engineIdle->SetVolume( 0.8f );
+			engineIdle->Play( TRUE, FALSE );
+		}
+
+	}
+	else {
+		engineIdle->Stop();
+*/
+
+		// Accelleration
+		if(engineRev->IsPlaying() == false) {
+			engineRev->SetVolume( 0.8f );
+			engineRev->Play( TRUE, FALSE );
+		}
+
+		// Modulate engine sound based on RPM
+		long newFreq = 0;
+
+		newFreq = ( ( (float) rpm / (float) (maximumRPM - IDLE_RPM) ) * oldFreq ) + (oldFreq / 3);
+		engineRev->SetFrequency( newFreq );
+//	}
+
 }
 
 //--------------------------------------------------------------

@@ -2,6 +2,7 @@
 #define _VEHICLE_H
 
 #include "entity.h"
+#include "soundcore.h"
 #include "tire.h"
 #include "WmlVector3.h"
 
@@ -180,12 +181,14 @@ private:
 	Vector3f velocityWC;	// velocity of the vehicle in world coordinates.
 	tInputState inputState;
 
-
-
-
-
-
 	bool dynamicFriction;
+
+	// Sound stuff
+	unsigned long oldFreq;
+	CSoundEffect* engineIdle;
+	CSoundEffect* engineRev;
+	CSoundEffect* tireSkid;
+
 };
 
 
