@@ -47,13 +47,12 @@ int CCommandLineParser::initKeywords()
 /*	Keywords.push_back(std::string("setvol"));
 	Keywords.push_back(std::string("loadmap"));
 	Keywords.push_back(std::string("pause"));
-	
+	Keywords.push_back(std::string("stop"));
 	Keywords.push_back(std::string("play"));
     */
     Keywords.push_back(std::string("help"));
 	Keywords.push_back(std::string("clear"));
     Keywords.push_back(std::string("echo"));
-	Keywords.push_back(std::string("stop"));
     Keywords.push_back(std::string("settimer"));
 
 	/*** Begin Chris' Commands ***/

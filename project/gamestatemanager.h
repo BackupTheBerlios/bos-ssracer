@@ -8,15 +8,15 @@ class CGameStateManager
 {
 
 public:
-	CGameStateManager( CScene * pkScene ) { m_kScene = pkScene; CGameStateManager(); };  //J's Re-mod
+	CGameStateManager( CScene * pkScene ) { ms_pkScene = pkScene; CGameStateManager(); };
 	static CGameStateManager & GetGameStateManager();
 	static CGameStateManager * GetGameStateManagerPtr();
 	
 	void Initialize();
 	void Shutdown();
 	
-	inline CScene * GetScenePtr() { return m_kScene; };
-	void SetScene(CScene* newScene) { m_kScene = newScene; }; 
+	inline CScene * GetScenePtr() { return ms_pkScene; };
+	void SetScene(CScene* newScene) { ms_pkScene = newScene; }; 
 
 
 protected:
@@ -26,7 +26,7 @@ protected:
 	static CGameStateManager * ms_pkGame;
 
 private:
-	CScene * m_kScene;
+	static CScene * ms_pkScene;
 };
 
 

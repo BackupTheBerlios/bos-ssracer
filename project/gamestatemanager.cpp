@@ -3,6 +3,7 @@
 
 
 CGameStateManager * CGameStateManager::ms_pkGame = NULL;
+CScene * CGameStateManager::ms_pkScene = NULL;
 
 
 CGameStateManager & CGameStateManager::GetGameStateManager()
@@ -22,5 +23,5 @@ void CGameStateManager::Initialize()
 
 void CGameStateManager::Shutdown()
 {
-	m_kScene->ReleaseScene();
+	ms_pkScene->ReleaseScene();
 }

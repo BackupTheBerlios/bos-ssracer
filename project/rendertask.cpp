@@ -92,7 +92,7 @@ bool CRenderTask::Start()
     // get game settings for graphics
 
     // set up loaded map resources (textures meshes)
-    m_pkRenderer->LoadMeshes();
+    //m_pkRenderer->CreateMeshes();
 
 	return true;
 }
@@ -107,7 +107,7 @@ void CRenderTask::Update()
 {
     HandleMessages();
 
-    m_pkRenderer->Click();       // update the camera position
+    m_pkRenderer->Click();       // update view from the camera position
 
     m_pkRenderer->RenderScene(); // render current scene
     

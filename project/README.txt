@@ -1,6 +1,20 @@
 Super Street Racer
-BETA 2.0 Release Documentation -- Readme.txt
+BETA 3.0 Release Documentation -- Readme.txt
 https://developer.berlios.de/projects/bos-ssracer/
+
+
+BETA 3.0 *********** CURRENT VERSION PLEASE FILL THIS IN **************
+--------
+[DD.MM.2004]
+
+Changes / Additions :
+
+Bug Fixes:
+- no longer crashes if no gamepad connected
+
+Known Bugs: 
+
+
 
 BETA 2.0
 --------
@@ -13,9 +27,6 @@ Changes / Additions :
 
 Bug Fixes:
 - no longer crashes on release mode
-
-Known Bugs: 
-- 
 
 
 BETA 1.1 

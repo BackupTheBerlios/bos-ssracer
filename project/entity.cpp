@@ -1,13 +1,19 @@
 #include "entity.h"
+#include "renderer.h"
+#include "gamestatemanager.h"
 
 
-// Stub class for Jay to fill in as he sees fit
-// Need this asap
+// load a mesh and intitialize it using the renderer
+// stored in the meshes vector of the scene
 int CEntity::LoadMesh()
 {
-	// Failure
-	// return 0;
+    char szBuf[256];
+    sprintf(szBuf, "%s%s", m_strName, ".x");
 
-	// Success
-	return 1;
+    assert(CRenderer::GetRendererPtr());
+    
+    if (!CRenderer::GetRenderer().CreateMesh(m_strName ,m_pMesh))
+        return 0;  // Failure
+
+    return 1;  // Success
 }

@@ -1,9 +1,6 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-//#include "singleton.h"
-//#include "dator.h"
-
 // --- system includes --- //
 #define STL_USING_ALL
 #include "stl.h"

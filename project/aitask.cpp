@@ -135,7 +135,7 @@ void CAITask::DoMessageHandle( ITaskMessage *cMsg ) {
 void CAITask::HandleInputMessage( CInputTaskMessage *cIMsg ) {
 	
 	#ifdef _DEBUG
-	CLog::GetLog().Write(LOG_MISC, "AI Task: Input message received with timestamp %f.", cIMsg->GetTimeStamp() );
+	//CLog::GetLog().Write(LOG_MISC, "AI Task: Input message received with timestamp %f.", cIMsg->GetTimeStamp() );
     //CLog::GetLog().Write(LOG_GAMECONSOLE, "AI:  cIMsg->m_keyValue %c Hex %x Dec %d", cIMsg->m_keyValue, cIMsg->m_keyValue, cIMsg->m_keyValue );	
 	#endif
 

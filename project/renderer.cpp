@@ -161,25 +161,7 @@ HRESULT CRenderer::Initialize()
         it->second->RestoreDeviceObjects();
     }
 
-    return S_OK;
-}
 
-
-
-struct CUSTOMVERTEX
-{
-    D3DXVECTOR3 position; // The 3-D position for the vertex.
-    D3DXVECTOR3 normal;   // The surface normal for the vertex.
-};
-// Custom flexible vertex format (FVF).
-#define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_NORMAL)
-//-----------------------------------------------------------------------------
-// Name:
-// Desc:
-//-----------------------------------------------------------------------------
-void CRenderer::LoadMeshes ()
-{
-	HRESULT   hr;
     
     //assert(m_pd3dDevice);  //$$$DEBUG check if its allocated first
 
@@ -206,7 +188,7 @@ void CRenderer::LoadMeshes ()
     d3dLight.Specular.b = 1.0f;
 
     d3dLight.Position.x = 0.0f;
-    d3dLight.Position.y = 50.0f;//1000.0f;
+    d3dLight.Position.y = 500.0f;//1000.0f;
     d3dLight.Position.z = -10.0f;//-100.0f;
 
     d3dLight.Attenuation0 = 0.7f; 
@@ -217,11 +199,33 @@ void CRenderer::LoadMeshes ()
     if (SUCCEEDED(hr))
 	    ;// Handle Success
     else
-	    ;// Handle failure
+        assert(0);// Handle failure
     
     hr = m_pd3dDevice->LightEnable(0, TRUE);
+        if (SUCCEEDED(hr))
+	    ;// Handle Success
+    else
+	    assert(0);// Handle failure
+
+    return S_OK;
+}
 
 
+
+struct CUSTOMVERTEX
+{
+    D3DXVECTOR3 position; // The 3-D position for the vertex.
+    D3DXVECTOR3 normal;   // The surface normal for the vertex.
+};
+// Custom flexible vertex format (FVF).
+#define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_NORMAL)
+//-----------------------------------------------------------------------------
+// Name:
+// Desc:
+//-----------------------------------------------------------------------------
+void CRenderer::CreateMeshes ()
+{
+   	HRESULT   hr;
 
     // create the meshes in the meshmap
     std::map< std::string, CD3DMesh * >::iterator it;
@@ -240,6 +244,24 @@ void CRenderer::LoadMeshes ()
 
 }
 
+
+
+int CRenderer::CreateMesh( char * pcEntName, CD3DMesh * pMesh )
+{
+
+    HRESULT hr;
+    if ( FAILED( hr = pMesh->Create( CRenderer::GetRenderer().GetDevice(), pcEntName )) )  {
+	    #ifdef _DEBUG
+	    CLog::GetLog().Write(LOG_APP, IDS_RENDER_ERROR, "could not load mesh");
+	    #endif
+        DXTRACE_ERR_MSGBOX( _T("could not load single mesh"), hr );
+        return 0;  // Failure
+	}
+    pMesh->UseMeshMaterials(true);
+    pMesh->RestoreDeviceObjects( m_pd3dDevice );
+    return 1;
+
+}
 
 
 //-----------------------------------------------------------------------------
@@ -326,6 +348,9 @@ void CRenderer::RenderScene()
         pkObject->draw();
     }
     */
+
+    //$$$TEMP renders ALL entitites until I get the Octree up
+
 
     m_pd3dDevice->EndScene();  // --- end scene drawing commands
      

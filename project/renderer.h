@@ -78,8 +78,6 @@ protected:
     RECT              m_rcWindow;
 
     static HRESULT ms_hResult;
-
-	// Gibran's modifications:
 	static CRenderer * ms_pkRenderer;
 
 private:
@@ -116,7 +114,8 @@ public:
 
     HRESULT Initialize();
     void Cleanup();
-    void LoadMeshes();
+    void CreateMeshes();
+    int CreateMesh( char * pcEntName, CD3DMesh * pMesh );
   
     void EstablishCapabilities ();
 
@@ -137,7 +136,7 @@ public:
 
     void ToggleFullScreen (int  riNewWidth, int  riNewHeight);
     bool IsWindowed () { return m_d3dSettings.IsWindowed; }; 
-    //virtual void ShowCursor (bool bShow);
+    void ShowCursor (bool bShow){  m_pd3dDevice->ShowCursor(bShow); };
 
     void DisplayBackBuffer ();
 
