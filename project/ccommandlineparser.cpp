@@ -9,7 +9,7 @@
 #include "kernel.h"
 #include "soundcore.h"
 #include "soundmessage.h"
-#include "Game.h"
+#include "gamestatemanager.h"
 #include "renderer.h"
 
 // TO ADD COMMANDS AND FUNCTIONS, SEE initKeywords()
@@ -100,6 +100,10 @@ int CCommandLineParser::execute()
     if (*it == "echo") error = echo();
 	if (*it == "stop") error = stop();
     if (*it == "settimer") error = settimer();
+	if (*it == "loadscene") error = LoadScene();
+	if (*it == "loadentity") error = LoadEntity();
+	if (*it == "loadplayervehicle") error = LoadPlayerVehicle();
+	if (*it == "clearscene") error = ClearScene();
 
 
 	return error;
@@ -115,9 +119,9 @@ int CCommandLineParser::setDeliminators(std::string dels)
 
 int CCommandLineParser::parse(std::string command)
 {
-	int mark = 0;
-	int index = 0;
-	int token_size = 0;
+	unsigned int mark = 0;
+	unsigned int index = 0;
+	unsigned int token_size = 0;
 
 	Tokens.clear();
 
@@ -142,7 +146,7 @@ int CCommandLineParser::parse(std::string command)
 
 bool CCommandLineParser::isDeliminator(char c)
 {
-	for (int i = 0; i < deliminators.size(); i++)
+	for (unsigned int i = 0; i < deliminators.size(); i++)
 		if (deliminators[i] == c) return true;
 
 	return false;
@@ -244,6 +248,68 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;
 }
+
+/*** Begin Chris' Functions ***/
+int CCommandLineParser::LoadScene()
+{
+	string file = "-file";
+	string dir = "-dir";
+
+	string filename;
+	string directory;
+
+	bool filenameSet = false;
+	bool directorySet = false;
+
+	for(unsigned int i=0;i<Tokens.size();i++) {
+		if(Tokens[i] == file) {
+			if(++i < Tokens.size()) {
+				filename = Tokens[i];
+				filenameSet = true;
+			}
+		}
+		else if(Tokens[i] == dir) {
+			if(++i < Tokens.size()) {
+				directory = Tokens[i];
+				directorySet = true;
+			}
+		}
+	}
+
+	if(!directorySet && !filenameSet) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Invalid Usage!  See help for instructions.");
+		return 0;
+	}
+
+	if(directorySet && filenameSet) {
+		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadScene(&directory, &filename))) {
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
+			return 0;
+		}
+	}
+		
+	return OK;
+}
+
+int CCommandLineParser::LoadEntity()
+{
+
+	return OK;
+}
+
+int CCommandLineParser::LoadPlayerVehicle()
+{
+
+	return OK;
+}
+
+int CCommandLineParser::ClearScene()
+{
+
+	return OK;
+}
+
+/*** End Chris' Functions ***/
 
 
 

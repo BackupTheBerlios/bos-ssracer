@@ -4,6 +4,22 @@
 #include <windows.h>
 #include "dxutil.h"
 #include "timer.h"
+#include "log.h"
+
+
+
+#ifdef _DEBUG
+#define NEW(name, type, errorString)	{ (name) = new (type); if(!(name)) { CLog::GetLog().Write(LOG_MISC, "%s", (errorString)); return 0;}}
+#elif
+#define NEW(name, type, errorString)	{ (name) = new (type); if(!(name)) return 0; }
+#endif
+
+#ifdef _DEBUG
+#define FREE(name, errorString)	{ if(name) { delete name; name = NULL;} else { CLog::GetLog().Write(LOG_MISC, "%s", errorString);} }
+#elif
+#define FREE(name, errorString)	{ if(name) { delete name; name = NULL;} }
+#endif
+
 
 
 // for tiles

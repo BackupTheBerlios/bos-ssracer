@@ -34,7 +34,11 @@ public:
 	int clear(); // clear console
 	int echo(); // echo text
 	int stop(); // soundFX or music
-    int settimer(); // set game timer resolution 
+    int settimer(); // set game timer resolution
+	int LoadScene();
+	int LoadEntity();
+	int LoadPlayerVehicle();
+	int ClearScene();
 
 protected:
 	std::string deliminators;

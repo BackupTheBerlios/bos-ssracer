@@ -314,8 +314,8 @@ BOOL CALLBACK EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi,
         diprg.diph.dwHeaderSize = sizeof(DIPROPHEADER); 
         diprg.diph.dwHow        = DIPH_BYID; 
 		diprg.diph.dwObj        = pdidoi->dwType; // Specify the enumerated axis or axes
-        diprg.lMin              = GAMEPAD_LOWER_RANGE; 
-        diprg.lMax              = GAMEPAD_UPPER_RANGE;
+        diprg.lMin              = (long)GAMEPAD_LOWER_RANGE; 
+        diprg.lMax              = (long)GAMEPAD_UPPER_RANGE;
 
 		hr = g_joystickDIDevice->SetProperty( DIPROP_RANGE, &diprg.diph);
 	}

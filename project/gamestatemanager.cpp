@@ -5,11 +5,11 @@
 CGameStateManager * CGameStateManager::ms_pkGame = NULL;
 
 
-CGameStateManager & CGameStateManager::GetGame()
+CGameStateManager & CGameStateManager::GetGameStateManager()
 {
   return  *ms_pkGame;
 }
-CGameStateManager * CGameStateManager::GetGamePtr()
+CGameStateManager * CGameStateManager::GetGameStateManagerPtr()
 {
   return ms_pkGame;
 }

@@ -8,9 +8,9 @@ class CGameStateManager
 {
 
 public:
-	//CGameStateManager( CScene * pkScene ) { m_kScene = pkScene; };  //J's Re-mod
-	static CGameStateManager & GetGame();
-	static CGameStateManager * GetGamePtr();
+	CGameStateManager( CScene * pkScene ) { m_kScene = pkScene; CGameStateManager(); };  //J's Re-mod
+	static CGameStateManager & GetGameStateManager();
+	static CGameStateManager * GetGameStateManagerPtr();
 	
 	void Initialize();
 	void Shutdown();

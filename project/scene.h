@@ -15,7 +15,9 @@ public:
 	~CScene() {};
 
 	int ReleaseScene();		// Delete all entities, and their meshes in the current scene
-	int LoadScene(char* directory, char* filename);		// Load a new scene
+	int LoadScene(string* directory, string* filename);		// Load a new scene
+	int LoadPlayerVehicle(string* directory, string* filename);		// Load a new player vehicle (.car file)
+	int LoadEntity(string* directory, string* filename);	// Load an entity and add it to the current scene
 
 protected:
 	
@@ -24,9 +26,8 @@ protected:
 
 private:
 
-	int LoadMap(FILE* fp, char* directory, char* filename);		// Load a new map (.map file)
-	int LoadObjects(char* directory, char* filename);	// Load the objects specified in the map file (.objects file)
-	int LoadPlayerVehicle(char* directory, char* filename);		// Load a new player vehicle (.car file)
+	int LoadMap(FILE* fp, string* directory, string* filename);		// Load a new map (.map file)
+	int LoadEntities(string* directory, string* filename);	// Load the objects specified in the map file (.objects file)
 	int LoadMeshes();	// Load all the meshes in the scene
 
 	/*void LoadMap(char * cFilename = "debug", char * cDir = "./maps/debug/");*/

@@ -120,9 +120,14 @@
 // STATUS: Microsoft has confirmed this to be a bug in the Microsoft product. 
 // This warning can be ignored. This occured only in the <map> container.
 
+
+
+#pragma warning(disable: 4146)
+
 #include <deque>
 
 #pragma warning(pop)
+
 
 #endif
 

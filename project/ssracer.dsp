@@ -268,26 +268,6 @@ SOURCE=.\gamestatemanager.cpp
 SOURCE=.\physicstask.cpp
 # End Source File
 # End Group
-# Begin Group "Front End Sources"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\cbutton.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\clabel.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\ctextfield.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\cwidget.cpp
-# End Source File
-# End Group
 # Begin Source File
 
 SOURCE=.\dxutil.cpp
@@ -318,66 +298,6 @@ SOURCE=.\winmain.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Group "Core Headers"
-
-# PROP Default_Filter ".h"
-# Begin Group "Game Console headers"
-
-# PROP Default_Filter ".h"
-# Begin Source File
-
-SOURCE=.\ccommandlineparser.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\cinputconsole.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\consolemessage.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\consoletask.h
-# End Source File
-# End Group
-# Begin Group "System Headers"
-
-# PROP Default_Filter ".h"
-# Begin Source File
-
-SOURCE=.\kernel.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\task.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\testtask.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\timer.h
-# End Source File
-# End Group
-# Begin Source File
-
-SOURCE=.\appstate.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\bosapp.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\log.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Settings.h
-# End Source File
-# End Group
 # Begin Group "Renderer Headers"
 
 # PROP Default_Filter ".h"
@@ -502,24 +422,64 @@ SOURCE=.\gamestatemanager.h
 SOURCE=.\physicstask.h
 # End Source File
 # End Group
-# Begin Group "Front End Headers"
+# Begin Group "Core Headers"
 
-# PROP Default_Filter ""
+# PROP Default_Filter ".h"
+# Begin Group "Game Console headers"
+
+# PROP Default_Filter ".h"
 # Begin Source File
 
-SOURCE=.\cbutton.h
+SOURCE=.\ccommandlineparser.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\clabel.h
+SOURCE=.\cinputconsole.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ctextfield.h
+SOURCE=.\consolemessage.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\cwidget.h
+SOURCE=.\consoletask.h
+# End Source File
+# End Group
+# Begin Group "System Headers"
+
+# PROP Default_Filter ".h"
+# Begin Source File
+
+SOURCE=.\kernel.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\task.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\testtask.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\timer.h
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=.\appstate.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\bosapp.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\log.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Settings.h
 # End Source File
 # End Group
 # Begin Source File

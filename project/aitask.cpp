@@ -6,7 +6,7 @@
 #include "consolemessage.h"
 #include "log.h"
 
-#include "game.h"
+#include "gamestatemanager.h"
 
 #include "appstate.h"
 #include "input.h"
@@ -36,9 +36,11 @@ bool CAITask::Start() {
 	CLog::GetLog().Write(LOG_MISC, "Starting AI Task..." );
 	#endif
 
-	//new CGame(NULL); // no scene to load yet
-	//CGame::GetGame().Initialize();
+	new CGameStateManager(NULL); // no scene to load yet
 
+	if(!CGameStateManager::GetGameStateManagerPtr()) {
+		return FALSE;
+	}
 
 	return TRUE;
 }

@@ -1,6 +1,7 @@
 #include "scene.h"
 
 #include "log.h"
+#include "macros.h"
 
 int CScene::ReleaseScene()
 {
@@ -8,38 +9,43 @@ int CScene::ReleaseScene()
 
 	// Free all the meshes
 	for(i=0;i<m_vMeshes.size();i++) {
-		delete m_vMeshes[i];
+		FREE(m_vMeshes[i], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
 	}
 
 	// Free all the entities
 	for(i=0;i<m_vEntities.size();i++) {
-		delete m_vEntities[i];
+		FREE(m_vEntities[i], "Error CScene::ReleaseScene >> Attempted to delte a null pointer");
 	}
+
+	// Don't forget to set the player vehicle pointer to NULL
+	// Also, clean up any other pointers that use the scene
+	// AI player cars would have to be set to NULL as well.
+	// Can't think of anything else right now.
 
 	return 1;
 }
 
-int CScene::LoadScene(char* directory, char* filename)
+int CScene::LoadScene(string* directory, string* filename)
 {
 	char buf[512];
 	char tempFilename[128];
 	FILE* fp;
 
-	char defaultDirectory[128] = ".\\";  // current working dir
-	char defaultFilename[128] = "bos";
 	char objectsExt[16] = ".objects";
 	char mapExt[16] = ".map";
 
-	if(strlen(directory) == 0) {
-		strcpy(directory, defaultDirectory);
-	}
+	string path;
 
-	if(strlen(filename) == 0) {
-		strcpy(filename, defaultFilename);
-	}
+	path = directory->c_str();
+	path.append("\\");
+	path.append(filename->c_str());
+	path.append(mapExt);
 
-	sprintf(tempFilename, "%s%s", filename, mapExt);
-	sprintf(buf, "%s%s", directory, tempFilename);
+
+	string test;
+
+	test.assign(tempFilename);
+
 
 	fp = fopen(buf, "r");
 
@@ -77,7 +83,7 @@ int CScene::LoadScene(char* directory, char* filename)
 }
 
 
-int CScene::LoadMap(FILE* fp, char* filename, char* directory)
+int CScene::LoadMap(FILE* fp, string* filename, string* directory)
 {
 	char buf[512];
 	char seps[] = " \n.";
@@ -91,7 +97,7 @@ int CScene::LoadMap(FILE* fp, char* filename, char* directory)
 			token = strtok(NULL, seps);
 
 			if(!strcmp(token, "objects")) {
-				if(!LoadObjects(filename, directory)) {
+				if(!LoadEntities(filename, directory)) {
 					return 0;
 				}
 			}
@@ -105,23 +111,24 @@ int CScene::LoadMap(FILE* fp, char* filename, char* directory)
 	return 1;
 }
 
-int CScene::LoadObjects(char* directory, char* filename)
+int CScene::LoadEntities(string* directory, string* filename)
 {
 	FILE* fp;
 	char buf[512];
-	char tempFilename[512];
 	char* token;
 	char seps[] = " \n";
 	int i;
+	string path;
 
-	sprintf(tempFilename, "%s.objects", filename);
-	sprintf(buf, "%s%s", directory, tempFilename);
+	path = directory->c_str();
+	path.append("\\");
+	path.append(filename->c_str());
 
-	fp = fopen(buf, "r");
+	fp = fopen(path.c_str(), "r");
 
 	if(!fp) {
 		#ifdef _DEBUG
-		CLog::GetLog().Write(LOG_GAMECONSOLE, "Error CScene::importObjects >> Unable to open file: ");
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Error CScene::LoadEntities() >> Unable to open file");
 		#endif
 		return 0;
 	}
@@ -137,7 +144,10 @@ int CScene::LoadObjects(char* directory, char* filename)
 			continue;
 		}
 		if(!strcmp(token, "<newObject>")) {
-			newObject = new CEntity;
+			//newObject = new CEntity;
+
+
+			NEW(newObject, CEntity, "Error CScene::LoadEntities >> new operator failed");
 			while(fgets(buf, sizeof(buf), fp)) {
 				token = strtok(buf, seps);
 				/*	Set the Type of the object (MAP, STATIC, DYNAMIC)
@@ -274,7 +284,7 @@ int CScene::LoadObjects(char* directory, char* filename)
 	return 1;
 }
 
-int CScene::LoadPlayerVehicle(char* directory, char* filename)
+int CScene::LoadPlayerVehicle(string* directory, string* filename)
 {
 	FILE* fp;
 	char path[1024];
@@ -376,6 +386,12 @@ int CScene::LoadPlayerVehicle(char* directory, char* filename)
 
   */
 
+
+	return 1;
+}
+
+int LoadEntity(string* directory, string* filename)
+{
 
 	return 1;
 }
