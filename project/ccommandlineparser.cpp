@@ -86,6 +86,7 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("drawentbbox"));
     Keywords.push_back(std::string("drawquadtree"));
     Keywords.push_back(std::string("drawplanes"));
+    Keywords.push_back(std::string("drawwaypoints"));
     Keywords.push_back(std::string("exit"));
     /*** End J's Commands ***/
     
@@ -182,6 +183,7 @@ int CCommandLineParser::execute()
     if (*it == "drawentbbox") error = SetDraw();
     if (*it == "drawquadtree") error = SetDraw();
     if (*it == "drawplanes") error = SetDraw();
+    if (*it == "drawwaypoints") error = SetDraw();
     if (*it == "exit") error = SystemCommand();
 
     if (*it == "loadvehicleai") error = LoadVehicleAI();
@@ -350,7 +352,7 @@ int CCommandLineParser::help()
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESH <file> <dir> - load a mesh at some directory (leave .x extension off");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "SETVISCULL <0|1> - turn on visibility culling");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "DRAW{ENTBBOX|QUADTREE} <0|1> - draw debug information for AI");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "DRAW{ENTBBOX|QUADTREE|PLANES|WAYPOINTS} <0|1> - draw debug information for AI");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> [dir] - load a map and create a scene from a .map file [dir] defaults to .\\maps\\ if omitted");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map and scene objects");
@@ -834,6 +836,9 @@ int CCommandLineParser::SetDraw()
             else if (Tokens[0] == "drawplanes")  {
                 CRenderer::GetRenderer().SetDrawRects(true);
             }
+            else if (Tokens[0] == "drawwaypoints")  {
+                CRenderer::GetRenderer().SetDrawWayPoints(true);
+            }
             CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: state set to %d", Tokens[0].c_str(), 1);
         }
         else if (Tokens[1] == "OFF" || Tokens[1] == "off" || Tokens[1] == "0")  {
@@ -847,6 +852,10 @@ int CCommandLineParser::SetDraw()
             else if (Tokens[0] == "drawplanes")  {
                 CRenderer::GetRenderer().SetDrawRects(false);
             }
+            else if (Tokens[0] == "drawwaypoints")  {
+                CRenderer::GetRenderer().SetDrawWayPoints(false);
+            }
+
             CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: state set to %d", Tokens[0].c_str(), 0);
         }
         else  {

@@ -487,6 +487,86 @@ void CRenderer::DrawRect( Rectangle3f * pRect, float fPointSize, DWORD dwColor)
 }
 
 
+void CRenderer::DrawWayPoint( CWaypoint * pWayPt, float fPointSize, DWORD dwColor)
+{
+    // load debug renderstates
+    m_pSBMap[RENSB_DEBUGSTATE]->Apply();
+
+    LPDIRECT3DVERTEXBUFFER9 theBuffer;
+
+    if( FAILED( m_pd3dDevice->CreateVertexBuffer( 5*sizeof(D3DVertex), 0, D3DFVF_D3DVertex, D3DPOOL_DEFAULT, &theBuffer, NULL) ) )
+    {
+        return;
+    }
+
+    D3DVertex myWayPt[5];  // 5 points to show a waypoint
+    Vector3f vecOrigin = *pWayPt->GetTranslate(), vecPt;
+
+
+	vecPt = vecOrigin + pWayPt->Radius()*Vector3f(1,0,0);
+    myWayPt[0].x = vecPt.X();
+    myWayPt[0].y = vecPt.Y();
+    myWayPt[0].z = vecPt.Z();  
+    myWayPt[0].psize = fPointSize;
+    myWayPt[0].color = dwColor - D3DCOLOR_ARGB( 0, 55, 55, 55 );
+
+
+	vecPt = vecOrigin - pWayPt->Radius()*Vector3f(1,0,0);
+    myWayPt[1].x = vecPt.X();
+    myWayPt[1].y = vecPt.Y();
+    myWayPt[1].z = vecPt.Z();  
+    myWayPt[1].psize = fPointSize;
+    myWayPt[1].color = dwColor - D3DCOLOR_ARGB( 0, 55, 55, 55 );
+
+
+  	vecPt = vecOrigin;
+    myWayPt[2].x = vecPt.X();
+    myWayPt[2].y = vecPt.Y();
+    myWayPt[2].z = vecPt.Z(); 
+    myWayPt[2].psize = fPointSize;
+    myWayPt[2].color = dwColor;
+    
+    
+    vecPt = vecOrigin + pWayPt->Radius()*Vector3f(0,0,1);
+    myWayPt[3].x = vecPt.X();
+    myWayPt[3].y = vecPt.Y();
+    myWayPt[3].z = vecPt.Z();  
+    myWayPt[3].psize = fPointSize;
+    myWayPt[3].color = dwColor - D3DCOLOR_ARGB( 0, 55, 55, 55 );
+
+    
+	vecPt = vecOrigin - pWayPt->Radius()*Vector3f(0,0,1);
+    myWayPt[4].x = vecPt.X();
+    myWayPt[4].y = vecPt.Y();
+    myWayPt[4].z = vecPt.Z();  
+    myWayPt[4].psize = fPointSize;
+    myWayPt[4].color = dwColor - D3DCOLOR_ARGB( 0, 55, 55, 55 );
+
+
+
+
+    // Copy rect vertices into the buffer
+    VOID* pVertices;
+    if( FAILED( theBuffer->Lock( 0, sizeof(myWayPt), (void**)&pVertices, 0 ) ) )
+        return;// E_FAIL;
+    memcpy( pVertices, myWayPt, sizeof(myWayPt) );
+    theBuffer->Unlock();
+
+    // Draw the vertex buffer
+    m_pd3dDevice->SetStreamSource( 0, theBuffer, 0,  sizeof(D3DVertex) );
+    //m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
+
+    m_pd3dDevice->DrawPrimitive( D3DPT_POINTLIST, 0, 5 );
+    //m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 4 );
+    m_pd3dDevice->DrawPrimitive( D3DPT_LINESTRIP, 0, 4 );
+    
+    // Destroy the vertex buffer
+    theBuffer->Release();
+
+    m_pDefaultSB->Apply();  // restore default states
+}
+
+
 #ifdef _DEBUG
 extern int iDrawnEnt, iTotalNodeEnt;
 #endif

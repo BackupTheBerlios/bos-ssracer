@@ -30,6 +30,7 @@
 #include "d3dfont.h"
 #include "d3dfile.h"
 #include "cscreens.h"
+#include "cwaypoint.h"
 
 // --- defines and constants --- //
 // fonts available to render
@@ -104,6 +105,7 @@ protected:
     bool              m_bDrawEntBBoxes;     //$$$DEBUG show bounding boxed for entities
     bool              m_bDrawQNodeBBoxes;   //$$$DEBUG show bounding boxed for quadtree nodes
     bool              m_bDrawRects;         //$$$DEBUG show bounding planes for coll det 
+    bool              m_bDrawWayPoints;     //$$$DEBUG show waypoints for AI
 
     HRESULT           m_hResult;
 	static CRenderer * ms_pkRenderer;
@@ -182,6 +184,10 @@ public:
     bool IsDrawRectsEnabled() { return m_bDrawRects; };
     void SetDrawRects( bool bState ) { m_bDrawRects = bState;};
 
+    bool IsDrawWayPointsEnabled() { return m_bDrawWayPoints; };
+    void SetDrawWayPoints( bool bState ) { m_bDrawWayPoints = bState;};
+
+
 
     void InitializeState();
     //void SetState (const RenderStatePtr aspkState[]);
@@ -229,6 +235,7 @@ protected:
     void DrawQuadTreeNode( CQuadNode * pQNode );
     void DrawBBox( Box3f * pBBox, float fPointSize = 1.0f, DWORD dwColor = D3DCOLOR_ARGB( 255, 155, 155, 155 ));
     void DrawRect( Rectangle3f * pRect, float fPointSize = 10.0f, DWORD dwColor = D3DCOLOR_ARGB( 255, 155, 155, 255 ));
+    void DrawWayPoint( CWaypoint * pWayPt, float fPointSize = 3.0f, DWORD dwColor = D3DCOLOR_ARGB( 255, 55, 155, 155 ));
     void DrawVehicle( CVehicle * pVehicle );
 
 

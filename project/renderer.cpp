@@ -130,6 +130,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     m_bDrawQNodeBBoxes = false;
     m_bDrawEntBBoxes = false;
     m_bDrawRects = false;
+    m_bDrawWayPoints = false;
 
 }
 
@@ -457,6 +458,19 @@ void CRenderer::RenderScene()
         it != CGameStateManager::GetGameStateManager().GetScenePtr()->m_vPlanes.end();  it++)  
         {
             DrawRect(*it, 10.0f, D3DCOLOR_ARGB( 255, 55, 55, 255 ));
+        }
+    }
+    //$$$DEBUG DRAW ALL WAYPOINTS
+    if (m_bDrawWayPoints== true)  {
+        for (vector<CWaypoint *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWaypoints.begin();
+        it != CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWaypoints.end();  it++)  
+        {
+            if (it == CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWaypoints.begin())
+                DrawWayPoint(*it, 10.0f, D3DCOLOR_ARGB( 255, 255, 255, 255 ));  //first waypoint
+            else if ( it == CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWaypoints.end()-1)
+                DrawWayPoint(*it, 10.0f, D3DCOLOR_ARGB( 255, 255, 55, 55 ));  //last waypoint
+            else
+                DrawWayPoint(*it, 7.0f, D3DCOLOR_ARGB( 255, 55, 155, 155 ));
         }
     }
     #endif
