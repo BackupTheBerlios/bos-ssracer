@@ -103,10 +103,35 @@ void CRenderTask::Update()
 
     m_pkRenderer->Click();       // update view from the camera position
 
+    #ifdef _DEBUG
+    D3DXVECTOR3 * vEye = m_pkRenderer->GetActiveCameraPtr()->GetEyePtr();
+    D3DXVECTOR3 * vLookAt = m_pkRenderer->GetActiveCameraPtr()->GetLookAtPtr();
+    D3DXVECTOR3 * vVel = m_pkRenderer->GetActiveCameraPtr()->GetVelocityPtr();
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 0, "Cam Eye Position %f %f %f", vEye->x, vEye->y, vEye->z);
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 1, "Cam Look At %f %f %f", vLookAt->x, vLookAt->y, vLookAt->z);
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 2, "Cam Velocity %f %f %f", vVel->x, vVel->y, vVel->z);
+    #endif
+
     m_pkRenderer->RenderScene(); // render current scene
     
     if ( CBOSApplication::GetBOSApp().GetConsoleState() == TRUE ) 
         m_pkRenderer->DrawConsole(); // draw the console if down
+
+    #ifdef _DEBUG
+    if ( CBOSApplication::GetBOSApp().GetDebugOverlayState() == TRUE ) {
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 5, "J: slots 0-9 in the LOG_DEBUGOVERLAY are mine");
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 6, "reserve your own slots");
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "usage Write(LOG_DEBUGOVERLAY, slot#,...)");
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "use this to monitor variables");
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "press F12 to hide all this");
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "line 10");
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 20, "line 20");
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 30, "line 30");
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 40, "line 40");
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 100, "line 100");
+        m_pkRenderer->DrawDebugOverlay();  // draw the debugging overlay
+    }
+    #endif
         
     m_pkRenderer->DisplayBackBuffer();  // swap buffers
 }

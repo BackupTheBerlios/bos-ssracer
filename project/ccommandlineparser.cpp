@@ -253,8 +253,9 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADENTITY <params> - load a new entity and add it to the current scene");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "CLEARSCENE - clear the current scene");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADPLAYERVEHICLE <params> - load a new player vehicle");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "loadmeshtest <file> <dir> - load a mesh at some directory");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "cameratest <CAMERA_NAME> - change cameras to a specific one");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESHTEST <file> <dir> - load a mesh at some directory");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> <dir> - load a scene from a .map file");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "-----------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;

@@ -219,7 +219,7 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 				CBOSApplication::GetBOSApp().SetConsoleState( FALSE );
 				iConsoleOn ^= 1;
 				// play a sound
-				CKernel::GetKernel().DeliverMessage( new CSoundMessage(), SOUND_TASK );
+				//CKernel::GetKernel().DeliverMessage( new CSoundMessage(), SOUND_TASK );
                 m_kInputMap[ cIMsg->m_keyValue ] = FALSE;  // set the key as inactive
 			}
 			else {
@@ -231,6 +231,33 @@ void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 		}
         return;  // don't save the new state
         break;
+
+    #ifdef _DEBUG
+    // special case for the debug overlay
+    case GAME_F12:
+   		// see if state has changed
+		if ( m_kInputMap[ cIMsg->m_keyValue ] != cIMsg->m_keyDown )  {
+			static bool iDebugOverlayOn = true;
+
+			if (iDebugOverlayOn){
+				// toggle the console
+				CBOSApplication::GetBOSApp().SetDebugOverlayState( FALSE );
+				iDebugOverlayOn ^= 1;
+				// play a sound
+				//CKernel::GetKernel().DeliverMessage( new CSoundMessage(), SOUND_TASK );
+                m_kInputMap[ cIMsg->m_keyValue ] = FALSE;  // set the key as inactive
+			}
+			else {
+				// toggle the console
+				CBOSApplication::GetBOSApp().SetDebugOverlayState( TRUE );
+				iDebugOverlayOn ^= 1;
+			}
+
+		}
+        return;  // don't save the new state
+        break;
+    #endif
+
 
 	default:
 		// Check if we need to forward stuff off to the console

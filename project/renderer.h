@@ -180,8 +180,11 @@ public:
 protected:
     CRenderer();
     ~CRenderer ();
+
+    // draw functions
     void DrawConsole();
     void DrawSkyBox();
+    void DrawDebugOverlay();
 
 private:
 };

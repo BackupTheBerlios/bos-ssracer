@@ -46,6 +46,7 @@ private:
     static RECT                    ms_rcWindow;             // rectangle describing window
     static BOOL                    ms_bFullScreen;          // TRUE if the app is fullscreen
     static BOOL                    ms_bConsoleDown;         // TRUE if the in game console is displayed
+    static BOOL                    ms_bShowDebugOverlay;    // TRUE if debug overlay is to be shown
 
 protected:
     static CBOSApplication * ms_pkBOSApp; // static reference to this singleton
@@ -77,6 +78,10 @@ public:
     BOOL GetConsoleState() { return ms_bConsoleDown; }; 
     void SetConsoleState( bool bNewState ) { ms_bConsoleDown = bNewState; };
     BOOL ToggleConsoleState() { ms_bConsoleDown = !ms_bConsoleDown;  return ms_bConsoleDown; }; 
+
+    BOOL GetDebugOverlayState() { return ms_bShowDebugOverlay; }; 
+    void SetDebugOverlayState( bool bNewState ) { ms_bShowDebugOverlay = bNewState; };
+    
 
 protected:
     void    InitializeKernel();         // create system and game tasks

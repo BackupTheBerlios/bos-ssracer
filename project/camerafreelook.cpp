@@ -175,6 +175,6 @@ VOID CCameraFreeLook::FrameMove( FLOAT fElapsedTime )
 
     //D3DXMatrixInverse( &m_mCameraWorld, NULL, &m_mView );
     #ifdef _DEBUG
-    CLog::GetLog().Write(LOG_GAMECONSOLE, " Camera Position %f %f %f", m_vEye.x, m_vEye.y, m_vEye.z);
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 0, " Camera Position %f %f %f", m_vEye.x, m_vEye.y, m_vEye.z);
     #endif
 }

@@ -87,6 +87,10 @@ public:
     virtual void Update(){ /* does nothing */};
 	virtual void Update( int iInput, bool bState ) { /* does nothing */};
 
+    D3DXVECTOR3 * GetEyePtr() { return &m_vEye; };
+    D3DXVECTOR3 * GetLookAtPtr() { return &m_vLookAt; };
+    D3DXVECTOR3 * GetVelocityPtr() { return &m_vVelocity; };
+
 	//void SetObject( CPlayerVehicle * pkObject ){ m_pkObject = pkObject; }
 	//CPlayerVehicle * GetObject(){ return m_pkObject; }
 

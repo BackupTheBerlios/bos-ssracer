@@ -8,6 +8,7 @@ BETA 3.0 *********** CURRENT VERSION PLEASE FILL THIS IN **************
 [DD.MM.2004]
 
 Changes / Additions :
+Added LOG_DEBUGOVERLAY
 
 Bug Fixes:
 - no longer crashes if no gamepad connected

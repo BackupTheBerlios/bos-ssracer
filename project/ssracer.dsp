@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 d3dx9.lib dsound.lib dinput8.lib dxerr9.lib d3d9.lib d3dxof.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 WildMagic2.lib Kernel32.lib d3dx9dt.lib dsound.lib dinput8.lib dxerr9.lib d3d9.lib d3dxof.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"MSVCRTD.LIB"
+# ADD LINK32 WildMagic2.lib Kernel32.lib d3dx9dt.lib dsound.lib dinput8.lib dxerr9.lib d3d9.lib d3dxof.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /machine:I386 /nodefaultlib:"MSVCRTD.LIB"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "ssracer - Win32 Debug"
@@ -138,6 +138,10 @@ SOURCE=.\camerafreelook.cpp
 # Begin Source File
 
 SOURCE=.\renderer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\rendererdrawfunctions.cpp
 # End Source File
 # Begin Source File
 

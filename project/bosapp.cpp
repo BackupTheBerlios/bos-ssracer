@@ -46,7 +46,11 @@ CBOSApplication * CBOSApplication::ms_pkBOSApp     = NULL;
 RECT CBOSApplication::ms_rcWindow;//                  = (0, 0, 0, 0);
 BOOL CBOSApplication::ms_bFullScreen               = FALSE;
 BOOL CBOSApplication::ms_bConsoleDown              = FALSE;
-
+#ifdef _DEBUG
+BOOL CBOSApplication::ms_bShowDebugOverlay         = TRUE; 
+#else
+BOOL CBOSApplication::ms_bShowDebugOverlay         = FALSE; 
+#endif
 
 //-----------------------------------------------------------------------------
 // get functions for the singleton instance of the app

@@ -134,10 +134,10 @@ int CFrontendManager::Transition()
 		CAppStateManager::GetAppMan().SetAppState(STATE_IN_GAME);
 		break;
 	default:
-#ifdef _DEBUG
-		CLog::GetLog().Write(LOG_MISC, "case %i out of range in CFrontendManager::Transition()",
-			next_screen);
-#endif
+        #ifdef _DEBUG
+		CLog::GetLog().Write(LOG_MISC, "case %i out of range in CFrontendManager::Transition()",next_screen);
+        #endif
+        break;
 	}
 
 	return OK;

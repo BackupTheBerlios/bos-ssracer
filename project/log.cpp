@@ -100,7 +100,7 @@ bool CLog::Shutdown()
 
 //----------------------------------------------------------------------------
 // Write ()
-//   writes a plain log entry to file
+//   writes a plain log entry to a log
 //   target:  logfile to write to eg) LOG_APP
 //   msg:  description of log entry 
 //   ... : variable length arguement list, pass any other info about this log 
@@ -115,73 +115,101 @@ void CLog::Write(int target, const char *msg, ...)
   
   if(target&LOG_APP)  { // write to application log
     AppLog<<szBuf<<"\n";
-#ifdef DEBUG
+    #ifdef DEBUG
     AppLog.flush();
-#endif
+    #endif
   }
   if(target&LOG_CLIENT)  { // write to client log
     ClientLog<<szBuf<<"\n";
-#ifdef DEBUG
+    #ifdef DEBUG
     ClientLog.flush();
-#endif
+    #endif
   }
   if(target&LOG_SERVER)  { // write to server log
     ServerLog<<szBuf<<"\n";
-#ifdef DEBUG
+    #ifdef DEBUG
     ServerLog.flush();
-#endif
+    #endif
   }
   if(target&LOG_MISC)  { // write to server log
     MiscLog<<szBuf<<"\n";
-#ifdef DEBUG
+    #ifdef DEBUG
     MiscLog.flush();
-#endif
-  }
-  if(target&LOG_GAMECONSOLE)  {  // write to console buffer
-      //sprintf(szBuf, "%s%s", szBuf,"\n"); 
-      kConsoleQueue.push_back(szBuf);  
-      if (kConsoleQueue.size() > uiMaxConsoleLines)  {
-          kConsoleQueue.pop_front();  // remove lines fron the buffer
-      }
+    #endif
   }
   if(target&LOG_USER)  { // write to user display
-#ifdef WIN32
+    #ifdef WIN32
     MessageBox(NULL,szBuf,"Message",MB_OK);  // display a msg box
-#else
-#error User-level logging is not implemented for this platform.
-#endif
+    #else
+    #error User-level logging is not implemented for this platform.
+    #endif
+  }
+  if(target&LOG_GAMECONSOLE)  {  // write to console buffer
+      m_kConsoleQueue.push_back(szBuf);  
+      if (m_kConsoleQueue.size() > uiMaxConsoleLines)  {
+          m_kConsoleQueue.pop_front();  // remove lines fron the buffer
+      }
+  }
+  if(target&LOG_DEBUGOVERLAY)  {  // write to debug overlay
+      m_kDebugOverLay[m_iCurrDebugSlot] = string(szBuf);
+      // check if it'll fit on the screen
+      /*if (m_kConsoleQueue.size() > uiMaxConsoleLines)  {
+          m_kConsoleQueue.pop_front();  // remove lines fron the buffer
+      }*/
+  }
+
+  va_end(args);
+}
+
+
+
+//----------------------------------------------------------------------------
+// Write () 2 functions
+//   1) writes a predefined log entry to file
+//   2) writes an entry to the overlay
+//
+//   target:  logfile to write to eg) LOG_APP
+//   msgID:   
+//    1) if you are using a predef log string
+//         ID of string entry in string table eg) IDS_APP_ERROR
+//    2) if you are writing to the overlay
+//         slot in the overlay you are writing to 
+//   ... : variable length arguement list, pass any other info about this log 
+//         entry you want in here like printf in C
+// 
+// ex) CLog::GetLog().Write (LOG_APP, IDS_APP_ERROR, "cannot allocate %s", mesh.name);
+//----------------------------------------------------------------------------
+void CLog::Write(int target, unsigned long msgID, const char * cMsg, ...)
+{
+  va_list args; 
+  char logBuf[1024];       // buffer for log entry
+  char logEntry[1024];
+  //char strTableMsg[1024];  // buffer for string table message
+
+  if (target&LOG_DEBUGOVERLAY)  {  // msgID is the slot # in the overlay
+      va_start(args, cMsg);
+      m_iCurrDebugSlot = msgID;    // point logger to this slot
+      //vsprintf(logBuf, cMsg, args);
+      //Write(target, cMsg);
+      sprintf(logEntry, "%s", cMsg);
+      vsprintf(logBuf, logEntry, args);
+      Write(target, logBuf);
+  }
+  else {
+      va_start(args, msgID);
+      // load predefined message from string table
+      //$$$DEBUG already loaded in LoadStrings() LoadString(GetModuleHandle(NULL), msgID ,strTableMsg, sizeof(strTableMsg));
+   
+      // combine string table message with log message
+      //vsprintf(logBuf, strTableMsg, args);
+      vsprintf(logBuf, m_kLogMap[msgID].c_str(), args);
+
+      // write log entry to file
+      Write(target, logBuf);
   }
   va_end(args);
 }
 
-
-
-//----------------------------------------------------------------------------
-// Write ()
-//   writes a predefined log entry to file
-//   target:  logfile to write to eg) LOG_APP
-//   msgID:   ID of string entry in string table eg) IDS_APP_ERROR
-//   ... : variable length arguement list, pass any other info about this log 
-//         entry you want in here like printf in C
-// ex) CLog::GetLog().Write (LOG_APP, IDS_APP_ERROR, "cannot allocate %s", mesh.name);
-//----------------------------------------------------------------------------
-void CLog::Write(int target, unsigned long msgID, ...)
-{
-  va_list args; va_start(args, msgID);
-  char logBuf[1024];       // buffer for log entry
-  char strTableMsg[1024];  // buffer for string table message
-
-  // load predefined message from string table
-  //$$$DEBUG already loaded in LoadStrings() LoadString(GetModuleHandle(NULL), msgID ,strTableMsg, sizeof(strTableMsg));
-   
-  // combine string table message with log message
-  //vsprintf(logBuf, strTableMsg, args);
-  vsprintf(logBuf, m_kLogMap[msgID].c_str(), args);
-
-  // write log entry to file
-  Write(target, logBuf);
-  va_end(args);
-}
 
 
 
