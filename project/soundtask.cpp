@@ -90,8 +90,18 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 		while ( it != sound.end() ) {
 			cSID = it->first;
 			cSfx = it->second;
-			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (play: %d, pause: %d, loop: %d, destruct: %d)", cSID.getID(), cSfx->IsPlaying, cSfx->IsPaused );
+			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (play: %d, pause: %d, loop: %d, destruct: %d)", cSID.getID(), cSfx->IsPlaying(), cSfx->IsPaused(), cSfx->IsLooping(), cSfx->IsDestruct() );
 			it++;
+		}
+
+		CLog::GetLog().Write( LOG_GAMECONSOLE, "\nLoaded Sound Streams:" );
+
+		it2 = stream.begin();
+		while ( it2 != stream.end() ) {
+			cSID = it2->first;
+			cStr = it2->second;
+			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (play: %d, pause: %d, loop: %d, destruct: %d)", cSID.getID(), cStr->IsPlaying(), cStr->IsPaused(), cStr->IsLooping(), cStr->IsDestruct() );
+			it2++;
 		}
 		break;
 
