@@ -18,7 +18,7 @@ class CScene {
     friend int CCommandLineParser::loadmap();      //needed to access the LoadMap function from console
     friend int CCommandLineParser::ShowEntities(); //needed to access the entities from console
     friend int CCommandLineParser::LoadVehicleAI(); // Ram's Addition needed to axs entities from console
-    
+    friend int CCommandLineParser::loadrace();      //needed to access the LoadRace function from console
     friend void CRenderer::RenderScene();  // need to access static & dynamic entities for rendering
     friend CAITask; // to print debugging info only
 
@@ -36,7 +36,7 @@ public:
     //Ram's Additions
 	int LoadOpponentVehicle(string* directory, string* filename);
     int LoadWaypoints(string* directory, string* filename);
-    int LoadRace(string* directory, string* filename);
+    int LoadRaceSettings(string* directory, string* filename);
     int LoadWaypoint(CWaypoint* waypoint){m_vWaypoints.push_back(waypoint); return 1;}; //Temp just for my own testing
     //$$$TEMP this is just to get access too the entities for now.
     vector<CEntity*> * TEMPGetEntities() { return &m_vEntities; };  //$$$TEMP this function will not exist soon....
@@ -74,7 +74,7 @@ protected:
     static vector<Rectangle3f*>			 m_vPlanes;
 
 private:
-
+    int LoadRace(FILE* fp, string* directory, string* filename);		// Rams: Load a new Race, which leads to map WPS etc
 	int LoadMap(FILE* fp, string* directory, string* filename);		// Load a new map (.map file) and create a scene
 	int LoadEntities(string* directory, string* filename);	        // Load the objects specified in the map file (.objects file)
     bool bMapIsLoaded;

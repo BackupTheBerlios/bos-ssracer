@@ -215,17 +215,7 @@ int CScene::LoadMap(FILE* fp, string* directory, string* filename)
 					return 0;
 				}
             }
-            //Rams adds
-            if(!strcmp(token, "waypoints")) {
-				if(!LoadWaypoints(directory, filename)) {
-					return 0;
-				}
-			}
-            if(!strcmp(token, "race")) {
-				if(!LoadRace(directory, filename)) {
-					return 0;
-				}
-			}
+            //Rams stuff is now in LoadRace
 
 			// Add more strcmp's here for other file types
 			// that the map exporter might export
@@ -1115,7 +1105,7 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 
 }
 
-int CScene ::LoadRace(string* directory, string* filename)
+int CScene ::LoadRaceSettings(string* directory, string* filename)
 {
 	FILE* fp;
 	char buf[512];
@@ -1128,7 +1118,7 @@ int CScene ::LoadRace(string* directory, string* filename)
 	//path.append("\\");
 	path += *filename;
     ////
-    path += ".race";
+    path += ".raceset";
 
 	fp = fopen(path.c_str(), "r");
 
@@ -1152,7 +1142,7 @@ int CScene ::LoadRace(string* directory, string* filename)
 			continue;
 		}
         	if(!strcmp(token, "<racedata>")) {
-              CLog::GetLog().Write(LOG_GAMECONSOLE, "In race data");
+              CLog::GetLog().Write(LOG_MISC, "In race data");
 	
 			//newObject = new CEntity;
 			//NEW(newObject, CWaypoint, "Error CScene::LoadWaypoints >> new operator failed");
@@ -1247,7 +1237,7 @@ int CScene ::LoadRace(string* directory, string* filename)
 */
 	}  //endwhile
 
-    //Go thru opponents vector and initialize waypoints (Which should be loaded in)
+    //Go thru opponents vector and initialize waypoints (Which should already be loaded in)
     vector<COpponentVehicle *>::iterator it2;
     for (it2=CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin();
          it2<CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end();  it2++) {
@@ -1265,11 +1255,58 @@ int CScene ::LoadRace(string* directory, string* filename)
 	fclose(fp);
 *///CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
     //((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle((*CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin()));
-	
+	CLog::GetLog().Write(LOG_MISC, "Leaving Race Settings");
+	            
 	return 1;
 
 }
 
+//
+int CScene::LoadRace(FILE* fp, string* directory, string* filename)
+{
+	char buf[512];
+	char seps[] = " \n.";
+	char* token;
+    //gotta be able to parse through map file
+    FILE * fpMap;
+    fpMap = fopen( ((*directory)+(*filename)+".map").c_str(), "r");
+	while(fgets(buf, sizeof(buf), fp)) {
+		token = strtok(buf, seps);
+
+		if(!strcmp(token, "<include>")) {
+			token = strtok(NULL, seps);
+			token = strtok(NULL, seps);
+
+			if(!strcmp(token, "map")) {
+				if(!LoadMap(fpMap, directory, filename)) {
+					return 0;
+				}
+            }
+            //Rams adds
+            if(!strcmp(token, "waypoints")) {
+				if(!LoadWaypoints(directory, filename)) {
+					return 0;
+				}
+			}
+            if(!strcmp(token, "raceset")) {
+				if(!LoadRaceSettings(directory, filename)) {
+					return 0;
+				}
+			}
+
+			// Add more strcmp's here for other file types
+			// that the map exporter might export
+			// Maybe .aiPaths, .triggers
+		}
+	}
+
+    //bMapIsLoaded = true;  
+
+    // intitalize the quadtree using the new entitity information
+    //m_kQuadTree->Initialize( &m_vEntities );
+
+	return 1;
+}
 
 
 // Gib's Add: code copied and pasted directly from Ram's LoadWaypoint()

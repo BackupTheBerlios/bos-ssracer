@@ -43,8 +43,10 @@ public:
 	int ClearScene();
 	//int PhysicsTest1();
 	//int PhysicsTest2();
-    //==== Ram & Gibs Functions ====/
+    
+    //==== Ram's Functions ====/
     int LoadVehicleAI();
+    int loadrace();
 
     // === J's Functions === //
     int loadmeshtest();
