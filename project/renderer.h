@@ -97,6 +97,8 @@ private:
     CD3DCamera * m_pActiveCamera; // active camera in game
     static CameraType m_eActiveCamType;     // type of active camera
 
+    CD3DMesh * m_pSkyBox;
+
     // renderer capabilities
     bool m_bCapMultitexture;
     bool m_bCapSpecularAfterTexture;
@@ -113,7 +115,6 @@ private:
 public:
     CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight);
 
-	// Gib's modifications:
 	static CRenderer & GetRenderer();
     static CRenderer * GetRendererPtr();
 
@@ -180,6 +181,7 @@ protected:
     CRenderer();
     ~CRenderer ();
     void DrawConsole();
+    void DrawSkyBox();
 
 private:
 };

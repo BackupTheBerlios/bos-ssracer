@@ -74,7 +74,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     m_bFullScreen = bFullScreen;
     m_bConsoleDown = true; //$$$DEBUG
     GetWindowRect(hWnd, &m_rcWindow );
-
+	ms_pkRenderer = this;
     m_bCursorVisible = false;
     
     //Create a structure to hold the settings for our device
@@ -84,13 +84,15 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     m_kFontMap[FONT_DEFAULT] = new CD3DFont( _T("Arial"), 12, D3DFONT_BOLD );
     m_kFontMap[FONT_SYSTEM]  = new CD3DFont( _T("System"), 12, D3DFONT_BOLD|D3DFONT_ITALIC|D3DFONT_ZENABLE );
     m_kFontMap[FONT_SMALL]   = new CD3DFont( _T("Arial"), 8 );
-	
-	ms_pkRenderer = this;
 
+    // set up the skybox
+    m_pSkyBox = new CD3DMesh(_T("skybox"));
+    
     // set up the cameras
    	m_pkCameraMap[CAMERA_BUMPER]     = NULL;//new CD3DCamera();  // bumper camera
 	m_pkCameraMap[CAMERA_CHASE]      = new CCameraChase();  // chase camera
 	m_pkCameraMap[CAMERA_FREELOOK]   = new CCameraFreeLook(); // free look
+
 
 	// set up default camera parameters for each main camera
     // 1 eye origin            2 look at pt      3 up vector
@@ -207,6 +209,21 @@ HRESULT CRenderer::Initialize()
            return DXTRACE_ERR( "m_kFontMap[it]->InitDeviceObjects", hr );
         it->second->RestoreDeviceObjects();
     }
+
+
+    char szBuf[512];
+    sprintf(szBuf, "%s%s", CSettingsManager::GetSettingsManager().GetGameSetting(DIRSTATICMESH).c_str(), "skybox");
+    // use the current working directory trick to make DX load the textures from the same dir
+    if (!SetCurrentDirectory(szBuf))
+        return E_FAIL;
+    sprintf(szBuf, "%s%s", szBuf, "\\skybox.x");
+    // Load the skybox
+    if( FAILED( m_pSkyBox->Create( m_pd3dDevice, _T(szBuf) ) ) )
+        return E_FAIL;//D3DAPPERR_MEDIANOTFOUND;
+    m_pSkyBox->RestoreDeviceObjects( m_pd3dDevice );
+    // set the CWD back
+    if (!SetCurrentDirectory(CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING).c_str()))
+        return E_FAIL;
 
 
     //$$$DEBUG testing lighting $$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -419,6 +436,11 @@ void CRenderer::RenderScene()
     InitializeState();
     m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,50,110), 1.0f, 0 );
     //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );//D3DCOLOR_XRGB(0,20,50)
+
+
+    // render the skybox first
+    DrawSkyBox();
+
 
     //$$$TEMP renders ALL entitites until I get the Octree up    
     ID3DXMatrixStack* pMatrixStack;
@@ -634,10 +656,13 @@ void CRenderer::Cleanup()
         hr = it2->second->InvalidateDeviceObjects();
         if( FAILED( hr ) )
            DXTRACE_ERR_MSGBOX( "m_kMeshMap::it2->DeleteDeviceObjects", hr );
+        it2->second->Destroy();
     }
 
-
-	// destroy the textures
+    // destroy the skybox
+    m_pSkyBox->InvalidateDeviceObjects();
+    m_pSkyBox->Destroy();
+    SAFE_DELETE( m_pSkyBox );
 
 
     // shutdown d3d interfaces
@@ -645,6 +670,8 @@ void CRenderer::Cleanup()
         m_pd3dDevice->Release();
     if( m_pD3D != NULL)
         m_pD3D->Release();
+
+    //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ NEED TO DE FINAL CLEANUP TO CALL RELEASE EVERYTHING!!!!
 }
 
 
@@ -735,6 +762,14 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_CLAMP );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_CLAMP );
 
     return;
 
@@ -855,7 +890,11 @@ void CRenderer::DrawConsole()
 
 
 
-
+//-----------------------------------------------------------------------------
+// Name:  SetActiveCamera()
+// Desc:  sets the active camera to the one specified by name
+// name must be one of the enumerated types or this will fail
+//-----------------------------------------------------------------------------
 bool CRenderer::SetActiveCamera( CameraType eCameraName )  { 
     // check if there even exists a camera to set
     if (!m_pkCameraMap[eCameraName])
@@ -874,6 +913,38 @@ bool CRenderer::SetActiveCamera( CameraType eCameraName )  {
 
 
 
+
+//-----------------------------------------------------------------------------
+// Name:  DrawSkyBox()
+// Desc:  draws the currently loaded skybox mesh
+//-----------------------------------------------------------------------------
+void CRenderer::DrawSkyBox()
+{
+    // turn lighting off
+    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
+
+    // Center view matrix for skybox and disable zbuffer
+    D3DXMATRIXA16 matView, matViewSave;
+    m_pd3dDevice->GetTransform( D3DTS_VIEW, &matViewSave );
+    matView = matViewSave;
+    matView._41 = 0.0f; matView._42 = -3.0f; matView._43 = 0.0f;
+    m_pd3dDevice->SetTransform( D3DTS_VIEW,      &matView );
+    m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, FALSE );
+    // Some cards do not disable writing to Z when 
+    // D3DRS_ZENABLE is FALSE. So do it explicitly
+    m_pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );
+
+    // Render the skybox
+    m_pSkyBox->Render( m_pd3dDevice );
+
+    // Restore the render states
+    m_pd3dDevice->SetTransform( D3DTS_VIEW,      &matViewSave );
+    m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
+    m_pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, TRUE);
+
+    // turn lighting back on
+    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
+}
 
 
 /*
