@@ -12,7 +12,7 @@
 <VehicleMass> 1500
 <TireMass> 35
 <RotatingMass> 100
-<MaximumTorque> 250
+<MaximumTorque> 300
 <MaximumRPM> 6500
 <DrivetrainEfficiency> 0.75
 <RearDiffRatio> 3.42

@@ -377,6 +377,10 @@ void CVehicle::CalculateEngineTorque()
 		// At 90% of maxRPM we are at 100% torque output
 		// At 100% maxRPM we are at 90% torque output
 		engineTorque = float(maximumTorque * ( 0.90f + (1 - (rpm / maximumRPM)) ) );
+
+		if(engineTorque > maximumTorque) {
+			engineTorque = maximumTorque;
+		}
 	}
 }
 
