@@ -28,9 +28,10 @@
 #define AI_TASK			4
 #define CONSOLE_TASK	5
 #define PHYSICS_TASK	6
-// Gib's modification (for FrontendManager task & VehicleAI task)
+// Gib's modification 
 #define FRONTEND_TASK 7
 #define OPPONENT_AI_TASK 8
+#define COLLISION_TASK 9
 
 // #defines for Message Types
 #define SYSTEM_TASK_MESSAGE		-1
@@ -41,9 +42,10 @@
 #define AI_TASK_MESSAGE			4
 #define CONSOLE_TASK_MESSAGE	5
 #define PHYSICS_MESSAGE			6
-// Gib's modification (for FrontendManager msg & Vehicle AI)
+// Gib's modification 
 #define FRONTEND_TASK_MESSAGE 7
 #define OPPONENT_AI_MESSAGE 8
+#define COLLISION_MESSAGE 9
 
 // Forward class definitions
 class CKernel;

@@ -61,6 +61,9 @@ public:
 	int SoundCoreCommand();
 	int PlaylistCommand();
 
+	// === Gib's Functions === //
+	int LoadCollisionTest();
+
 protected:
 	std::string deliminators;
 	int ndels;

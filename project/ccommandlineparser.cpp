@@ -112,6 +112,10 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("killsound"));
     /*** End Rob's Commands ***/
 
+	/*** Begin Gib's commands ***/
+	Keywords.push_back(std::string("loadcollisiontest"));
+	/*** End Gib's commands ***/
+
 	return OK;
 }
 
@@ -192,6 +196,8 @@ int CCommandLineParser::execute()
 
     if (*it == "showaudio") error = SoundCoreCommand();
     if (*it == "killsound") error = SoundCoreCommand();
+
+	if (*it == "loadcollisiontest") error = LoadCollisionTest();
 
 	return error;
 }
@@ -332,6 +338,7 @@ int CCommandLineParser::help()
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> [dir] - load a map and create a scene from a .map file [dir] defaults to .\\maps\\ if omitted");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map and scene objects");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADVEHICLEAI - runs opponent vehicle AI test");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADCOLLISIONTEST - loads a scene with collidable objects and a player vehicle.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n*** Sound Engine Commands ***" );
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOAD{SOUND|STREAM} <file> as <alias> - Loads a sound effect or stream and gives it the specified alias.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAY{SOUND|STREAM} [-loop] <alias> - Plays a sound effect or stream either one-shot or looping.");
@@ -1472,6 +1479,51 @@ int CCommandLineParser::SoundStreamCommand()
 }
 // ===== End Rob's functions ==== //
 
+// ===== Begin Gib's functions === //
+int CCommandLineParser::LoadCollisionTest()
+{
+
+#ifdef _DEBUG
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "LoadCollisionTest() still under construction. Have yet to implement planes");
+#endif
+
+	string carDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
+	string carName = "mitsuEclipse.car";
+	string pylonDir, pylonName;
+
+	//straight copy from Jays loadmeshtest to get 2 pylons up yay.
+	pylonDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\pylon\\";
+    pylonName = "pylon";
+
+	// read: {near-left, far-left, far-right, near-right}
+	float xvals[] = {-20.0f, 20.0f, 20.0f, -20.0f};
+	float zvals[] = {-20.0f, -20.0f, 20.0f, 20.0f};
+
+	// Load 4 pylons and initialize their positions
+	// These mark the corners of the world borders (planes)
+	std::vector<CEntity *>::iterator it;
+	for (int i = 0; i < 4; i++) {
+		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&pylonDir, &pylonName))) {
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "%s not loaded successfully!", pylonName.begin());
+			return GENERAL_ERROR;
+		}
+		it = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()->end()-1;
+		(*it)->SetTranslate(Vector3f(xvals[i], 0.0f, zvals[i]));
+	}
+
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&carDir, &carName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Player Vehicle not loaded correctly!");
+		return GENERAL_ERROR;
+	}
+	CVehicle * PV = (CVehicle *)CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
+	//PV->SetTranslate(Vector3f(50.0f, 0.0f, 50.0f)); // right in the middle of the pylons
+
+	// set camera
+	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+
+	return OK;
+}
 
 
 // SAVING THIS; IT'S USEFUL:

@@ -12,7 +12,7 @@
 #define FONT_ARIAL 1
 #define FONT_COURIER 2
 #define FONT_TIMES_NEW_ROMAN 3
-#define FONT_SYSTEM 4
+//#define FONT_SYSTEM 4 // This is also defined in renderer.h
 #define FONT_VERDANA 5
 #define MAX_FONTS 5
 
