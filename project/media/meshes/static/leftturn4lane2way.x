@@ -814,7 +814,7 @@ Frame SCENE_ROOT {
      0.000000;0.000000;0.000000;;
 
      TextureFilename {
-      "straightaway4lane2way.bmp";
+      ".\\straightaway4lane2way.bmp";
      }
     }
    }
