@@ -45,6 +45,8 @@
 #define PLAYLIST_STOP_COMMAND 66
 #define PLAYLIST_PAUSE_COMMAND 67
 #define PLAYLIST_UNPAUSE_COMMAND 68
+#define PLAYLIST_NEXT_COMMAND 69
+#define PLAYLIST_PREV_COMMAND 70
 
 
 // Forward Class Definitions
@@ -115,6 +117,8 @@ public:
     void StopList();
     void PauseList();
     void UnpauseList();
+	void ListNext();
+	void ListPrev();
 
 	void ListAudio();
 

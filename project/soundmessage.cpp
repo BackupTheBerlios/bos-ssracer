@@ -213,7 +213,7 @@ void CSoundMessage::LoadList( std::string sListFile ) {
 	if ( sListFile.size() > MAX_FILENAME_LEN ) return;
 
 	// Set command properties
-	nCommandType = PLAYLIST_LOAD_COMMAND
+	nCommandType = PLAYLIST_LOAD_COMMAND;
 	strcpy( cSoundName, sListFile.c_str() );
 
 	return;
@@ -222,7 +222,7 @@ void CSoundMessage::LoadList( std::string sListFile ) {
 
 void CSoundMessage::PlayList( float fNewVolume, bool bAutoRepeat, bool bAutoAdvance ) {
 	// Set command properties
-	nCommandType = PLAYLIST_PLAY_COMMAND
+	nCommandType = PLAYLIST_PLAY_COMMAND;
 	fVolume = fNewVolume;
 	bLooped = bAutoRepeat;
 	bPause = bAutoAdvance;
@@ -233,7 +233,7 @@ void CSoundMessage::PlayList( float fNewVolume, bool bAutoRepeat, bool bAutoAdva
 
 void CSoundMessage::StopList() {
 	// Set command properties
-	nCommandType = PLAYLIST_STOP_COMMAND
+	nCommandType = PLAYLIST_STOP_COMMAND;
 
 	return;
 }
@@ -241,7 +241,7 @@ void CSoundMessage::StopList() {
 
 void CSoundMessage::PauseList() {
 	// Set command properties
-	nCommandType = PLAYLIST_PAUSE_COMMAND
+	nCommandType = PLAYLIST_PAUSE_COMMAND;
 
 	return;
 }
@@ -249,7 +249,23 @@ void CSoundMessage::PauseList() {
 
 void CSoundMessage::UnpauseList() {
 	// Set command properties
-	nCommandType = PLAYLIST_UNPAUSE_COMMAND
+	nCommandType = PLAYLIST_UNPAUSE_COMMAND;
+
+	return;
+}
+
+
+void CSoundMessage::ListNext() {
+	// Set command properties
+	nCommandType = PLAYLIST_NEXT_COMMAND;
+
+	return;
+}
+
+
+void CSoundMessage::ListPrev() {
+	// Set command properties
+	nCommandType = PLAYLIST_PREV_COMMAND;
 
 	return;
 }

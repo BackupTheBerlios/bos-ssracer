@@ -56,6 +56,7 @@ public:
     int SoundEffectCommand();
     int SoundStreamCommand();
 	int SoundCoreCommand();
+	int PlaylistCommand();
 
 protected:
 	std::string deliminators;

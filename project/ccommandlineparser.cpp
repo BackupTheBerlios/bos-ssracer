@@ -98,7 +98,9 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("pausestream"));
     Keywords.push_back(std::string("unpausestream"));
 
-    Keywords.push_back(std::string("listaudio"));
+    Keywords.push_back(std::string("playlist"));
+
+    Keywords.push_back(std::string("showaudio"));
     /*** End Rob's Commands ***/
 
 	return OK;
@@ -160,6 +162,7 @@ int CCommandLineParser::execute()
     if (*it == "releasesound") error = SoundEffectCommand();
     if (*it == "pausesound") error = SoundEffectCommand();
     if (*it == "unpausesound") error = SoundEffectCommand();
+
     if (*it == "playstream") error = SoundStreamCommand();
     if (*it == "stopstream") error = SoundStreamCommand();
     if (*it == "loadstream") error = SoundStreamCommand();
@@ -167,7 +170,13 @@ int CCommandLineParser::execute()
     if (*it == "pausestream") error = SoundStreamCommand();
     if (*it == "unpausestream") error = SoundStreamCommand();
 
-    if (*it == "listaudio") error = SoundCoreCommand();
+    if (*it == "loadlist") error = PlaylistCommand();
+    if (*it == "playlist") error = PlaylistCommand();
+    if (*it == "stoplist") error = PlaylistCommand();
+    if (*it == "pauselist") error = PlaylistCommand();
+    if (*it == "unpauselist") error = PlaylistCommand();
+
+    if (*it == "showaudio") error = SoundCoreCommand();
 
 	return error;
 }
@@ -779,7 +788,7 @@ int CCommandLineParser::SoundCoreCommand()
 	CSoundMessage *cSMsg = NULL;
 
 	// ** LISTAUDIO command ** //
-	if ( strcmp( Tokens[0].c_str(), "listaudio" ) == 0 ) {
+	if ( strcmp( Tokens[0].c_str(), "showaudio" ) == 0 ) {
 		switch( Tokens.size() ) {
 		case 1:
 			// Send the sound message
@@ -789,12 +798,158 @@ int CCommandLineParser::SoundCoreCommand()
 			break;
 
 		default:
-			CLog::GetLog().Write(LOG_GAMECONSOLE, "listaudio - invalid syntax (command takes no arguments)." );
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "showaudio - invalid syntax (command takes no arguments)." );
 			return BAD_COMMAND;
 			break;
 
 		}
 	}
+
+    return OK;
+}
+
+
+int CCommandLineParser::PlaylistCommand()
+{
+	std::string sSoundFile;
+	float fVol = 1.0f;
+	bool bAutoRep = true;
+	bool bAutoAdv = true;
+
+	CSoundMessage *cSMsg = NULL;
+
+	// ** LOAD command ** //
+	if ( strcmp( Tokens[0].c_str(), "loadlist" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 2:
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->LoadList( Tokens[1].c_str() );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "playlist - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** PLAY command ** //
+	else if ( strcmp( Tokens[0].c_str(), "playlist" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 2:
+			// ** NEXT command ** //
+			if ( Tokens[1] == "-next" ) {
+				// Send the sound message
+				cSMsg = new CSoundMessage();
+				cSMsg->ListNext();
+				CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+				break;
+			}
+
+			// ** PREV command ** //
+			if ( Tokens[1] == "-prev" ) {
+				// Send the sound message
+				cSMsg = new CSoundMessage();
+				cSMsg->ListPrev();
+				CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+				break;
+			}
+
+			return BAD_COMMAND;
+			break;
+
+		case 4:
+			fVol = (float) atof( Tokens[1].c_str() );
+
+			// Autorepeat?
+			if ( Tokens[2] == "-repeat" ) {
+				bAutoRep = true;
+			}
+			else if ( Tokens[2] == "-norepeat" ) {
+				bAutoRep = false;
+			}
+			else return BAD_COMMAND;
+
+			// Autoadvance?
+			if ( Tokens[3] == "-advance" ) {
+				bAutoRep = true;
+			}
+			else if ( Tokens[3] == "-noadvance" ) {
+				bAutoRep = false;
+			}
+			else return BAD_COMMAND;
+
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->PlayList( fVol, bAutoRep, bAutoAdv );
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "playlist - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** STOP command ** //
+	else if ( strcmp( Tokens[0].c_str(), "stoplist" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->StopList();
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "stoplist - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** PAUSE command ** //
+	else if ( strcmp( Tokens[0].c_str(), "pauselist" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->PauseList();
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "pauselist - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+	// ** UNPAUSE command ** //
+	else if ( strcmp( Tokens[0].c_str(), "unpauselist" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->UnpauseList();
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "unpauselist - invalid syntax." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
 
     return OK;
 }
