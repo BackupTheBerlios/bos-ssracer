@@ -650,7 +650,7 @@ void CVehicle::CalculateLateralAcceleration()
 			FlateralRear = CalculateLateralForce(slipAngleRear, rearAxleWeight);
 		}
 
-		//accelerationLC.Y() = ((float(cos(steerAngleRADS)) * FlateralFront) + FlateralRear) / vehicleMass;
+		accelerationLC.Y() = ((float(cos(steerAngleRADS)) * FlateralFront) + FlateralRear) / vehicleMass;
 
 		
 		corneringTorque = (FlateralFront*b) - (FlateralRear*c);
@@ -806,6 +806,7 @@ void CVehicle::CalculateTireRotation(float deltaT)
 void CVehicle::CalculateVehicleVelocity(float deltaT)
 {
 	velocityLC = velocityLC + (accelerationLC * deltaT);
+	RotateVectorAboutLocalZ(&velocityLC, rotationLC.Z());
 }
 
 //--------------------------------------------------------------
@@ -829,7 +830,7 @@ void CVehicle::CalculateVehicleAngularVelocity(float deltaT)
 //--------------------------------------------------------------
 void CVehicle::CalculateVehicleRotation(float deltaT)
 {
-	rotationLC = rotationLC + (angularVelocityLC * deltaT);
+	rotationLC = rotationLC - (angularVelocityLC * deltaT);
 }
 
 //--------------------------------------------------------------
@@ -861,10 +862,11 @@ void CVehicle::UpdateVehiclePhysics()
 	CalculateWheelAngularAcceleration();
 	CalculateRPM();
 
-	CalculateVehicleVelocity(deltaT);
-	CalculateVehiclePosition(deltaT);
 	CalculateVehicleAngularVelocity(deltaT);
 	CalculateVehicleRotation(deltaT);
+	CalculateVehicleVelocity(deltaT);
+	CalculateVehiclePosition(deltaT);
+
 
 	// $$$PHYSICSLOGS
 	//CLog::GetLog().Write(LOG_GAMECONSOLE, "DeltaT: %f", deltaT);
@@ -873,7 +875,9 @@ void CVehicle::UpdateVehiclePhysics()
 	//CLog::GetLog().Write(LOG_GAMECONSOLE, "Velocity: %f %f %f", velocityLC.X(), velocityLC.Y(), velocityLC.Z());
 	//CLog::GetLog().Write(LOG_GAMECONSOLE, "Position: %f %f %f", positionLC.X(), positionLC.Y(), positionLC.Z());
 
-	
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 101, "RPM: %d", rpm);
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 102, "GEAR: %d", gear);
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 103, "SPEED.X: %f (m/s)", velocityLC.X());
 	CalculateTireAngularVelocity(deltaT);
 	CalculateTireRotation(deltaT);
 	
@@ -904,20 +908,41 @@ void CVehicle::TransformLocalToWorldSpace()
 		}
 
 		tireTransLC = tires[i]->GetPositionLC();
+
+		RotateVectorAboutLocalZ(&tireTransLC, rotationLC.Z());
+
 		tireTransLC += positionLC;
+
+		
 		tires[i]->SetTranslate(Vector3f(tireTransLC.X(), tireTransLC.Z()*(-1.0f), tireTransLC.Y()));
 		
 		// Something fucked in the renderer.  I think it's gimbal locking my rotations.
-		// I need to invert the right side tires, local Y axis rotation to get them to 
+		// I need to invert the right side tires' local Y axis rotation to get them to 
 		// rotate correctly.
 		if(i == FRTIRE || i == RRTIRE) {
-			tires[i]->SetRotate(Vector3f( DEGREES(tireRotLC.X()), DEGREES(tireRotLC.Z()*(-1.0f)), DEGREES(tireRotLC.Y())*(-1.0f)));
-			//tires[i]->SetRotate(Vector3f(0.0f, 0.0f, DEGREES(tireRotLC.Y()*(-1.0f)) ));
+			tires[i]->SetRotate(Vector3f( DEGREES(tireRotLC.X()), DEGREES(tireRotLC.Z()*(-1.0f)) + DEGREES(rotationLC.Z()*(-1.0f)), DEGREES(tireRotLC.Y())*(-1.0f)));
 		}
 		else {
-			tires[i]->SetRotate(Vector3f( DEGREES(tireRotLC.X()), DEGREES(tireRotLC.Z()*(-1.0f)), DEGREES(tireRotLC.Y()) ));
+			tires[i]->SetRotate(Vector3f( DEGREES(tireRotLC.X()), DEGREES(tireRotLC.Z()*(-1.0f)) + DEGREES(rotationLC.Z()*(-1.0f)), DEGREES(tireRotLC.Y()) ));
 		}
 	}
+}
+
+void CVehicle::RotateVectorAboutLocalZ(Vector3f* param, float rotZRADS)
+{
+	float cosTheta = float(cos(rotZRADS));
+	float sinTheta = float(sin(rotZRADS));
+
+	Vector3f temp;
+
+	temp.X() = (param->X() * cosTheta) - (param->Y() * sinTheta);
+	temp.Y() = (param->X() * sinTheta) + (param->Y() * cosTheta);
+	temp.Z() = param->Z();
+
+	param->X() = temp.X();
+	param->Y() = temp.Y();
+	param->Z() = temp.Z();
+
 }
 
 

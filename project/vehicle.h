@@ -110,6 +110,7 @@ private:
 	void CalculateAutomaticGearShifting();
 
 	void TransformLocalToWorldSpace();
+	void RotateVectorAboutLocalZ(Vector3f* param, float rotZ);
 
 	  // Required from .car file
 	// Following data is what gives each car its driving characteristics
