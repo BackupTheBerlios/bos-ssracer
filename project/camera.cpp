@@ -9,6 +9,7 @@ CULLINFO   CD3DCamera::m_CullInfo;           // frustrum information for this ca
 
 
 
+
 //-----------------------------------------------------------------------------
 // Name: CD3DCamera
 // Desc: Constructor
@@ -509,4 +510,14 @@ void CD3DCamera::UpdateCullInfo( CULLINFO* pCullInfo, D3DXMATRIX* pMatView, D3DX
         &pCullInfo->vecFrustum[3], &pCullInfo->vecFrustum[6] ); // Top
     D3DXPlaneFromPoints( &pCullInfo->planeFrustum[5], &pCullInfo->vecFrustum[1], 
         &pCullInfo->vecFrustum[0], &pCullInfo->vecFrustum[4] ); // Bottom
+}
+
+
+//-----------------------------------------------------------------------------
+// Name: GetFrustum
+// Desc: converts the D3DX CULLINFO to a wml frustrum 
+//-----------------------------------------------------------------------------
+Frustum3f * CD3DCamera::GetFrustum() 
+{
+    return &m_Frustum;
 }

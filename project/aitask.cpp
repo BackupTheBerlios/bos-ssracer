@@ -105,16 +105,30 @@ void CAITask::Update() {
     // update the quadtree to account for new dynamic entity positions
     CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->Update(); //$$$TODO does nothing yet...
 
+    // perform visibility culling on the quadtree
+    if (CRenderer::GetRenderer().IsVisCullingEnabled())  {        
+        // clear visible nodes first
+        CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetVisibleNodesPtr()->clear();
+
+        if (CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->IsInitialized()) {
+            CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->CullVisibility( CRenderer::GetRenderer().GetActiveCameraPtr() );
+            //CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->CullVisibility( CRenderer::GetRenderer().GetActiveCameraPtr(), CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetRootNodePtr() );
+        }
+        else   {  
+            #ifdef _DEBUG
+            CLog::GetLog().Write(LOG_DEBUGOVERLAY, 19, "ERROR: Quadtree not init");
+            #endif
+        }
+    }
+
     //$$$DEBUG display some scene info to the overlay lines 11-19 ONLY -J
     #ifdef _DEBUG 
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 11, "# QTree Entities: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->GetNumEntities());
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 12, "# QTree levels: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetNumLevels());
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 13, "# QTree nodes: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetNumNodes());
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 14, "QTree init state: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->IsInitialized());
-    //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 15, "QTree init: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->IsInitialized());
-    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 16, "");
-
-
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 15, "# Visible Nodes: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetVisibleNodesPtr()->size());
+    //CLog::GetLog().Write(LOG_DEBUGOVERLAY, 19, "");
     #endif
 
 	return;

@@ -871,7 +871,7 @@ int CCommandLineParser::LoadVehicleAI()
     //iterate through entities and find opponent vehicle
  
      
-      vector<CEntity *>::iterator it2;
+    vector<CEntity *>::iterator it2;
     CLog::GetLog().Write(LOG_MISC, "size %i", CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->size());
     for (it2=CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.begin();
          it2<CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.end();  it2++) {

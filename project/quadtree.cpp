@@ -15,11 +15,25 @@
 #include "bos.h"
 #include "log.h"
 #include "quadtree.h"
+#include "camera.h"
+
+//#include "WmlDistVec3Fru3.h"
+#include "WmlDistVec3Box3.h"
+#include "WmlIntrBox3Fru3.h"
+#include "WmlContBox3.h"
+#include "WmlContSphere3.h"
+#include "WmlPlane3.h"
+
 
 //#include "macros.h"
 
 #define QUADTREE_DEFAULT_LEVELS 4
 #define QUADTREE_DEFAULT_NODE_WIDTH 25
+
+
+// static member initialization
+CQuadNode * CQuadTree::m_pkQRoot = NULL;
+
 
 CQuadTree::CQuadTree() {
     m_pkQRoot = NULL;
@@ -124,8 +138,8 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
 
     // assuming a uniform distribution of entities, try to compute an optimal tree depth
     // want #levels = log(#entities)/log(#subdiv at each level=4)
-    m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) );
-    //m_iLevels = 5;
+    //m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) );
+    m_iLevels = 5;
     
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE,"Quadtree depth %d", m_iLevels);
@@ -144,7 +158,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     }
 
     // assume that all nodes are visible at this point
-    m_vpVisibleNodes.push_back(m_pkQRoot);
+    //m_vpVisibleNodes.push_back(m_pkQRoot);
 
     return;
 }
@@ -153,14 +167,6 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
 
 void CQuadTree::Add(CEntity *pEntity)
 {    
-    //$$$TEMP once bounding boxes are fixed, I'll use this code
-    /*
-	// Add references for each corner of the bounding box
-	addReference( gobj->bbox.max.x, gobj->bbox.max.y, gobj );
-	addReference( gobj->bbox.max.x, gobj->bbox.min.y, gobj );
-	addReference( gobj->bbox.min.x, gobj->bbox.max.y, gobj );
-	addReference( gobj->bbox.min.x, gobj->bbox.min.y, gobj );    //
-    */
 
     if(m_bIsInitialized == false) {
         #ifdef _DEBUG
@@ -170,7 +176,24 @@ void CQuadTree::Add(CEntity *pEntity)
     }
 
     // for now, use the position of the entity to place in the tree
-    AddReference(*pEntity->GetTranslate(), pEntity);
+    //AddReference(*pEntity->GetTranslate(), pEntity);
+
+    //$$$TEMP once entity bounding boxes are fixed, I'll use this code
+    
+    // Add references for each corner of the bounding box
+	
+  
+    Vector3f vBox[8];
+    pEntity->GetBoundingBox()->ComputeVertices(vBox);
+    // zero out the y to keep these boxes on the ground plane
+    for (int i=0; i<8; i++)  {
+        vBox[i].Y() = 0.0f;
+    }
+  	AddReference( vBox[6], pEntity);  // +x +z
+    AddReference( vBox[1], pEntity);  // +x -z
+    AddReference( vBox[4], pEntity);  // -x +z
+    AddReference( vBox[0], pEntity);  // -x -z
+
     return;
 }
 
@@ -273,4 +296,224 @@ void CQuadTree::SubDivide( CQuadNode * pQNode, int iLevel )
 	SubDivide(pQNode->m_pChildNode[NE], iLevel-1);
 
 	return;
+}
+
+/*ol BoxInFrustum(Box3f BBox, CULLINFO Frust )
+{
+    Vector3f vCorner[8];
+	int iTotalIn = 0;
+
+	// get the corners of the box into the vCorner array
+	BBox.ComputeVertices(vCorner);
+
+	// test all 8 corners against the 6 sides 
+	// if all points are behind 1 specific plane, we are out
+	// if we are in with all points, then we are fully in
+	for(int p = 0; p < 6; ++p) {
+	
+		int iInCount = 8;
+		int iPtIn = 1;
+
+		for(int i = 0; i < 8; ++i) {
+
+			// test this point against the planes
+			if(m_plane[p].SideOfPlane(vCorner[i]) == BEHIND) {
+			iPtIn = 0;
+				--iInCount;
+			}
+		}
+
+		// were all the points outside of plane p?
+		If(iInCount == 0)
+			return false;
+
+		// check if they were all on the right side of the plane
+		iTotalIn += iPtIn;
+	}
+
+	// so if iTotalIn is 6, then all are inside the view
+	if(iTotalIn == 6)
+		return true;
+
+	// we must be partly in then otherwise
+
+
+
+}
+*/
+
+
+
+enum { INSIDE=0, OUTSIDE, INTERSECT };
+
+int FrustumContainsSphere( CD3DCamera * pCamera, Sphere3f pSphere)
+{
+   	// various distances
+	float fDistance;
+
+    //$$$TEMP get the frustum planes from the camera's CULLINFO
+    Plane3f plane[6];
+    CULLINFO *cInfo = pCamera->GetCullInfo();
+    for (int j=0; j<6; j++)  {
+        plane[j] = Plane3f( Vector3f(cInfo->planeFrustum[j].a,  cInfo->planeFrustum[j].b,  cInfo->planeFrustum[j].c), cInfo->planeFrustum[j].d);
+    }
+
+
+	// calculate our distances to each of the planes
+	for(int i = 0; i < 6; ++i) {
+
+		// find the distance to this plane
+		//fDistance = plane[i].GetNormal().Dot(pSphere.Center()) + plane[i].GetNormal().Length();
+        //fDistance = plane[i].GetNormal().Dot(pSphere.Center()) + plane[i].DistanceTo(pSphere.Center());
+        fDistance = plane[i].GetNormal().Dot(pSphere.Center()) + plane[i][3];
+
+		// if this distance is < -sphere.radius, we are outside
+		if(fDistance < -pSphere.Radius())
+			return(OUTSIDE);
+
+		// else if the distance is between +- radius, then we intersect
+		if((float)fabs(fDistance) < pSphere.Radius())
+			return(INTERSECT);
+	}
+
+	// otherwise we are fully in view
+    return (INSIDE);
+}
+
+
+
+int FrustumContainsBox( CD3DCamera * pCamera, Box3f BBox )
+{
+    Vector3f vCorner[8];
+	int iTotalIn = 0;
+
+    //$$$TEMP get the frustum planes from the camera's CULLINFO
+    Plane3f plane[6];
+    CULLINFO *cInfo = pCamera->GetCullInfo();
+    for (int j=0; j<6; j++)
+        plane[j] = Plane3f( Vector3f(cInfo->planeFrustum[j].a,  cInfo->planeFrustum[j].b,  cInfo->planeFrustum[j].c), cInfo->planeFrustum[j].d);
+
+
+	// get the corners of the box into the vCorner array
+	BBox.ComputeVertices(vCorner);
+
+	// test all 8 corners against the 6 sides 
+	// if all points are behind 1 specific plane, we are out
+	// if we are in with all points, then we are fully in
+	for(int p = 0; p < 6; ++p) {
+	
+		int iInCount = 8;
+		int iPtIn = 1;
+
+		for(int i = 0; i < 8; ++i) {
+
+			// test this point against the planes
+            if( plane[p].WhichSide(vCorner[i]) == Plane3f::POSITIVE_SIDE ) {
+                iPtIn = 0;
+				--iInCount;
+			}
+		}
+
+		// were all the points outside of plane p?
+		if(iInCount == 0)
+			return(OUTSIDE);
+
+		// check if they were all on the right side of the plane
+		iTotalIn += iPtIn;
+	}
+
+	// so if iTotalIn is 6, then all are inside the view
+	if(iTotalIn == 6)
+		return(INSIDE);
+
+	// we must be partly in then otherwise
+	return(INTERSECT);
+
+}
+
+
+
+// recursively cull nodes that are not visible to the camera
+void CQuadTree::CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode, bool bTestChildren)
+{
+	// do we need to check for clipping?
+	if(bTestChildren) {
+        // check if we are inside this node first
+        //if(InSphere (pCamera->GetEye(), pNode->m_BSphere) == true )  {
+        //if(InBox (pCamera->GetEye(), pNode->m_BBox) == true )  {
+                    
+            // check if frustrum constains bounding sphere for node
+            switch (FrustumContainsSphere(pCamera, pNode->m_BSphere))  {
+
+                case OUTSIDE:  // outside, so cull this node
+                    return;
+        
+                case INSIDE:  // inside so render this node and it's children
+                    bTestChildren = false;
+                    break;
+
+                case INTERSECT:  // intersects, so check the AABB
+                    
+                    switch( FrustumContainsBox(pCamera, pNode->m_BBox) )  {
+                        case INSIDE:   // inside the AABB, so render
+                            #ifdef _DEBUG
+                            //CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "INSIDE AABB");
+                            #endif
+                            bTestChildren = false;
+                            break;
+                        case OUTSIDE:  // outside the AABB, so cull
+                            #ifdef _DEBUG
+                            //CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "OUTSIDE AABB");
+                            #endif
+                            return;
+                        case INTERSECT:
+                            bTestChildren = true;  // need to test the children                            
+                            break;
+                    }
+                    break;
+            }// end switch (Frust-Sphere
+            
+            /*
+            // if AABB for node does not intersect frustum
+            if (TestIntersection (pNode->m_BBox, *pCamera->GetFrustum()) == false)  {
+                // check if box inside frustum
+                //$$$TEMP just check the box
+                if (InBox ( pCamera->GetEye(), pNode->m_BBox) )  {
+                    bTestChildren = false;  //inside frust, so render
+                }
+                else {
+                    return; // outside frust, so cull
+                }
+            }
+            else {  //intersects frust
+                bTestChildren = true; // check child nodes
+            }
+            */
+        //}// end if (InSphere ...
+	}// end if (bTestChildren ...
+    
+
+    // check the children if this node intersects or camera intersects the bounding box for this node
+    if (bTestChildren)  {
+        if (pNode->m_pChildNode[NE] == NULL)    { // no more kids
+            #ifdef _DEBUG
+            CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "visible node at %f %f %f", pNode->m_BBox.Center().X(), pNode->m_BBox.Center().Y(), pNode->m_BBox.Center().Z());
+            #endif
+            //m_vpVisibleNodes.push_back(pNode);  
+            return;
+        }
+        CullVisibility( pCamera, pNode->m_pChildNode[NE], true);
+        CullVisibility( pCamera, pNode->m_pChildNode[NW], true);
+        CullVisibility( pCamera, pNode->m_pChildNode[SE], true);
+        CullVisibility( pCamera, pNode->m_pChildNode[SW], true);
+    }
+    else  {  // put this node in the renderable list
+        #ifdef _DEBUG
+        CLog::GetLog().Write(LOG_GAMECONSOLE|LOG_MISC, "visible node at %f %f %f", pNode->m_BBox.Center().X(), pNode->m_BBox.Center().Y(), pNode->m_BBox.Center().Z());
+        #endif
+        m_vpVisibleNodes.push_back(pNode);  
+    }
+
+
+    return;
 }

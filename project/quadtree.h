@@ -67,7 +67,8 @@ public:
 
         // set the AABBox
         m_BBox.Center() = vOrigin;
-        m_BBox.Extent(0) = m_BBox.Extent(1) = m_BBox.Extent(2) = fHalfWidth;
+        m_BBox.Extent(0) = m_BBox.Extent(2) = fHalfWidth;
+        m_BBox.Extent(1) = 0.01f; // thin out the height of the box
         m_BBox.Axis(0) = Vector3f(1,0,0);  // axis aligned
         m_BBox.Axis(1) = Vector3f(0,1,0);
         m_BBox.Axis(2) = Vector3f(0,0,1);
@@ -75,13 +76,15 @@ public:
         // set the bounding sphere
         m_BSphere.Center() = vOrigin;
         // use diagonal of box to get bounding sphere
-        m_BSphere.Radius() = (Vector3f(m_BBox.Extent(1),0,m_BBox.Extent(2)) - Vector3f(-m_BBox.Extent(1),0,-m_BBox.Extent(2))).Length()/2.0f; 
+        m_BSphere.Radius() = (Vector3f(m_BBox.Extent(0),0,m_BBox.Extent(2)) - Vector3f(-m_BBox.Extent(0),0,-m_BBox.Extent(2))).Length()/2.0f; 
+        //m_BSphere.Radius() = fHalfWidth;
     };
 
     
 };
 
 
+class CD3DCamera;  // forward declaration
 
 //-----------------------------------------------------------------------------
 // Name: class CQuadTree  
@@ -108,11 +111,14 @@ public:
     bool IsInitialized(){ return m_bIsInitialized; };
     vector <CQuadNode *> * GetVisibleNodesPtr(){ return &m_vpVisibleNodes; };
 
+    void CullVisibility(CD3DCamera * pCamera, CQuadNode* pNode = m_pkQRoot, bool bTestChildren = true);
+    CQuadNode * GetRootNodePtr(){ return m_pkQRoot; };
+
 private:
 	void SubDivide( CQuadNode * pQNode, int iLevel );
 	void AddReference( Vector3f vOrigin, CEntity * pEntity);
-	void CQuadTree::Render( CQuadNode * pQNode, int cullcode, int iLevel );
-	CQuadNode	* m_pkQRoot;
+	//void CQuadTree::Render( CQuadNode * pQNode, int cullcode, int iLevel );
+	static CQuadNode	* m_pkQRoot;
 	int			m_iTraversalCount;
     float       m_fNodeWidth;
     int         m_iLevels;

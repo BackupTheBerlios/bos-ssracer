@@ -2,11 +2,15 @@
 #define CAMERA_H
 
 #include "bos.h"
-#include "WmlVector3.h"
 #include <d3dx9.h>
 #include <dxerr9.h>
 
 #include "inputmessage.h"
+
+#include "WmlVector3.h"
+#include "WmlFrustum3.h"
+
+using namespace Wml;
 
 //class CObject;
 class CPlayerVehicle;
@@ -107,6 +111,11 @@ public:
     // defaults to matrices used by this camera
     void UpdateCullInfo(CULLINFO* pCullInfo = &m_CullInfo, D3DXMATRIX* pMatView = &m_mView, D3DXMATRIX* pMatProj = &m_mProj);
 
+    Frustum3f * GetFrustum();
+
+    Vector3f GetEye() { return Vector3f(m_vEye.x, m_vEye.y, m_vEye.z); };
+    Vector3f GetLookAt() { return Vector3f(m_vLookAt.x, m_vLookAt.y, m_vLookAt.z); };
+    Vector3f GetVelocity() { return Vector3f(m_vVelocity.x, m_vVelocity.y, m_vVelocity.z); };
     D3DXVECTOR3 * GetEyePtr() { return &m_vEye; };
     D3DXVECTOR3 * GetLookAtPtr() { return &m_vLookAt; };
     D3DXVECTOR3 * GetVelocityPtr() { return &m_vVelocity; };
@@ -167,6 +176,7 @@ protected:
 
     bool                  m_bResetCursorAfterMove;// If true, the class will reset the cursor position so that the cursor always has space to move 
 
+    Frustum3f             m_Frustum;  // wml frustum information for this camera
 private:
 
 };
