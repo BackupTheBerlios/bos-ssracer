@@ -6,6 +6,7 @@
 #include "macros.h"
 #include "settings.h"
 #include "copponentvehicle.h"
+#include "ccollisionmanager.h" // Gib's add (for LoadPlanes())
 
 //static member declarations
 std::map< std::string, CD3DMesh * > CScene::m_kMeshMap;
@@ -17,6 +18,8 @@ vector<CEntity*> CScene::m_vEntities;
 vector<CWaypoint*> CScene::m_vWaypoints;
 vector<CWaypoint*> CScene::m_vWPShortCut1;
 
+//Gib's add
+vector<Rectangle3f*> CScene::m_vPlanes;
 
 CScene::CScene()  
 {
@@ -26,6 +29,7 @@ CScene::CScene()
     m_vEntities.clear();
     m_vWaypoints.clear();
     m_vWPShortCut1.clear();
+    m_vPlanes.clear();
     m_kQuadTree = new CQuadTree();
 }
 
@@ -37,6 +41,7 @@ CScene::~CScene()
     m_vEntities.clear();
     m_vWaypoints.clear();
     m_vWPShortCut1.clear();
+    m_vPlanes.clear();
     delete m_kQuadTree;
 };
 
@@ -113,6 +118,12 @@ int CScene::ReleaseScene()
 	// Clear the vector of entity pointers
 	m_vWPShortCut1.clear();
 
+	//Gib's add to free all planes in scene
+    // Free all the Planes
+	for(unsigned int k=0;k<m_vPlanes.size();k++) {
+		FREE(m_vPlanes[k], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
+	}
+	m_vPlanes.clear();
 
 	// set player vehicle pointer to NULL
     CGameStateManager::GetGameStateManager().SetPlayerVehicle(NULL);
@@ -416,7 +427,7 @@ int CScene::LoadEntities(string* directory, string* filename)
 	}  //endwhile
 
 	fclose(fp);
-  //CLog::GetLog().Write(LOG_MISC, "Size of Entities: %i",m_vEntities.size() );
+
 	return 1;
 }
 
@@ -965,7 +976,6 @@ int CScene::LoadEntity(string* directory, string* filename)
 //other than that exactly LoadEntitys
 int CScene ::LoadWaypoints(string* directory, string* filename)
 {
-  
 	FILE* fp;
 	char buf[512];
 	char* token;
@@ -1185,6 +1195,7 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
         {
 		  m_vWaypoints.push_back(newObject);
         }
+
 	}  //endwhile
 
     //Set Last Waypoint as last Waypoint
@@ -1195,4 +1206,147 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 
 	return 1;
 
+}
+
+// Gib's Add: code copied and pasted directly from Ram's LoadWaypoint()
+// then modified accordingly.
+int CScene::LoadPlanes(string* directory, string* filename)
+{
+	FILE* fp;
+	char buf[512];
+	char* token;
+	char seps[] = " \n";
+	int i;
+	string path;
+
+	path = directory->c_str();
+	//path.append("\\");
+	path += *filename;
+    ////
+    path += ".planes";
+
+	fp = fopen(path.c_str(), "r");
+
+	if(!fp) {
+		#ifdef _DEBUG
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Error CScene::LoadEntities() >> Unable to open file %s", path.c_str());
+		#endif
+		return 0;
+	}
+
+	float temp[2];
+	//Box3f tempBox;
+	//Sphere3f tempSphere;
+	Rectangle3f * newPlane = NULL;
+
+	while(fgets(buf, sizeof(buf), fp)) {
+		token = strtok(buf, seps);
+		if(token == NULL) {
+			continue;
+		}
+		if(!strcmp(token, "<newPlane>")) {
+			newPlane = new Rectangle3f();
+
+			while(fgets(buf, sizeof(buf), fp)) {
+				token = strtok(buf, seps);
+				/*	Set the Type of the object (MAP, STATIC, DYNAMIC)
+				    NOT USED AS OF YET, MIGHT NEED IT LATER
+				if(!strcmp(token, "<type>")) {
+					token = strtok(NULL, seps);
+					newObject->setType(atoi(token));
+					continue;
+				}
+				*/
+				if(!strcmp(token, "<origine>")) {
+					for(i=0;i<3;i++) {
+						token = strtok(NULL, seps);
+						temp[i] = float(atof(token));
+					}
+					newPlane->Origin() = Vector3f(temp[0], temp[1], temp[2]);
+					continue;
+				}
+				if(!strcmp(token, "<edge0>")) {
+					for(i=0;i<3;i++) {
+						token = strtok(NULL, seps);
+						temp[i] = float(atof(token));
+					}
+					newPlane->Edge0() = Vector3f(temp[0], temp[1], temp[2]);
+					continue;
+				}
+				if(!strcmp(token, "<edge1>")) {
+					for(i=0;i<3;i++) {
+						token = strtok(NULL, seps);
+						temp[i] = float(atof(token));
+					}
+					newPlane->Edge1() = Vector3f(temp[0], temp[1], temp[2]);
+					continue;
+				}
+			
+				if(!strcmp(token, "<endPlane>")) {
+					m_vPlanes.push_back(newPlane);
+					break;
+				}
+
+                    /*
+                    #ifdef _DEBUG
+					CLog::GetLog().Write(LOG_MISC, "<id> %d", newObject->getId());
+					CLog::GetLog().Write(LOG_MISC, "<name> %s", newObject->getName());
+					CLog::GetLog().Write(LOG_MISC, "<translate> %f %f %f", newObject->getTranslate().X(), newObject->getTranslate().Y(), newObject->getTranslate().Z());
+					CLog::GetLog().Write(LOG_MISC, "<scale> %f %f %f", newObject->getScale().X(), newObject->getScale().Y(), newObject->getScale().Z());
+					CLog::GetLog().Write(LOG_MISC, "<rotate> %f %f %f", newObject->getRotate().X(), newObject->getRotate().Y(), newObject->getRotate().Z());
+					CLog::GetLog().Write(LOG_MISC, "<OBBCenter> %f %f %f", newObject->getBoundingBox().Center().X(), newObject->getBoundingBox().Center().Y(), newObject->getBoundingBox().Center().Z());
+					CLog::GetLog().Write(LOG_MISC, "<OBBAxis1> %f %f %f", newObject->getBoundingBox().Axis(0).X(), newObject->getBoundingBox().Axis(0).Y(), newObject->getBoundingBox().Axis(0).Z());
+					CLog::GetLog().Write(LOG_MISC, "<OBBAxis2> %f %f %f", newObject->getBoundingBox().Axis(1).X(), newObject->getBoundingBox().Axis(1).Y(), newObject->getBoundingBox().Axis(1).Z());
+					CLog::GetLog().Write(LOG_MISC, "<OBBAxis3> %f %f %f", newObject->getBoundingBox().Axis(2).X(), newObject->getBoundingBox().Axis(2).Y(), newObject->getBoundingBox().Axis(2).Z());
+					CLog::GetLog().Write(LOG_MISC, "<OBBExtent1> %f", newObject->getBoundingBox().Extent(0));
+					CLog::GetLog().Write(LOG_MISC, "<OBBExtent2> %f", newObject->getBoundingBox().Extent(1));
+					CLog::GetLog().Write(LOG_MISC, "<OBBExtent3> %f", newObject->getBoundingBox().Extent(2));
+					CLog::GetLog().Write(LOG_MISC, "<sphereCenter> %f %f %f", newObject->getBoundingSphere().Center().X(), newObject->getBoundingSphere().Center().Y(), newObject->getBoundingSphere().Center().Z());
+					CLog::GetLog().Write(LOG_MISC, "<sphereRadius> %f", newObject->getBoundingSphere().Radius());
+                    #endif
+					*/              
+
+			}
+		}
+
+		if (!strcmp(token, "<endFile>")) {
+			fclose(fp);
+			break;
+		}
+	}
+
+	// Now, add planes to CollisionManager:
+	CCollisionManager::GetCollisionManagerPtr()->SetPlanes(&m_vPlanes);
+
+
+        //No mesh stuff needed :)
+        /*
+        // for now assume these are all static entitites in the map file
+        // so I know where to look for the mesh
+        // we will need to be able to tell the difference between static and dynamic eventually to preserve the directory struture
+
+        // look in .\media\meshes\static\
+        // the mesh filename is the object's name as well: .\media\meshes\static\meshname\meshname.x .
+        if(!(newObject->LoadMesh(CSettingsManager::GetSettingsManager().GetGameSetting(DIRSTATICMESH) + string(newObject->GetName()) +"\\")) ) {
+            CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntities() >> Error loading mesh");
+//                        return 0; //if you comment this line out, The entity will still load but will not render
+        }
+
+        //=== add it to the mesh map ===//
+        AddMesh( newObject->GetMesh() );
+        */
+        //=== add it to the Waypoint vector ===//
+	//	m_vWaypoints.push_back(newObject);
+
+//	}  //endwhile
+
+    //Set Last Waypoint as last Waypoint
+   
+		/*
+    std::vector<CWaypoint *>::iterator it = m_vWaypoints.end()-1;
+	(*it)->setLastWay(true);
+	fclose(fp);
+*/
+
+	return 1;
 }

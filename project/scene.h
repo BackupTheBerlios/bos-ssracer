@@ -9,6 +9,7 @@
 #include "ccommandlineparser.h"
 #include "quadtree.h"
 #include "renderer.h"
+#include "WmlRectangle3.h" // Gib's add (for planes vector)
 
 class CAITask;  //forward declaration
 
@@ -38,10 +39,17 @@ public:
     int LoadWaypoint(CWaypoint* waypoint){m_vWaypoints.push_back(waypoint); return 1;}; //Temp just for my own testing
     //$$$TEMP this is just to get access too the entities for now.
     vector<CEntity*> * TEMPGetEntities() { return &m_vEntities; };  //$$$TEMP this function will not exist soon....
-    
+   
+    //Gib's Additions
+    int LoadPlanes(string* directory, string* filename);
+ 
     //Ramits Add
     vector<CWaypoint*> * GetWaypoints() { return &m_vWaypoints; };
     vector<CWaypoint*> * GetShortCut1() { return &m_vWPShortCut1; };
+
+
+    //Gib's Add
+    vector<Rectangle3f*> * GetPlanes() {return &m_vPlanes;}
 
     // misc get functions
     int GetNumEntities() { return m_vEntities.size(); };
@@ -60,6 +68,9 @@ protected:
     //Ram's Add to hold me Waypoints
     static vector<CWaypoint*>                    m_vWaypoints;	// Vector containing all waypoints in the scene
     static vector<CWaypoint*>                    m_vWPShortCut1;	// Short Cut Vector 1 MAke more as needed
+
+    // Gib's Add
+    static vector<Rectangle3f*>			 m_vPlanes;
 
 private:
 
