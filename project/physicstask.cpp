@@ -17,7 +17,7 @@ bool CPhysicsTask::Start()
 void CPhysicsTask::Update()
 {
   HandleMessages();
-  //CPhysics::GetPhysicsPtr()->Update(-1, false);
+  CPhysics::GetPhysicsPtr()->Update();
 }
 
 void CPhysicsTask::OnSuspend()

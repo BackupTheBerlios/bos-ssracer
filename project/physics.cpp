@@ -15,7 +15,9 @@ void CPhysics::Update()
 
 	// Get the player vehicle from the game
 	CVehicle* playerVehicle = CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
-	playerVehicle->UpdateVehiclePhysics();
+	if(playerVehicle) {
+		playerVehicle->UpdateVehiclePhysics();
+	}
 
 	// Get any AI vehicles that need to be updated
 	// Get all other rigid bodies in simulation, and update their physics.
