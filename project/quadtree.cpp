@@ -173,8 +173,8 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
 
     // assuming a uniform distribution of entities, try to compute an optimal tree depth
     // want #levels = log(#entities)/log(#subdiv at each level=4)
-    m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) ) +2 ;
-    //m_iLevels = 6;//m_iLevels = 7;///GOOD
+    //m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) ) +2 ;
+    m_iLevels = 7;//m_iLevels = 7;///GOOD
     
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE,"Quadtree depth %d", m_iLevels);

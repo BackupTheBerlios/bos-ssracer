@@ -648,7 +648,8 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
 //-----------------------------------------------------------------------------
 void CRenderer::DrawVehicle( CVehicle * pVehicle )
 {
-    //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
+    // turn lighting on
+    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
 
     // draw body
     DrawEntity( pVehicle );
@@ -787,7 +788,7 @@ bool CRenderer::DrawHUD()
         // initial needle position is ~225 degrees about 0 
 
         // Build a matrix which rotates around the Z axis
-        float fRPMpercent = (float)CGameStateManager::GetGameStateManager().GetPlayerVehicle()->GetRPM()/CGameStateManager::GetGameStateManager().GetPlayerVehicle()->GetMaxRPM();
+        float fRPMpercent = (float)CGameStateManager::GetGameStateManager().GetPlayerVehicle()->GetRPM()/9000.0f;//CGameStateManager::GetGameStateManager().GetPlayerVehicle()->GetMaxRPM();
         float fAngle = RADIANS(45.0f) - RADIANS(fRPMpercent*180.0f);  //45 degrees puts it to 0 RPMS
         //static float sfPrevAngle = 0.0f, sfPrevPrevAngle = 0.0f; //use this to minimize needle jumping
 

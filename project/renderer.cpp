@@ -473,6 +473,9 @@ void CRenderer::RenderScene()
     }    
     else {  //just draw all entities if culling is disabled
 
+        //$$$DEBUG turn lighting on
+        m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
+
         for (vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.begin();
              it != CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.end();  it++)  
         {
@@ -505,29 +508,29 @@ void CRenderer::RenderScene()
                 DrawWayPoint(*it, 7.0f, D3DCOLOR_ARGB( 255, 55, 155, 155 ));
         }
         // draw all shortcut sets
-        if (!CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut1.empty())  {
+        //if (!CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut1.empty())  {
             for ( it = CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut1.begin();
             it != CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut1.end();  it++)  
             {
-                if (!*it)
+                //if (!*it)
                 DrawWayPoint(*it, 7.0f, D3DCOLOR_ARGB( 255, 55, 255, 155 ));
             }
-        }
+        //}
         
-        if (!CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut2.empty())  {
+        //if (!CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut2.empty())  {
             for ( it = CGameStateManager::GetGameStateManager().GetScenePtr()->GetShortCut2()->begin();
             it != CGameStateManager::GetGameStateManager().GetScenePtr()->GetShortCut2()->end();  it++)  
             {
                 DrawWayPoint(*it, 7.0f, D3DCOLOR_ARGB( 255, 55, 255, 155 ));
             }
-        }
-        if (!CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut3.empty())  {
+        //}
+        //if (!CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut3.empty())  {
             for ( it = CGameStateManager::GetGameStateManager().GetScenePtr()->GetShortCut3()->begin();
             it != CGameStateManager::GetGameStateManager().GetScenePtr()->GetShortCut3()->end();  it++)  
             {
                 DrawWayPoint(*it, 7.0f, D3DCOLOR_ARGB( 255, 55, 255, 155 ));
             }
-        }
+        //}
 
 
 
@@ -661,13 +664,16 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
  
     // simple ambient light
-    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
-    //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
+    //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
     m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
+
+    // disable lighting
+    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
+    
 
     // Set up the texture 
     //m_pd3dDevice->SetTexture(0, NULL);
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
+    /*m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
@@ -677,14 +683,35 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
-
-    //m_pd3dDevice->SetTexture(1, NULL);
-
-    // disable texture transparencies
-    m_pd3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,FALSE);
-    m_pd3dDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_ONE);
-    m_pd3dDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_ZERO);
+    */
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE );
     
+
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
+
+    m_pd3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);
+    m_pd3dDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);
+    m_pd3dDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
+
+
+    /* TEMP
+    // disable texture transparencies
+    //m_pd3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,FALSE);
+    //m_pd3dDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_ONE);
+    //m_pd3dDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_ZERO);
+    */
+
     m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_DEFAULT] );
     // END default info state block //
     

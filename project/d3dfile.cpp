@@ -114,8 +114,20 @@ HRESULT CD3DMesh::Create( LPDIRECT3DDEVICE9 pd3dDevice, TCHAR* strFilename )
                 DXUtil_ConvertAnsiStringToGenericCb( strTextureTemp, d3dxMtrls[i].pTextureFilename, sizeof(strTextureTemp) );
                 DXUtil_FindMediaFileCb( strTexture, sizeof(strTexture), strTextureTemp );
 
-                if( FAILED( D3DXCreateTextureFromFile( pd3dDevice, strTexture, 
-                                                       &m_pTextures[i] ) ) )
+                if( FAILED( D3DXCreateTextureFromFileEx(pd3dDevice, 
+                                                        strTexture, 
+                                                        D3DX_DEFAULT, 
+                                                        D3DX_DEFAULT,
+                                                        3,
+                                                        0,
+                                                        D3DFMT_UNKNOWN,
+                                                        D3DPOOL_DEFAULT,
+                                                        D3DX_FILTER_LINEAR,
+                                                        D3DX_FILTER_NONE, 
+                                                        D3DCOLOR_ARGB(255,255,0,255), //alpha color
+                                                        NULL,
+                                                        NULL,
+                                                        &m_pTextures[i] ) ) )
                     m_pTextures[i] = NULL;
             }
         }
