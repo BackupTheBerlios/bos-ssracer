@@ -89,8 +89,8 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 		it = sound.begin();
 		while ( it != sound.end() ) {
 			cSID = it->first;
-			//CSoundEffect *cSStrm = it->second;
-			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (play: %d, pause: %d, loop: %d, destruct: %d)", cSID.getID() );
+			cSfx = it->second;
+			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (play: %d, pause: %d, loop: %d, destruct: %d)", cSID.getID(), cSfx->IsPlaying, cSfx->IsPaused );
 			it++;
 		}
 		break;

@@ -37,6 +37,8 @@ CSound::CSound() {
 	m_bPlaying = FALSE;
 	m_bLocked = FALSE;
 	m_bSelfDestruct = FALSE;
+	m_bPaused = FALSE;
+	m_bLooping = FALSE;
 
 	m_lVolume = 0;
 	m_ulFrequency = 0;

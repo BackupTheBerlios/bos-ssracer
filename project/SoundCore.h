@@ -242,6 +242,9 @@ public:
 	BOOL IsPlaying() { return m_bPlaying; }
 	BOOL IsPaused() { return m_bPaused; }
 	BOOL IsLocked() { return m_bLocked; }
+	BOOL IsLooping() { return m_bLooping; }
+	BOOL IsDestruct() { return m_bSelfDestruct; }
+
 	int GetID() { return m_nId; }
 	long GetVolume() { return m_lVolume; }
 	unsigned long GetFrequency() { return m_ulFrequency; }
