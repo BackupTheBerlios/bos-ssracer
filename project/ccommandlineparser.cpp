@@ -864,15 +864,39 @@ int CCommandLineParser::LoadVehicleAI()
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The Opponent Vehicle is not loaded correctly!");
 		return OK;
 	}
-	
-	COpponentVehicle * opponent = (COpponentVehicle *)CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
-	opponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetWaypoints());
-	opponent->initNext();
-	COpponentAI::GetOpponentAIPtr()->addCar(opponent);
-	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
-    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+ 
+    COpponentVehicle * opponent = NULL;
+    //iterate through entities and find opponent vehicle
+ 
+     
+      vector<CEntity *>::iterator it2;
+    CLog::GetLog().Write(LOG_MISC, "size %i", CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->size());
+    for (it2=CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.begin();
+         it2<CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.end();  it2++) {
+      if ((*it2)->GetId()==20001)
+      {
+        opponent = (COpponentVehicle *)(*it2);
+      }
+    }
     
-	return OK;
+    if (opponent ==NULL)
+    {
+      CLog::GetLog().Write(LOG_GAMECONSOLE, "Opponent not found in entity list");
+	  return OK;
+    }
+   
+	//COpponentVehicle * opponent = (COpponentVehicle *)CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
+	opponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetWaypoints());
+;
+    opponent->initNext();
+   
+	COpponentAI::GetOpponentAIPtr()->addCar(opponent);
+   
+	
+    //((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(opponent);
+	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+    return OK;
 }
 
 //  ===== End Ram & Gibs Functions =====//

@@ -219,6 +219,7 @@ void COpponentAI::Update()
 			// accelerate/decelerate:
 			if ((*thisCar)->GetVehicleVelocityWC().Length() < VAI_CARS_VEL) {
 				(*thisCar)->SetGas(true); (*thisCar)->SetBrake(false);
+                CLog::GetLog().Write(LOG_MISC, "Attempting to set Gas");
 			}
 			if ((*thisCar)->GetVehicleVelocityWC().Length() > VAI_CARS_VEL) {
 				(*thisCar)->SetBrake(true); (*thisCar)->SetGas(false);

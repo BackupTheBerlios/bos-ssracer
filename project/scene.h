@@ -16,6 +16,7 @@ class CScene {
 
     friend CCommandLineParser::loadmap();      //needed to access the LoadMap function from console
     friend CCommandLineParser::ShowEntities(); //needed to access the entities from console
+    friend CCommandLineParser::LoadVehicleAI(); // Ram's Addition needed to axs entities from console
     friend CAITask; // to print debugging info only
 
 public:

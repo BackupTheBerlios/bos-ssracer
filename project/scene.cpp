@@ -664,14 +664,20 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
 	}
 
 	newCar = new COpponentVehicle();
-
+    newCar->SetId(20001);   //temp for myself testing
 	while(fgets(buf, sizeof(buf), fp)) {
 		token = strtok(buf, seps);
 
 		if(token == NULL) {
 			continue;
 		}
-
+        //hardcoded id to 20001 for now, since im only dealing with one ai car
+        if(!strcmp(token, "<id>")) {
+			token = strtok(NULL, seps);
+			//newCar->SetId(atoi(token));
+            newCar->SetId(20001);
+			continue;
+		}
 		if(!strcmp(token, "<BodyMesh>")) {
 			token = strtok(NULL, seps);
 			newCar->SetName(token);
@@ -885,7 +891,7 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
     //$$$NOTE then set the active camera to the chase cam -J
 	
     // Set the playerVehicle pointer for the gamestatemanager,
-	CGameStateManager::GetGameStateManagerPtr()->SetPlayerVehicle(newCar);  //please fix
+	//CGameStateManager::GetGameStateManagerPtr()->SetPlayerVehicle(newCar);  //please fix
 
 	return 1;
 }
