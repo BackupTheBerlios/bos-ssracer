@@ -234,18 +234,18 @@ HRESULT CRenderer::Initialize()
 
     // Set up a white point light.
     d3dLight.Type = D3DLIGHT_POINT;
-    d3dLight.Diffuse.r  = 0.5f;//1.0f;
-    d3dLight.Diffuse.g  = 0.5f;//1.0f;
-    d3dLight.Diffuse.b  = 0.5f;//1.0f;
+    d3dLight.Diffuse.r  = 1.0f;
+    d3dLight.Diffuse.g  = 1.0f;
+    d3dLight.Diffuse.b  = 1.0f;
     d3dLight.Ambient.r  = 1.0f;
     d3dLight.Ambient.g  = 1.0f;
     d3dLight.Ambient.b  = 1.0f;
-    d3dLight.Specular.r = 0.5f;//1.0f;
-    d3dLight.Specular.g = 0.5f;//1.0f;
-    d3dLight.Specular.b = 0.5f;//1.0f;
+    d3dLight.Specular.r = 1.0f;
+    d3dLight.Specular.g = 1.0f;
+    d3dLight.Specular.b = 1.0f;
 
     d3dLight.Position.x = 0.0f;
-    d3dLight.Position.y = 500.0f;//1000.0f;
+    d3dLight.Position.y = 1000.0f;
     d3dLight.Position.z = -10.0f;//-100.0f;
 
     d3dLight.Attenuation0 = 1.0f; 
@@ -752,6 +752,7 @@ void CRenderer::InitializeState ()
     
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
     m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
+    //m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00ffffff );
 
     // Set up the texture 
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );

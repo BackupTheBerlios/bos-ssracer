@@ -38,7 +38,7 @@ void CCameraChase::SetVehicle( CVehicle * pkVehicle )
     CLog::GetLog().Write(LOG_GAMECONSOLE, "negative dir of heading %f %f %f", vDir.x, vDir.y, vDir.z );	
 
 	// translate eye in -dir
-	m_vDefaultEye += vDir*4.5f;
+	m_vDefaultEye += vDir*7.5f;
 
     // elevate the eye point
     m_vDefaultEye.y += 1.2f;  //should really use the height of the vehicle to calculate this
@@ -134,7 +134,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
 
     vTemp = Vector3f(*m_pkVehicle->GetTranslate());
 //    CLog::GetLog().Write(LOG_GAMECONSOLE, "worldpos %f %f %f", vTemp.X(), vTemp.Y() , vTemp.Z() );	
-    m_vEye = D3DXVECTOR3(vTemp.X(), 1.2f, vTemp.Z()) - vLocalAhead*4.5f;
+    m_vEye = D3DXVECTOR3(vTemp.X(), 1.2f, vTemp.Z()) - vLocalAhead*7.5f;
 
     // Move the eye position 
     m_vEye += vPosDeltaWorld;
