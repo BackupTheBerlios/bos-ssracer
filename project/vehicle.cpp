@@ -39,11 +39,6 @@ void CVehicle::Init()
 	accelerationLC = Vector3f(0.0f, 0.0f, 0.0f);
 	velocityLC = Vector3f(0.0f, 0.0f, 0.0f);
 
-	// TEMP
-	rotLCThisFrame = Vector3f(0.0f, 0.0f, 0.0f);
-	velocityLCRot = Vector3f(0.0f, 0.0f, 0.0f);
-	// TEMP
-
 	// Initialize angular values;
 	angularAccelerationLC = Vector3f(0.0f, 0.0f, 0.0f);
 	angularVelocityLC = Vector3f(0.0f, 0.0f, 0.0f);
@@ -51,6 +46,9 @@ void CVehicle::Init()
 	// Initialize orientation
 	headingWC = Vector3f(1.0f, 0.0f, 0.0f);
 	velocityWC = Vector3f(1.0f, 0.0f, 0.0f);
+
+	headingTotLC = Vector3f(0.0f, 0.0f, 0.0f);
+	velocityTotLC = Vector3f(0.0f, 0.0f, 0.0f);
 
 	// Calculate the weight of the vehicle.  W = mass * gravity
 	vehicleWeight = vehicleMass * 9.81f;
@@ -907,12 +905,8 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 
 		Vector3f trans = Gprime - G;
 		
-		//Vector3f Gprime = G + Bprime;
-		//positionLC += Gprime;
-
 		Vector3f temp = velocityLC;
-
-
+		
 		temp.X() = temp.X() * float(cos(steerAngleRADS));
 		temp.Y() = 0.0f;
 		temp.Z() = 0.0f;
@@ -920,10 +914,6 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 		temp += trans / deltaT;
 
 		Vector3f tempTrans = temp * deltaT;
-
-		//Vector3f localTrans = velocityLC * deltaT;
-		//positionLC += trans * -sgn(steerAngleRADS);
-		//positionLC.X() += velocityLC.X() * deltaT * float(cos(steerAngleRADS));
 
 		Vector3f rotPos;
 
@@ -936,6 +926,9 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 		Vector3f AB = A - B;
 		Vector3f AprimeBprime = Aprime - Bprime;
 
+		headingTotLC = rotPos / deltaT;
+		velocityTotLC = temp;
+
 		float ABdotAprimeBprime = AB.X() * AprimeBprime.X() + AB.Y() * AprimeBprime.Y() + AB.Z() * AprimeBprime.Z();
 		float magAB = pow(AB.X(), 2) + pow(AB.Y(), 2) + pow(AB.Z(), 2);
 
@@ -944,7 +937,10 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 41, "A: %f %f %f", A.X(), A.Y(), A.Z());
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 42, "B: %f %f %f", B.X(), B.Y(), B.Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 43, "HeadingTotLC: %f %f %f", headingTotLC.X(), headingTotLC.Y(), headingTotLC.Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 44, "VelocityTotLC: %f %f %f", velocityTotLC.X(), velocityTotLC.Y(), velocityTotLC.Z());
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 50, "steerAngleDEGS: %f", DEGREES(steerAngleRADS));
+
 //	}
 //	else {
 //		positionLC = positionLC + (velocityLC * deltaT);
@@ -1088,6 +1084,11 @@ void CVehicle::TransformLocalToWorldSpace()
 			tires[i]->SetRotate(Vector3f( DEGREES(tireRotLC.X()), DEGREES(tireRotLC.Z()*(-1.0f)) + DEGREES(rotationLC.Z()*(-1.0f)), DEGREES(tireRotLC.Y()) ));
 		}
 	}
+
+	headingWC = Vector3f( headingTotLC.X(), -headingTotLC.Z(), headingTotLC.Y());
+	velocityWC = Vector3f( velocityTotLC.X(), -velocityTotLC.Z(), velocityTotLC.Y());
+
+
 }
 
 void CVehicle::RotateVectorAboutLocalZ(Vector3f* param, float rotZRADS)

@@ -170,15 +170,15 @@ private:
 
 	Vector3f accelerationLC;	// acceleration of the vehicle in local coordinate space
 	Vector3f velocityLC;	// velocity of the vehicle in local coordinate space
-	Vector3f velocityLCRot;	// TEMPORARY
 	Vector3f positionLC;	// position of the vehicle in local coordinate space
 
 	Vector3f angularAccelerationLC;	// angular acceleration of the vehicle in local coordinate space;
 	Vector3f angularVelocityLC;		// angular velocity of the vehicle in local coordinate space
 	Vector3f rotationLC;			// rotation of the vehicle in local coordinate space. (X = roll, Y = pitch, Z = yaw)
-	Vector3f rotLCThisFrame;		// amount that the vehicle has been rotated this frame.
 	Vector3f headingWC;	// heading of the vehicle in world coordinates. (vector that tells us which direction the vehicle is facing.)
 	Vector3f velocityWC;	// velocity of the vehicle in world coordinates.
+	Vector3f headingTotLC;
+	Vector3f velocityTotLC;
 	tInputState inputState;
 
 	bool dynamicFriction;
