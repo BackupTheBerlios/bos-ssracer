@@ -534,6 +534,7 @@ void CVehicle::TransformLocalToWorldSpace()
 	for(int i=0;i<4;i++) {
 		Vector3f test = tires[i]->GetPositionLC();
 		tires[i]->SetTranslate(Vector3f(test.Y(), test.Z()*(-1.0f), test.X() * (-1.0f)));
+        //tires[i]->SetTranslate(tires[i]->GetPositionLC());
 	}
 
 }

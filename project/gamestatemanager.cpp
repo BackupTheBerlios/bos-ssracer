@@ -4,7 +4,7 @@
 #include "camerafreelook.h"
 #include "macros.h"
 
-
+CVehicle * CGameStateManager::m_playerVehicle = NULL;
 CGameStateManager * CGameStateManager::ms_pkGame = NULL;
 
 CGameStateManager & CGameStateManager::GetGameStateManager()

@@ -340,7 +340,7 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 				temp[i] = float(atof(token));
 			}
 			newCar->GetTire(FRTIRE)->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
-			newCar->GetTire(FLTIRE)->SetPositionLC(Vector3f(temp[0], -temp[1], temp[2]));
+			newCar->GetTire(FLTIRE)->SetPositionLC(Vector3f(-temp[0], temp[1], temp[2]));
 			newCar->GetTire(FLTIRE)->SetRotationLC(Vector3f(0.0f, 0.0f, PI_BOS));
 			continue;
 		}
@@ -354,19 +354,18 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 			newCar->getTires()[FRWHEEL].setScale(Vector3f(temp[0], temp[1], temp[2]));
 			continue;
 		} */
-		else if(!strcmp(token, "<BRTireTrans>")) {
+		else if(!strcmp(token, "<RRTireTrans>")) {
 			for(int i=0;i<3;i++) {
 				token = strtok(NULL, seps);
 				temp[i] = float(atof(token));
 			}
 			newCar->GetTire(RRTIRE)->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
-			newCar->GetTire(RLTIRE)->SetPositionLC(Vector3f(temp[0], -temp[1], temp[2]));
+			newCar->GetTire(RLTIRE)->SetPositionLC(Vector3f(-temp[0], temp[1], temp[2]));
 			newCar->GetTire(RLTIRE)->SetRotationLC(Vector3f(0.0f, 0.0f, PI_BOS));
-			
 			continue;
 		}
 		/*
-		else if(!strcmp(token, "<BLWheelScale>")) {
+		else if(!strcmp(token, "<RLWheelScale>")) {
 			for(int i=0;i<3;i++) {
 				token = strtok(NULL, seps);
 				temp[i] = float(atof(token));
@@ -380,7 +379,10 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 				token = strtok(NULL, seps);
 				temp[i] = float(atof(token));
 			}
-			newCar->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
+            Vector3f vOTrans = Vector3f(temp[0], temp[1], temp[2]);
+			newCar->SetPositionLC(vOTrans);
+            for(int j=0; j<4; j++)
+                newCar->GetTire(j)->SetPositionLC(newCar->GetTire(j)->GetPositionLC() + vOTrans);
 			continue;
 		}
 		else if(!strcmp(token, "<Height>")) {

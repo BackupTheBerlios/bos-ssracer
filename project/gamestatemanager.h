@@ -40,7 +40,7 @@ protected:
 
 private:
 	CScene * ms_pkScene;
-	CVehicle* m_playerVehicle;
+	static CVehicle* m_playerVehicle;
 };
 
 

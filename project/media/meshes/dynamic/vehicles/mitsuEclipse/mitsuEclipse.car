@@ -1,7 +1,7 @@
 <BodyMesh> mitsuEclipseBody
 <WheelMesh> mitsuEclipseWheel
-<FRTireTrans>  0.8670 0.5210 0.2460
-<RRTireTrans>  -0.891 0.5210 0.2430
+<FRTireTrans>  0.521 0.8690 -0.244
+<RRTireTrans>  0.521 0.8690 0.2430
 <OverallTrans> 0.0000 0.0000 -0.469
 
 <Height> 0.4690

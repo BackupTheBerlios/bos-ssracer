@@ -462,17 +462,17 @@ void CRenderer::RenderScene()
         pMatrixStack->LoadIdentity();
 
 	    D3DMATRIX xRot, yRot, zRot;
-			    // translation
-	    vTemp = (*it)->GetTranslate();		
-	    pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
-
+	
 	    // orientation
 	    vTemp = (*it)->GetRotate();
 	    pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
 	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
 	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
 	    //pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
-	    
+
+        // translation
+	    vTemp = (*it)->GetTranslate();		
+	    pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
 
         //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 
