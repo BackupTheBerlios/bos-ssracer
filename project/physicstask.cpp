@@ -1,5 +1,6 @@
 #include "physicstask.h"
 #include "physics.h"
+#include "ccollisionmessage.h"
 
 CPhysicsTask::CPhysicsTask()
 { 
@@ -40,5 +41,12 @@ void CPhysicsTask::Stop()
 }
 
 void CPhysicsTask::DoMessageHandle( ITaskMessage *cMsg ) {
+	if (!cMsg) return;
 
+	CCollisionMessage* ColMsg;
+
+	if (cMsg->GetType() == COLLISION_MESSAGE) {
+		ColMsg = (CCollisionMessage*)cMsg;
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 75, "ColMsg->x = %i", ColMsg->x);
+	}
 }

@@ -1,0 +1,28 @@
+<newPlane>
+<origine> -50.0 0.0 50.0
+<edge0> 0.0 0.0 -100.0
+<edge1> 0.0 100.0 0.0
+<endPlane>
+
+<newPlane>
+<origine> -50.0 0.0 -50.0
+<edge0> 100.0 0.0 0.0
+<edge1> 0.0 100.0 0.0
+<endPlane>
+
+<newPlane>
+<origine> 50.0 0.0 -50.0
+<edge0> 0.0 0.0 100.0
+<edge1> 0.0 100.0 0.0
+<endPlane>
+
+<newPlane>
+<origine> 50.0 0.0 50.0
+<edge0> -100.0 0.0 0.0
+<edge1> 0.0 100.0 0.0
+<endPlane>
+
+<endFile>
+
+
+

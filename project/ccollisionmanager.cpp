@@ -1,12 +1,17 @@
 #include "ccollisionmanager.h"
 #include "log.h"
 #include "macros.h"
+#include "gamestatemanager.h"
+#include "WmlIntrPln3Box3.h"
+#include "WmlPlane3.h"
+using namespace Wml;
 
 CCollisionManager * CCollisionManager::m_pkCollisionManager = NULL; 
 
 CCollisionManager::CCollisionManager()
 {
 	m_nTaskType = COLLISION_TASK;
+	m_vPlanes = NULL;
 	m_pkCollisionManager = this;
 }
 
@@ -23,6 +28,25 @@ bool CCollisionManager::Start()
 
 void CCollisionManager::Update()
 {
+	std::vector<CEntity*>::iterator thisEntity;
+	std::vector<Rectangle3f*>::iterator thisPlane;
+
+	if (!CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()) return;
+	if (CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()->size() == 0) return;
+
+	thisEntity = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()->begin();
+	while (thisEntity != CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()->end()) { 
+		if (!m_vPlanes) break;
+		if (m_vPlanes->size() == 0) break;
+		thisPlane = m_vPlanes->begin();
+		while (thisPlane != m_vPlanes->end()) {
+			if (hasCollided(thisEntity, thisPlane))
+				respond(thisEntity, thisPlane);
+			thisPlane++;
+		}
+		thisEntity++;
+	}
+
 	// Basic needs:
 	// Go thru all Entities.
 	// For each one, parse the quadtree till quadtree division cut through entity.
@@ -32,22 +56,95 @@ void CCollisionManager::Update()
 	// If collision detected, call respond(entity, plane)
 }
 
+// entity, entity
 bool CCollisionManager::hasCollided(std::vector<CEntity*>::iterator E1, std::vector<CEntity*>::iterator E2)
 {
 #ifdef _DEBUG
 	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80, "CCollisionManager::hasCollided(entity, entity) not implemented yet.");
 #endif
+
 	return false;
 }
 
-bool CCollisionManager::hasCollided(std::vector<CEntity*>::iterator Entity, Plane3f* Plane)
+// entity, plane
+bool CCollisionManager::hasCollided(std::vector<CEntity*>::iterator Entity, std::vector<Rectangle3f*>::iterator Plane)
 {
-#ifdef _DEBUG
-	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80, "CCollisionManager::hasCollided(entity, plane) not implemented yet.");
-#endif
+	Vector3f vertices[8];
+	Vector3f edges[12][2];
+	bool b = true;
+
+	// Create a WmlPlane3 from the WmlRectangle3 in the Plane iterator
+	Vector3f normal = (*Plane)->Edge0().Cross((*Plane)->Edge1());
+	normal.Normalize();
+	Plane3f P = Plane3f(normal, (*Plane)->Origin());
+
+	// And 2 planes that mark the edges of the rectangle.
+	// These will be used to test intersection points to see if they are within rectangle boundries
+	Plane3f EdgePlanes[2];
+	Vector3f EdgePlaneNormals[2];
+	Vector3f EdgePlanePoints[2];
+	// Create 2 planes out of its edges, and see if point is a positive distance away from all of them.
+	EdgePlaneNormals[0] = (*Plane)->Edge1().Cross(P.GetNormal());
+	EdgePlaneNormals[1] = P.GetNormal().Cross((*Plane)->Edge1());
+	EdgePlaneNormals[0].Normalize();
+	EdgePlaneNormals[1].Normalize();
+	EdgePlanePoints[0] = (*Plane)->Origin();
+	EdgePlanePoints[1] = (*Plane)->Origin() + (*Plane)->Edge0();
+	EdgePlanes[0] = Plane3f(EdgePlaneNormals[0], EdgePlanePoints[0]);
+	EdgePlanes[1] = Plane3f(EdgePlaneNormals[1], EdgePlanePoints[1]);
+
+	// Compute vertices and edges of Entity's bounding box
+	ComputeVertices(*(*Entity)->GetBoundingBox(), vertices);
+	ComputeEdges(vertices, edges);
+
+	// Go through each edge and see if it intersects the plane.
+	// If it does, find the intersection point and find out if it is within the rectangle boundries.
+	float d1, d2;
+	float u;
+	Vector3f V;
+	for (int i = 0; i < 12; i++) {
+		d1 = P.DistanceTo(edges[i][0]);
+		d2 = P.DistanceTo(edges[i][1]);
+		if ((d1 <= 0 && d2 > 0) ||
+			(d1 > 0 && d2 <= 0)) {
+
+			// Intersection detected. Find out if intersection point is inside Rectangle boundries
+			u = Mathf::FAbs(Mathf::FAbs(d1)/(Mathf::FAbs(d1)+Mathf::FAbs(d2)));
+			V = edges[i][1] - edges[i][0];
+			V.Normalize();
+			V *= u;
+			V += edges[i][0];
+
+			// V is now the intersection point relative to the world origin.
+			// Now test that point to see if it is within the Rectangle boundries.
+			d1 = EdgePlanes[0].DistanceTo(V);
+			d2 = EdgePlanes[1].DistanceTo(V);
+			if (d1 >= 0 && d2 >= 0) {
+				if (!strcmp((*Entity)->GetName(),"mitsuEclipseBody")) {
+					CLog::GetLog().Write(LOG_DEBUGOVERLAY, 74, "BOOM!!!");
+					CLog::GetLog().Write(LOG_DEBUGOVERLAY, 75, "u = %f", u);
+					CLog::GetLog().Write(LOG_DEBUGOVERLAY, 76, "E[%i][0] = (%f, %f, %f)", i,
+						edges[i][0].X(), edges[i][0].Y(), edges[i][0].Z());
+					CLog::GetLog().Write(LOG_DEBUGOVERLAY, 77, "E[%i][1] = (%f, %f, %f)", i,
+						edges[i][1].X(), edges[i][1].Y(), edges[i][1].Z());
+					CLog::GetLog().Write(LOG_DEBUGOVERLAY, 78, "V = (%f, %f, %f)",
+						V.X(), V.Y(), V.Z());
+
+				//	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 75, "d1 = %f, d2 = %f", d1, d2);
+				//	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 76, "V = (%f, %f, %f)", V.X(), V.Y(), V.Z());
+				}
+				
+				return true; // COLLISION!!!
+			}
+		}
+	}
+
 	return false;
+
+	//if (!strcmp((*Entity)->GetName(),"mitsuEclipseBody")) 
 }
 
+// entity, entity
 int CCollisionManager::respond(std::vector<CEntity*>::iterator E1, std::vector<CEntity*>::iterator E2)
 {
 #ifdef _DEBUG
@@ -56,11 +153,74 @@ int CCollisionManager::respond(std::vector<CEntity*>::iterator E1, std::vector<C
 	return OK;
 }
 
-int CCollisionManager::respond(std::vector<CEntity*>::iterator Entity, Plane3f* Plane)
+// entity, plane
+int CCollisionManager::respond(std::vector<CEntity*>::iterator Entity, std::vector<Rectangle3f*>::iterator Plane)
 {
 #ifdef _DEBUG
-	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80, "CCollisionManager::respond(entity, plane) not implemented yet.");
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80, "Entity-Plane Collision:");
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 81, "Entity: %s", (*Entity)->GetName());
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 82, "Rect Origin: (%f, %f, %f)",
+		(*Plane)->Origin().X(), (*Plane)->Origin().Y(), (*Plane)->Origin().Z());
 #endif
+
+	CCollisionMessage* ColMsg = new CCollisionMessage();
+	ColMsg->x = 5;
+	CKernel::GetKernelPtr()->DeliverMessage(ColMsg, PHYSICS_TASK);
+
+
+
+	return OK;
+}
+
+int CCollisionManager::SetPlanes(std::vector<Rectangle3f*>* Planes)
+{
+	if (!Planes) return NULL_POINTER;
+
+	// As long as m_vPlanes is not initialized with 'new', this will not cause a memory leak
+	m_vPlanes = Planes;
+	return OK;
+}
+
+// 'cause Box3's ComputeVertices() doesn't work
+int CCollisionManager::ComputeVertices(Box3f BBox, Vector3f vertices[])
+{
+	Vector3f Center = BBox.Center();
+	float* Ex = BBox.Extents();
+
+	Vector3f V[] = {Vector3f(Ex[0], Ex[1], Ex[2]), // far-top-left
+					Vector3f(Ex[0], Ex[1], -Ex[2]), // far-top-right
+					Vector3f(Ex[0], -Ex[1], Ex[2]), // far-bottom-left
+					Vector3f(Ex[0], -Ex[1], -Ex[2]), // far-bottom-right
+					Vector3f(-Ex[0], Ex[1], Ex[2]), // near-top-left
+					Vector3f(-Ex[0], Ex[1], -Ex[2]), // near-top-right
+					Vector3f(-Ex[0], -Ex[1], Ex[2]), // near-bottom-left
+					Vector3f(-Ex[0], -Ex[1], -Ex[2]) // near-bottom-right
+	};
+
+	for (int i = 0; i < 8; i++) {
+		vertices[i] = V[i] + Center;
+	}
+
+	return OK;
+}
+
+int CCollisionManager::ComputeEdges(Vector3f vertices[], Vector3f edges[][2])
+{
+	edges[0][0] = vertices[0]; edges[0][1] = vertices[1]; // far-top-left to far-top-right
+	edges[1][0] = vertices[1]; edges[1][1] = vertices[3]; // far-top-right to far-bottom-right
+	edges[2][0] = vertices[3]; edges[2][1] = vertices[2]; // far-bottom-right to far-bottom-left
+	edges[3][0] = vertices[2]; edges[3][1] = vertices[0]; // far-bottom-left to far-top-left
+
+	edges[4][0] = vertices[4]; edges[4][1] = vertices[5]; // near-top-left to near-top-right
+	edges[5][0] = vertices[5]; edges[5][1] = vertices[7]; // near-top-right to near-bottom-right
+	edges[6][0] = vertices[7]; edges[6][1] = vertices[6]; // near-bottom-right to near-bottom-left
+	edges[7][0] = vertices[6]; edges[7][1] = vertices[4]; // near-bottom-left to near-top-left
+
+	edges[8][0] = vertices[0]; edges[8][1] = vertices[4]; // far-top-left to near-top-left
+	edges[9][0] = vertices[1]; edges[9][1] = vertices[5]; // far-top-right to near-top-right
+	edges[10][0] = vertices[3]; edges[10][1] = vertices[7]; // far-bottom-right to near-bottom-right
+	edges[11][0] = vertices[2]; edges[11][1] = vertices[6]; // far-bottom-left to near-bottom-left
+
 	return OK;
 }
 
@@ -68,3 +228,106 @@ void CCollisionManager::DoMessageHandle( ITaskMessage *cMsg )
 {
 	// Don't need to do anything here (as far as I can think)
 }
+
+/*
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80+(i*2), "plane.normal = (%f, %f, %f)",
+				 (*thisPlane)->GetNormal().X(),  (*thisPlane)->GetNormal().Y(),  (*thisPlane)->GetNormal().Z());
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 81+(i*2), "plane.c = %f", (*thisPlane)->GetConstant());
+*/
+
+/*
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80, "Ex: (%f, %f, %f)",
+			(*Entity)->GetBoundingBox()->Extent(0), (*Entity)->GetBoundingBox()->Extent(1), (*Entity)->GetBoundingBox()->Extent(2));
+		for (int i = 0; i < 8; i++) {
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 81+i, "(%f, %f, %f)",
+				vertices[i].X(), vertices[i].Y(), vertices[i].Z());
+		}
+		*/
+
+//		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 81, "car.translate = (%f, %f, %f)",
+//			(*Entity)->GetTranslate()->X(), (*Entity)->GetTranslate()->Y(), (*Entity)->GetTranslate()->Z());
+	//	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 82, "plane.c = %f", (*Plane)->GetConstant());
+		/*
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 82, "box.translate = (%f,\n%f,\n%f)",
+			(*Entity)->GetBoundingBox()->Center().X(), 
+			(*Entity)->GetBoundingBox()->Center().Y(),
+			(*Entity)->GetBoundingBox()->Center().Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 85, "sphere.translate = (%f,\n%f,\n%f)",
+			(*Entity)->GetBoundingSphere()->Center().X(), 
+			(*Entity)->GetBoundingSphere()->Center().Y(),
+			(*Entity)->GetBoundingSphere()->Center().Z());
+		*/	
+	
+/*		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 82, "BB.pos = (%f, %f, %f)",
+			(*Entity)->GetBoundingBox()->Center().X(), (*Entity)->GetBoundingBox()->Center().Y(), (*Entity)->GetBoundingBox()->Center().Z());
+
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 83, "BB.ext = (%f, %f, %f)",
+			(*Entity)->GetBoundingBox()->Extent(0), (*Entity)->GetBoundingBox()->Extent(1), (*Entity)->GetBoundingBox()->Extent(2));
+
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 84, "BB.axes = (%f, %f, %f)",
+			(*Entity)->GetBoundingBox()->Axis(0), (*Entity)->GetBoundingBox()->Axis(1), (*Entity)->GetBoundingBox()->Axis(2));
+
+	(*Entity)->GetBoundingBox()->ComputeVertices(vertices);
+	for (int i = 0; i < 8; i++)
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 85+i, "vertices[%i] = (%f, %f, %f)",
+			i, vertices[i].X(), vertices[i].Y(), vertices[i].Z());
+*/
+
+/*
+	if (!strcmp((*Entity)->GetName(),"mitsuEclipseBody")) {
+		for (int i = 6; i < 12; i++)
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 68+(i*2), "From (%f, %f, %f)\nTo (%f, %f, %f)",
+			edges[i][0].X(), edges[i][0].Y(), edges[i][0].Z(),
+			edges[i][1].X(), edges[i][1].Y(), edges[i][1].Z());
+	}
+	*/
+
+/*
+	if (!strcmp((*Entity)->GetName(),"mitsuEclipseBody")) {
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 74, "P: (%f, %f, %f)",
+			P.GetNormal().X(), P.GetNormal().Y(), P.GetNormal().Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 75, "C: %f", (float)P.GetConstant());
+
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 76, "O: (%f, %f, %f)",
+				(*Plane)->Origin().X(), (*Plane)->Origin().Y(), (*Plane)->Origin().Z());
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 77, "E0: (%f, %f, %f)",
+				(*Plane)->Edge0().X(), (*Plane)->Edge0().Y(), (*Plane)->Edge0().Z());
+			CLog::GetLog().Write(LOG_DEBUGOVERLAY, 78, "E1: (%f, %f, %f)",
+				(*Plane)->Edge1().X(), (*Plane)->Edge1().Y(), (*Plane)->Edge1().Z());
+
+	EdgePlaneNormals[0] = (*Plane)->Edge1().Cross(P.GetNormal());
+	EdgePlaneNormals[1] = P.GetNormal().Cross((*Plane)->Edge1());
+	EdgePlaneNormals[0].Normalize();
+	EdgePlaneNormals[1].Normalize();
+
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80, " N0: (%f, %f, %f)",
+			EdgePlaneNormals[0].X(), EdgePlaneNormals[0].Y(), EdgePlaneNormals[0].Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 81, " N1: (%f, %f, %f)",
+			EdgePlaneNormals[1].X(), EdgePlaneNormals[1].Y(), EdgePlaneNormals[1].Z());
+	
+	EdgePlanePoints[0] = (*Plane)->Origin();
+	EdgePlanePoints[1] = (*Plane)->Origin() + (*Plane)->Edge0();
+
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 82, " P0: (%f, %f, %f)",
+			EdgePlanePoints[0].X(), EdgePlanePoints[0].Y(), EdgePlanePoints[0].Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 83, " P1: (%f, %f, %f)",
+			EdgePlanePoints[1].X(), EdgePlanePoints[1].Y(), EdgePlanePoints[1].Z());
+
+
+	EdgePlanes[0] = Plane3f(EdgePlaneNormals[0], EdgePlanePoints[0]);
+	EdgePlanes[1] = Plane3f(EdgePlaneNormals[1], EdgePlanePoints[1]);
+
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 84, " Pl0: (%f, %f, %f)",
+			EdgePlanes[0].GetNormal().X(), EdgePlanes[0].GetNormal().Y(), EdgePlanes[0].GetNormal().Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 85, "c: %f", EdgePlanes[0].GetConstant());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 86, " Pl1: (%f, %f, %f)",
+			EdgePlanes[1].GetNormal().X(), EdgePlanes[1].GetNormal().Y(), EdgePlanes[1].GetNormal().Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 87, "c: %f", EdgePlanes[1].GetConstant());
+		}
+*/
+	/*
+	if (!strcmp((*Entity)->GetName(),"mitsuEclipseBody"))
+	for (int g = 0; g < 2; g++)
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80+(g*2), " %i: (%f, %f, %f)\nc = %f", g,
+		EdgePlanes[g].GetNormal().X(), EdgePlanes[g].GetNormal().Y(), EdgePlanes[g].GetNormal().Z(), EdgePlanes[g].GetConstant());
+*/

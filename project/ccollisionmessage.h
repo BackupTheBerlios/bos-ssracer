@@ -8,6 +8,7 @@ public:
 	CCollisionMessage();
 	~CCollisionMessage();
 
+	int x;
 	// Get/Set functions for the structures below:
 
 protected:

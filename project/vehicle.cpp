@@ -1050,10 +1050,13 @@ void CVehicle::TransformLocalToWorldSpace()
 	// Apply the transformation WC(X,Y,Z) = LC(X,-Z,Y) to the position of the vehicle
 	Vector3f bodyTransWC(positionLC.X(), positionLC.Z()*(-1.0f), positionLC.Y());
 	m_translate = bodyTransWC;
+	/*Gib's modification*/m_box.Center() = bodyTransWC;/*end Gib's modification*/
 
 	// Update the car body rotation value for the renderer.
 	Vector3f bodyRotWC(DEGREES(rotationLC.X()), DEGREES(rotationLC.Z()*(-1.0f)), DEGREES(rotationLC.Y()));
 	m_rotate = bodyRotWC;
+	// Gib's comment: m_box's rotation cannot be done in the same way, but must be done nevertheless.
+	// See WmlBox3.h: it has an array of 3 axes that denote its orientation.
 	
 	// Then transform all 4 tires
 	Vector3f tireTransformedLC;

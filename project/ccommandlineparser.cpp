@@ -1574,48 +1574,82 @@ int CCommandLineParser::SoundStreamCommand()
 // ===== Begin Gib's functions === //
 int CCommandLineParser::LoadCollisionTest()
 {
-
+// 	sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\pylon\\";
 #ifdef _DEBUG
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LoadCollisionTest() still under construction. Have yet to implement planes");
 #endif
 
 	string carDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
 	string carName = "mitsuEclipse.car";
+	string planesDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + "debug\\";
+	string planesName = "debug";
 	string pylonDir, pylonName;
 
 	//straight copy from Jays loadmeshtest to get 2 pylons up yay.
 	pylonDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\pylon\\";
     pylonName = "pylon";
 
-	// read: {near-left, far-left, far-right, near-right}
-	float xvals[] = {-20.0f, 20.0f, 20.0f, -20.0f};
-	float zvals[] = {-20.0f, -20.0f, 20.0f, 20.0f};
+	// Load planes
+	CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlanes(&planesDir, &planesName);
 
-	// Load 4 pylons and initialize their positions
-	// These mark the corners of the world borders (planes)
+	/* // Old code before I implemented CScene::LoadPlanes()
+	// COORDINATES:
+	// read: {near, left, right, far}
+	float normalx[] = {1.0f, 0.0f, 0.0f, -1.0f};
+	float normaly[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	float normalz[] = {0.0f, 1.0f, -1.0f, 0.0f};
+	// read: {near-left, far-left, far-right, near-right}
+	float pointx[] = {-20.0f, 20.0f, -20.0f, 20.0f};
+	float pointy[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	float pointz[] = {-20.0f, -20.0f, 20.0f, 20.0f};
+	// normals, points, and planes:
+	Vector3f normals[4];
+	Vector3f points[4];
+	std::vector<Plane3f*>* Planes = new std::vector<Plane3f*>();
 	std::vector<CEntity *>::iterator it;
-	for (int i = 0; i < 4; i++) {
+
+	// initialize them:
+	for (int j = 0; j < 4; j++) {
+		// Set planes:
+		normals[j] = Vector3f(normalx[j], normaly[j], normalz[j]);
+		points[j] = Vector3f(pointx[j], pointy[j], pointz[j]);
+		Planes->push_back(new Plane3f(normals[j], points[j]));
+
+		// Load pylons and initialize their positions
+		// These mark the corners of the world borders (planes)
 		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&pylonDir, &pylonName))) {
 			CLog::GetLog().Write(LOG_GAMECONSOLE, "%s not loaded successfully!", pylonName.begin());
 			return GENERAL_ERROR;
 		}
 		it = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()->end()-1;
-		(*it)->SetTranslate(Vector3f(xvals[i], 0.0f, zvals[i]));
+		(*it)->SetTranslate(Vector3f(pointx[j], pointy[j], pointz[j]));
 	}
+	// Set planes vector in CollisionManager
+	CCollisionManager::GetCollisionManagerPtr()->SetPlanes(Planes);
+*/
 
+	// Load Player Vehicle
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&carDir, &carName))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Player Vehicle not loaded correctly!");
 		return GENERAL_ERROR;
 	}
 	CVehicle * PV = (CVehicle *)CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
+	PV->GetBoundingBox()->Extent(0) = 1.5f;
+	PV->GetBoundingBox()->Extent(1) = 0.5f;
+	PV->GetBoundingBox()->Extent(2) = 0.5f;
+	PV->GetBoundingBox()->Axis(0) = Vector3f(1.0f, 0.0f, 0.0f);
+	PV->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
+	PV->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
+
 	//PV->SetTranslate(Vector3f(50.0f, 0.0f, 50.0f)); // right in the middle of the pylons
 
 	// set camera
-	CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+	CRenderer::GetRenderer().SetActiveCamera(CAMERA_FREELOOK);
     ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
 
 	return OK;
 }
+
 
 
 // SAVING THIS; IT'S USEFUL:
