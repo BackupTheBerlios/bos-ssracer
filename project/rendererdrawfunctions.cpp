@@ -266,33 +266,57 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
     HRESULT hr;
 
    	pMatrixStack->Push(); 
-    //pMatrixStack->LoadIdentity();
+    pMatrixStack->LoadIdentity();
 
-	// orientation
+	//--- orientation ---//
 	vTemp = pEntity->GetRotate();
-    //pMatrixstack->LoadMatrix( D3DXMatrixRotateX( RADIANS(vTemp->X()) ) );
-    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
-    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
-    pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
-	//pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
+        
+    /* 1) alternate rotation method
+    D3DXMATRIX temp;
+    D3DXMatrixRotationZ( &temp, RADIANS(vTemp->Z()) );
+    pMatrixStack->MultMatrix( &temp );
+    D3DXMatrixRotationY( &temp, RADIANS(vTemp->Y()) );
+    pMatrixStack->MultMatrix( &temp );
+    D3DXMatrixRotationX( &temp, RADIANS(vTemp->X()) );
+    pMatrixStack->MultMatrix( &temp );
+    */
 
-    // translation
+    //$$$TEMP Chris, this is what I was saying about local axes and world axes
+    // somewhere along the line rotns are being performed on the local axes in car space
+    // but this this totally different from the world coordinate system
+    // the only fix to this is RotateAxisLocal which performs the rotation about the cars origin
+    // uncomment lines marked WORKING to try the different methods
+
+    // 2) rotation method part deux
+    ////pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
+    pMatrixStack->RotateAxisLocal(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));  //// 1 WORKING    
+    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));       //// 1 WORKING
+    ////pMatrixStack->RotateAxisLocal(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y())); ///FUKD for some reason
+    ////pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
+    pMatrixStack->RotateAxisLocal(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));  //// 1 WORKING
+
+    // 3) yet another rotation method
+    //pMatrixStack->RotateYawPitchRoll(RADIANS(vTemp->X()), RADIANS(vTemp->Y()), RADIANS(vTemp->Z()));
+    
+    //$$$NOTE this also works too, but note the rotations I'm using here in each parameter...
+    //pMatrixStack->RotateYawPitchRollLocal(RADIANS(vTemp->Y()), RADIANS(vTemp->X()), RADIANS(vTemp->Z())); /// 2 ALSO WORKING
+
+    
+    //--- translation ---//
 	vTemp = pEntity->GetTranslate();		
 	pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
-
     //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 
-	// scale
+	//--- scale ---//
 	vTemp = pEntity->GetScale();
 	pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
     //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 
 
-	m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
+	m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() ); // set the transformation of the D3D device
 
     //actual drawing of the mesh
     if ( FAILED(hr =  pEntity->GetMesh()->Render(m_pd3dDevice, true, true)) )  {
-    //if ( FAILED(hr =  m_kMeshMap[pEntity->GetMesh()->m_strName]->Render(m_pd3dDevice)) )  {
 		#ifdef _DEBUG
 		CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
         CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", pEntity->GetMesh()->m_strName);
@@ -305,7 +329,7 @@ void CRenderer::DrawEntity( CEntity * pEntity )  {
     }
 
     pMatrixStack->Pop();
-    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
+    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() ); // restore the world matrix
 
     if (m_bDrawEntBBoxes == true)
         DrawBBox(pEntity->GetBoundingBox(), 10.0f, D3DCOLOR_ARGB(255, 220, 50, 50));
