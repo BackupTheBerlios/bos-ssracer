@@ -79,6 +79,7 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("unloadmap"));
     Keywords.push_back(std::string("setres"));
     Keywords.push_back(std::string("showentities"));
+    Keywords.push_back(std::string("setviscull"));
     /*** End J's Commands ***/
     
     /** Begin Ram & Gib Commands **/
@@ -164,6 +165,7 @@ int CCommandLineParser::execute()
     if (*it == "cameratest") error = cameratest();
     if (*it == "setres") error = setres();
     if (*it == "showentities") error = ShowEntities();
+    if (*it == "setviscull") error = SetVisCull();
 
     if (*it == "loadvehicleai") error = LoadVehicleAI();
 
@@ -756,6 +758,32 @@ int CCommandLineParser::ShowEntities()
     return OK;
 }
 
+int CCommandLineParser::SetVisCull()
+{
+    // default to ON
+    if (Tokens.size()<2)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "setviscull: no arguments, Visibility Culling ON");
+        CRenderer::GetRenderer().SetVisCulling(true);
+		return OK;
+    }
+    else if (Tokens.size() == 2)  {
+        if (Tokens[1] == "ON" || Tokens[1] == "on" || Tokens[1] == "1")  {
+            CRenderer::GetRenderer().SetVisCulling(true);
+        }
+        else if (Tokens[1] == "OFF" || Tokens[1] == "off" || Tokens[1] == "0")  {
+            CRenderer::GetRenderer().SetVisCulling(false);
+        }
+        else  {
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "setviscull: invalid syntax");
+            return OK;
+        }
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "setviscull: Visibility Culling set to %d", CRenderer::GetRenderer().IsVisCullingEnabled());
+        return OK;
+    }
+
+    return OK;
+
+}
 // ===== End Jay's functions ==== //
 
 

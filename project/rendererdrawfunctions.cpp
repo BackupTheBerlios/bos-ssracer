@@ -22,6 +22,7 @@ using namespace Wml;
 #include "settings.h"
 #include "cinputconsole.h"
 #include "macros.h"
+#include "quadtree.h"
 
 // --- system includes --- //
 #define STL_USING_ALL
@@ -51,11 +52,11 @@ void CRenderer::DrawConsole()
 
     // draw the blinking prompt if buffer is empty
     if ( ( (int)CTimer::GetTimer().GetCurrTime() % 2) || ( *strInBuf != std::string("")) )  {
-        m_kFontMap[FONT_SMALL]->DrawText( 0, iConsoleLine, D3DCOLOR_ARGB(255,255,255,20), ">> ", D3DFONT_FILTERED);
+        m_kFontMap[FONT_SMALL]->DrawText( 0.0f, (float)iConsoleLine, D3DCOLOR_ARGB(255,255,255,20), ">> ", D3DFONT_FILTERED);
     }
 
     // display contents of the current command buffer
-    m_kFontMap[FONT_SMALL]->DrawText( 3*kFontSize.cx, iConsoleLine, 
+    m_kFontMap[FONT_SMALL]->DrawText( (float)3*kFontSize.cx, (float)iConsoleLine, 
                                       D3DCOLOR_ARGB(255,255,255,20),
                                       strInBuf->c_str(), D3DFONT_FILTERED);
 
@@ -79,7 +80,7 @@ void CRenderer::DrawConsole()
         }  while (iStrIndex < signed(it->length()));
 
         iConsoleLine -= kFontSize.cy*uiNumNewlines;      // font spacing
-        m_kFontMap[FONT_SMALL]->DrawText( 0, iConsoleLine, D3DCOLOR_ARGB(255,255,255,20),
+        m_kFontMap[FONT_SMALL]->DrawText( 0.0f, (float)iConsoleLine, D3DCOLOR_ARGB(255,255,255,20),
                                           szBuf, D3DFONT_FILTERED);
         if (i>uiMaxLinesOnScreen)  
             break;  // can't fit anymore lines on screen
@@ -231,7 +232,7 @@ void CRenderer::DrawDebugOverlay()
                  else iStrIndex++;
             }  while (iStrIndex < signed(CLog::GetLog().m_kDebugOverLay[iSlot].length()));
 
-            m_kFontMap[FONT_SMALL]->DrawText( uiStartXPos, iLogSlotOnscreen, D3DCOLOR_ARGB(255,255,150,20),
+            m_kFontMap[FONT_SMALL]->DrawText( (float)uiStartXPos, (float)iLogSlotOnscreen, D3DCOLOR_ARGB(255,255,150,20),
                                               szBuf, D3DFONT_FILTERED);
         }
         if (i>uiMaxRowsOnScreen)  {  // can't fit anymore lines in this column
@@ -247,6 +248,57 @@ void CRenderer::DrawDebugOverlay()
 }
 
 
+
+//-----------------------------------------------------------------------------
+// Name:  DrawEntity()
+// Desc:  generic draw funciton for an entity
+//-----------------------------------------------------------------------------
+void CRenderer::DrawEntity( CEntity * pEntity )  {
+
+    ID3DXMatrixStack* pMatrixStack;
+    D3DXCreateMatrixStack( 0, &pMatrixStack);
+    Vector3f * vTemp;
+    HRESULT hr;
+
+   	pMatrixStack->Push(); 
+    pMatrixStack->LoadIdentity();
+
+	// orientation
+	vTemp = pEntity->GetRotate();
+    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
+	pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
+	pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
+	//pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
+
+    // translation
+	vTemp = pEntity->GetTranslate();		
+	pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
+
+    //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
+
+	// scale
+	vTemp = pEntity->GetScale();
+	pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
+    //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
+
+
+	m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
+
+    //actual drawing of the mesh
+    if ( FAILED(hr =  pEntity->GetMesh()->Render(m_pd3dDevice, true, true)) )  {
+    //if ( FAILED(hr =  m_kMeshMap[pEntity->GetMesh()->m_strName]->Render(m_pd3dDevice)) )  {
+		#ifdef _DEBUG
+		CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
+        CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", pEntity->GetMesh()->m_strName);
+		#endif
+	}
+	else {
+		#ifdef _DEBUG
+		//CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", pEntity->GetMesh()->m_strName);
+		#endif
+    }
+
+}
 
 
 /*
@@ -326,3 +378,27 @@ void CRenderer::DrawDebugOverlay()
             assert(fp);// Model doesn't exist.
 		}
 */
+
+
+//-----------------------------------------------------------------------------
+// Name:  DrawQuadTreeNode()
+// Desc:  recursively draws all entities within a quad tree node
+//-----------------------------------------------------------------------------
+void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
+{
+    // draw its entities if any
+    map<int, CEntity *>::iterator it;
+    for (it=pQNode->m_EntMap.begin(); it!=pQNode->m_EntMap.end(); it++)
+        DrawEntity(it->second);
+
+    if (!pQNode->m_pChildNode[NE]) 
+        return; // no children to draw
+
+    // recursively draw the child nodes
+    DrawQuadTreeNode(pQNode->m_pChildNode[NE]);
+    DrawQuadTreeNode(pQNode->m_pChildNode[NW]);
+    DrawQuadTreeNode(pQNode->m_pChildNode[SE]);
+    DrawQuadTreeNode(pQNode->m_pChildNode[SW]);
+
+    return;
+}

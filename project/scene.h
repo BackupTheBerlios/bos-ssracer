@@ -45,6 +45,8 @@ public:
     bool IsMeshLoaded( string strMeshName ){ if (!m_kMeshMap[strMeshName]) return false; else return true;};
     CD3DMesh * GetMeshPtrFromMap( string strName ) { return m_kMeshMap[strName]; };
 
+    CQuadTree * GetQuadTree(){ return m_kQuadTree; };
+
 protected:
 	
 	//static vector<CD3DMesh*> m_vMeshes;	// Vector containing meshes in the scene

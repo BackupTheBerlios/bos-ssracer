@@ -73,6 +73,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
     GetWindowRect(hWnd, &m_rcWindow );
 	ms_pkRenderer = this;
     m_bCursorVisible = false;
+    m_bVisCullingEnabled = false;
     
     //Create a structure to hold the settings for our device
     ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
@@ -377,12 +378,6 @@ void CRenderer::RenderScene()
 
     InitializeState();
 
-    //$$$TEMP renders ALL entitites until I get the Octree up    
-    ID3DXMatrixStack* pMatrixStack;
-    D3DXCreateMatrixStack( 0, &pMatrixStack);
-    Vector3f * vTemp;
-    HRESULT hr;
-
     m_pd3dDevice->BeginScene();  // --- begin scene drawing commands
 
 	#ifdef _DEBUG  // show developer info
@@ -393,65 +388,29 @@ void CRenderer::RenderScene()
 
 
 
-    //$$$TODO 
-
-    // if m_bVisCullingEnabled
-
-    // empty out visible quadtree nodes <-DO THIS IN AI
-    // get visible quadtree nodes
-    // render visible quadtree nodes
-
-    // else just draw all renderable entities
-
-    assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
-
-    for (vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->begin();
-         it != CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->end();
-         it++)  
-      {
-    
-   	    pMatrixStack->Push(); 
-        pMatrixStack->LoadIdentity();
-
-	    // orientation
-	    vTemp = (*it)->GetRotate();
-        pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
-	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
-	    pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
-	    //pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
-
-        // translation
-	    vTemp = (*it)->GetTranslate();		
-	    pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-        //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-	    // scale
-	    vTemp = (*it)->GetScale();
-	    pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
-        //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
-
-
-	    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
-
-        //actual drawing of the mesh
-        if ( FAILED(hr =  (*it)->GetMesh()->Render(m_pd3dDevice, true, true)) )  {
-        //if ( FAILED(hr =  m_kMeshMap[(*it)->GetMesh()->m_strName]->Render(m_pd3dDevice)) )  {
-		    #ifdef _DEBUG
-		    CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
-            CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", (*it)->GetMesh()->m_strName);
-		    #endif
-	    }
-	    else {
-		    #ifdef _DEBUG
-		    //CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", (*it)->GetMesh()->m_strName);
-		    #endif
+    if (m_bVisCullingEnabled)  {
+        // get visible quadtree nodes
+        vector<CQuadNode *> * pvVisible = CGameStateManager::GetGameStateManager().GetScenePtr()->GetQuadTree()->GetVisibleNodesPtr();
+        for (vector<CQuadNode *>::iterator it2 = pvVisible->begin();  it2 != pvVisible->end(); it2++)  {
+            DrawQuadTreeNode(*it2);// render this visible nodes contents
         }
+    }
+    
+    else {  //just draw all renderable entities
 
-   	    pMatrixStack->Pop();
+        assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
 
-     }//end big ass for loop
-     
+        for (vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->begin();
+             it != CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->end();  it++)  
+        {
+            if ((*it)->getIsRenderable())
+                DrawEntity(*it);
+        } 
+    }
+
+    m_pd3dDevice->EndScene();  // --- end scene drawing commands     
+}
+
 /*
 
     assert(m_pd3dDevice);
@@ -574,9 +533,6 @@ for(i=0; i<numMaterials; i++ )
 }
 */
 
-    m_pd3dDevice->EndScene();  // --- end scene drawing commands     
-    
-}
 
 
 //-----------------------------------------------------------------------------

@@ -850,6 +850,10 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
     // add the vehicle to the scene
 	m_vEntities.push_back(newCar);
 
+    // add body to the quadtree
+    m_kQuadTree->Add(newCar);
+
+
 	// Add 1 tire mesh (assuming they all look the same)
 	//m_vMeshes.push_back(newCar->GetTire(0)->GetMesh());
     if (!AddMesh(newCar->GetTire(0)->GetMesh()))
@@ -858,10 +862,10 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
     // Add the tires to the scene
 	for(i=0;i<4;i++) {
 		m_vEntities.push_back(newCar->GetTire(i));
+        // add tire to the quadtree
+        m_kQuadTree->Add(newCar->GetTire(i));
 	}
 
-    // add it to the quadtree
-    m_kQuadTree->Add(newCar);
 
 
     //$$$NOTE you guys should not be setting this because this is an AI car.

@@ -21,14 +21,13 @@
 #define QUADTREE_DEFAULT_LEVELS 4
 #define QUADTREE_DEFAULT_NODE_WIDTH 25
 
-enum { SW=0, SE, NW, NE };
-
 CQuadTree::CQuadTree() {
     m_pkQRoot = NULL;
     m_iLevels = QUADTREE_DEFAULT_LEVELS;
     m_fNodeWidth = QUADTREE_DEFAULT_NODE_WIDTH;
     m_bIsInitialized = false;
     m_vpNodes.clear();
+    m_vpVisibleNodes.clear();
     Initialize();
 }
 
@@ -39,6 +38,7 @@ CQuadTree::CQuadTree( float fNodeWidth )
     m_fNodeWidth = QUADTREE_DEFAULT_NODE_WIDTH;
     m_bIsInitialized = false;
     m_vpNodes.clear();
+    m_vpVisibleNodes.clear();
     m_fNodeWidth = fNodeWidth;
     Initialize();
 }
@@ -126,7 +126,10 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     // want #levels = log(#entities)/log(#subdiv at each level=4)
     m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) );
     //m_iLevels = 5;
+    
+    #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE,"Quadtree depth %d", m_iLevels);
+    #endif
 
     // compute the initial sub levels of the tree
 	SubDivide(m_pkQRoot, m_iLevels);
@@ -139,6 +142,9 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
         //$$$TEMP for now, just add all entities
         Add(*it);
     }
+
+    // assume that all nodes are visible at this point
+    m_vpVisibleNodes.push_back(m_pkQRoot);
 
     return;
 }

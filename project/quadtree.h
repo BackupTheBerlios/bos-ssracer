@@ -20,10 +20,12 @@
 
 #include "wmlvector3.h"
 #include "wmlbox3.h"
+#include "wmlsphere3.h"
 using namespace Wml;
 
 #include "entity.h"
 
+enum { SW=0, SE, NW, NE };
 
 //-----------------------------------------------------------------------------
 // Name: enum CULLSTATE
@@ -53,18 +55,27 @@ public:
     // map of entities within this quad indexed by ID
     std::map <int , CEntity *> m_EntMap; 
 
-    Box3f m_BBox;  //bounding box for this node
+    Box3f m_BBox;        // bounding box for this node
+    Sphere3f m_BSphere;  // bounding sphere
+
     
     CQuadNode(Vector3f vOrigin, float fHalfWidth) {
         m_vOrigin = vOrigin;
         m_fHalfWidth = fHalfWidth;
         for (int i=0; i<4; i++)  m_pChildNode[i] = NULL;
         m_EntMap.clear();
+
+        // set the AABBox
         m_BBox.Center() = vOrigin;
         m_BBox.Extent(0) = m_BBox.Extent(1) = m_BBox.Extent(2) = fHalfWidth;
         m_BBox.Axis(0) = Vector3f(1,0,0);  // axis aligned
         m_BBox.Axis(1) = Vector3f(0,1,0);
         m_BBox.Axis(2) = Vector3f(0,0,1);
+
+        // set the bounding sphere
+        m_BSphere.Center() = vOrigin;
+        // use diagonal of box to get bounding sphere
+        m_BSphere.Radius() = (Vector3f(m_BBox.Extent(1),0,m_BBox.Extent(2)) - Vector3f(-m_BBox.Extent(1),0,-m_BBox.Extent(2))).Length()/2.0f; 
     };
 
     
@@ -95,6 +106,7 @@ public:
 
     void Initialize( std::vector <CEntity *> * pvEntities = NULL);  // use loaded scene info to create this quadtree
     bool IsInitialized(){ return m_bIsInitialized; };
+    vector <CQuadNode *> * GetVisibleNodesPtr(){ return &m_vpVisibleNodes; };
 
 private:
 	void SubDivide( CQuadNode * pQNode, int iLevel );
@@ -112,7 +124,9 @@ private:
     Vector3f m_vfMapOrigin;  // 'center' point of quadtree
 
 
-    std::vector <CQuadNode *> m_vpNodes;  // a vector to manage node pointers
+    std::vector <CQuadNode *> m_vpNodes;         // a vector to manage node pointers
+    std::vector <CQuadNode *> m_vpVisibleNodes;  // all visible nodes in the scene
+
 };
 
 #endif

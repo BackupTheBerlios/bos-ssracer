@@ -53,6 +53,7 @@ public:
     int cameratest();
     int setres();
     int ShowEntities();
+    int SetVisCull();
 
 	// === Rob's Functions === //
     int SoundEffectCommand();

@@ -48,6 +48,7 @@ enum CameraType
     CAMERA_UNKNOWN = 0xFF
 };
 
+class CQuadNode;
 
 //-----------------------------------------------------------------------------
 // Class: CRenderer
@@ -82,6 +83,8 @@ protected:
     bool              m_bDeviceLost;
     bool              m_bCursorVisible;
     RECT              m_rcWindow;
+
+    bool              m_bVisCullingEnabled; // enable culling
 
     static HRESULT ms_hResult;
 	static CRenderer * ms_pkRenderer;
@@ -146,6 +149,9 @@ public:
     // get the camera type currently being used
     CameraType GetActiveCameraType() { return m_eActiveCamType; };
 
+    bool IsVisCullingEnabled() {return m_bVisCullingEnabled;};
+    void SetVisCulling( bool bState) { m_bVisCullingEnabled = bState;};
+
     void InitializeState();
     //void SetState (const RenderStatePtr aspkState[]);
 
@@ -185,6 +191,8 @@ protected:
     void DrawConsole();
     void DrawSkyBox();
     void DrawDebugOverlay();
+    void DrawEntity( CEntity * pEntity );
+    void DrawQuadTreeNode( CQuadNode * pQNode );
 
 private:
 };
