@@ -42,7 +42,8 @@ public:
 	int LoadPlayerVehicle();
 	int ClearScene();
 	int PhysicsTest1();
-
+    //==== Ram & Gibs Functions ====/
+    int LoadVehicleAI();
 
     // === J's Functions === //
     int loadmeshtest();

@@ -70,7 +70,10 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("loadmeshtest"));
     Keywords.push_back(std::string("cameratest"));
     /*** End J's Commands ***/
-
+    
+    /** Begin Ram & Gib Commands **/
+    Keywords.push_back(std::string("loadvehicleai"));
+    /*** End Ram & Gib Commands ***/
 
 	return OK;
 }
@@ -115,7 +118,7 @@ int CCommandLineParser::execute()
     if (*it == "loadmap") error = loadmap();
     if (*it == "loadmeshtest") error = loadmeshtest();
     if (*it == "cameratest") error = cameratest();
-
+    if (*it == "loadvehicleai") error = LoadVehicleAI();
 
 	return error;
 }
@@ -519,6 +522,33 @@ int CCommandLineParser::cameratest()
 
 // ===== End Jay's functions ==== //
 
+
+// ===== Begin Ram & Gib Functions ==== //
+int CCommandLineParser::LoadVehicleAI()
+{
+  //Hey Gibs, this is literally just Chris's physics test 1 right now
+  //of course we'll change this in due time :)
+    string sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
+	string sName = "mitsuEclipse.car";
+
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The Vehicle AI was not loaded successfully");
+		return OK;
+	}
+
+    /*J fucken w Chris' shit*/
+
+    //set the active camera to the chase cam
+    CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+
+    //set it to chase the vehicle we just created
+    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+
+	return OK;
+
+}
+
+//  ===== End Ram & Gibs Functions =====//
 
 // SAVING THIS; IT'S USEFUL:
 /*
