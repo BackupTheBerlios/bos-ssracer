@@ -149,6 +149,7 @@ int CFrontendManager::setState(int state)
 	if (state < NO_STATE || state > MAX_STATES)
 		return INDEX_OUT_OF_RANGE;
 	m_iState = state;
+    return OK;
 }
 
 CScreen* CFrontendManager::Screen(int which)

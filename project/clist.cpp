@@ -80,6 +80,7 @@ int CList::setCurItem(std::vector<std::string>::iterator curItem)
 	if (curItem < m_items.begin() || curItem >= m_items.end())
 		return INDEX_OUT_OF_RANGE;
 	m_curItem = curItem;
+    return OK;
 }
 
 int CList::setCurItem(int i) 
@@ -87,6 +88,7 @@ int CList::setCurItem(int i)
 	if (i < 0 || i >= m_items.size())
 		return INDEX_OUT_OF_RANGE;
 	m_curItem = &m_items[i];
+    return OK;
 }
 
 void CList::autoAdjust()
