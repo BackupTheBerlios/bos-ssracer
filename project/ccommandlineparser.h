@@ -64,6 +64,7 @@ public:
     int SoundStreamCommand();
 	int SoundCoreCommand();
 	int PlaylistCommand();
+	int LoadFinalMap();
 
 	// === Gib's Functions === //
 	int LoadCollisionTest();

@@ -119,6 +119,8 @@ int CCommandLineParser::initKeywords()
 
     Keywords.push_back(std::string("showaudio"));
     Keywords.push_back(std::string("killsound"));
+
+    Keywords.push_back(std::string("loadfinalmap"));
     /*** End Rob's Commands ***/
 
 	/*** Begin Gib's commands ***/
@@ -213,6 +215,8 @@ int CCommandLineParser::execute()
 
     if (*it == "showaudio") error = SoundCoreCommand();
     if (*it == "killsound") error = SoundCoreCommand();
+
+	if (*it == "loadfinalmap") error = LoadFinalMap();
 
 	if (*it == "loadcollisiontest" || *it == "CT") error = LoadCollisionTest();
 
@@ -1648,6 +1652,26 @@ int CCommandLineParser::SoundStreamCommand()
 	}
 
     return OK;
+}
+
+
+int CCommandLineParser::LoadFinalMap()
+{
+	// Execute a series of commands
+
+	// Turn on culling
+	parse( "setviscull 1" );
+	execute();
+
+	// Load the final map
+	parse( "loadmap map_final" );
+	execute();
+
+	// Load a player vehicle
+	parse( "loadpv acuransx" );
+	execute();
+
+	return OK;
 }
 // ===== End Rob's functions ==== //
 
