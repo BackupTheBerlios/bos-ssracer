@@ -4,8 +4,8 @@
 #include "cwidget.h"
 //#define STL_USING_ALL
 //#include "stl.h"
-
-#define STD_TEXT_SIZE 64
+//Ramits MOD! DIDNT LIKE 2 STD_TEXT_SIZE
+#define STD_BTEXT_SIZE 64
 
 class CButton : public CWidget {
 public:

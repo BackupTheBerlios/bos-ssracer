@@ -3,7 +3,7 @@
 
 CButton::CButton()
 {
-	m_text.reserve(STD_TEXT_SIZE);
+	m_text.reserve(STD_BTEXT_SIZE);
 	m_text.erase();
 	m_text.append("Click Me!");
 	m_bDown = false;
