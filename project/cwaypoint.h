@@ -26,8 +26,11 @@ class CWaypoint : public CEntity {
 		int setRadius(float r);
 		int setNeighbors(std::vector<CWaypoint*> Neighbors);
         //Rams's Add
-        bool m_isLastWay;
+        int setLastWay(bool b) {m_isLastWay=b; return OK;};
+        bool getLastWay(){return m_isLastWay;};
+
 	protected:
+        bool m_isLastWay;
 		float m_fRadius;
 		std::vector<CWaypoint*> m_Neighbors;
 

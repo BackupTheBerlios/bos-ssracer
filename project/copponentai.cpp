@@ -226,7 +226,7 @@ void COpponentAI::Update()
 			}
 
             //Rams add to brake at last waypoint (after reaching it)
-            if (isAtWaypoint((*thisCar)) && (*thisCar)->Next()->m_isLastWay) {
+            if (isAtWaypoint((*thisCar)) && (*thisCar)->Next()->getLastWay()) {
                 lastWPReached = true;
             }
 

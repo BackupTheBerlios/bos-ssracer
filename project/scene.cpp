@@ -962,6 +962,7 @@ int CScene::LoadEntity(string* directory, string* filename)
 //other than that exactly LoadEntitys
 int CScene ::LoadWaypoints(string* directory, string* filename)
 {
+  CLog::GetLog().Write(LOG_MISC, "In Load Waypoints");
 	FILE* fp;
 	char buf[512];
 	char* token;
@@ -973,7 +974,7 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 	//path.append("\\");
 	path += *filename;
     ////
-    path += ".objects";
+    path += ".waypoints";
 
 	fp = fopen(path.c_str(), "r");
 
@@ -1152,6 +1153,10 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 
 	}  //endwhile
 
+    //Set Last Waypoint as last Waypoint
+   
+    std::vector<CWaypoint *>::iterator it = m_vWaypoints.end()-1;
+	(*it)->setLastWay(true);
 	fclose(fp);
 
 	return 1;

@@ -797,7 +797,9 @@ int CCommandLineParser::SetVisCull()
 // ===== Begin Ram & Gib Functions ==== //
 int CCommandLineParser::LoadVehicleAI()
 {
-    
+    //just temporary TODO cut and paste properly 
+    loadmap();
+
 	string carDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
 	string carName = "mitsuEclipse.car";
 	string sDir, sName;
@@ -829,7 +831,7 @@ int CCommandLineParser::LoadVehicleAI()
     (*--it)->SetTranslate(Vector3f(30.0f, 0.0f, 0.0f));
 	(*--it)->SetTranslate(Vector3f(100.0f, 0.0f, 0.0f));
 
-
+/*
 	CWaypoint * waypoint1 = new CWaypoint();
 	CWaypoint * waypoint2 = new CWaypoint();
 	CWaypoint * waypoint3 = new CWaypoint();
