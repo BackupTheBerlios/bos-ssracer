@@ -307,7 +307,8 @@ int CCommandLineParser::help()
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> [dir] - load a map and create a scene from a .map file [dir] defaults to .\\maps\\ if omitted");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map and scene objects");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------------------------------------");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADVEHICLEAI - runs opponent vehicle AI test");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "----------------------------------------------------------------------------------------------------------------");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n\n\n");
 	return OK;
 }
@@ -722,7 +723,7 @@ int CCommandLineParser::LoadVehicleAI()
 
 	//translate pylons to desired locations
 	(*it)->SetTranslate(Vector3f(10.0f, 0.0f, 0.0f));
-	(*--it)->SetTranslate(Vector3f(25.0f, 0.0f, -10.0f));
+	(*--it)->SetTranslate(Vector3f(25.0f, 0.0f, 0.0f));
 
 
 	CWaypoint * waypoint1 = new CWaypoint();
@@ -735,7 +736,7 @@ int CCommandLineParser::LoadVehicleAI()
 	waypoint1->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
 	
 	waypoint2->SetName("Waypoint2");
-	waypoint2->SetTranslate(Vector3f(25.0f, 0.0f, -10.0f));
+	waypoint2->SetTranslate(Vector3f(10.0f, 0.0f, 0.0f));
 	waypoint2->SetScale(Vector3f(1.0f, 1.0f, 1.0f));
 	waypoint2->SetRotate(Vector3f(0.0f, 0.0f, 0.0f));
 	
