@@ -102,6 +102,14 @@ void CAITask::Update() {
 		}
 	}
 
+    //$$$DEBUG display some scene info to the overlay lines 11-19 ONLY -J
+    #ifdef _DEBUG 
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 11, "# entities: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->GetNumEntities());
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 12, "# quadtree levels: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetNumLevels());
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 13, "# quadtree nodes: %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_kQuadTree->GetNumNodes());
+
+    #endif
+
 	return;
 }
 

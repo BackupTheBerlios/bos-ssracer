@@ -22,6 +22,7 @@ CScene::CScene()
     //m_vMeshes.clear();
     m_kMeshMap.clear();
     m_vEntities.clear();
+    m_kQuadTree = new CQuadTree();
 }
 
 
@@ -30,6 +31,7 @@ CScene::~CScene()
     //m_vMeshes.clear();
     m_kMeshMap.clear();
     m_vEntities.clear();
+    delete m_kQuadTree;
 };
 
 
@@ -95,6 +97,9 @@ int CScene::ReleaseScene()
     // Also, clean up any other pointers that use the scene
 	// AI player cars would have to be set to NULL as well.
 	// Can't think of anything else right now.
+
+    // empty out the quadtree
+    m_kQuadTree->ClearQuadTree();
 
     bMapIsLoaded = false;
 
@@ -183,6 +188,9 @@ int CScene::LoadMap(FILE* fp, string* directory, string* filename)
 	}
 
     bMapIsLoaded = true;  
+
+    // intitalize the quadtree using the new entitity information
+    m_kQuadTree->Initialize( &m_vEntities );
 
 	return 1;
 }
@@ -612,6 +620,8 @@ int CScene::LoadPlayerVehicle(string* directory, string* filename)
 	// Set the playerVehicle pointer for the gamestatemanager,
 	CGameStateManager::GetGameStateManagerPtr()->SetPlayerVehicle(newCar);
 
+    //$$$TODO add it to the quadtree
+
 	return 1;
 }
 
@@ -899,5 +909,8 @@ int CScene::LoadEntity(string* directory, string* filename)
     //m_vMeshes.push_back(newEntity->GetMesh());
     if (!AddMesh(newEntity->GetMesh()))
         return 0;
+
+    //$$$TODO add it to the quadtree
+
 	return 1;
 }

@@ -51,6 +51,8 @@ public:
   	int loadmap();
     int unloadmap();
     int cameratest();
+    int setres();
+    int ShowEntities();
 
 	// === Rob's Functions === //
     int SoundEffectCommand();

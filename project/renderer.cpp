@@ -6,7 +6,7 @@
 * Module:  Renderer
 * Author:  Jay Javier
 * Modified by:  On: 
-* Date Created:  Feb 12, 2003
+* Date Created:  Feb 12, 2004
 *
 ******************************************************************************
 * Desc:  
@@ -117,6 +117,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 
 
     // defaults to this camera
+    //this->SetActiveCamera(CAMERA_FREELOOK);  //device isn't even set up yet so we can't use this funciton
     m_pActiveCamera = m_pkCameraMap[CAMERA_FREELOOK];
     m_eActiveCamType = CAMERA_FREELOOK;
 }
@@ -390,6 +391,8 @@ void CRenderer::RenderScene()
 	#endif
 
 
+    //$$$TODO ONLY RENDER VISIBLE OBJECTS
+
     assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
 
     for (vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->begin();
@@ -609,10 +612,9 @@ void CRenderer::ToggleFullScreen( int  riNewWidth, int riNewHeight )
     CLog::GetLog().Write( LOG_APP, "\tx resolution: %d y resolution %d",
                           riNewWidth, riNewHeight );
     #endif
-    //m_d3dpp.Windowed = !m_d3dpp.Windowed;
+
     m_d3dpp.BackBufferWidth = (UINT)riNewWidth;  //$$$DEBUG
     m_d3dpp.BackBufferHeight = (UINT)riNewHeight;
-
     m_d3dpp.Windowed = !m_d3dpp.Windowed;
 
     if ( m_d3dpp.Windowed )
@@ -712,6 +714,8 @@ CD3DCamera * CRenderer::SetCamera( CD3DCamera* pkCamera, CameraType eCameraName)
     m_pd3dDevice->SetTransform( D3DTS_VIEW, pkCamera->GetViewMatrix() );
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, pkCamera->GetProjMatrix() );    
 
+    // re-compute the frustrum of the new camera
+
     return m_pkCameraMap[eCameraName]; 
 }
 
@@ -737,8 +741,11 @@ void CRenderer::Click()
 {
     #ifdef _DEBUG
     assert(m_pActiveCamera);
-    #endif
-    m_pActiveCamera->Update();
+    #endif    
+
+    // get next frame from camera
+    m_pActiveCamera->FrameMove(CTimer::GetTimer().GetTimeElapsed());  //m_pActiveCamera->Update();
+
     // set the new view matrix for the camera in the D3Ddevice
     m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, m_pActiveCamera->GetProjMatrix() );   
@@ -768,6 +775,11 @@ bool CRenderer::SetActiveCamera( CameraType eCameraName )  {
     }
     m_pActiveCamera = m_pkCameraMap[eCameraName];
     m_eActiveCamType = eCameraName; 
+
+    // set the new view matrix for the active camera in the D3Ddevice
+    m_pd3dDevice->SetTransform( D3DTS_VIEW, m_pActiveCamera->GetViewMatrix() );
+    m_pd3dDevice->SetTransform( D3DTS_PROJECTION, m_pActiveCamera->GetProjMatrix() );   
+
     return 1;
 };
 

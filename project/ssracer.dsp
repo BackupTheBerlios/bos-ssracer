@@ -19,6 +19,7 @@ CFG=ssracer - Win32 Debug
 !MESSAGE 
 !MESSAGE "ssracer - Win32 Release" (based on "Win32 (x86) Application")
 !MESSAGE "ssracer - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "ssracer - Win32 Debug Release" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -83,12 +84,42 @@ LINK32=link.exe
 # ADD LINK32 WildMagic2.lib Kernel32.lib d3dx9dt.lib dsound.lib dinput8.lib dxerr9.lib d3d9.lib d3dxof.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"MSVCRT.LIB" /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
+!ELSEIF  "$(CFG)" == "ssracer - Win32 Debug Release"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "ssracer___Win32_Debug_Release"
+# PROP BASE Intermediate_Dir "ssracer___Win32_Debug_Release"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "ssracer___Win32_Debug_Release"
+# PROP Intermediate_Dir "ssracer___Win32_Debug_Release"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W4 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D _WIN32_WINNT=0x0501 /D "WML_IMPORT_DLL" /YX /FD /c
+# ADD CPP /nologo /MD /W4 /GX /Zi /Od /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D _WIN32_WINNT=0x0501 /D "WML_IMPORT_DLL" /FAcs /FR /YX /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x1009 /d "NDEBUG"
+# ADD RSC /l 0x1009 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 WildMagic2.lib Kernel32.lib d3dx9dt.lib dsound.lib dinput8.lib dxerr9.lib d3d9.lib d3dxof.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /machine:I386 /nodefaultlib:"MSVCRTD.LIB"
+# SUBTRACT BASE LINK32 /pdb:none
+# ADD LINK32 WildMagic2.lib Kernel32.lib d3dx9dt.lib dsound.lib dinput8.lib dxerr9.lib d3d9.lib d3dxof.lib dxguid.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"MSVCRTD.LIB"
+# SUBTRACT LINK32 /pdb:none /incremental:yes
+
 !ENDIF 
 
 # Begin Target
 
 # Name "ssracer - Win32 Release"
 # Name "ssracer - Win32 Debug"
+# Name "ssracer - Win32 Debug Release"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -201,6 +232,10 @@ SOURCE=.\inputtask.cpp
 # Begin Source File
 
 SOURCE=.\entity.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\quadtree.cpp
 # End Source File
 # Begin Source File
 
@@ -367,6 +402,11 @@ SOURCE=.\ssracer.rc
 # ADD RSC /l 0x409
 # SUBTRACT RSC /x
 
+!ELSEIF  "$(CFG)" == "ssracer - Win32 Debug Release"
+
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
+
 !ENDIF 
 
 # End Source File
@@ -483,6 +523,10 @@ SOURCE=.\inputtask.h
 # Begin Source File
 
 SOURCE=.\entity.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\quadtree.h
 # End Source File
 # Begin Source File
 

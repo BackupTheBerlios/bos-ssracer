@@ -6,7 +6,7 @@
 * Module:        Core
 * Author:        Jay Javier 
 * Modified by:   Rob Diaz-Marino
-* Date Created:  Jan 17, 2003
+* Date Created:  Jan 17, 2004
 *
 ******************************************************************************
 * Desc:  

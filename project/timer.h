@@ -6,7 +6,7 @@
 * Module:  Core
 * Author:  Jay Javier
 * Modified by:  On: 
-* Date Created:  Feb 18, 2003
+* Date Created:  Feb 18, 2004
 *
 ******************************************************************************
 * Desc:  Variable Timer task using direct X utilities

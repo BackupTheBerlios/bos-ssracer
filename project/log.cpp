@@ -6,7 +6,7 @@
 * Module:  Core
 * Author:  Jay Javier 
 * Modified by:  On: 
-* Date Created:  Jan 18, 2003
+* Date Created:  Jan 18, 2004
 *
 ******************************************************************************
 * Desc:  logging utility writes output to disk in logfiles 

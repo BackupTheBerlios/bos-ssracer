@@ -77,6 +77,8 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("cameratest"));
     Keywords.push_back(std::string("loadmap"));
     Keywords.push_back(std::string("unloadmap"));
+    Keywords.push_back(std::string("setres"));
+    Keywords.push_back(std::string("showentities"));
     /*** End J's Commands ***/
     
     /** Begin Ram & Gib Commands **/
@@ -158,6 +160,9 @@ int CCommandLineParser::execute()
     if (*it == "loadmap") error = loadmap();
     if (*it == "loadmeshtest") error = loadmeshtest();
     if (*it == "cameratest") error = cameratest();
+    if (*it == "setres") error = setres();
+    if (*it == "showentities") error = ShowEntities();
+
     if (*it == "loadvehicleai") error = LoadVehicleAI();
 
     if (*it == "playsound") error = SoundEffectCommand();
@@ -329,7 +334,7 @@ int CCommandLineParser::help()
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "PAUSE{SOUND|STREAM} <alias> - Pauses the specified sound or stream if playing.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "UNPAUSE{SOUND|STREAM} <alias> - Pauses the specified sound or stream.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "RELEASE{SOUND|STREAM} <alias> - Unloads the specified sound or stream.");
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "LISTAUDIO - Shows a list of all sounds and streams registered by the console, including their status.");
+	CLog::GetLog().Write(LOG_GAMECONSOLE, "SHOWAUDIO - Shows a list of all sounds and streams registered by the console, including their status.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n*** Playlist Commands ***" );
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADLIST <file> - Loads the <file>.slp playlist if it exists.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAYLIST <vol%%> -[no]repeat -[no]advance - Begins playing the list with specified volume (0-1) and specified autorepeat and autoadvance.");
@@ -719,6 +724,28 @@ int CCommandLineParser::cameratest()
         CLog::GetLog().Write(LOG_GAMECONSOLE, "sorry, that camera is not implemented yet");
 		return OK;
     }
+
+    return OK;
+}
+
+
+//$$$TEMP don't use yet...
+int CCommandLineParser::setres()
+{
+    CRenderer::GetRenderer().ToggleFullScreen(atoi(Tokens[1].c_str()), atoi(Tokens[1].c_str()));
+    return OK;
+}
+
+int CCommandLineParser::ShowEntities()
+{
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "showentities:  listing all loaded entities");
+    vector<CEntity *>::iterator it;
+    int i=0;
+    for (it=CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.begin();
+         it<CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.end();  it++,i++) {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "#%d  Name: %s  Id: %d  MeshName: %s", i, (*it)->GetName(), (*it)->GetId(), (*it)->GetMesh()->m_strName);        
+    }
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "showentities:  TOTAL # of entities %d", CGameStateManager::GetGameStateManager().GetScenePtr()->m_vEntities.size());
 
     return OK;
 }

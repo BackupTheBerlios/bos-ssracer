@@ -6,7 +6,7 @@
 * Module:  Renderer
 * Author:  Jay Javier
 * Modified by:  On: 
-* Date Created:  Feb 19, 2003
+* Date Created:  Feb 19, 2004
 *
 ******************************************************************************
 * Desc:  
@@ -116,10 +116,10 @@ void CRenderTask::Update()
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "");
     #endif
 
-    // update view from the camera position //
+    //--- update view from the camera position ---//
     m_pkRenderer->Click();       
 
-    // display camera info
+    //$$$DEBUG display camera info
     #ifdef _DEBUG
     switch (CRenderer::GetRenderer().GetActiveCameraType())  {
     case CAMERA_FREELOOK:
@@ -143,18 +143,20 @@ void CRenderTask::Update()
     CLog::GetLog().Write(LOG_DEBUGOVERLAY, 3, "Cam Velocity %f %f %f", vVel->x, vVel->y, vVel->z);
     #endif
 
-    m_pkRenderer->RenderScene(); // render current scene
+
+    //--- render HUD if we're in-game ---//
+
+    //--- render current scene ---//
+    m_pkRenderer->RenderScene(); 
     
+    //--- draw the console if down ---//
     if ( CBOSApplication::GetBOSApp().GetConsoleState() == TRUE ) 
-        m_pkRenderer->DrawConsole(); // draw the console if down
+        m_pkRenderer->DrawConsole(); 
 
     #ifdef _DEBUG
     if ( CBOSApplication::GetBOSApp().GetDebugOverlayState() == TRUE ) {
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 5, "J: slots 0-9 in the LOG_DEBUGOVERLAY are mine");
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 6, "reserve your own slots");
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "usage Write(LOG_DEBUGOVERLAY, slot#,...)");
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "use this to monitor variables");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 9, "press F12 to hide all this");
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 19, "J:  got lines 0-19");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 20, "line 20");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 30, "line 30");
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 40, "line 40");
@@ -163,7 +165,8 @@ void CRenderTask::Update()
     }
     #endif
         
-    m_pkRenderer->DisplayBackBuffer();  // swap buffers
+    //--- swap buffers to display rendered image ---//
+    m_pkRenderer->DisplayBackBuffer();  
 }
 
 

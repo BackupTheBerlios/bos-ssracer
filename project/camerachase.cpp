@@ -92,11 +92,11 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
 
     #ifdef _DEBUG
     if (!m_pkVehicle)  {
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "ERROR: null vehicle!" );	
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "cam ERROR: null vehicle!" );	
         return;
     }
     else {
-        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "status OK" );
+        CLog::GetLog().Write(LOG_DEBUGOVERLAY, 10, "cam status OK" );
     }
     #endif
 

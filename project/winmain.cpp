@@ -6,7 +6,7 @@
 * Module:  Core
 * Author:  Jay Javier
 * Modified by:  On: 
-* Date Created:  Feb 10, 2003
+* Date Created:  Feb 10, 2004
 *
 ******************************************************************************
 * Desc:  Win32 application entry point

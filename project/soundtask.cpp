@@ -30,12 +30,13 @@ bool CSoundTask::Start() {
 		CSoundCore::GetSoundCore().Resume();
 	}
 
+    //$$$NOTE we're still testing stuff out so we need the game to start without any thing like sound playing`
 	// Initialize the playlist if needed
 	if ( cPlayList == NULL ) {
 		cPlayList = new CPlayList();
-		cPlayList->Load("default");
-		cPlayList->Shuffle();
-		cPlayList->Play( 0.8f, true, true );
+		//cPlayList->Load("default");
+		//cPlayList->Shuffle();
+		//cPlayList->Play( 0.8f, true, true );
 	}
 
 	return TRUE;
