@@ -4,7 +4,7 @@
 #define STL_USING_ALL
 #include "stl.h"
 
-#include "vehicle.h"
+#include "copponentvehicle.h"
 #include "task.h"
 #include "ccollisionmessage.h"
 
@@ -29,9 +29,9 @@ public:
 	CCollisionManager();
 	~CCollisionManager();
 
-	bool hasCollided(std::vector<CEntity*>::iterator E1, std::vector<CEntity*>::iterator E2);
+	bool hasCollided(CVehicle* PV, std::vector<COpponentVehicle*>::iterator OV);
 	bool hasCollided(CVehicle* PV, std::vector<Rectangle3f*>::iterator Plane);
-	int respond(std::vector<CEntity*>::iterator E1, std::vector<CEntity*>::iterator E2);
+	int respond(CVehicle* PV, std::vector<COpponentVehicle*>::iterator OV);
 	int respond(CVehicle* PV, std::vector<Rectangle3f*>::iterator Plane);
 
 	int ComputeVertices(Box3f BBox, Vector3f vertices[]);

@@ -86,14 +86,12 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("drawentbbox"));
     Keywords.push_back(std::string("drawquadtree"));
     Keywords.push_back(std::string("drawplanes"));
-    Keywords.push_back(std::string("drawwaypoints"));
     Keywords.push_back(std::string("exit"));
     /*** End J's Commands ***/
     
-    /** Begin Rams Commands **/
+    /** Begin Ram & Gib Commands **/
     Keywords.push_back(std::string("loadvehicleai"));
-    Keywords.push_back(std::string("loadrace"));
-    /*** End Rams Commands ***/
+    /*** End Ram & Gib Commands ***/
 
     /*** Begin Rob's Commands ***/
     Keywords.push_back(std::string("playsound"));
@@ -123,6 +121,7 @@ int CCommandLineParser::initKeywords()
 
 	/*** Begin Gib's commands ***/
 	Keywords.push_back(std::string("loadcollisiontest"));
+	Keywords.push_back(std::string("CT"));
 	/*** End Gib's commands ***/
 
 	return OK;
@@ -183,11 +182,9 @@ int CCommandLineParser::execute()
     if (*it == "drawentbbox") error = SetDraw();
     if (*it == "drawquadtree") error = SetDraw();
     if (*it == "drawplanes") error = SetDraw();
-    if (*it == "drawwaypoints") error = SetDraw();
     if (*it == "exit") error = SystemCommand();
 
     if (*it == "loadvehicleai") error = LoadVehicleAI();
-    if (*it == "loadrace") error = loadrace();
 
     if (*it == "playsound") error = SoundEffectCommand();
     if (*it == "stopsound") error = SoundEffectCommand();
@@ -213,7 +210,7 @@ int CCommandLineParser::execute()
     if (*it == "showaudio") error = SoundCoreCommand();
     if (*it == "killsound") error = SoundCoreCommand();
 
-	if (*it == "loadcollisiontest") error = LoadCollisionTest();
+	if (*it == "loadcollisiontest" || *it == "CT") error = LoadCollisionTest();
 
 	return error;
 }
@@ -352,13 +349,12 @@ int CCommandLineParser::help()
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMESH <file> <dir> - load a mesh at some directory (leave .x extension off");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "SETVISCULL <0|1> - turn on visibility culling");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "DRAW{ENTBBOX|QUADTREE|PLANES|WAYPOINTS} <0|1> - draw debug information for AI");
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "DRAW{ENTBBOX|QUADTREE} <0|1> - draw debug information for AI");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "CAMERATEST <CAMERA_NAME> - change cameras to a specific one: {CAMERA_FREELOOK, CAMERA_CHASE, CAMERA_BUMPER}");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADMAP <file> [dir] - load a map and create a scene from a .map file [dir] defaults to .\\maps\\ if omitted");
     CLog::GetLog().Write(LOG_GAMECONSOLE, "UNLOADMAP - unload current map and scene objects");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADVEHICLEAI - runs opponent vehicle AI test");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADCOLLISIONTEST - loads a scene with collidable objects and a player vehicle.");
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "LOADRACE - loads a race baby! (map, WPS, opponent, race cond.)");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "\n*** Sound Engine Commands ***" );
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "LOAD{SOUND|STREAM} <file> as <alias> - Loads a sound effect or stream and gives it the specified alias.");
 	CLog::GetLog().Write(LOG_GAMECONSOLE, "PLAY{SOUND|STREAM} [-loop] <alias> - Plays a sound effect or stream either one-shot or looping.");
@@ -836,9 +832,6 @@ int CCommandLineParser::SetDraw()
             else if (Tokens[0] == "drawplanes")  {
                 CRenderer::GetRenderer().SetDrawRects(true);
             }
-            else if (Tokens[0] == "drawwaypoints")  {
-                CRenderer::GetRenderer().SetDrawWayPoints(true);
-            }
             CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: state set to %d", Tokens[0].c_str(), 1);
         }
         else if (Tokens[1] == "OFF" || Tokens[1] == "off" || Tokens[1] == "0")  {
@@ -852,10 +845,6 @@ int CCommandLineParser::SetDraw()
             else if (Tokens[0] == "drawplanes")  {
                 CRenderer::GetRenderer().SetDrawRects(false);
             }
-            else if (Tokens[0] == "drawwaypoints")  {
-                CRenderer::GetRenderer().SetDrawWayPoints(false);
-            }
-
             CLog::GetLog().Write(LOG_GAMECONSOLE, "%s: state set to %d", Tokens[0].c_str(), 0);
         }
         else  {
@@ -880,8 +869,7 @@ int CCommandLineParser::SystemCommand()
 // ===== End Jay's functions ==== //
 
 
-// ===== Begin Ram's FunctionsFunctions ==== //
-
+// ===== Begin Ram & Gib Functions ==== //
 int CCommandLineParser::LoadVehicleAI()
 {
     //just temporary TODO cut and paste properly 
@@ -990,63 +978,7 @@ int CCommandLineParser::LoadVehicleAI()
     return 0;
 }
 
-//Kinda like loadmap... but different :)
-int CCommandLineParser::loadrace()
-{
-    string sDir, sName;
-    FILE *fp;
-
-    // if only 'loadrace' was entered
-    if (Tokens.size() == 1)  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "not enough arguements, loading race from debug.race");
-        sName = "debug";
-        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + sName + "\\";
-    }
-    // if only 'loadrace <racename>' was entered
-    else if (Tokens.size() == 2)  {
-        sName = Tokens[1];
-        // look in the .\maps directory
-        sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + sName + "\\";
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadrace:  looking in %s for race", sDir.c_str());
-    }
-    // if 'loadrace <racename> <dir>' was entered
-    else if (Tokens[2].find(".\\", 0) == 0)  { // check if they used that .\ dir shortcut
-        sName = Tokens[1];
-        sDir = Tokens[2];
-        sDir.replace(0, 2, CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING));
-    }
-
-    //check if the file exists
-    fp = fopen( (sDir+sName+".race").c_str(), "r");
-    if (!fp)  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadrace Error: File does not exist: %s", (sDir+sName+".race").c_str());
-        return OK;
-    }
-
-    // first unload the current map & scene if any
-    if (CGameStateManager::GetGameStateManager().GetScenePtr()->IsLoaded() == true )  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "Releasing current scene");
-        if (CGameStateManager::GetGameStateManager().GetScenePtr()->ReleaseScene()){
-            CLog::GetLog().Write(LOG_GAMECONSOLE, "Scene released sucessfully");
-        }
-        else {
-            CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR: Scene was not released sucessfully");
-        }
-    }
-
-    // load the new map and scene
-    if (CGameStateManager::GetGameStateManager().GetScenePtr()->LoadRace( fp, &sDir, &sName ))  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "Successfully loaded Race: %s%s%s", sDir.c_str(), sName.c_str(), ".race");
-    }
-    else  {
-        CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR: Failed to load race: %s%s%s", sDir.c_str(), sName.c_str(), ".race");
-    }
-    CLog::GetLog().Write(LOG_MISC, "Done Command Line");
-	            
-    return OK;
-}
-
-//  ===== End Rams Functions =====//
+//  ===== End Ram & Gibs Functions =====//
 
 
 // ===== Begin Rob's Functions ==== ///
@@ -1684,12 +1616,11 @@ int CCommandLineParser::LoadCollisionTest()
 	// Set its bounding box
 	PV->GetBoundingBox()->Extent(0) = 1.5f;
 	PV->GetBoundingBox()->Extent(1) = 0.5f;
-	PV->GetBoundingBox()->Extent(2) = 0.5f;
+	PV->GetBoundingBox()->Extent(2) = 0.6f;
 	PV->GetBoundingBox()->Axis(0) = Vector3f(1.0f, 0.0f, 0.0f);
 	PV->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
 	PV->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
-	PV->SetPositionLC(Vector3f(0.0f, 30.0f, 0.0f));
-PV->GetBoundingBox()->Center() = PV->GetPositionLC();
+	PV->GetBoundingBox()->Center() = PV->GetPositionLC();
 
 	/*** set bbox for tires ***/
 	// First, initialize their extents and axis
@@ -1715,41 +1646,89 @@ PV->GetBoundingBox()->Center() = PV->GetPositionLC();
 	TireCenter.Z() *= -1.0f; // rear-left
 	PV->GetTire(RLTIRE)->GetBoundingBox()->Center() = TireCenter + PV->GetBoundingBox()->Center();
 	
+	// Now, set its bounding sphere
+	Vector3f RadiusVec;
+	if (PV->GetBoundingSphere()) {
+		PV->GetBoundingSphere()->Center() = PV->GetBoundingBox()->Center();
+		RadiusVec = Vector3f(PV->GetBoundingBox()->Extent(0),
+							 PV->GetBoundingBox()->Extent(1),
+							 PV->GetBoundingBox()->Extent(2));
+		PV->GetBoundingSphere()->Radius() = RadiusVec.Length();
+	}
+	else CLog::GetLog().Write(LOG_DEBUGOVERLAY, 60, "Vehicle %s has no bounding sphere", PV->GetName());
 
-//	PV->SetTranslate(Vector3f(0.0f, 0.0f, 30.0f));
+	/***************** Load a couple opponent vehicles *************************/
 
-	/*
-	// Load a couple opponent vehicles
+	// Opponent Vehicle 1
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&oppDir1, &oppName1))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Opponent Vehicle 1 not loaded correctly!");
 		return GENERAL_ERROR;
-	}
-	COpponentVehicle* OV = (COpponentVehicle*)CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end()-1;
-	OV->GetBoundingBox()->Extent(0) = 1.5f;
-	OV->GetBoundingBox()->Extent(1) = 0.5f;
-	OV->GetBoundingBox()->Extent(2) = 0.5f;
-	OV->GetBoundingBox()->Axis(0) = Vector3f(1.0f, 0.0f, 0.0f);
-	OV->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
-	OV->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
-//	OV->SetTranslate(Vector3f(20.0f, 0.0f, 0.0f));
-*/
+	}	
 
-
-/*	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&oppDir2, &oppName2))) {
+	// Opponent Vehicle 2
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&oppDir2, &oppName2))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Opponent Vehicle 2 not loaded correctly!");
 		return GENERAL_ERROR;
 	}
-	PV = (CVehicle*)CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end()-1;
-	PV->GetBoundingBox()->Extent(0) = 1.5f;
-	PV->GetBoundingBox()->Extent(1) = 0.5f;
-	PV->GetBoundingBox()->Extent(2) = 0.5f;
-	PV->GetBoundingBox()->Axis(0) = Vector3f(1.0f, 0.0f, 0.0f);
-	PV->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
-	PV->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
-	PV->SetTranslate(Vector3f(20.0f, -20.0f, 0.0f));
-*/
 
-	//PV->SetTranslate(Vector3f(50.0f, 0.0f, 50.0f)); // right in the middle of the pylons
+	std::vector<COpponentVehicle*>::iterator OV = CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin();
+
+	float sign = 1.0f;
+	do {
+
+	// sign = 1 --> ahead and to the right
+	// sign = -1 --> ahead and to the left
+	(*OV)->SetPositionLC(Vector3f(10.0f, 10.0f*sign, 0.0f)); 
+
+	// Set opponent vehicle's bounding box
+	(*OV)->GetBoundingBox()->Extent(0) = 1.5f;
+	(*OV)->GetBoundingBox()->Extent(1) = 0.5f;
+	(*OV)->GetBoundingBox()->Extent(2) = 0.6f;
+	(*OV)->GetBoundingBox()->Axis(0) = Vector3f(1.0f, 0.0f, 0.0f);
+	(*OV)->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
+	(*OV)->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
+	(*OV)->GetBoundingBox()->Center() = (*OV)->GetPositionLC();
+
+	/*** set bbox for tires ***/
+	// First, initialize their extents and axis
+	for (i = 0; i < 4; i++) {
+		(*OV)->GetTire(i)->GetBoundingBox()->Extent(0) = 0.2f;
+		(*OV)->GetTire(i)->GetBoundingBox()->Extent(1) = 0.2f;
+		(*OV)->GetTire(i)->GetBoundingBox()->Extent(2) = 0.1f;
+		(*OV)->GetTire(i)->GetBoundingBox()->Axis(0) = Vector3f(1.0f, 0.0f, 0.0f);
+		(*OV)->GetTire(i)->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
+		(*OV)->GetTire(i)->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
+	}
+
+	// Set opponent vehicle's tire positions
+// enum { FLTIRE, FRTIRE, RLTIRE, RRTIRE };
+	TireCenter = Vector3f (0.85f, -0.25f, 0.5f); // guestimate for FLTIRE
+	(*OV)->SetFLTirePosition(TireCenter);
+	(*OV)->GetTire(FLTIRE)->GetBoundingBox()->Center() = TireCenter + PV->GetBoundingBox()->Center();
+	TireCenter.Z() *= -1.0f; // front-right
+	(*OV)->GetTire(FRTIRE)->GetBoundingBox()->Center() = TireCenter + PV->GetBoundingBox()->Center();
+	TireCenter.X() *= -1.0f; // rear-right
+	(*OV)->GetTire(RRTIRE)->GetBoundingBox()->Center() = TireCenter + PV->GetBoundingBox()->Center();
+	TireCenter.Z() *= -1.0f; // rear-left
+	(*OV)->GetTire(RLTIRE)->GetBoundingBox()->Center() = TireCenter + PV->GetBoundingBox()->Center();
+	
+	// Now, set opponent vehicle's bounding sphere
+	//Vector3f RadiusVec;
+	if ((*OV)->GetBoundingSphere()) {
+		(*OV)->GetBoundingSphere()->Center() = (*OV)->GetBoundingBox()->Center();
+		RadiusVec = Vector3f((*OV)->GetBoundingBox()->Extent(0),
+							 (*OV)->GetBoundingBox()->Extent(1),
+							 (*OV)->GetBoundingBox()->Extent(2));
+		(*OV)->GetBoundingSphere()->Radius() = RadiusVec.Length();
+	}
+	else CLog::GetLog().Write(LOG_DEBUGOVERLAY, 60, "Vehicle %s has no bounding sphere", (*OV)->GetName());
+
+	OV++;
+	sign = -sign;
+
+	} while(OV != CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end());
+
+	/****** OTHER MISCELLANEOUS STUFF **********/
 
 	// Make planes visible
 	string drawplanes = "drawplanes 1";
@@ -1765,9 +1744,7 @@ PV->GetBoundingBox()->Center() = PV->GetPositionLC();
 	CRenderer::GetRenderer().SetActiveCamera(CAMERA_FREELOOK);
     ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
 
-
 	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 25, "%i planes", CCollisionManager::GetCollisionManagerPtr()->GetPlanes()->size());
-
 
 	return OK;
 }

@@ -42,6 +42,7 @@ void CCollisionManager::Update()
 {
 	std::vector<CEntity*>::iterator thisEntity;
 	std::vector<Rectangle3f*>::iterator thisPlane;
+	std::vector<COpponentVehicle*>::iterator OV;
 
 	// First, test collisions with player vehicle
 	CVehicle* PV = CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
@@ -52,35 +53,46 @@ void CCollisionManager::Update()
 				thisPlane = m_vPlanes->begin();
 				while (thisPlane != m_vPlanes->end()) {
 					if (hasCollided(PV, thisPlane))
-						respond(PV, thisPlane);
+						respond(PV, thisPlane); 
 					thisPlane++;
 				}
 			}
 		}
-		// Implementing playervehicle and opponent vehicle collisions here
+		// playervehicle-box collisions
+		if (CGameStateManager::GetGameStateManagerPtr()->GetOpponents())
+			if (CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->size() > 0) {
+				OV = CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin();
+				while (OV != CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end()) {
+					if (hasCollided(PV, OV))
+						respond(PV, OV);
+					OV++;
+				}
+			}
 	}
 
+	/*
 	// Now, test collisions with opponent vehicles
 	if (!CGameStateManager::GetGameStateManagerPtr()->GetOpponents()) return;
 	if (CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->size() == 0) return;
 
-	std::vector<COpponentVehicle*>::iterator OP = CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin();
-	while (OP != CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end()) { 
+	OV = CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin();
+	while (OV != CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end()) { 
 		// vehicle-plane collisions
 		if (m_vPlanes) {
 			if (m_vPlanes->size() > 0) {
 				thisPlane = m_vPlanes->begin();
 				while (thisPlane != m_vPlanes->end()) {
-					if (hasCollided((CVehicle*)*OP, thisPlane))
-						respond((CVehicle*)*OP, thisPlane);
+					if (hasCollided((CVehicle*)*OV, thisPlane))
+						respond((CVehicle*)*OV, thisPlane);
 					thisPlane++;
 				}
 			}
 		}
 		// Implement opponent vehicle collisions with other opponent vehicles here
 		// Remember to skip opponent vehicles colliding with themselves
-		OP++;
+		OV++;
 	}
+*/
 
 	// Basic needs:
 	// Go thru all Entities.
@@ -91,14 +103,28 @@ void CCollisionManager::Update()
 	// If collision detected, call respond(entity, plane)
 }
 
-// entity, entity
-bool CCollisionManager::hasCollided(std::vector<CEntity*>::iterator E1, std::vector<CEntity*>::iterator E2)
+// playervehicle, opponentvehicle
+bool CCollisionManager::hasCollided(CVehicle* PV, std::vector<COpponentVehicle*>::iterator OV)
 {
-#ifdef _DEBUG
-	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80, "CCollisionManager::hasCollided(entity, entity) not implemented yet.");
-#endif
-
+	// First, test if they are within colliding distance
+	float pv_radius = PV->GetBoundingSphere()->Radius();
+	float ov_radius = (*OV)->GetBoundingSphere()->Radius();
+	Vector3f DistVec = PV->GetBoundingSphere()->Center() - (*OV)->GetBoundingSphere()->Center();
+	if (pv_radius + ov_radius >= DistVec.Length()) {
+		// possible collision
+		return true;
+	}
+	
 	return false;
+}
+
+// playervehicle, opponentvehicle
+int CCollisionManager::respond(CVehicle* PV, std::vector<COpponentVehicle*>::iterator OV)
+{
+
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 120, "BOOM!!!");
+
+	return OK;
 }
 
 // playervehicle, plane
@@ -185,15 +211,6 @@ bool CCollisionManager::hasCollided(CVehicle* PV, std::vector<Rectangle3f*>::ite
 
 	return false;
 	//if (!strcmp(PV->GetName(),"mitsuEclipseBody")) 
-}
-
-// entity, entity
-int CCollisionManager::respond(std::vector<CEntity*>::iterator E1, std::vector<CEntity*>::iterator E2)
-{
-#ifdef _DEBUG
-	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80, "CCollisionManager::respond(entity, entity) not implemented yet.");
-#endif
-	return OK;
 }
 
 // playervehicle, plane

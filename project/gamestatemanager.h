@@ -18,6 +18,7 @@ public:
             ms_pkScene = pkScene; 
 
         m_playerVehicle = NULL;
+		m_vOpponentVehicles.clear(); // Gib's add
         ms_pkGame = this;
     };
 

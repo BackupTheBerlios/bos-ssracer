@@ -1001,7 +1001,7 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 		}
 	}
 	
-	/*
+	
 
 	/*
 	if(float(fabs(accelerationLC.Y())) > 0.0f) {
@@ -1014,7 +1014,6 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 	}
 	*/
 	
-	
 }
 
 //--------------------------------------------------------------
@@ -1023,7 +1022,11 @@ void CVehicle::CalculatePitchAndRoll(float deltaT)
 void CVehicle::UpdateVehiclePhysics()
 {
 	float deltaT = CTimer::GetTimer().GetTimeElapsed();
-	
+
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80, "velocityLC = (%f, %f, %f)",
+		velocityLC.X(), velocityLC.Y(), velocityLC.Z());
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 81, "velocityWC = (%f, %f, %f)",
+		velocityWC.X(), velocityWC.Y(), velocityWC.Z());
 	
 	CalculateAutomaticGearShifting();
 	InterpolateSteeringAngle(deltaT);
@@ -1102,9 +1105,9 @@ void CVehicle::UpdateVehiclePhysics()
 		newFreq = ( ( (float) rpm / (float) (maximumRPM - IDLE_RPM) ) * oldFreq ) + (oldFreq / 3);
 		engineRev->SetFrequency( newFreq );
 //	}
+
 		// Gib's additions
 		if (disturbed) UpdateCollisionReaction();
-
 }
 
 //--------------------------------------------------------------
@@ -1119,7 +1122,7 @@ void CVehicle::TransformLocalToWorldSpace()
 	// Update the car body rotation value for the renderer.
 	Vector3f bodyRotWC(DEGREES(rotationLC.X()), DEGREES(rotationLC.Z()*(-1.0f)), DEGREES(rotationLC.Y()));
 	m_rotate = bodyRotWC;
-
+	
 	// Then transform all 4 tires
 	Vector3f tireTransformedLC;
 	Vector3f tireTransLC;
@@ -1153,12 +1156,12 @@ void CVehicle::TransformLocalToWorldSpace()
 	headingWC = Vector3f( headingTotLC.X(), -headingTotLC.Z(), headingTotLC.Y());
 	velocityWC = Vector3f( velocityTotLC.X(), -velocityTotLC.Z(), velocityTotLC.Y());
 
+	
 	// Gib's additions
 
 	updateBoundingBoxes(bodyRotWC); // gib's addition
 
 	/*
-
 	if (ExtraneousForces.Length() > 0.1f) {
 		m_translate += ExtraneousForces;
 		m_box.Center() += ExtraneousForces;
@@ -1167,7 +1170,6 @@ void CVehicle::TransformLocalToWorldSpace()
 	}
 	else ExtraneousForces = Vector3f(0.0f, 0.0f, 0.0f);
 */
-
 
 }
 
@@ -1193,11 +1195,9 @@ void CVehicle::RotateVectorAboutLocalZ(Vector3f* param, float rotZRADS)
 void CVehicle::updateBoundingBoxes(Vector3f bodyRotWC)
 {
 
-	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 50, "heading = (%f, %f, %f)",
-		headingWC.X(), headingWC.Y(), headingWC.Z());
-
-		// update position
+	// update position
 	m_box.Center() = m_translate;
+	m_sphere.Center() = m_translate;
 
 //	if (bodyRotWC.Y() == 0.0f) return;
 
@@ -1236,9 +1236,17 @@ void CVehicle::updateBoundingBoxes(Vector3f bodyRotWC)
 	tires[RLTIRE]->GetBoundingBox()->Center() = m_box.Center() + RLRotatedTirePos; // RR
 	tires[RRTIRE]->GetBoundingBox()->Center() = m_box.Center() + RRRotatedTirePos; // RL
 
-
+	/*
+	if (!isPlayer) {
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 50, "name = %s", GetName());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 51, "sphere center = (%f, %f, %f)",
+			m_sphere.Center().X(), m_sphere.Center().Y(), m_sphere.Center().Z());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 52, "sphere radius = %f", m_sphere.Radius());
+	}
+	*/
 
 }
 
 
 // end Gib's addition
+
