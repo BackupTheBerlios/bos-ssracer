@@ -43,19 +43,42 @@ void CCollisionManager::Update()
 	std::vector<CEntity*>::iterator thisEntity;
 	std::vector<Rectangle3f*>::iterator thisPlane;
 
-	if (!CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()) return;
-	if (CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()->size() == 0) return;
-
-	thisEntity = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()->begin();
-	while (thisEntity != CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()->end()) { 
-		if (!m_vPlanes) break;
-		if (m_vPlanes->size() == 0) break;
-		thisPlane = m_vPlanes->begin();
-		while (thisPlane != m_vPlanes->end()) {
-			if (hasCollided(thisEntity, thisPlane))
-				respond(thisEntity, thisPlane);
-			thisPlane++;
+	// First, test collisions with player vehicle
+	CVehicle* PV = CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle();
+	if (PV) {
+		// playervehicle-plane collisions
+		if (m_vPlanes) {
+			if (m_vPlanes->size() > 0) {
+				thisPlane = m_vPlanes->begin();
+				while (thisPlane != m_vPlanes->end()) {
+					if (hasCollided(PV, thisPlane))
+						respond(PV, thisPlane);
+					thisPlane++;
+				}
+			}
 		}
+		// Implementing playervehicle and opponent vehicle collisions here
+	}
+
+	// Now, test collisions with opponent vehicles
+	if (!CGameStateManager::GetGameStateManagerPtr()->GetOpponents()) return;
+	if (CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->size() == 0) return;
+
+	std::vector<COpponentVehicle*>::iterator OP = CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin();
+	while (OP != CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end()) { 
+		// vehicle-plane collisions
+		if (m_vPlanes) {
+			if (m_vPlanes->size() > 0) {
+				thisPlane = m_vPlanes->begin();
+				while (thisPlane != m_vPlanes->end()) {
+					if (hasCollided((CVehicle*)*OP, thisPlane))
+						respond((CVehicle*)*OP, thisPlane);
+					thisPlane++;
+				}
+			}
+		}
+		// Implement opponent vehicle collisions with other opponent vehicles here
+		// Remember to skip opponent vehicles colliding with themselves
 		thisEntity++;
 	}
 
@@ -78,16 +101,19 @@ bool CCollisionManager::hasCollided(std::vector<CEntity*>::iterator E1, std::vec
 	return false;
 }
 
-// entity, plane
-bool CCollisionManager::hasCollided(std::vector<CEntity*>::iterator Entity, std::vector<Rectangle3f*>::iterator Plane)
+// playervehicle, plane
+bool CCollisionManager::hasCollided(CVehicle* PV, std::vector<Rectangle3f*>::iterator Plane)
 {
-	Vector3f vertices[8];  // struct
+	Vector3f vertices[8];  
 	bool NEG = false, POS = false;
+
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 26, "translate = (%f, %f, %f)",
+		PV->GetTranslate()->X(), PV->GetTranslate()->Y(), PV->GetTranslate()->Z());
 
 	// Create a WmlPlane3 from the WmlRectangle3 in the Plane iterator
 	Vector3f normal = (*Plane)->Edge0().Cross((*Plane)->Edge1());
 	normal.Normalize();
-	Plane3f* P = new Plane3f(normal, (*Plane)->Origin()); // struct
+	Plane3f* P = new Plane3f(normal, (*Plane)->Origin()); 
 	// Save in CollisionInfo
 	SAFE_DELETE(m_CI.Plane);
 	m_CI.Plane = P;
@@ -108,7 +134,7 @@ bool CCollisionManager::hasCollided(std::vector<CEntity*>::iterator Entity, std:
 	EdgePlanes[1] = Plane3f(EdgePlaneNormals[1], EdgePlanePoints[1]);
 
 	// Compute vertices and edges of Entity's bounding box
-	ComputeVertices(*(*Entity)->GetBoundingBox(), vertices);
+	ComputeVertices(*PV->GetBoundingBox(), vertices);
 
 	// Go thru each bounding box vertex and do 2 things:
 	// 1) find out if they span the plane
@@ -133,7 +159,7 @@ bool CCollisionManager::hasCollided(std::vector<CEntity*>::iterator Entity, std:
 	float theta, h;
 	if (POS && NEG) {
 		// Find the collision point
-		ReverseVelocity = new Vector3f(((CVehicle*)*Entity)->GetVehicleVelocityWC());
+		ReverseVelocity = new Vector3f(PV->GetVehicleVelocityWC());
 		*ReverseVelocity *= -1;
 		ReverseNormal = -P->GetNormal();
 		theta = acos((ReverseVelocity->Dot(ReverseNormal))/(ReverseVelocity->Length()*ReverseNormal.Length()));		
@@ -155,7 +181,7 @@ bool CCollisionManager::hasCollided(std::vector<CEntity*>::iterator Entity, std:
 	}
 
 	return false;
-	//if (!strcmp((*Entity)->GetName(),"mitsuEclipseBody")) 
+	//if (!strcmp(PV->GetName(),"mitsuEclipseBody")) 
 }
 
 // entity, entity
@@ -167,8 +193,8 @@ int CCollisionManager::respond(std::vector<CEntity*>::iterator E1, std::vector<C
 	return OK;
 }
 
-// entity, plane
-int CCollisionManager::respond(std::vector<CEntity*>::iterator Entity, std::vector<Rectangle3f*>::iterator Plane)
+// playervehicle, plane
+int CCollisionManager::respond(CVehicle* PV, std::vector<Rectangle3f*>::iterator Plane)
 {
 	// Make CRASH sound
 	CSoundMessage* SoundMsg = new CSoundMessage();
@@ -178,7 +204,7 @@ int CCollisionManager::respond(std::vector<CEntity*>::iterator Entity, std::vect
 	// Send collision info to physics task
 	CCollisionMessage* ColMsg = new CCollisionMessage();
 	// Set Entity
-	ColMsg->SetEntity(*Entity);
+	ColMsg->SetEntity((CEntity*)PV);
 	// Set Normal
 	Vector3f* Normal = new Vector3f((*Plane)->Edge0().Cross((*Plane)->Edge1()));
 	Normal->Normalize();
@@ -388,4 +414,115 @@ void CCollisionManager::DoMessageHandle( ITaskMessage *cMsg )
 	for (int g = 0; g < 2; g++)
 	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 80+(g*2), " %i: (%f, %f, %f)\nc = %f", g,
 		EdgePlanes[g].GetNormal().X(), EdgePlanes[g].GetNormal().Y(), EdgePlanes[g].GetNormal().Z(), EdgePlanes[g].GetConstant());
+*/
+
+/*
+// entity, plane
+bool CCollisionManager::hasCollided(std::vector<CEntity*>::iterator Entity, std::vector<Rectangle3f*>::iterator Plane)
+{
+	Vector3f vertices[8];  // struct
+	bool NEG = false, POS = false;
+
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 26, "translate = (%f, %f, %f)",
+		(*Entity)->GetTranslate()->X(), (*Entity)->GetTranslate()->Y(), (*Entity)->GetTranslate()->Z());
+
+	// Create a WmlPlane3 from the WmlRectangle3 in the Plane iterator
+	Vector3f normal = (*Plane)->Edge0().Cross((*Plane)->Edge1());
+	normal.Normalize();
+	Plane3f* P = new Plane3f(normal, (*Plane)->Origin()); // struct
+	// Save in CollisionInfo
+	SAFE_DELETE(m_CI.Plane);
+	m_CI.Plane = P;
+
+	// And 2 planes that mark the edges of the rectangle.
+	// These will be used to test intersection points to see if they are within rectangle boundries
+	Plane3f EdgePlanes[2];
+	Vector3f EdgePlaneNormals[2];
+	Vector3f EdgePlanePoints[2];
+	// Create 2 planes out of its edges, and see if point is a positive distance away from all of them.
+	EdgePlaneNormals[0] = (*Plane)->Edge1().Cross(P->GetNormal());
+	EdgePlaneNormals[1] = P->GetNormal().Cross((*Plane)->Edge1());
+	EdgePlaneNormals[0].Normalize();
+	EdgePlaneNormals[1].Normalize();
+	EdgePlanePoints[0] = (*Plane)->Origin();
+	EdgePlanePoints[1] = (*Plane)->Origin() + (*Plane)->Edge0();
+	EdgePlanes[0] = Plane3f(EdgePlaneNormals[0], EdgePlanePoints[0]);
+	EdgePlanes[1] = Plane3f(EdgePlaneNormals[1], EdgePlanePoints[1]);
+
+	// Compute vertices and edges of Entity's bounding box
+	ComputeVertices(*(*Entity)->GetBoundingBox(), vertices);
+
+	// Go thru each bounding box vertex and do 2 things:
+	// 1) find out if they span the plane
+	// 2) find out which is furthest behind plane
+	float dist;
+	m_CI.dist = 0.0f;
+	for (int i = 0; i < 8; i++) {
+		dist = P->DistanceTo(vertices[i]);
+		if (dist > 0) POS = true;
+		if (dist < 0) NEG = true;
+		if (dist < m_CI.dist) {
+			m_CI.dist = dist;
+			m_CI.col_vertex = i;
+		}
+	}
+
+	// if some vertices are positive and some negative, it spans the plane
+	// therefore, find the exact collision point
+	// If that point is within the rectangle boundries, return true
+	Vector3f* ReverseVelocity;
+	Vector3f ReverseNormal;
+	float theta, h;
+	if (POS && NEG) {
+		// Find the collision point
+		ReverseVelocity = new Vector3f(((CVehicle*)*Entity)->GetVehicleVelocityWC());
+		*ReverseVelocity *= -1;
+		ReverseNormal = -P->GetNormal();
+		theta = acos((ReverseVelocity->Dot(ReverseNormal))/(ReverseVelocity->Length()*ReverseNormal.Length()));		
+		h = m_CI.dist/cos(theta);
+		ReverseVelocity->Normalize();
+		*ReverseVelocity *= Math<float>::FAbs(h);
+		SAFE_DELETE(m_CI.Reverse);
+		m_CI.Reverse = ReverseVelocity;
+		SAFE_DELETE(m_CI.ColPoint);
+		m_CI.ColPoint = new Vector3f(vertices[m_CI.col_vertex] + *ReverseVelocity);	
+		
+		// If it is within the rectangle boundried, return true
+		// Make 2 planes of out rectangle edges
+		Plane3f P1 = Plane3f((*Plane)->Edge0(), (*Plane)->Origin());
+		Plane3f P2 = Plane3f(-(*Plane)->Edge0(), (*Plane)->Origin()+(*Plane)->Edge0());
+		if (P1.DistanceTo(*m_CI.ColPoint) >= 0 &&
+			P2.DistanceTo(*m_CI.ColPoint) >= 0)
+			return true;
+	}
+
+	return false;
+	//if (!strcmp((*Entity)->GetName(),"mitsuEclipseBody")) 
+}
+
+  // entity, plane
+int CCollisionManager::respond(std::vector<CEntity*>::iterator Entity, std::vector<Rectangle3f*>::iterator Plane)
+{
+	// Make CRASH sound
+	CSoundMessage* SoundMsg = new CSoundMessage();
+	SoundMsg->PlaySoundEffectOnce("crash_hard");
+	CKernel::GetKernelPtr()->DeliverMessage(SoundMsg, SOUND_TASK);
+
+	// Send collision info to physics task
+	CCollisionMessage* ColMsg = new CCollisionMessage();
+	// Set Entity
+	ColMsg->SetEntity(*Entity);
+	// Set Normal
+	Vector3f* Normal = new Vector3f((*Plane)->Edge0().Cross((*Plane)->Edge1()));
+	Normal->Normalize();
+	ColMsg->SetNormal(Normal);
+	// Set Reverse
+	ColMsg->SetReverse(m_CI.Reverse);
+	// Set Collision Point
+	ColMsg->SetColPoint(m_CI.ColPoint);
+	// Send message
+	CKernel::GetKernelPtr()->DeliverMessage(ColMsg, PHYSICS_TASK);
+
+	return OK;
+}
 */

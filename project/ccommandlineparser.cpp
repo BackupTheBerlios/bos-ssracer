@@ -1619,7 +1619,7 @@ int CCommandLineParser::LoadCollisionTest()
 
 	
 	// Load a couple opponent vehicles
-	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&oppDir1, &oppName1))) {
+/*	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&oppDir1, &oppName1))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Opponent Vehicle 1 not loaded correctly!");
 		return GENERAL_ERROR;
 	}
@@ -1631,7 +1631,7 @@ int CCommandLineParser::LoadCollisionTest()
 	OV->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
 	OV->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
 //	OV->SetTranslate(Vector3f(20.0f, 0.0f, 0.0f));
-
+*/
 
 
 /*	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&oppDir2, &oppName2))) {

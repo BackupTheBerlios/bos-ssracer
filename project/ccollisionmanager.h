@@ -4,7 +4,7 @@
 #define STL_USING_ALL
 #include "stl.h"
 
-#include "entity.h"
+#include "vehicle.h"
 #include "task.h"
 #include "ccollisionmessage.h"
 
@@ -30,9 +30,9 @@ public:
 	~CCollisionManager();
 
 	bool hasCollided(std::vector<CEntity*>::iterator E1, std::vector<CEntity*>::iterator E2);
-	bool hasCollided(std::vector<CEntity*>::iterator Entity, std::vector<Rectangle3f*>::iterator Plane);
+	bool hasCollided(CVehicle* PV, std::vector<Rectangle3f*>::iterator Plane);
 	int respond(std::vector<CEntity*>::iterator E1, std::vector<CEntity*>::iterator E2);
-	int respond(std::vector<CEntity*>::iterator Entity, std::vector<Rectangle3f*>::iterator Plane);
+	int respond(CVehicle* PV, std::vector<Rectangle3f*>::iterator Plane);
 
 	int ComputeVertices(Box3f BBox, Vector3f vertices[]);
 	int ComputeEdges(Vector3f vertices[], Vector3f edges[][2]);
@@ -63,3 +63,10 @@ private:
 };
 
 #endif 
+
+/*
+	bool hasCollided(std::vector<CEntity*>::iterator E1, std::vector<CEntity*>::iterator E2);
+	bool hasCollided(std::vector<CEntity*>::iterator Entity, std::vector<Rectangle3f*>::iterator Plane);
+	int respond(std::vector<CEntity*>::iterator E1, std::vector<CEntity*>::iterator E2);
+	int respond(std::vector<CEntity*>::iterator Entity, std::vector<Rectangle3f*>::iterator Plane);
+*/
