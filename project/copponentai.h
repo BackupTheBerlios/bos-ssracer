@@ -13,6 +13,10 @@
 #define VAI_CARS_VEL 100.0f // don't know if this is to scale
 #define VAI_CARS_ACCEL 10.0f // ""
 
+#define DUMB_AI 1
+#define MEDIOCRE_AI 2
+#define ADVANCED_AI 3
+
 class COpponentAI : public ITask {
 public:
 	COpponentAI();

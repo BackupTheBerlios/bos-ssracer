@@ -1,4 +1,5 @@
 #include "copponentvehicle.h"
+#include "copponentai.h"
 #include "macros.h"
 
 COpponentVehicle::COpponentVehicle()
@@ -13,6 +14,8 @@ COpponentVehicle::COpponentVehicle()
 	m_strEntityType = "COpponentVehicle";
     lastWPReached = false;
     raceOver = false;
+    //default dumb
+    m_aiLevel = DUMB_AI;
 }
 
 COpponentVehicle::~COpponentVehicle()
@@ -83,13 +86,13 @@ bool COpponentVehicle::reachedHeadingTarget()
 	// For HeadingWC
 	Vector3f NormalizedHeadingWC = GetVehicleHeadingWC();
 	NormalizedHeadingWC.Normalize();
-	float heading_angle = asin(NormalizedHeadingWC.Z());
+	double heading_angle = asin(NormalizedHeadingWC.Z());
 
 	// For HeadingTargetWC
 	Vector3f NormalizedHeadingTargetWC = *HeadingTarget();
 
 	NormalizedHeadingTargetWC.Normalize();
-	float heading_target_angle = asin(NormalizedHeadingTargetWC.Z());
+	double heading_target_angle = asin(NormalizedHeadingTargetWC.Z());
 
 	// read: if turning left then
 	//			if current heading WC angle will be greater than target untill target reached.

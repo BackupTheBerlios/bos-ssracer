@@ -4,6 +4,32 @@
 // J's edit
 #include "renderer.h"
 
+// main input processor maybe overrided in some screens
+void CScreen::processInput(int key)
+{
+  switch(key)
+  {
+  case GAME_TAB:
+  case GAME_RIGHT:
+  case GAME_DOWN:
+    selectedScreeni++;
+    if (selectedScreeni > maxScreeni)
+    selectedScreeni =maxScreeni;
+    break;
+  case GAME_LEFT:
+  case GAME_UP:
+    selectedScreeni--;
+    if (selectedScreeni < 0)
+      selectedScreeni = 0;
+    break;  
+  case GAME_RETURN:
+  case GAME_NUMPADENTER:
+    gotoScreen = screenOrder[selectedScreeni];
+    if (screenOrder[gotoScreen] == QUIT)  // QUIT screen
+        CKernel::GetKernel().KillAllTasks();  //exit the game 
+  }
+}
+
 CMainMenu::CMainMenu()
 {
   newGame = new CButton();
@@ -74,27 +100,6 @@ void CMainMenu::draw()
     quit->draw();
 }
 
-void CMainMenu::processInput(int key)
-{
-  switch(key)
-  {
-  case GAME_TAB:
-  case GAME_DOWN:
-    selectedScreeni++;
-    if (selectedScreeni > maxScreeni)
-    selectedScreeni =0;
-    break;
-  case GAME_UP:
-    selectedScreeni--;
-    if (selectedScreeni < 0)
-      selectedScreeni = maxScreeni;
-    break;
-  case GAME_RETURN:
-  case GAME_NUMPADENTER:	 
-    gotoScreen = screenOrder[selectedScreeni];
-    break;
-  }
-}
 
 //New Game Screen
 CNewGame::CNewGame()
@@ -149,7 +154,7 @@ void CNewGame::processInput(int key)
     break;
   case GAME_RETURN:
   case GAME_NUMPADENTER:
-    gotoScreen = selectedScreeni;
+    gotoScreen = screenOrder[selectedScreeni];
   }
 }
 
@@ -205,9 +210,10 @@ void CGarage::processInput(int key)
     break;
   case GAME_RETURN:
   case GAME_NUMPADENTER:
-    gotoScreen = selectedScreeni;
+    gotoScreen = screenOrder[selectedScreeni];
   }
 }
+
 
 //PostGame Game Screen
 CPostGame::CPostGame()
@@ -226,7 +232,7 @@ CPostGame::CPostGame()
   placement->setText("You Finished the Race in Some Place");
   winnings = new CLabel();
   winnings->setText("Good For you buddy, You won a Gazillion Dollars");
-  int tempOrder[]={HOME, IN_GAME, MAIN_MENU};
+  int tempOrder[]={HOME, PRE_GAME, MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 2;
 
@@ -253,31 +259,6 @@ char tmp[100];
 
 }
 
-void CPostGame::processInput(int key)
-{
-  switch(key)
-  {
-  case GAME_TAB:
-  case GAME_RIGHT:
-    selectedScreeni++;
-    if (selectedScreeni > maxScreeni)
-    selectedScreeni =0;
-    break;
-  case GAME_LEFT:
-    selectedScreeni--;
-    if (selectedScreeni < 0)
-      selectedScreeni = maxScreeni;
-    break;
-  case GAME_UP:
-  case GAME_DOWN:
-    break;
-  case GAME_RETURN:
-  case GAME_NUMPADENTER:
-    gotoScreen = selectedScreeni;
-  }
-}
-
-
 //Pause Game Screen
 CPauseGame::CPauseGame()
 {
@@ -291,7 +272,7 @@ CPauseGame::CPauseGame()
   //labels
   instructions = new CLabel();
   instructions->setText("Pause Menu");
-  int tempOrder[]={IN_GAME, IN_GAME, MAIN_MENU};
+  int tempOrder[]={IN_GAME, PRE_GAME, MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 2;
 }
@@ -317,31 +298,6 @@ void CPauseGame::draw()
 
 }
 
-void CPauseGame::processInput(int key)
-{
-  switch(key)
-  {
-  case GAME_TAB:
-  case GAME_DOWN:
-    selectedScreeni++;
-    if (selectedScreeni > maxScreeni)
-    selectedScreeni =0;
-    break;
-  case GAME_UP:
-    selectedScreeni--;
-    if (selectedScreeni < 0)
-      selectedScreeni = maxScreeni;
-    break;
-  case GAME_LEFT:
-  case GAME_RIGHT:
-    break;
-  case GAME_RETURN:
-  case GAME_NUMPADENTER:
-    gotoScreen = selectedScreeni;
-    //TODO DEAL WITH RESTART OR RESUME DEPENDENT ON CHOICE
-  }
-}
-
 //HOME SCREEN
 CHome::CHome()
 {
@@ -359,7 +315,7 @@ CHome::CHome()
   //labels
   home = new CLabel();
   home->setText("Home");
-  int tempOrder[]={IN_GAME,PERFORMANCE, GARAGE, DEALERSHIP, MAIN_MENU};
+  int tempOrder[]={PRE_GAME,PERFORMANCE, GARAGE, DEALERSHIP, MAIN_MENU};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 4;
 }
@@ -385,29 +341,6 @@ void CHome::draw()
   mainMenu->draw();
 }
 
-void CHome::processInput(int key)
-{
-  switch(key)
-  {
-  case GAME_TAB:
-  case GAME_DOWN:
-    selectedScreeni++;
-    if (selectedScreeni > maxScreeni)
-    selectedScreeni =0;
-    break;
-  case GAME_UP:
-    selectedScreeni--;
-    if (selectedScreeni < 0)
-      selectedScreeni = maxScreeni;
-    break;
-  case GAME_LEFT:
-  case GAME_RIGHT:
-    break;
-  case GAME_RETURN:
-  case GAME_NUMPADENTER:
-    gotoScreen = selectedScreeni;
-  }
-}
 
 //Quit Screen SCREEN
 CQuit::CQuit()
@@ -450,7 +383,236 @@ void CQuit::draw()
   mainMenu->draw();
 }
 
-void CQuit::processInput(int key)
+//PreGame Game Screen
+CPreGame::CPreGame()
+{
+  onward = new CButton();
+  onward->setText("Onward!");
+  mainMenu = new CButton();
+  mainMenu->setText("Back to Main Menu");
+
+  //labels
+  ready = new CLabel();
+  ready->setText("Get Ready to Race");
+  int tempOrder[]={IN_GAME, MAIN_MENU};
+  memcpy(screenOrder, tempOrder, sizeof(tempOrder));
+  maxScreeni = 1;
+
+}
+
+CPreGame::~CPreGame()
+{
+  //Do something here
+}
+
+void CPreGame::draw()
+{
+//$$$TEMP just draw this for now
+CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "PRE\nGAME", 0.3, 0.3);
+
+  onward->draw();
+  mainMenu->draw();
+  ready->draw();
+
+}
+
+//Option Screen
+COptions::COptions()
+{
+  option1 = new CButton();
+  option1->setText("option1");
+  option2 = new CButton();
+  option2->setText("option2");
+  option3 = new CButton();
+  option3->setText("option3");
+  mainMenu = new CButton();
+  mainMenu->setText("Back to Main Menu");
+
+  //labels
+  instructions = new CLabel();
+  instructions->setText("Options");
+  int tempOrder[]={MAIN_MENU};
+  memcpy(screenOrder, tempOrder, sizeof(tempOrder));
+  maxScreeni = 0;
+  //TODO ADD OPTIONS
+}
+
+
+COptions::~COptions()
+{
+  //Do something here
+}
+
+void COptions::draw()
+{
+  //$$$TEMP just draw this for now
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "OPTIONS", 0.3, 0.3);
+
+  option1->draw();
+  option2->draw();
+  option3->draw();
+  mainMenu->draw();
+  instructions->draw();
+
+}
+
+//Best Times Screen
+CBestTimes::CBestTimes()
+{
+  mainMenu = new CButton();
+  mainMenu->setText("Back to Main Menu");
+
+  //labels
+  bestTime = new CLabel();
+  bestTime->setText("blah blah blah");
+  int tempOrder[]={MAIN_MENU};
+  memcpy(screenOrder, tempOrder, sizeof(tempOrder));
+  maxScreeni = 0;
+
+}
+
+CBestTimes::~CBestTimes()
+{
+  //Do something here
+}
+
+void CBestTimes::draw()
+{
+//$$$TEMP just draw this for now
+CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "BEST\nTIMES", 0.3, 0.3);
+  mainMenu->draw();
+  bestTime->draw();
+
+}
+
+//Help Screen
+CHelp::CHelp()
+{
+  mainMenu = new CButton();
+  mainMenu->setText("Back to Main Menu");
+
+  //labels
+  help = new CLabel();
+  help->setText("blah blah blah");
+  int tempOrder[]={MAIN_MENU};
+  memcpy(screenOrder, tempOrder, sizeof(tempOrder));
+  maxScreeni = 0;
+
+}
+
+CHelp::~CHelp()
+{
+  //Do something here
+}
+
+void CHelp::draw()
+{
+//$$$TEMP just draw this for now
+CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "HELP", 0.3, 0.3);
+  mainMenu->draw();
+  help->draw();
+
+}
+
+//Help Screen
+CCredits::CCredits()
+{
+  mainMenu = new CButton();
+  mainMenu->setText("Back to Main Menu");
+
+  //labels
+  credits = new CLabel();
+  credits->setText("blah blah blah");
+  int tempOrder[]={MAIN_MENU};
+  memcpy(screenOrder, tempOrder, sizeof(tempOrder));
+  maxScreeni = 0;
+
+}
+
+CCredits::~CCredits()
+{
+  //Do something here
+}
+
+void CCredits::draw()
+{
+//$$$TEMP just draw this for now
+CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "CREDITS", 0.3, 0.3);
+  mainMenu->draw();
+  credits->draw();
+
+}
+
+//Performance Upgrade Screen
+CPerformance::CPerformance()
+{
+  tireUp = new CButton();
+  tireUp->setText("Upgrade Tires");
+  engineUp = new CButton();
+  engineUp->setText("Upgrade Engine");
+  weightRed = new CButton();
+  weightRed->setText("Weight Reduction");
+  home = new CButton();
+  home->setText("Back to Home");
+
+  //labels
+  instructions = new CLabel();
+  instructions->setText("Performance");
+  int tempOrder[]={MAIN_MENU};
+  memcpy(screenOrder, tempOrder, sizeof(tempOrder));
+  maxScreeni = 0;
+  //TODO ADD CURRENT LEVELS OF TUNE
+}
+
+
+CPerformance::~CPerformance()
+{
+  //Do something here
+}
+
+void CPerformance::draw()
+{
+  //$$$TEMP just draw this for now
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "PERFORMANCE", 0.3, 0.3);
+
+  tireUp->draw();
+  engineUp->draw();
+  weightRed->draw();
+  home->draw();
+  instructions->draw();
+
+}
+
+
+CDealership::CDealership()
+{
+  select = new CButton();
+  select->setText("Purchase");
+  cancel = new CButton();
+  cancel->setText("Cancel");
+  instructions = new CLabel();
+  instructions->setText("Change Cars By Pressing Left/Right");
+  int tempOrder[]={HOME, MAIN_MENU};
+  memcpy(screenOrder, tempOrder, sizeof(tempOrder));
+  maxScreeni = 1;
+}
+
+CDealership::~CDealership()
+{
+  //Do something here
+}
+
+void CDealership::draw()
+{
+  //$$$TEMP just draw this for now
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "Dealership", 0.3, 0.3);
+
+  select->draw();
+  cancel->draw();
+  instructions->draw();
+}
+
+void CDealership::processInput(int key)
 {
   switch(key)
   {
@@ -469,7 +631,7 @@ void CQuit::processInput(int key)
     break;
   case GAME_RETURN:
   case GAME_NUMPADENTER:
-    gotoScreen = selectedScreeni;
+    gotoScreen = screenOrder[selectedScreeni];
     if (screenOrder[gotoScreen] == QUIT)  // QUIT screen
         CKernel::GetKernel().KillAllTasks();  //exit the game 
   }

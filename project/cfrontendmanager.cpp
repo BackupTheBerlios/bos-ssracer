@@ -20,10 +20,17 @@ CFrontendManager::CFrontendManager()
 	m_MainMenu = NULL;
 	m_NewGame = NULL;
 	m_Garage = NULL;
+    m_PreGame = NULL;
+    m_Options = NULL;
 	m_PostGame = NULL;
 	m_PauseGame = NULL;
 	m_Home = NULL;
     m_Quit = NULL;
+    m_BestTimes = NULL;
+	m_Help=NULL;
+	m_Credits=NULL;
+	m_Performance=NULL;
+	m_Dealership=NULL;
 
 	m_pkFrontendManager = this;
 }
@@ -36,8 +43,15 @@ CFrontendManager::~CFrontendManager()
 	SAFE_DELETE(m_Garage);
 	SAFE_DELETE(m_PostGame);
 	SAFE_DELETE(m_PauseGame);
+    SAFE_DELETE(m_PreGame);
+    SAFE_DELETE(m_Options);
 	SAFE_DELETE(m_Home);
     SAFE_DELETE(m_Quit);
+    SAFE_DELETE(m_BestTimes);
+    SAFE_DELETE(m_Help);
+    SAFE_DELETE(m_Credits);
+    SAFE_DELETE(m_Performance);
+    SAFE_DELETE(m_Dealership);
 }
 
 bool CFrontendManager::Start()
@@ -45,10 +59,19 @@ bool CFrontendManager::Start()
 	m_MainMenu = new CMainMenu();
 	m_NewGame = new CNewGame();
 	m_Garage = new CGarage();
+    m_PreGame = new CPreGame();
 	m_PostGame = new CPostGame();
 	m_PauseGame = new CPauseGame();
-  	m_Home = new CHome();
+    m_Options = new COptions();
+    m_Home = new CHome();
     m_Quit = new CQuit();
+    m_BestTimes = new CBestTimes();
+	m_Help = new CHelp();
+    m_Credits= new CCredits();
+	m_Performance= new CPerformance();
+	m_Dealership= new CDealership();
+
+
 	m_curScreen = m_MainMenu;
 	m_iState = MAIN_MENU;
 
@@ -117,21 +140,27 @@ int CFrontendManager::Transition()
 	case HOME:
 		m_curScreen = m_Home; m_iState = HOME; break;
 	case OPTIONS:
+        m_curScreen = m_Options; m_iState = OPTIONS; break;
 	case BESTTIMES:
+        m_curScreen = m_BestTimes; m_iState = BESTTIMES; break;
 	case HELP:
+      m_curScreen = m_Help; m_iState = HELP; break;
 	case CREDITS:
+      m_curScreen = m_Credits; m_iState = CREDITS; break;
 	case QUIT:
         m_curScreen = m_Quit; m_iState = QUIT; 
         break;
 	case PERFORMANCE:
+      m_curScreen = m_Performance; m_iState = PERFORMANCE; break;
 	case DEALERSHIP:
+      m_curScreen = m_Dealership; m_iState = DEALERSHIP; break;
 #ifdef _DEBUG
 		CLog::GetLog().Write(LOG_MISC, "case %i not implemented in CFrontendManager::Transition()", 
 			next_screen);
 #endif
 		break;
 	case PRE_GAME:
-		m_curScreen = NULL; m_iState = PRE_GAME;
+		m_curScreen = m_PreGame/*NULL*/; m_iState = PRE_GAME; //or Change ot pregame
 		CAppStateManager::GetAppMan().SetAppState(STATE_PRE_GAME);
 		break;
 	case IN_GAME:
@@ -172,14 +201,22 @@ CScreen* CFrontendManager::Screen(int which)
 		return m_PauseGame;
 	case HOME:
 		return m_Home;
-	// not yet implemented:
 	case OPTIONS:
+        return m_Options;
 	case BESTTIMES:
+        return m_BestTimes;
 	case HELP:
+        return m_Help;
 	case CREDITS:
+        return m_Credits;
 	case QUIT:
+        return m_Quit;
 	case PERFORMANCE:
+        return m_Performance;
 	case DEALERSHIP:
+        return m_Dealership;
+    case PRE_GAME:
+        return m_PreGame;
 	default:
 		return NULL;
 	}

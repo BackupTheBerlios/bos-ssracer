@@ -47,6 +47,13 @@ private:
 	CPauseGame* m_PauseGame;
 	CHome* m_Home;
     CQuit* m_Quit;
+    COptions * m_Options;
+    CPreGame * m_PreGame;
+    CBestTimes * m_BestTimes;
+	CHelp * m_Help;
+	CCredits * m_Credits;
+	CPerformance * m_Performance;
+	CDealership * m_Dealership;
 };
 
 #endif

@@ -890,13 +890,6 @@ int CScene::LoadOpponentVehicle(string* directory, string* filename)
         //m_kQuadTree->Add(newCar->GetTire(i));
 	}
 
-
-
-    //$$$NOTE you guys should not be setting this because this is an AI car.
-    //$$$NOTE if you want the chasecam to follow it use the following
-    //$$$NOTE CRenderer::GetRenderer().GetCameraPtr(CAMERA_CHASE)->SetVehicle(pointertoyouropponentvehicle);
-    //$$$NOTE then set the active camera to the chase cam -J
-	
     // Add opponent to list in Gamestate manager
     CGameStateManager::GetGameStateManagerPtr()->addOpponentVehicle(newCar);
 	return 1;
@@ -1036,14 +1029,20 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 					newObject->SetRotate(Vector3f(temp[0], temp[1], temp[2]));
 					continue;
 				}
+                if(!strcmp(token, "<Branch>")) {
+					token = strtok(NULL, seps);
+					newObject->setBranch(atoi(token));
+					continue;
+					}
 				if(!strcmp(token, "<scale>")) {
 					for(i=0;i<3;i++) {
 						token = strtok(NULL, seps);
 						temp[i] = float(atof(token));
 					}
 					newObject->SetScale(Vector3f(temp[0], temp[1], temp[2]));
-					continue;
+					break;
 				}
+                /* NONE OF This Stuff used at all yet
 				if(!strcmp(token, "<OBBCenter>")) {
 					for(i=0;i<3;i++) {
 						token = strtok(NULL, seps);
@@ -1107,7 +1106,7 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 
 
 					break;
-				}
+				}*/
 
                     /*
                     #ifdef _DEBUG

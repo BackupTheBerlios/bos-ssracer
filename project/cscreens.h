@@ -28,19 +28,20 @@ class CScreen
 {
 public:
   virtual void draw()=0;
-  virtual void processInput(int key)=0;
+  //virtual void processInput(int key)=0;
   int getGotoScreen(){return gotoScreen;};
   void resetGotoScreen(){gotoScreen=0;};
   //not much else in base class for now
   CScreen(){gotoScreen=0; maxScreeni = 1000; selectedScreeni =0;};
   ~CScreen(){};
+  void processInput(int key);
 
 protected:
   //CWidget * selectedWidget;
   int selectedScreeni;
   int maxScreeni;
   int gotoScreen;  
-
+  int screenOrder[20];
 
 };
 
@@ -56,13 +57,13 @@ class CMainMenu : public CScreen
   CButton * help;
   CButton * credits;
   CButton * quit;
-  int screenOrder[6];
+  //int screenOrder[6];
 
   //functions
   CMainMenu();          //constructor where all widgets are set 
   ~CMainMenu();         //destructor
   void draw();          //Jay's stub to render screen
-  void processInput(int key);
+  
 
 
 };
@@ -74,7 +75,7 @@ class CNewGame : public CScreen
     //buttons
   CButton * ok;
   CButton * cancel; 
-  int screenOrder[2];
+  //int screenOrder[2];
 
   //labels
   CLabel * instructions;
@@ -87,6 +88,7 @@ class CNewGame : public CScreen
   ~CNewGame();         //destructor
   void draw();          //Jay's stub to render screen
   void processInput(int key);
+  
 
 };
 
@@ -96,7 +98,7 @@ class CGarage : public CScreen
     //buttons
   CButton * select;
   CButton * cancel;
-  int screenOrder[2];
+  //int screenOrder[2];
 
   //TODO WILL NEED 3D Widget Here to Handle Rotating Car
 
@@ -118,7 +120,7 @@ class CPostGame : public CScreen
   CButton * onward;
   CButton * restartRace;
   CButton * mainMenu;
-  int screenOrder[3];
+  //int screenOrder[3];
 
   //labels
   CLabel * congrats;
@@ -129,7 +131,7 @@ class CPostGame : public CScreen
   CPostGame();          //constructor where all widgets are set 
   ~CPostGame();         //destructor
   void draw();          //Jay's stub to render screen
-  void processInput(int key);
+  
 
 };
 
@@ -141,7 +143,7 @@ class CPauseGame : public CScreen
   CButton * restartRace;
   CButton * mainMenu;
   CButton * options;
-  int screenOrder[3];
+  //int screenOrder[3];
 
   //labels
   CLabel * instructions;
@@ -150,7 +152,7 @@ class CPauseGame : public CScreen
   CPauseGame();          //constructor where all widgets are set 
   ~CPauseGame();         //destructor
   void draw();          //Jay's stub to render screen
-  void processInput(int key);
+  
 
 };
 
@@ -164,7 +166,7 @@ class CHome : public CScreen
   CButton * dealership;
   CButton * mainMenu;
 
-  int screenOrder[5];
+  //int screenOrder[5];
 
   //labels
   CLabel * home;
@@ -184,13 +186,147 @@ class CQuit : public CScreen
   CButton * quit;
   CButton * mainMenu;
 
-  int screenOrder[2];
+  //int screenOrder[2];
 
   //functions
   CQuit();          //constructor where all widgets are set 
   ~CQuit();         //destructor
   void draw();          //Jay's stub to render screen
+
+
+};
+
+class CPreGame : public CScreen
+{
+  public:
+    //buttons
+  CButton * onward;
+  CButton * mainMenu;
+  //int screenOrder[2];
+
+  //labels
+  CLabel * ready;
+  
+  //functions
+  CPreGame();          //constructor where all widgets are set 
+  ~CPreGame();         //destructor
+  void draw();          //Jay's stub to render screen
+  //void processInput(int key);
+
+};
+
+class COptions : public CScreen
+{
+  public:
+    //buttons
+  CButton * option1;
+  CButton * option2;
+  CButton * option3;
+  CButton * mainMenu;
+  //int screenOrder[3];
+
+  //labels
+  CLabel * instructions;
+
+  //functions
+  COptions();          //constructor where all widgets are set 
+  ~COptions();         //destructor
+  void draw();          //Jay's stub to render screen
+  
+
+};
+
+class CBestTimes : public CScreen
+{
+  public:
+    //buttons
+  CButton * mainMenu;
+
+  //labels
+  CLabel * bestTime;
+  
+  //functions
+  CBestTimes();          //constructor where all widgets are set 
+  ~CBestTimes();         //destructor
+  void draw();          //Jay's stub to render screen
+  //void processInput(int key);
+
+};
+
+class CHelp : public CScreen
+{
+  public:
+    //buttons
+  CButton * mainMenu;
+
+  //labels
+  CLabel * help;
+  
+  //functions
+  CHelp();          //constructor where all widgets are set 
+  ~CHelp();         //destructor
+  void draw();          //Jay's stub to render screen
+  //void processInput(int key);
+
+};
+
+class CCredits : public CScreen
+{
+  public:
+    //buttons
+  CButton * mainMenu;
+
+  //labels
+  CLabel * credits;
+  
+  //functions
+  CCredits();          //constructor where all widgets are set 
+  ~CCredits();         //destructor
+  void draw();          //Jay's stub to render screen
+  //void processInput(int key);
+
+};
+
+class CPerformance : public CScreen
+{
+  public:
+    //buttons
+  CButton * engineUp;
+  CButton * tireUp;
+  CButton * weightRed;
+  CButton * home;
+  //int screenOrder[3];
+
+  //labels
+  CLabel * instructions;
+
+  //functions
+  CPerformance();          //constructor where all widgets are set 
+  ~CPerformance();         //destructor
+  void draw();          //Jay's stub to render screen
+  
+
+};
+
+class CDealership : public CScreen
+{
+  public:
+    //buttons
+  CButton * select;
+  CButton * cancel;
+  //int screenOrder[2];
+
+  //TODO WILL NEED 3D Widget Here to Handle Rotating Car
+
+  //labels
+  CLabel * instructions;
+
+  //functions
+  CDealership();          //constructor where all widgets are set 
+  ~CDealership();         //destructor
+  void draw();          //Jay's stub to render screen
   void processInput(int key);
 
 };
+
 #endif

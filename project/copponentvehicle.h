@@ -39,11 +39,14 @@ public:
     //Ram's Add 
     bool lastWPReached;
     bool raceOver;
+    int getAILevel(){return m_aiLevel;};
+    void setAILevel(int lev){m_aiLevel = lev;}; 
 protected:
 	std::vector<CWaypoint*> m_vWPSequence;
 	std::vector<CWaypoint*>::iterator m_Next;
 	Vector3f m_vHeadingTargetWC;
 	Vector3f m_vVelocityTargetWC;
+    int m_aiLevel;
 
 
 private:

@@ -28,10 +28,13 @@ class CWaypoint : public CEntity {
         //Rams's Add
         int setLastWay(bool b) {m_isLastWay=b; return OK;};
         bool getLastWay(){return m_isLastWay;};
+        int setBranch(int b) {m_isBranch=b; return OK;};
+        int getBranch(){return m_isBranch;};
 
 	protected:
         bool m_isLastWay;
 		float m_fRadius;
+        int m_isBranch;
 		std::vector<CWaypoint*> m_Neighbors;
 
 	private:

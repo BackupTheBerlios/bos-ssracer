@@ -117,7 +117,7 @@ bool COpponentAI::isAtWaypoint(COpponentVehicle* Car)
 
 	else return false;
 
-	return true;
+	//return true;
 }
 
 int COpponentAI::setDirection(COpponentVehicle* Car)
@@ -145,7 +145,7 @@ int COpponentAI::setDirection(COpponentVehicle* Car)
 	Vector3f NormalizedHeadingWC = Car->GetVehicleHeadingWC();
 	NormalizedHeadingWC.Normalize();
     //CLog::GetLog().Write(LOG_DEBUGOVERLAY,60, "Vehicle HEading: %f %f %f", NormalizedHeadingWC.X(), NormalizedHeadingWC.Y(),NormalizedHeadingWC.Z());
-	float heading_angle = asin(NormalizedHeadingWC.Z());
+	double heading_angle = asin(NormalizedHeadingWC.Z());
 
 	// Set heading target to the vector from car to waypoint
 	CWaypoint* WP = Car->Next();
@@ -156,7 +156,7 @@ int COpponentAI::setDirection(COpponentVehicle* Car)
 	Vector3f NormalizedHeadingTargetWC = *Car->HeadingTarget();
 	NormalizedHeadingTargetWC.Normalize();
    // CLog::GetLog().Write(LOG_DEBUGOVERLAY,64, "Normalized Heading: %f %f %f", NormalizedHeadingTargetWC.X(), NormalizedHeadingTargetWC.Y(),NormalizedHeadingTargetWC.Z());
-	float heading_target_angle = asin(NormalizedHeadingTargetWC.Z());
+	double heading_target_angle = asin(NormalizedHeadingTargetWC.Z());
 
 	// compare angles to see if lturn or rturn should be set
     CLog::GetLog().Write(LOG_DEBUGOVERLAY,65, "Vehicle Angle: %f Target Angle: %f", heading_angle, heading_target_angle);
@@ -211,7 +211,6 @@ void COpponentAI::Update()
 		for (thisCar = m_pCars.begin(); thisCar != m_pCars.end(); thisCar++) {
 			// turning:
 			if ((*thisCar)->reachedHeadingTarget()) {
-                CLog::GetLog().Write(LOG_MISC, "Heading Target Reached");
 				(*thisCar)->SetLTurn(false);
 				(*thisCar)->SetRTurn(false);
 			}
@@ -258,9 +257,8 @@ void COpponentAI::Update()
 		break;
 	default:; // Program should never get here
 	}
-
-	// Also, need to decide what to do with cars that have finished race
 }
+	
 
 // Careful, the following 2 functions don't add Entities to scene
 int COpponentAI::setCars(std::vector<COpponentVehicle*> Cars)
@@ -277,48 +275,7 @@ int COpponentAI::setWaypoints(std::vector<CWaypoint*> Waypoints)
 	return OK;
 }
 
-// DON'T USE THIS. DOESN'T WORK!!! (see COpponentVehicle for another version of this function)
-//bool COpponentAI::reachedHeadingTarget(std::vector<COpponentVehicle*>::iterator thisCar)
-//{
-	/*
-	CLog::GetLog().Write(LOG_USER, "lturn = %d\nrturn = %d",
-		(*thisCar)->GetLTurn(), (*thisCar)->GetRTurn);
 
-	if (!(*thisCar)) return false;
-	if ((*thisCar)->GetLTurn() && (*thisCar)->GetRTurn()) return true;
-
-	// Procedure for finding angle from heading:
-	//		Normalize HeadingWC
-	//		Take the z value of normalized HeadingWC.
-	//		Take the inverse sine of z
-	//		That's your WC angle.
-
-	// For HeadingWC
-	Vector3f NormalizedHeadingWC = (*thisCar)->GetVehicleHeadingWC();
-	NormalizedHeadingWC.Normalize();
-	float heading_angle = asin(NormalizedHeadingWC.Z());
-
-	// For HeadingTargetWC
-	Vector3f NormalizedHeadingTargetWC = (*thisCar)->GetVehicleHeadingWC();
-	NormalizedHeadingTargetWC.Normalize();
-	float heading_target_angle = asin(NormalizedHeadingTargetWC.Z());
-
-//	CLog::GetLog().Write(LOG_USER, "heading_angle = %f\nheading_target_angle = %f\nlturn = %d\nrturn = %d",
-//		heading_angle, heading_target_angle, (*thisCar)->GetLTurn(), (*thisCar)->GetRTurn);
-
-	// read: if turning left then
-	//			if current heading WC angle will be greater than target untill target reached.
-	//		 if turning right then
-	//		    if current heading WC angle will be less than target untill target reached.
-	if (((*thisCar)->GetLTurn() && heading_angle > heading_target_angle) ||
-		((*thisCar)->GetRTurn() && heading_angle < heading_target_angle))
-		return false;
-	else return true;
-	// Note: assuming that if neither lturn or rturn = true, 
-	// target heading already reached.
-*/
-//	return true;
-//}
 
 void COpponentAI::DoMessageHandle(ITaskMessage* cMsg)
 {
