@@ -101,7 +101,7 @@ bool CTimer::Start()
 //-----------------------------------------------------------------------------
 void CTimer::Update()
 {
-    DXUtil_Timer( TIMER_ADVANCE, m_xTimeStep );  ////
+    //DXUtil_Timer( TIMER_ADVANCE, m_xTimeStep );  ////UNCOMMENT FOR FIXED TIMESTEP
     m_fCurrTime = DXUtil_Timer( TIMER_GETAPPTIME );
     m_fElapsedTime = DXUtil_Timer( TIMER_GETELAPSEDTIME );
 
@@ -123,7 +123,7 @@ void CTimer::Reset()
     #endif
     DXUtil_Timer( TIMER_RESET );
     DXUtil_Timer( TIMER_START );  // we have to do this or the system times will
-    DXUtil_Timer( TIMER_STOP );   // not be initialized properly ////
+    //no fixed timestep DXUtil_Timer( TIMER_STOP );   // not be initialized properly ////UNCOMMENT FOR FIXED TIMESTEP
 
     m_fCurrTime = DXUtil_Timer( TIMER_GETAPPTIME );
     m_fElapsedTime = DXUtil_Timer( TIMER_GETELAPSEDTIME );

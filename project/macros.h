@@ -10,13 +10,13 @@
 
 #ifdef _DEBUG
 #define NEW(name, type, errorString)	{ (name) = new (type); if(!(name)) { CLog::GetLog().Write(LOG_MISC, "%s", (errorString)); return 0;}}
-#elif
+#else if
 #define NEW(name, type, errorString)	{ (name) = new (type); if(!(name)) return 0; }
 #endif
 
 #ifdef _DEBUG
 #define FREE(name, errorString)	{ if(name) { delete name; name = NULL;} else { CLog::GetLog().Write(LOG_MISC, "%s", errorString);} }
-#elif
+#else if
 #define FREE(name, errorString)	{ if(name) { delete name; name = NULL;} }
 #endif
 

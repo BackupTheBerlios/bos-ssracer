@@ -35,13 +35,12 @@ CRenderTask::CRenderTask()
 {
     m_nTaskType = RENDER_TASK;
 
-//    m_pkRenderer = CBOSApplication::GetBOSApp().GetRendererPtr();
-//    assert(m_pkRenderer);
     CBOSApplication * pBOSApp = CBOSApplication::GetBOSAppPtr();
 
     // create the renderer for this app
-    m_pkRenderer = new CRenderer(pBOSApp->IsFullScreen(), pBOSApp->GetMainWindowHandle(),
+    new CRenderer(pBOSApp->IsFullScreen(), pBOSApp->GetMainWindowHandle(),
                                  (UINT)pBOSApp->GetWidth(), (UINT)pBOSApp->GetHeight());
+    m_pkRenderer = CRenderer::GetRendererPtr();
 }
 
 
@@ -63,7 +62,7 @@ CRenderTask::CRenderTask( CRenderer * pkRenderer )
 //-----------------------------------------------------------------------------
 CRenderTask::~CRenderTask()
 {
-    delete m_pkRenderer;
+    delete CRenderer::GetRendererPtr();
 }
 
 
@@ -108,7 +107,7 @@ void CRenderTask::Update()
     m_pkRenderer->RenderScene(); // render current scene
     
     if ( CBOSApplication::GetBOSApp().GetConsoleState() == TRUE ) 
-        m_pkRenderer->DrawConsole(); // draw the console
+        m_pkRenderer->DrawConsole(); // draw the console if down
         
     m_pkRenderer->DisplayBackBuffer();  // swap buffers
 }

@@ -395,11 +395,13 @@ int CCommandLineParser::ClearScene()
 
 int CCommandLineParser::JScript1()
 {
-    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(new string("\0"), new string("ferrarif20\0")))) {
+    string sDir = "\0";
+    string sName = "ferraritest\0";
+    if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&sDir, &sName))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "The entity was not loaded successfully!");
 		return GENERAL_ERROR;
 	}
-    CLog::GetLog().Write(LOG_GAMECONSOLE, "J's script 1 loaded the entity %s Sucessfully!", "ferrarif20\0" );
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "J's script 1 loaded the entity %s Sucessfully!", sName.c_str() );
     return OK;
 }
 

@@ -902,7 +902,7 @@ void CSoundStream::Destroy() {
 	m_cSTRefreshCheck->shutdown();
 
 	// Wait for the thread to shut itself down
-	while( (volatile) m_cSTRefreshCheck->IsRunning() ) {}
+	//while( (volatile) m_cSTRefreshCheck->IsRunning() ) {}
 
 	// Delete the object off the heap
 	if (m_cSTRefreshCheck) delete m_cSTRefreshCheck;

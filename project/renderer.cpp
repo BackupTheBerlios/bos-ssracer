@@ -33,13 +33,13 @@ using namespace Wml;
 
 
 
-
+CD3DSettings      CRenderer::m_d3dSettings;
+CD3DEnumeration   CRenderer::m_d3dEnumeration;
 HRESULT CRenderer::ms_hResult                = NULL;
 LPDIRECT3D9       CRenderer::m_pD3D          = NULL;
 LPDIRECT3DDEVICE9 CRenderer::m_pd3dDevice    = NULL;
 std::map<std::string, CD3DMesh *> CRenderer::m_kMeshMap;       // meshes available to this app
 std::map< unsigned int, CD3DCamera * > CRenderer::m_pkCameraMap;  // cameras used by this renderer
-
 CRenderer * CRenderer::ms_pkRenderer = NULL; 
 
 
@@ -85,9 +85,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 
     // set up the cameras
    	m_pkCameraMap[CAMERA_BUMPER] = NULL;//new CD3DCamera();  // bumper camera
-	
 	m_pkCameraMap[CAMERA_CHASE]  = NULL;//new CCameraChase();  // chase camera
-
 	m_pkCameraMap[CAMERA_FREELOOK]   = new CCameraFreeLook(); // free look
 
 	// set up default camera parameters for each main camera
@@ -109,11 +107,11 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 
 */
 	//--- free look camera --- //	
-	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(0.0f, 10.0f, -10.0f), 
-				                               &D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pkCameraMap[CAMERA_FREELOOK]->SetViewParams( &D3DXVECTOR3(10.0f, 10.0f, -10.0f), 
+				                                   &D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	// wide FOV and a large frustrum
-	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f ,1.0f ,1000.0f );
+	m_pkCameraMap[CAMERA_FREELOOK]->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000.0f );
 
     // defaults to this camera
     m_pActiveCamera = m_pkCameraMap[CAMERA_FREELOOK];
@@ -206,6 +204,26 @@ HRESULT CRenderer::Initialize()
     }
 
 
+    //$$$TEMP
+    //m_kMeshMap["mercedes"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\mercedes\\mercedes.x"));
+    m_kMeshMap["mercedes"] = new CD3DMesh(_T("mercedes"));
+    //m_kMeshMap["mercedes"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\mercedes\\mercedes.x\0") );
+    m_kMeshMap["mercedes"]->Create( m_pd3dDevice, _T("C:\\Documents and Settings\\jay.ALTRON\\My Documents\\SCHOOL\\CPSC585\\CODE\\WORKING\\project\\mercedes.x") );
+    m_kMeshMap["mercedes"]->UseMeshMaterials(true);
+    m_kMeshMap["mercedes"]->RestoreDeviceObjects( m_pd3dDevice );
+
+    m_kMeshMap["f20"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0"));
+    m_kMeshMap["f20"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\ferrarif20\\ferrarif20.x\0") );
+    m_kMeshMap["f20"]->UseMeshMaterials(true);
+    m_kMeshMap["f20"]->RestoreDeviceObjects( m_pd3dDevice );
+
+    m_kMeshMap["lambo"] = new CD3DMesh(_T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0"));
+    m_kMeshMap["lambo"]->Create( m_pd3dDevice, _T(".\\media\\meshes\\dynamic\\vehicles\\lambo\\lambo.x\0") );
+    m_kMeshMap["lambo"]->UseMeshMaterials(true);
+    m_kMeshMap["lambo"]->RestoreDeviceObjects( m_pd3dDevice );
+    //$$$ENDTEMP
+
+
     
     //assert(m_pd3dDevice);  //$$$DEBUG check if its allocated first
 
@@ -284,6 +302,7 @@ void CRenderer::CreateMeshes ()
 		}
 		it->second->UseMeshMaterials(true);
 		it->second->RestoreDeviceObjects( m_pd3dDevice );
+
 	}
 
 }
@@ -308,8 +327,18 @@ int CRenderer::CreateMesh( CD3DMesh * pMesh, char * pcFileName )
         //DXTRACE_ERR_MSGBOX( _T("could not load single mesh"), hr );
         return 0;  // Failure
 	}
+    //pMesh->InvalidateDeviceObjects();
     pMesh->UseMeshMaterials(true);
     pMesh->RestoreDeviceObjects( m_pd3dDevice );
+ 
+
+    //$$$ TEMP store a local copy
+    m_kMeshMap[pMesh->m_strName] = new CD3DMesh(_T(pcFileName));
+    m_kMeshMap[pMesh->m_strName]->Create( m_pd3dDevice, _T(pcFileName) );
+    m_kMeshMap[pMesh->m_strName]->UseMeshMaterials(true);
+    m_kMeshMap[pMesh->m_strName]->RestoreDeviceObjects( m_pd3dDevice );
+    //$$$TEMP
+
     return 1;
 
 }
@@ -374,7 +403,7 @@ bool CRenderer::CheckDevice()
 void CRenderer::RenderScene()
 {
     InitializeState();
-    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,100,200), 1.0f, 0 );
+    m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,50,110), 1.0f, 0 );
     //m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_ZBUFFER, NULL, 1.0f, 0 );D3DCOLOR_XRGB(0,20,50)
 
     m_pd3dDevice->BeginScene();  // --- begin scene drawing commands
@@ -386,27 +415,13 @@ void CRenderer::RenderScene()
 	m_kFontMap[FONT_SYSTEM]->DrawText( 0, 0, D3DCOLOR_ARGB(100,255,255,255), tMsgA, D3DFONT_FILTERED|D3DFONT_BOTTOM);
 	#endif
 
-    /*
-	CObject * pkObject; 
-	CScene * pkScene = CGame::GetGame().GetScenePtr();
-	int iMaxNumObj = pkScene->GetNumObjects();
-   
-    //Render all the objects in the scene 
-	CLog::GetLog().Write(LOG_MISC, "\n\n\n\niMaxNumObj = %i", iMaxNumObj);
-    for (int i=0; i<iMaxNumObj ; i++) {
-		pkObject = pkScene->GetObject(i);
-        pkObject->draw();
-    }
-    */
-
-
     //$$$TEMP renders ALL entitites until I get the Octree up    
     static ID3DXMatrixStack* pMatrixStack;
     D3DXCreateMatrixStack( 0, &pMatrixStack);
     Vector3f * vTemp;
     HRESULT hr;
 
-    assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
+/*    assert(CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities());
 
     for (vector<CEntity *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->begin();
          it != CGameStateManager::GetGameStateManager().GetScenePtr()->TEMPGetEntities()->end();
@@ -425,8 +440,7 @@ void CRenderer::RenderScene()
 	    //pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
 	    
 	    // translation
-	    //vTemp = (*it)->GetTranslate();
-		vTemp = &Vector3f(0.0f, 0.0f, -100.0f);
+	    vTemp = (*it)->GetTranslate();		
 	    pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
         //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
 
@@ -438,8 +452,9 @@ void CRenderer::RenderScene()
 
 	    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
 
-          //actual drawing of the mesh
+        //actual drawing of the mesh
         if ( FAILED(hr =  (*it)->GetMesh()->Render(m_pd3dDevice)) )  {
+        //if ( FAILED(hr =  m_kMeshMap[(*it)->GetMesh()->m_strName]->Render(m_pd3dDevice)) )  {
 		    #ifdef _DEBUG
 		    CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
             CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", (*it)->GetMesh()->m_strName);
@@ -454,9 +469,66 @@ void CRenderer::RenderScene()
    	    pMatrixStack->Pop();
 
      }//end big ass for loop
+*/
 
-    m_pd3dDevice->EndScene();  // --- end scene drawing commands
-     
+    assert(m_pd3dDevice);
+    int iTemp=0;//$$$TEMP  should slow down the timer
+
+//TIMERTEST:
+    for(map< std::string, CD3DMesh * >::iterator it=m_kMeshMap.begin(); it!=m_kMeshMap.end(); it++ )
+    {
+
+        CD3DMesh * pTemp = it->second;
+        pMatrixStack->Push(); 
+        pMatrixStack->LoadIdentity();
+
+	    D3DMATRIX xRot, yRot, zRot;
+	    // orientation
+	    vTemp = &Vector3f(0,0,0);//(*it)->GetRotate();
+	    pMatrixStack->RotateAxis(&D3DXVECTOR3(1.0f, 0.0f, 0.0f), RADIANS(vTemp->X()));
+	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 1.0f, 0.0f), RADIANS(vTemp->Y()));
+	    pMatrixStack->RotateAxis(&D3DXVECTOR3(0.0f, 0.0f, 1.0f), RADIANS(vTemp->Z()));
+	    //pMatrixStack->RotateYawPitchRoll(vTemp->X(), vTemp->Y(), vTemp->Z());	
+	    
+	    // translation
+	    vTemp = &Vector3f(0,0,0);//(*it)->GetTranslate();		
+	    pMatrixStack->Translate(vTemp->X(), vTemp->Y(), vTemp->Z());
+        //pMatrixStack->TranslateLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
+
+	    // scale
+	    vTemp = &Vector3f(1,1,1);//(*it)->GetScale();
+	    pMatrixStack->Scale(vTemp->X(), vTemp->Y(), vTemp->Z());
+        //pMatrixStack->ScaleLocal(vTemp->X(), vTemp->Y(), vTemp->Z());
+
+
+	    m_pd3dDevice->SetTransform( D3DTS_WORLD, pMatrixStack->GetTop() );
+
+        //actual drawing of the mesh
+        assert(m_pd3dDevice);
+        if ( FAILED(hr =  it->second->Render(m_pd3dDevice)) )  {
+        //if ( FAILED(hr =  m_kMeshMap[(*it)->GetMesh()->m_strName]->Render(m_pd3dDevice)) )  {
+		    #ifdef _DEBUG
+		    //CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, IDS_RENDER_ERROR, "Mesh Drawing Failed");
+            CLog::GetLog().Write(LOG_MISC|LOG_GAMECONSOLE, "Could not draw: %s", it->second->m_strName);
+		    #endif
+	    }
+	    else {
+		    #ifdef _DEBUG
+		    CLog::GetLog().Write(LOG_GAMECONSOLE, "Drawing a mesh %s", it->second->m_strName);
+		    #endif
+        }
+
+   	    pMatrixStack->Pop();
+    }
+
+    //$$$TEMP
+    //if (iTemp < 100) {
+    //    iTemp++;
+    //    goto TIMERTEST;
+    //}
+
+
+    m_pd3dDevice->EndScene();  // --- end scene drawing commands     
 }
 
 
@@ -680,11 +752,11 @@ void CRenderer::Cleanup()
 //-----------------------------------------------------------------------------
 void CRenderer::ToggleFullScreen( int  riNewWidth, int riNewHeight )
 {
-#ifdef _DEBUG
+    #ifdef _DEBUG
     CLog::GetLog().Write( LOG_APP, IDS_RENDER_MSG, "Toggling Fullscreen to..." );
     CLog::GetLog().Write( LOG_APP, "\tx resolution: %d y resolution %d",
                           riNewWidth, riNewHeight );
-#endif
+    #endif
     //m_d3dpp.Windowed = !m_d3dpp.Windowed;
     m_d3dpp.BackBufferWidth = (UINT)riNewWidth;  //$$$DEBUG
     m_d3dpp.BackBufferHeight = (UINT)riNewHeight;

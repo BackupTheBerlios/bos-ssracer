@@ -63,8 +63,8 @@ protected:
     BOOL              m_bFullScreen;
     BOOL              m_bConsoleDown;      // indicates if console overlay is to be drawn
     
-    CD3DSettings      m_d3dSettings;
-    CD3DEnumeration   m_d3dEnumeration;
+    static CD3DSettings      m_d3dSettings;
+    static CD3DEnumeration   m_d3dEnumeration;
 
     D3DPRESENT_PARAMETERS m_d3dpp;         // Parameters for CreateDevice/Reset
     HWND              m_hWnd;              // The main app window
