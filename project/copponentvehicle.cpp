@@ -154,6 +154,7 @@ float maxTurnAngle = (MAX_STEER_ANGLE_RADS - MIN_STEER_ANGLE_RADS) * speedScalar
 	
 if(inputState.lturn)
 {
+    CLog::GetLog().Write(LOG_MISC, "When Left: %f",angle);
 if(angle > maxTurnAngle) {
 			steerAngleRADS = maxTurnAngle;
              CLog::GetLog().Write(LOG_DEBUGOVERLAY, 118, "MAX LEFT HIT!");
@@ -166,7 +167,9 @@ if(angle > maxTurnAngle) {
 }
 else if(inputState.rturn)
 {
+    CLog::GetLog().Write(LOG_MISC, "When Right: %f",angle);
   if(angle < (maxTurnAngle * -1.0f)) {
+    CLog::GetLog().Write(LOG_DEBUGOVERLAY, 118, "MAX RIGHT HIT!");
 			steerAngleRADS = maxTurnAngle * (-1.0f);
 		}
 		else {

@@ -159,18 +159,25 @@ int COpponentAI::setDirection(COpponentVehicle* Car)
    // CLog::GetLog().Write(LOG_DEBUGOVERLAY,64, "Normalized Heading: %f %f %f", NormalizedHeadingTargetWC.X(), NormalizedHeadingTargetWC.Y(),NormalizedHeadingTargetWC.Z());
 	double heading_target_angle = asin(NormalizedHeadingTargetWC.Z());
     double resultAngle = acos(NormalizedHeadingWC.X()*NormalizedHeadingTargetWC.X()+NormalizedHeadingWC.Y()*NormalizedHeadingTargetWC.Y()+NormalizedHeadingWC.Z()*NormalizedHeadingTargetWC.Z());
-	// compare angles to see if lturn or rturn should be set
+	//double currentAngle = acos(NormalizedHeadingWC.X()*NormalizedHeadingTargetWC.X()+NormalizedHeadingWC.Y()*NormalizedHeadingTargetWC.Y()+NormalizedHeadingWC.Z()*NormalizedHeadingTargetWC.Z());
+	double blah = NormalizedHeadingTargetWC.Z() - NormalizedHeadingWC.Z();
+
+    // compare angles to see if lturn or rturn should be set
     CLog::GetLog().Write(LOG_DEBUGOVERLAY,65, "Vehicle Angle: %f Target Angle: %f", heading_angle, heading_target_angle);
-	if (heading_angle < heading_target_angle) {
-     //   CLog::GetLog().Write(LOG_MISC, "Attempting to turn Left");
-		Car->SetRTurn(false);
+	//if (heading_angle < heading_target_angle) {
+    if(blah>0){ 
+    //   CLog::GetLog().Write(LOG_MISC, "Attempting to turn Left");
+	CLog::GetLog().Write(LOG_DEBUGOVERLAY,121, "When Left: %f", blah);
+        Car->SetRTurn(false);
 		Car->SetLTurn(true);
     //  Car->SetHeadingTotLC(Vector3f(direction.X(),direction.Z(), -direction.Y()));
-	    if (resultAngle > 3.14156/2)
-          Car->SetBrake(true);
+	    //if (resultAngle > 2)
+         // Car->SetBrake(true);
         Car->setHeadingAngle(resultAngle);
     }
-	if (heading_angle > heading_target_angle) {
+    else /*if(blah<0)*/{ 
+	//if (heading_angle > heading_target_angle) {
+      	CLog::GetLog().Write(LOG_DEBUGOVERLAY,121, "When Right: %f", blah);
        // CLog::GetLog().Write(LOG_MISC, "Attempting to turn Right");
 		Car->SetLTurn(false);
 		Car->SetRTurn(true);
@@ -213,8 +220,7 @@ bool COpponentAI::Start()
 }
 
 void COpponentAI::Update()
-{CLog::GetLog().Write(LOG_MISC, "In AI update");
-	if (m_pCars.empty()) return;
+{	if (m_pCars.empty()) return;
 
 	std::vector<COpponentVehicle*>::iterator thisCar;
 	switch (CAppStateManager::GetAppManPtr()->GetAppState()) {
