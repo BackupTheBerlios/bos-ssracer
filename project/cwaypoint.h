@@ -40,6 +40,8 @@ class CWaypoint : public CEntity {
         int getPath(){return m_Path;};
         int setCIndex(int c) {m_conjunctIndex=c; return OK;};
         int getCIndex(){return m_conjunctIndex;};
+        int setCPath(int c) {m_conjunctPath=c; return OK;};
+        int getCPath(){return m_conjunctPath;};
         int setGoToPath(int p) {m_gotoPath=p; return OK;};
         int getGoToPath(){return m_gotoPath;};
 
@@ -51,6 +53,7 @@ class CWaypoint : public CEntity {
 		//Kinda Ugly for now, Perhaps make subclass later
         int m_gotoPath;                 //if branch taken gotopath
         int m_conjunctIndex;             //when conjoining index on main path to goto
+        int m_conjunctPath;
         std::vector<CWaypoint*> m_Neighbors;
 
 	private:

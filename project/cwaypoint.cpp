@@ -8,6 +8,7 @@ CWaypoint::CWaypoint()
     m_isLastWay = false;
     m_Type = NORMALWP;
     m_Path = 0;
+    m_conjunctPath =0;
 }
 
 CWaypoint::~CWaypoint()

@@ -200,7 +200,7 @@ bool COpponentAI::Start()
 }
 
 void COpponentAI::Update()
-{
+{CLog::GetLog().Write(LOG_MISC, "In AI update");
 	if (m_pCars.empty()) return;
 
 	std::vector<COpponentVehicle*>::iterator thisCar;
@@ -209,7 +209,8 @@ void COpponentAI::Update()
 		break;
 	case STATE_IN_GAME:
 		for (thisCar = m_pCars.begin(); thisCar != m_pCars.end(); thisCar++) {
-			// turning:
+		/*	// turning:
+            CLog::GetLog().Write(LOG_MISC, "In AI update");
 			if ((*thisCar)->reachedHeadingTarget()) {
 				(*thisCar)->SetLTurn(false);
 				(*thisCar)->SetRTurn(false);
@@ -253,7 +254,55 @@ void COpponentAI::Update()
             if((*thisCar)->raceOver){
               (*thisCar)->SetBrake(false); (*thisCar)->SetGas(false);}
 			
-		}
+		}*/
+          if (isAtWaypoint(*thisCar)) 
+              {
+                (*thisCar)->incNext(); // new next target waypoint
+				setDirection(*thisCar);
+                CLog::GetLog().Write(LOG_DEBUGOVERLAY, 111, "At WP");
+			}
+          
+            if ((*thisCar)->reachedHeadingTarget()) {
+				(*thisCar)->SetLTurn(false);
+				(*thisCar)->SetRTurn(false);
+                //(*thisCar)->SetGas(true);
+                CLog::GetLog().Write(LOG_DEBUGOVERLAY, 111, "Reached Heading Target");
+			}
+            else
+            {
+             setDirection(*thisCar);
+             CLog::GetLog().Write(LOG_DEBUGOVERLAY, 111, "Not at HT Yet");
+            }
+			// accelerate/decelerate:
+			if ((*thisCar)->GetVehicleVelocityWC().Length() < VAI_CARS_VEL) {
+				(*thisCar)->SetGas(true); (*thisCar)->SetBrake(false);
+			}
+			if ((*thisCar)->GetVehicleVelocityWC().Length() > VAI_CARS_VEL) {
+				(*thisCar)->SetBrake(true); (*thisCar)->SetGas(false);
+			}
+            // NOTE: vehicle current velocity will rarely ever be EXACTLY VAI_CARS_VEL
+			// Therefore, gas and brake are probably going to alternate.
+			// This can be fixed if necessary bay testing to see if current velocity falls
+			// within a range rather than an exact value.
+			// ALSO: we can give each Opponent vehicle its own standard velocity if desired.
+            //Rams add to brake at last waypoint (after reaching it)
+            if (isAtWaypoint((*thisCar)) && (*thisCar)->Next()->getLastWay()) {
+                (*thisCar)->lastWPReached = true;
+                
+            }
+            //Kind of shitty way to do this, but hey it works-> will fix later
+            CLog::GetLog().Write(LOG_DEBUGOVERLAY,112, "Vehicle Velocity: %f", (*thisCar)->GetVehicleVelocityWC().Length());
+            if ((*thisCar)->lastWPReached){ 
+                  (*thisCar)->SetBrake(true); (*thisCar)->SetGas(false);
+            
+                if ((*thisCar)->GetVehicleVelocityWC().Length()<=0.2)
+                {(*thisCar)->raceOver = true;(*thisCar)->SetLTurn(false);
+                (*thisCar)->SetRTurn(false);} 
+            }
+              if((*thisCar)->raceOver){
+                (*thisCar)->SetBrake(false); (*thisCar)->SetGas(false);
+              }
+        }
 		break;
 	default:; // Program should never get here
 	}

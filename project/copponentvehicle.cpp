@@ -6,7 +6,8 @@ COpponentVehicle::COpponentVehicle()
 {
 	m_vWPSequence[0].clear();
     m_vWPSequence[1].clear();
-    m_vWPShort1.clear();
+    m_vWPSequence[2].clear();
+    m_vWPSequence[3].clear();
 	m_vHeadingTargetWC = Vector3f(0.0f, 0.0f, 0.0f);
 	m_vVelocityTargetWC = Vector3f(0.0f, 0.0f, 0.0f);
 	m_Next = m_vWPSequence[0].begin();
@@ -24,8 +25,8 @@ COpponentVehicle::~COpponentVehicle()
 {
 	m_vWPSequence[0].clear();
     m_vWPSequence[1].clear();
-    m_vWPShort1.clear();
-
+    m_vWPSequence[2].clear();
+    m_vWPSequence[3].clear();
 
 }
 
@@ -41,9 +42,9 @@ int COpponentVehicle::incNext()
       }
       else m_Next++;
     }
-    else if((*m_Next)->getType()==3) //If Conjunction
+    else if((*m_Next)->getType()==2) //If Conjunction
     {
-      m_Next = &m_vWPSequence[0][(*m_Next)->getCIndex()]; //Can only get here if in branch
+      m_Next = &m_vWPSequence[(*m_Next)->getCPath()][(*m_Next)->getCIndex()]; //Can only get here if in branch
     }
     else
 	m_Next++;

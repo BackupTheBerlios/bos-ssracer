@@ -42,9 +42,9 @@ public:
     int getAILevel(){return m_aiLevel;};
     void setAILevel(int lev){m_aiLevel = lev;}; 
 protected:
-  std::vector<CWaypoint*> m_vWPSequence[2];
+  std::vector<CWaypoint*> m_vWPSequence[4];
     //ShortCut Vectors
-    std::vector<CWaypoint*> m_vWPShort1;
+    //std::vector<CWaypoint*> m_vWPShort1;
 
 	std::vector<CWaypoint*>::iterator m_Next;
 	Vector3f m_vHeadingTargetWC;

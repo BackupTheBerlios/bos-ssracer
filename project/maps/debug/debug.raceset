@@ -1,4 +1,10 @@
 <newopponent>
+<cardir> mitsuEclipse\\
+<carname> mitsuEclipse.car
+<startpos> 0.000000 5.000000 -0.497
+<ailevel> 1
+
+<newopponent>
 <cardir> acuransx\\
 <carname> acuransx.car
 <startpos> 0.000000 5.000000 -0.497

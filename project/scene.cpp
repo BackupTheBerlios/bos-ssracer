@@ -18,7 +18,8 @@ vector<CEntity*> CScene::m_vEntities;
 //Rams Add
 vector<CWaypoint*> CScene::m_vWaypoints;
 vector<CWaypoint*> CScene::m_vWPShortCut1;
-
+vector<CWaypoint*> CScene::m_vWPShortCut2;
+vector<CWaypoint*> CScene::m_vWPShortCut3;
 //Gib's add
 vector<Rectangle3f*> CScene::m_vPlanes;
 
@@ -30,6 +31,8 @@ CScene::CScene()
     m_vEntities.clear();
     m_vWaypoints.clear();
     m_vWPShortCut1.clear();
+    m_vWPShortCut2.clear();
+    m_vWPShortCut3.clear();
     m_vPlanes.clear();
     m_kQuadTree = new CQuadTree();
 }
@@ -42,6 +45,8 @@ CScene::~CScene()
     m_vEntities.clear();
     m_vWaypoints.clear();
     m_vWPShortCut1.clear();
+    m_vWPShortCut2.clear();
+    m_vWPShortCut3.clear();
     m_vPlanes.clear();
     delete m_kQuadTree;
 };
@@ -119,6 +124,19 @@ int CScene::ReleaseScene()
 	// Clear the vector of entity pointers
 	m_vWPShortCut1.clear();
 
+    for(j=0;j<m_vWPShortCut2.size();j++) {
+		FREE(m_vWPShortCut2[j], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
+	}
+
+	// Clear the vector of entity pointers
+	m_vWPShortCut2.clear();
+
+    for(j=0;j<m_vWPShortCut3.size();j++) {
+		FREE(m_vWPShortCut3[j], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
+	}
+
+	// Clear the vector of entity pointers
+	m_vWPShortCut3.clear();
 	//Gib's add to free all planes in scene
     // Free all the Planes
 	for(unsigned int k=0;k<m_vPlanes.size();k++) {
@@ -978,7 +996,7 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 	char seps[] = " \n";
 	int i;
 	string path;
-
+    m_vWaypoints.clear();
 	path = directory->c_str();
 	//path.append("\\");
 	path += *filename;
@@ -1034,7 +1052,7 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 						token = strtok(NULL, seps);
 						temp[i] = float(atof(token));
 					}
-					newObject->SetTranslate(Vector3f(temp[0], temp[1], temp[2]));
+					newObject->SetTranslate(Vector3f(temp[0], temp[1], temp[2] * -1));
 					continue;
 				}
 				if(!strcmp(token, "<rotate>")) {
@@ -1069,6 +1087,11 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 					newObject->setCIndex(atoi(token));
 					continue;
 					}
+                if(!strcmp(token, "<ConjunctToPath>")) {
+					token= strtok(NULL, seps);
+					newObject->setCPath(atoi(token));
+					continue;
+					}
 				if(!strcmp(token, "<scale>")) {
 					for(i=0;i<3;i++) {
 						token = strtok(NULL, seps);
@@ -1087,6 +1110,14 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
         if ( newObject->getPath() == 1)
         {
           m_vWPShortCut1.push_back(newObject);
+        }
+        else if ( newObject->getPath() == 2)
+        {
+          m_vWPShortCut2.push_back(newObject);
+        }
+        else if ( newObject->getPath() == 3)
+        {
+          m_vWPShortCut3.push_back(newObject);
         }
         else
         {
@@ -1208,8 +1239,8 @@ int CScene ::LoadRaceSettings(string* directory, string* filename)
 						temp[i] = float(atof(token));
 					}
                     //doesnt set starting position properly .... wtf.
-					//currentOpponent->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
-					currentOpponent->SetTranslate(Vector3f(temp[0], temp[1], temp[2]));
+					currentOpponent->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
+					//currentOpponent->SetTranslate(Vector3f(temp[0], temp[1], temp[2]));
                     continue;
 				}
 				
@@ -1245,6 +1276,8 @@ int CScene ::LoadRaceSettings(string* directory, string* filename)
         currentOpponent = (*it2);
         currentOpponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetWaypoints());
         currentOpponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetShortCut1());
+        currentOpponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetShortCut2());
+        currentOpponent->setWPSequence(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->GetShortCut3());
         currentOpponent->initNext();
 	    COpponentAI::GetOpponentAIPtr()->addCar(currentOpponent);
      
@@ -1253,8 +1286,8 @@ int CScene ::LoadRaceSettings(string* directory, string* filename)
     /*std::vector<CWaypoint *>::iterator it = m_vWaypoints.end()-1;
 	(*it)->setLastWay(true);
 	fclose(fp);
-*///CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
-    //((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle((*CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin()));
+*/CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle((*CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin()));
 	CLog::GetLog().Write(LOG_MISC, "Leaving Race Settings");
 	            
 	return 1;

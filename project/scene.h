@@ -47,7 +47,8 @@ public:
     //Ramits Add
     vector<CWaypoint*> * GetWaypoints() { return &m_vWaypoints; };
     vector<CWaypoint*> * GetShortCut1() { return &m_vWPShortCut1; };
-
+    vector<CWaypoint*> * GetShortCut2() { return &m_vWPShortCut2; };
+    vector<CWaypoint*> * GetShortCut3() { return &m_vWPShortCut3; };
 
     //Gib's Add
     vector<Rectangle3f*> * GetPlanes() {return &m_vPlanes;}
@@ -69,6 +70,8 @@ protected:
     //Ram's Add to hold me Waypoints
     static vector<CWaypoint*>                    m_vWaypoints;	// Vector containing all waypoints in the scene
     static vector<CWaypoint*>                    m_vWPShortCut1;	// Short Cut Vector 1 MAke more as needed
+    static vector<CWaypoint*>                    m_vWPShortCut2;	// Short Cut Vector 1 MAke more as needed
+    static vector<CWaypoint*>                    m_vWPShortCut3;	// Short Cut Vector 1 MAke more as needed
 
     // Gib's Add
     static vector<Rectangle3f*>			 m_vPlanes;
