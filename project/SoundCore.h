@@ -31,6 +31,7 @@
 #define STREAM_BUFFER_BYTES 65536
 #define STREAM_BUFFER_CHUNK 16384
 #define FADE_TIMER_RATE 50
+#define END_SILENCE_CHUNKS 3
 
 #define MAX_VOLUME 0
 #define MIN_VOLUME -10000
@@ -182,8 +183,8 @@ public:
 	void Suspend();
 	void Resume();
 
-	HRESULT GetSoundEffect( char *cSoundName, CSoundEffect **ref = NULL );
-	HRESULT GetSoundStream( char *cMusicName, CSoundStream **ref = NULL );
+	HRESULT GetSoundEffect( const char *cSoundName, CSoundEffect **ref = NULL );
+	HRESULT GetSoundStream( const char *cMusicName, CSoundStream **ref = NULL );
 
 	void LogError( char *sErrMsg, HRESULT hr, char *sErrLoc );
 	void LogMessage( char *sMsg );
@@ -225,8 +226,8 @@ protected:
 	virtual HRESULT RefreshVolume();
 	virtual HRESULT Reset() { return ERROR_NOT_SUPPORTED; }
 
-	HRESULT GetWAVHeader( char *cFileName );
-	virtual HRESULT Load( char *cSoundName );
+	HRESULT GetWAVHeader( const char *cFileName );
+	virtual HRESULT Load( const char *cSoundName );
 
 
 public:
@@ -286,9 +287,9 @@ private:
 	HANDLE hEndEvent[1];
 
 	// Private Methods
-	HRESULT Load( char *cSoundName );
+	HRESULT Load( const char *cSoundName );
     HRESULT CreateBufferFromWAV();
-    HRESULT LoadSoundData(char *cFilename, long lLockPos, long lSize);
+    HRESULT LoadSoundData(const char *cFilename, long lLockPos, long lSize);
 	HRESULT Reset();
 
 public:
@@ -335,9 +336,11 @@ private:
 	long m_lFreqStep;			// Step size for pitch bend
 	long m_lTargetPan;			// Target pan for pan slide
 	long m_lPanStep;			// Step size for pan slide
+	int m_nSilenceChunks;		// Number of silence chunks loaded
+	int m_nNumLoops;			// Number of times this stream has looped
 
 	// Private Methods
-	HRESULT Load( char *cSoundName );
+	HRESULT Load( const char *cSoundName );
     HRESULT CreateBuffer();
     HRESULT LoadSoundData(long lLockPos, long lSize);
 	HRESULT LoadSilence(long lLockPos, long lSize);
@@ -360,6 +363,15 @@ public:
 	// Initializer and Destroyer
 	HRESULT Init( CSoundCore *cSCNewParent, int iNewId );
 	void Destroy();
+
+	// Getters and Setters
+	float GetTimeLeft() { return (float) m_lDataLeft / (float) m_swHeader.lBytesPerSec; }
+	float GetTimePlayed() { return (float) m_lDataPos / (float) m_swHeader.lBytesPerSec; }
+	bool IsFading() { return m_fFadeStep != 0.0f ? true : false; }
+	bool IsBending() { return m_lFreqStep != 0.0f ? true : false; }
+	bool IsSliding() { return m_lPanStep != 0.0f ? true : false; }
+	int GetNumLoops() { return m_nNumLoops; }
+	int GetNumSilenceChunks() { return m_nSilenceChunks; }
 
 	// Actions
 	HRESULT Play( BOOL bLoop, BOOL bPause );

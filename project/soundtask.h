@@ -14,6 +14,7 @@
 #include "soundcore.h"
 #include "bosapp.h"
 #include "soundmessage.h"
+#include "playlist.h"
 
 class CSoundTask : public ITask
 {
@@ -23,6 +24,7 @@ public:
 	long m_lPriority; // 1 - highest, MAXINT^2 lowest
 	map<CSoundID, CSoundEffect*> sound;
 	map<CSoundID, CSoundStream*> stream;
+	CPlayList *cPlayList;
 
 	// Public methods
 	CSoundTask();

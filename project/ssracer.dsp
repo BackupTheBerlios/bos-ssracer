@@ -153,6 +153,10 @@ SOURCE=.\rendertask.cpp
 # PROP Default_Filter ".cpp"
 # Begin Source File
 
+SOURCE=.\playlist.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Sound.cpp
 # End Source File
 # Begin Source File
@@ -433,6 +437,10 @@ SOURCE=.\rendertask.h
 # Begin Group "Sound Headers"
 
 # PROP Default_Filter ".h, .hpp"
+# Begin Source File
+
+SOURCE=.\playlist.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\SoundCore.h

@@ -422,7 +422,7 @@ CSoundCore *CSoundCore::GetSoundCorePtr()
 //   NO_ERROR - the operation was successful
 //   ERROR_OUT_OF_STRUCTURES - no free sound effects
 //---------------------------------------------------------------------------//
-HRESULT CSoundCore::GetSoundEffect( char* cSoundName, CSoundEffect **ref ) {
+HRESULT CSoundCore::GetSoundEffect( const char* cSoundName, CSoundEffect **ref ) {
 	CSoundEffect *retSound = NULL;
 
 	// Locate the first unlocked sound effect
@@ -484,7 +484,7 @@ HRESULT CSoundCore::GetSoundEffect( char* cSoundName, CSoundEffect **ref ) {
 //   NO_ERROR - the operation was successful
 //   ERROR_OUT_OF_STRUCTURES - no free sound effects
 //---------------------------------------------------------------------------//
-HRESULT CSoundCore::GetSoundStream( char* cMusicName, CSoundStream **ref ) {
+HRESULT CSoundCore::GetSoundStream( const char* cMusicName, CSoundStream **ref ) {
 	HRESULT hr = NO_ERROR;
 	CSoundStream *retSound = NULL;
 
@@ -505,7 +505,7 @@ HRESULT CSoundCore::GetSoundStream( char* cMusicName, CSoundStream **ref ) {
 	}
 
 	// Prepare the sound buffer
-	retSound->Load( cMusicName );
+	hr = retSound->Load( cMusicName );
 
 	// If the reference is null, then we don't have to return a reference
 	if( ref != NULL ) {
@@ -634,9 +634,7 @@ void CSoundCore::LogError( char *sErrMsg, HRESULT hr, char *sErrLoc ) {
 	strcat(sMessage, sErrLoc);
 
 #ifdef _DEBUG
-	CLog::GetLog().Write(LOG_APP, sMessage);
-#else
-	//MessageBox( m_hWnd, sMessage, "Sound Error", NULL );
+	CLog::GetLog().Write(LOG_GAMECONSOLE, sMessage);
 #endif
 
 	return;
@@ -653,9 +651,7 @@ void CSoundCore::LogError( char *sErrMsg, HRESULT hr, char *sErrLoc ) {
 void CSoundCore::LogMessage( char *sMsg ) {
 
 #ifdef _DEBUG
-	CLog::GetLog().Write(LOG_APP, sMsg);
-#else
-	//MessageBox( m_hWnd, sMsg, "Sound Message", NULL );
+	CLog::GetLog().Write(LOG_GAMECONSOLE, sMsg);
 #endif
 
 	return;

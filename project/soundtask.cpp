@@ -10,6 +10,7 @@ CSoundTask::CSoundTask() {
 	m_lPriority=5000;
 
 	m_nTaskType = SOUND_TASK;
+	cPlayList = NULL;
 }
 
 //---------------------------------------------------------------------------//
@@ -29,6 +30,14 @@ bool CSoundTask::Start() {
 		CSoundCore::GetSoundCore().Resume();
 	}
 
+	// Initialize the playlist if needed
+	if ( cPlayList == NULL ) {
+		cPlayList = new CPlayList();
+		cPlayList->Load("default");
+		cPlayList->Shuffle();
+		cPlayList->Play( 0.8f, true, true );
+	}
+
 	return TRUE;
 }
 
@@ -41,6 +50,7 @@ void CSoundTask::OnSuspend() {
 
 void CSoundTask::Update() {
 	HandleMessages();
+	cPlayList->Update();
 	return;
 }
 

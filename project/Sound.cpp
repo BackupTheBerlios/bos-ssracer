@@ -280,7 +280,7 @@ HRESULT CSound::RefreshVolume() {
 // RETURNS:
 //   ERROR_NOT_SUPPORTED
 //---------------------------------------------------------------------------//
-HRESULT CSound::Load( char *cSoundName ) {
+HRESULT CSound::Load( const char *cSoundName ) {
 	// This is just to satisfy the compiler as not to get any unreferenced
 	// local variable warnings...
 	strcmp(cSoundName, "");
@@ -303,7 +303,7 @@ HRESULT CSound::Load( char *cSoundName ) {
 //   ERROR_BAD_FORMAT - the format of the WAV header did not match what
 //                      we were expecting.  Thus the file may be bad.
 //---------------------------------------------------------------------------//
-HRESULT CSound::GetWAVHeader( char *cFilename ) {
+HRESULT CSound::GetWAVHeader( const char *cFilename ) {
 	HRESULT hr = NO_ERROR;
 	FILE *fp;
 
@@ -430,7 +430,7 @@ void CSoundEffect::Destroy() {
 //   Otherwise - see errors returned by CreateBufferFromWav() and
 //               LoadSoundData(c,l,l).
 //---------------------------------------------------------------------------//
-HRESULT CSoundEffect::Load( char *cSoundName ) {
+HRESULT CSoundEffect::Load( const char *cSoundName ) {
 	HRESULT hr = NO_ERROR;
 
 	// Create the filename from the sound name
@@ -546,7 +546,7 @@ HRESULT CSoundEffect::CreateBufferFromWAV() {
 //   ERROR_INVALID_DATA - the lSize parameter is <= 0.
 //   Otherwise - DirectSound error.
 //---------------------------------------------------------------------------//
-HRESULT CSoundEffect::LoadSoundData(char *cFilename, long lLockPos, long lSize) {
+HRESULT CSoundEffect::LoadSoundData(const char *cFilename, long lLockPos, long lSize) {
 	HRESULT hr = NO_ERROR;
 	BYTE *bPtr1, *bPtr2;
 	DWORD dwSize1, dwSize2;
@@ -860,6 +860,9 @@ CSoundStream::CSoundStream() {
 	m_lPanStep = 0L;
 
 	m_fpFile = NULL;
+
+	m_nNumLoops = 0;
+	m_nSilenceChunks = 0;
 }
 
 
@@ -966,7 +969,7 @@ void CSoundStream::Destroy() {
 //   Otherwise - see errors returned by CreateBufferFromWav() and
 //               LoadSoundData(c,l,l).
 //---------------------------------------------------------------------------//
-HRESULT CSoundStream::Load( char *cMusicName ) {
+HRESULT CSoundStream::Load( const char *cMusicName ) {
 	HRESULT hr = NO_ERROR;
 
 	// Create the filename from the sound name
@@ -1187,6 +1190,9 @@ HRESULT CSoundStream::LoadSilence(long lLockPos, long lSize) {
 	// Unlock the buffer
 	m_lpDSBuffer->Unlock(bPtr1, dwSize1, bPtr2, dwSize2);
 
+	// Increment the number of silence chunks loaded
+	m_nSilenceChunks++;
+
 	return hr;
 }
 
@@ -1201,9 +1207,6 @@ HRESULT CSoundStream::LoadSilence(long lLockPos, long lSize) {
 //---------------------------------------------------------------------------//
 HRESULT CSoundStream::Reset() {
 	HRESULT hr = NO_ERROR;
-#ifdef _DEBUG
-	SOUND_MESSAGE("In Reset().");
-#endif
 
 	// Ensure that the buffer has been initialized and that it is not
 	// currently playing!
@@ -1229,6 +1232,9 @@ HRESULT CSoundStream::Reset() {
 
 	m_lTargetPan = 0L;
 	m_lPanStep = 0L;
+
+	m_nNumLoops = 0;
+	m_nSilenceChunks = 0;
 
 	return hr;
 }
@@ -1849,7 +1855,10 @@ HRESULT CSoundStream::UpdateData( DWORD dwEventNum ) {
 	long lRemPos = 0;		// Remaining position
 	long lRemData = 0;		// Remaining Data	
 
-	if ( ((m_bLooping == FALSE) && (m_lDataLeft == 0)) || m_fpFile == NULL ) {
+	if (m_bPlaying == false) return ERROR_NO_DATA;
+
+	// Check condition to terminate playback
+	if ( ((m_bLooping == FALSE) && (m_nSilenceChunks >= END_SILENCE_CHUNKS)) || m_fpFile == NULL ) {
 		return ERROR_NO_DATA;
 	}
 
@@ -1904,9 +1913,13 @@ HRESULT CSoundStream::UpdateData( DWORD dwEventNum ) {
 				m_lDataPos = sizeof(sWaveHeader);
 				m_lDataLeft = m_lDataSize;
 			}
+
+			// Increment the number of times this stream has looped
+			m_nNumLoops++;
+
 		}
 		else {
-			if( STREAM_BUFFER_CHUNK - m_lDataLeft != 0 ) {
+			if( (m_lDataLeft != 0) && (STREAM_BUFFER_CHUNK - m_lDataLeft != 0) ) {
 				// Here we fill the remaining chunk space with silence.
 				if (FAILED( hr = 
 					LoadSilence(
@@ -1916,12 +1929,26 @@ HRESULT CSoundStream::UpdateData( DWORD dwEventNum ) {
 					SOUND_ERROR( "Could not load silence", hr, "CSoundStream::UpdateData(dw)" );
 					return hr;
 				}
+
+				// Reset locators
+				m_lDataPos += m_lDataLeft;
+				m_lDataLeft = 0;
+
+			}
+			else if (m_lDataLeft == 0) {
+				// Continue filling buffer with silence until stream checker
+				// decides to terminate playback.
+				if (FAILED( hr = 
+					LoadSilence(
+						dwEventNum * STREAM_BUFFER_CHUNK,
+						STREAM_BUFFER_CHUNK ) )) {
+
+					SOUND_ERROR( "Could not load silence", hr, "CSoundStream::UpdateData(dw)" );
+					return hr;
+				}
+
 			}
 
-			// Update the locaters so that the stream checker thread will
-			// realize the stream has terminated.
-			m_lDataPos += m_lDataLeft;
-			m_lDataLeft = 0;
 		}
 
 	}
