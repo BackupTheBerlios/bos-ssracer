@@ -2,6 +2,7 @@
 #include "cfrontendmessage.h"
 #include "log.h"
 #include "appstate.h"
+#include "kernel.h"
 
 // Singleton stuff
 CFrontendManager * CFrontendManager::m_pkFrontendManager = NULL; 
@@ -120,7 +121,8 @@ int CFrontendManager::Transition()
 	case HELP:
 	case CREDITS:
 	case QUIT:
-        m_curScreen = m_Quit; m_iState = QUIT; break;
+        m_curScreen = m_Quit; m_iState = QUIT; 
+        break;
 	case PERFORMANCE:
 	case DEALERSHIP:
 #ifdef _DEBUG

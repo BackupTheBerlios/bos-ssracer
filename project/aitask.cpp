@@ -90,9 +90,9 @@ void CAITask::Update() {
 			// generate a input message for any keys still pressed
 			if (it->second) {
                 // free look camera controls
-                //if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
+                if (CRenderer::GetRendererPtr()->GetActiveCameraType() == CAMERA_FREELOOK )
     			    CKernel::GetKernel().DeliverMessage( new CInputTaskMessage(it->first, it->second), RENDER_TASK );
-                //else  // driving controls
+                else  // driving controls
 
 				// TEMPORARY SHIT FOR PLAYER VEHICLE TESTING
 				CGameStateManager::GetGameStateManagerPtr()->ProcessInput( new CInputTaskMessage(it->first, it->second) );

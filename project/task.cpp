@@ -97,7 +97,7 @@ void ITask::HandleMessages() {
 		//if ( SYSTEM_CALL <= iMsg->GetType() && iMsg->GetType() <= 10 ) {
 			// Handle the message
 			DoMessageHandle( *it );
-		//	delete *it;  // free the memory pointed to by the iterator NOT the iterator itself -J
+			delete *it;  // free the memory pointed to by the iterator NOT the iterator itself -J
 		//}
 
 		// Remove the message from the front of the queue

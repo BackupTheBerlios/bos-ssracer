@@ -410,6 +410,9 @@ void CBOSApplication::OnCleanUp()
 //-----------------------------------------------------------------------------
 HRESULT CBOSApplication::FinalCleanup()
 {
+    //$$$NOTE there shouldn't be anymore tasks running at this point.
+    //$$$NOTE because in order to leave STATE_IN_GAME they must be killed first
+    CKernel::GetKernel().KillAllTasks();  //just to be safe
     
     // TODO: Perform any final cleanup needed
     delete CGameStateManager::GetGameStateManagerPtr();

@@ -112,7 +112,7 @@ int CScene::ReleaseScene()
 	// Can't think of anything else right now.
 
     // empty out the quadtree
-    m_kQuadTree->ClearQuadTree();
+    m_kQuadTree->ClearQuadTree(); /////////////////////////////
 
     bMapIsLoaded = false;
 

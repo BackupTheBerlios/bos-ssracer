@@ -54,6 +54,10 @@ void CMainMenu::draw()
     //CRenderer::GetRendererPtr()->DrawScreenText(0,0,D3DCOLOR_ARGB(255,255,255,255), "MAIN MENU");
     //$$$TEMP just draw this for now
     CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "MAIN\nMENU", 0.3, 0.3);
+    char tmp[100];
+    sprintf(tmp, "sel screen: %d", selectedScreeni);  
+    CRenderer::GetRendererPtr()->Draw3DTextScaled(-1.0,0.5,0,D3DCOLOR_ARGB(200,0,200,255), tmp, 0.05, 0.05);
+
 
     static int iFade = 255, iDir = -1;
     CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.5, 0.8f,0,D3DCOLOR_ARGB(iFade,200,0,10), "Press F11 to exit the game ESC is remapped for front end -J", 0.03, 0.03);
@@ -117,6 +121,9 @@ void CNewGame::draw()
 {
   //$$$TEMP just draw this for now
   CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "NEW\nGAME", 0.3, 0.3);
+  char tmp[100];
+  sprintf(tmp, "sel screen: %d", selectedScreeni);  
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-1.0,0.5,0,D3DCOLOR_ARGB(200,0,200,255), tmp, 0.05, 0.05);
 
   //Draw Screen stuff
   ok->draw();
@@ -168,6 +175,9 @@ void CGarage::draw()
 {
   //$$$TEMP just draw this for now
   CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "GARAGE", 0.3, 0.3);
+  char tmp[100];
+  sprintf(tmp, "sel screen: %d", selectedScreeni);  
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-1.0,0.5,0,D3DCOLOR_ARGB(200,0,200,255), tmp, 0.05, 0.05);
 
   select->draw();
   cancel->draw();
@@ -230,7 +240,10 @@ CPostGame::~CPostGame()
 void CPostGame::draw()
 {
 //$$$TEMP just draw this for now
-CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "POST\nGAME", 0.3, 0.3);
+CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "POST\nGAME", 0.3, 0.3);  
+char tmp[100];
+  sprintf(tmp, "sel screen: %d", selectedScreeni);  
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-1.0,0.5,0,D3DCOLOR_ARGB(200,0,200,255), tmp, 0.05, 0.05);
 
   onward->draw();
   restartRace->draw();
@@ -292,7 +305,10 @@ CPauseGame::~CPauseGame()
 void CPauseGame::draw()
 {
   //$$$TEMP just draw this for now
-  CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "PAUSE", 0.3, 0.3);
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "PAUSE", 0.3, 0.3); 
+  char tmp[100];
+  sprintf(tmp, "sel screen: %d", selectedScreeni);  
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-1.0,0.5,0,D3DCOLOR_ARGB(200,0,200,255), tmp, 0.05, 0.05);
 
   resume->draw();
   restartRace->draw();
@@ -358,6 +374,9 @@ void CHome::draw()
 {
   //$$$TEMP just draw this for now
   CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "HOME", 0.3, 0.3);
+  char tmp[100];
+  sprintf(tmp, "sel screen: %d", selectedScreeni);  
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-1.0,0.5,0,D3DCOLOR_ARGB(200,0,200,255), tmp, 0.05, 0.05);
 
   race->draw();
   performanceUpgrade->draw();
@@ -395,12 +414,22 @@ CQuit::CQuit()
 {
   quit = new CButton();
   quit->setText("Quit");
+  quit->setX(0.0f);
+  quit->setY(0.5f);
+
+
   mainMenu = new CButton();
   mainMenu->setText("Back to Main Menu");
+  mainMenu->setX(-0.5f);
+  mainMenu->setY(0.0f);
 
-  int tempOrder[]={QUIT, MAIN_MENU};
+
+  int tempOrder[]={MAIN_MENU,  QUIT};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 1;
+
+  //$$$NOTE: you guys forgot to set this!!!!
+  selectedScreeni = 0;
 }
 
 
@@ -413,6 +442,9 @@ void CQuit::draw()
 {
   //$$$TEMP just draw this for now
   CRenderer::GetRendererPtr()->Draw3DTextScaled(-0.7,-0.7,0,D3DCOLOR_ARGB(100,255,255,255), "QUIT", 0.3, 0.3);
+  char tmp[100];
+  sprintf(tmp, "sel screen: %d", selectedScreeni);  
+  CRenderer::GetRendererPtr()->Draw3DTextScaled(-1.0,0.5,0,D3DCOLOR_ARGB(200,0,200,255), tmp, 0.05, 0.05);
 
   quit->draw();
   mainMenu->draw();
@@ -423,21 +455,22 @@ void CQuit::processInput(int key)
   switch(key)
   {
   case GAME_TAB:
+  case GAME_RIGHT:
   case GAME_DOWN:
     selectedScreeni++;
     if (selectedScreeni > maxScreeni)
-    selectedScreeni =0;
+    selectedScreeni = maxScreeni;  //do not wrap
     break;
+  case GAME_LEFT:
   case GAME_UP:
     selectedScreeni--;
     if (selectedScreeni < 0)
-      selectedScreeni = maxScreeni;
-    break;
-  case GAME_LEFT:
-  case GAME_RIGHT:
+      selectedScreeni = 0;  //do not wrap
     break;
   case GAME_RETURN:
   case GAME_NUMPADENTER:
     gotoScreen = selectedScreeni;
+    if (screenOrder[gotoScreen] == QUIT)  // QUIT screen
+        CKernel::GetKernel().KillAllTasks();  //exit the game 
   }
 }
