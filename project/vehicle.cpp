@@ -604,7 +604,7 @@ void CVehicle::InterpolateSteeringAngle(float deltaT)
 	// Based on the player input, we will interpolate
 	// the front tires' rotation about the local Z axis.
 	// We don't want the wheels to turn instantaneously from
-	// 0 - 25 DEGS, we want them to get over the course of about
+	// 0 - 40 DEGS, we want them to get over the course of about
 	// 1 or 2 seconds. These values need to be tweaked.
 
 	// Positive rotation, rotates counterclockwise around the Z axis.
@@ -612,11 +612,17 @@ void CVehicle::InterpolateSteeringAngle(float deltaT)
 
 	float newSteerAngle;
 
+	float vehicleMaxSpeed = 60.0f;
+
+	float speedScalar = 1 - velocityLC.X() / 60.0f;
+	float maxTurnAngle = (MAX_STEER_ANGLE_RADS - MIN_STEER_ANGLE_RADS) * speedScalar + MIN_STEER_ANGLE_RADS; 
+	
+
 	// Interpolate the wheels to steer left ( +Z rotation )
 	if(inputState.lturn) {
-		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * MAX_STEER_ANGLE_RADS + steerAngleRADS;
-		if(newSteerAngle > MAX_STEER_ANGLE_RADS) {
-			steerAngleRADS = MAX_STEER_ANGLE_RADS;
+		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * maxTurnAngle + steerAngleRADS;
+		if(newSteerAngle > maxTurnAngle) {
+			steerAngleRADS = maxTurnAngle;
 		}
 		else {
 			steerAngleRADS = newSteerAngle;
@@ -624,9 +630,9 @@ void CVehicle::InterpolateSteeringAngle(float deltaT)
 	}
 	// Interpolate the wheels to steer right ( -Z rotation )
 	else if(inputState.rturn) {
-		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * MAX_STEER_ANGLE_RADS * -1.0f + steerAngleRADS;
-		if(newSteerAngle < (MAX_STEER_ANGLE_RADS * -1.0f)) {
-			steerAngleRADS = MAX_STEER_ANGLE_RADS * (-1.0f);
+		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * maxTurnAngle * -1.0f + steerAngleRADS;
+		if(newSteerAngle < (maxTurnAngle * -1.0f)) {
+			steerAngleRADS = maxTurnAngle * (-1.0f);
 		}
 		else {
 			steerAngleRADS = newSteerAngle;
@@ -634,7 +640,7 @@ void CVehicle::InterpolateSteeringAngle(float deltaT)
 	}
 	// Interpolate the wheels back to 0
 	else {	// Right Button nor Left Button is pressed
-		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * MAX_STEER_ANGLE_RADS;
+		newSteerAngle = (deltaT / STEER_ANGLE_TIME) * maxTurnAngle;
 
 		if(steerAngleRADS >= 0.0f) {
 			if((steerAngleRADS - newSteerAngle) >= 0.0f) {
@@ -855,7 +861,9 @@ void CVehicle::CalculateTireRotation(float deltaT)
 //--------------------------------------------------------------
 void CVehicle::CalculateVehicleVelocity(float deltaT)
 {
-	velocityLC = velocityLC + (accelerationLC * deltaT);
+	velocityLC.X() = velocityLC.X() + (accelerationLC.X() * deltaT);
+	velocityLC.Y() = 0.0f;
+	velocityLC.Z() = 0.0f;
 }
 
 //--------------------------------------------------------------
@@ -916,6 +924,14 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 
 		Vector3f tempTrans = temp * deltaT;
 
+		Vector3f test = velocityTotLC;
+		RotateVectorAboutLocalZ(&test, -rotationLC.Z());
+
+		//accelerationLC.X() = tempTrans.X() / deltaT - test.X();
+		accelerationLC.Y() = tempTrans.Y() / deltaT - test.Y();
+
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 39, "accelerationLC.Y(): %f", accelerationLC.X());
+
 		Vector3f rotPos;
 
 		rotPos.X() = tempTrans.X() * cos(-rotationLC.Z()) + tempTrans.Y() * sin(-tempTrans.Z());
@@ -966,6 +982,31 @@ void CVehicle::CalculateVehicleAngularVelocity(float deltaT)
 //--------------------------------------------------------------
 //
 //--------------------------------------------------------------
+void CVehicle::CalculatePitchAndRoll(float deltaT)
+{
+	// Body rolls 2 degrees per G of acceleration
+	// for right now.
+	if(float(fabs(accelerationLC.X())) > 0.0f) {
+		rotationLC.Y() += RADIANS(3.0f*deltaT) * sgn(accelerationLC.X());
+		if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
+			if(fabs(rotationLC.Y()) > ((accelerationLC.X() / 9.81) * RADIANS(3.0f))) {
+				rotationLC.Y() = RADIANS(((accelerationLC.X() / 9.81) * 3.0f)) * sgn(accelerationLC.X());
+			}
+		}
+	}
+	if(float(fabs(accelerationLC.Y())) > 0.0f) {
+		rotationLC.X() += RADIANS(3.0f*deltaT) * sgn(accelerationLC.Y());
+		if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
+			if(fabs(rotationLC.X()) > ((accelerationLC.Y() / 9.81) * RADIANS(2.0f))) {
+				rotationLC.X() = RADIANS(((accelerationLC.Y() / 9.81) * 2.0f)) * sgn(accelerationLC.Y());
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------------
+//
+//--------------------------------------------------------------
 void CVehicle::UpdateVehiclePhysics()
 {
 	float deltaT = CTimer::GetTimer().GetTimeElapsed();
@@ -995,6 +1036,7 @@ void CVehicle::UpdateVehiclePhysics()
 
 	CalculateVehicleVelocity(deltaT);
 	CalculateVehiclePosition(deltaT);
+	CalculatePitchAndRoll(deltaT);
 	//CalculateVehicleAngularVelocity(deltaT);
 	//CalculateVehicleRotation(deltaT);
 
