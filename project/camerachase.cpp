@@ -106,7 +106,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
 
     Vector3f vTemp;
 
-    ////vTemp = Vector3f(m_pkObject->getTranslate());
+    ///vTemp = Vector3f(m_pkObject->getTranslate());
     ////CLog::GetLog().Write(LOG_GAMECONSOLE, "worldpos %f %f %f", vTemp.X(), vTemp.Y() , vTemp.Z() );	
 
     D3DXVECTOR3 vPosDelta;
@@ -114,8 +114,8 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     
     
     Vector3f vVel = m_pkVehicle->GetVehicleVelocityWC();
-    //vVel.Normalize();
-    //vPosDelta = D3DXVECTOR3(vVel.Z(), vVel.Y(), vVel.X()) * fElapsedTime;
+    vVel.Normalize();
+    //vPosDelta = D3DXVECTOR3(vVel.X(), vVel.Y(), vVel.Z()) * fElapsedTime;
     
 
     #ifdef _DEBUG
@@ -124,7 +124,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     #endif
 
 
-    //vPosDelta = D3DXVECTOR3(vTemp.Z(), 0.0f, vTemp.X()) * fElapsedTime;//m_vVelocity * fElapsedTime;
+    //vPosDelta = D3DXVECTOR3(vTemp.X(), 0.0f, vTemp.Z()) * fElapsedTime;//m_vVelocity * fElapsedTime;
 
     //vTemp = Vector3f(*m_pkVehicle->GetRotate());
     //m_fCameraYawAngle = -RADIANS(vTemp.X());//CTimer::GetTimer().GetTimeStep();;    
@@ -145,8 +145,8 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     D3DXVECTOR3 vLocalUp  = D3DXVECTOR3(0,1,0);
     // get the camera's local ahead vector based on the vehicles heading and velocity
     Vector3f vHeading = m_pkVehicle->GetVehicleVelocityWC();
-    if (vHeading.Length() < 0.01f)  // if velocity is small use heading
-        vHeading = m_pkVehicle->GetVehicleHeadingWC();
+    //if (vHeading.Length() < 0.1f)  // if velocity is small use heading
+        vHeading = m_pkVehicle->GetVehicleHeadingWC();  //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ TODO
 
     vHeading.Normalize();
     D3DXVECTOR3 vLocalAhead = D3DXVECTOR3(vHeading.X(), vHeading.Y(), vHeading.Z());
