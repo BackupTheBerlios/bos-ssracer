@@ -64,6 +64,7 @@ class CSoundStream;
 // Name: sWaveHeader
 // Desc: Holds header data from a .WAV file.
 //---------------------------------------------------------------------------//
+#pragma pack(push)
 #pragma pack(1) 
 typedef struct sWaveHeader {
 	char cRiffSig[4];
@@ -80,6 +81,7 @@ typedef struct sWaveHeader {
 	char cDataSig[4];
 	long lDataSize;
 } sWaveHeader;
+#pragma pack(pop)
 
 
 //---------------------------------------------------------------------------//
