@@ -78,9 +78,10 @@ bool CRenderTask::Start()
 #endif
 
     // initialize D3D subsystem in renderer
-    m_pkRenderer->Initialize();
-
-    m_pkRenderer->InitializeState();
+    if (m_pkRenderer->Initialize() != S_OK)  {
+        CLog::GetLog().Write(LOG_ALL, "RenderTask Failed to start!" );
+        return false;
+    }
 
     // establish device caps and check if it meets the minimum requirements
 
@@ -181,14 +182,15 @@ void CRenderTask::Update()
         // draw race stats and the win screen
         break;
     case STATE_IN_GAME:
-            //--- render HUD if we're in-game ---//
+        //--- render current scene ---//
+        m_pkRenderer->RenderScene(); 
 
-            //--- render current scene ---//
-            m_pkRenderer->RenderScene(); 
-            
-            //--- draw the console if down ---//
-            if ( CBOSApplication::GetBOSApp().GetConsoleState() == TRUE ) 
-                m_pkRenderer->DrawConsole(); 
+        //--- render HUD ---//
+        m_pkRenderer->DrawHUD();
+        
+        //--- draw the console if down ---//
+        if ( CBOSApplication::GetBOSApp().GetConsoleState() == TRUE ) 
+            m_pkRenderer->DrawConsole(); 
         break;
 
     default:

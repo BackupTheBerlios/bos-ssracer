@@ -61,6 +61,7 @@ enum StateBlockType
     RENSB_DEFAULT = 0,
     RENSB_NOLIGHTING,
     RENSB_NOTEXTURE,
+    RENSB_HUD,
     RENSB_DEBUGSTATE,  // disable lighting and texturing
     RENSB_MESH
 };
@@ -116,6 +117,7 @@ private:
 
     std::map< unsigned int, CD3DFont * > m_kFontMap;       // fonts available to this app    
     std::map< unsigned int, CD3DCamera * > m_pkCameraMap;  // cameras used by this renderer
+    std::map< std::string, LPDIRECT3DTEXTURE9 > m_pTextureMap;  // textures for HUD and such
     //static std::map< std::string, CD3DMesh * > m_kMeshMap;       // meshes available to this app
 
     std::map< int, bool > m_kDrawnEntIDs;
@@ -201,7 +203,7 @@ public:
     bool IsWindowed () { return m_d3dSettings.IsWindowed; }; 
     void ShowCursor (bool bShow){  m_pd3dDevice->ShowCursor(bShow); };
 
-    void Click();  // update the view from the active camera(s)
+    void Click();  // update the view, projection matrices from the active camera(s)
 
     //virtual void Move (int iXPos, int iYPos);
     //virtual void Resize (int iWidth, int iHeight);
@@ -219,7 +221,8 @@ public:
     void DrawScreenText(  FLOAT fXPos, FLOAT fYPos, DWORD dwColor, char * szText, DWORD dwFlags=D3DFONT_FILTERED, FontType eFType = FONT_FRONT_END );
     void Draw3DTextScaled( FLOAT fXPos, FLOAT fYPos, FLOAT fZPos, DWORD dwColor, char * szText, FLOAT fXScale, FLOAT fYScale, DWORD dwFlags=D3DFONT_FILTERED, FontType eFType = FONT_FRONT_END );
 
-    bool InitStaticLighting();
+    bool InitializeStaticLighting();
+    bool InitializeTextures();
 
 protected:
     CRenderer();
@@ -241,6 +244,8 @@ protected:
 
     void DrawFrontEnd();
     void DrawScreen( CScreen * pScreen );
+
+    bool DrawHUD();
 
 
 private:

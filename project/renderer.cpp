@@ -33,31 +33,14 @@ using namespace Wml;
 //-----------------------------------------------------------------------------
 // static member declarations
 //-----------------------------------------------------------------------------
-//CD3DCamera CRenderer::m_pActiveCamera; // active camera in game
-//CameraType CRenderer::m_eActiveCamType = CAMERA_UNKNOWN;     // type of active cam
-//CD3DSettings      CRenderer::m_d3dSettings;
-//CD3DEnumeration   CRenderer::m_d3dEnumeration;
-//HRESULT CRenderer::ms_hResult                = NULL;
-//LPDIRECT3D9       CRenderer::m_pD3D          = NULL;
-//LPDIRECT3DDEVICE9 CRenderer::m_pd3dDevice    = NULL;
-//std::map<std::string, CD3DMesh *> CRenderer::m_kMeshMap;       // meshes available to this app
-//std::map< unsigned int, CD3DCamera * > CRenderer::m_pkCameraMap;  // cameras used by this renderer
 CRenderer * CRenderer::ms_pkRenderer = NULL; 
 
 
+//-----------------------------------------------------------------------------
+// get functions for the singleton instance of the app
+//-----------------------------------------------------------------------------
 CRenderer & CRenderer::GetRenderer() {  return *ms_pkRenderer; } 
 CRenderer * CRenderer::GetRendererPtr() {  return ms_pkRenderer;  } 
-
-//-----------------------------------------------------------------------------
-// Name:
-// Desc:
-//-----------------------------------------------------------------------------
-/*CRenderer::CRenderer()
-{ 
-	// Gib's modification:
-	ms_pkRenderer = this;
-}
-*/
 
 
 //-----------------------------------------------------------------------------
@@ -115,7 +98,7 @@ CRenderer::CRenderer (BOOL bFullScreen, HWND hWnd, UINT iWidth, UINT iHeight)
 	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetViewParams( &D3DXVECTOR3( 0.0f, 0.0f, 0.0f), 
     			                                   &D3DXVECTOR3( 0.0f, 0.0f, 1.0f) );
 	// wide FOV and a large frustrum
-	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 100000.0f );
+	((CCameraFreeLook *)m_pkCameraMap[CAMERA_FREELOOK])->SetProjParams( D3DX_PI/4.0f, 1.0f, 1.0f, 1000000.0f );
 
 
     // defaults to this camera
@@ -233,7 +216,15 @@ HRESULT CRenderer::Initialize()
     if (!SetCurrentDirectory(CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING).c_str()))
         return E_FAIL;
 
-    if (!InitStaticLighting())
+    // set up renderstates
+    InitializeState();
+
+    // set up static lighting
+    if (!InitializeStaticLighting())
+        return E_FAIL;
+
+    // set up textures
+    if (!InitializeTextures())
         return E_FAIL;
 
     return S_OK;
@@ -242,10 +233,10 @@ HRESULT CRenderer::Initialize()
 
 
 //-----------------------------------------------------------------------------
-// Name: InitStaticLighting()
+// Name: InitializeStaticLighting()
 // Desc: Initialize static lighting for the scene
 //-----------------------------------------------------------------------------
-bool CRenderer::InitStaticLighting()
+bool CRenderer::InitializeStaticLighting()
 {
     HRESULT hr;
 
@@ -462,7 +453,9 @@ void CRenderer::RenderScene()
     }
     //$$$DEBUG DRAW ALL WAYPOINTS
     if (m_bDrawWayPoints== true)  {
-        for (vector<CWaypoint *>::iterator it = CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWaypoints.begin();
+        // draw main set
+        vector<CWaypoint *>::iterator it;
+        for ( it = CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWaypoints.begin();
         it != CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWaypoints.end();  it++)  
         {
             if (it == CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWaypoints.begin())
@@ -472,6 +465,33 @@ void CRenderer::RenderScene()
             else
                 DrawWayPoint(*it, 7.0f, D3DCOLOR_ARGB( 255, 55, 155, 155 ));
         }
+        // draw all shortcut sets
+        if (!CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut1.empty())  {
+            for ( it = CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut1.begin();
+            it != CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut1.end();  it++)  
+            {
+                if (!*it)
+                DrawWayPoint(*it, 7.0f, D3DCOLOR_ARGB( 255, 55, 255, 155 ));
+            }
+        }
+        
+        if (!CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut2.empty())  {
+            for ( it = CGameStateManager::GetGameStateManager().GetScenePtr()->GetShortCut2()->begin();
+            it != CGameStateManager::GetGameStateManager().GetScenePtr()->GetShortCut2()->end();  it++)  
+            {
+                DrawWayPoint(*it, 7.0f, D3DCOLOR_ARGB( 255, 55, 255, 155 ));
+            }
+        }
+        if (!CGameStateManager::GetGameStateManager().GetScenePtr()->m_vWPShortCut3.empty())  {
+            for ( it = CGameStateManager::GetGameStateManager().GetScenePtr()->GetShortCut3()->begin();
+            it != CGameStateManager::GetGameStateManager().GetScenePtr()->GetShortCut3()->end();  it++)  
+            {
+                DrawWayPoint(*it, 7.0f, D3DCOLOR_ARGB( 255, 55, 255, 155 ));
+            }
+        }
+
+
+
     }
     #endif
 }
@@ -497,6 +517,19 @@ void CRenderer::Cleanup()
     m_pSkyBox->InvalidateDeviceObjects();
     m_pSkyBox->Destroy();
     SAFE_DELETE( m_pSkyBox );
+
+    // release state block
+    std::map<StateBlockType, LPDIRECT3DSTATEBLOCK9>::iterator it2;
+    for ( it2=m_pSBMap.begin(); it2!=m_pSBMap.end(); it2++)  {
+        SAFE_RELEASE(it2->second);
+    }
+    SAFE_RELEASE(m_pSavedSB);  // not in the SB map
+
+    // release HUD and frontend textures
+    std::map<std::string, LPDIRECT3DTEXTURE9>::iterator it3;
+    for ( it3=m_pTextureMap.begin(); it3!=m_pTextureMap.end(); it3++)  {
+        SAFE_RELEASE(it3->second);
+    }
 
 
     // shutdown d3d interfaces
@@ -560,7 +593,7 @@ void CRenderer::ResetDevice ()
     
     //m_pqDefaultFont->OnResetDevice();
     InitializeState();
-    //m_spkCamera->Update();
+    //m_spkCamera->Update();`
 }
 
 
@@ -577,7 +610,7 @@ void CRenderer::OnDeviceLost ()
 //-----------------------------------------------------------------------------
 void CRenderer::InitializeState ()
 {
-    // set up commonly used state blocks //
+    //--- set up the default state block ---//
     m_pd3dDevice->BeginStateBlock();
 
     // z-buffering
@@ -592,6 +625,7 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
 
     // Set up the texture 
+    m_pd3dDevice->SetTexture(0, NULL);
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
@@ -604,16 +638,65 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
     m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
 
+    // disable texture transparencies
+    m_pd3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,FALSE);
+    m_pd3dDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_ONE);
+    m_pd3dDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_ZERO);
+
     // save this as the default state block
     m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_DEFAULT] );
     m_pDefaultSB = m_pSBMap[RENSB_DEFAULT];
 
-    // set up other utility state blocks
+    
+    //--- set up other utility state blocks ---//
+
+    // set up the debug info state block //
     m_pd3dDevice->BeginStateBlock();
+    m_pd3dDevice->SetRenderState(D3DRS_ZENABLE,TRUE);
+    m_pd3dDevice->SetRenderState(D3DRS_ZFUNC,D3DCMP_LESSEQUAL);
+    m_pd3dDevice->SetRenderState(D3DRS_ZWRITEENABLE,TRUE);
+    m_pd3dDevice->SetRenderState( D3DRS_CLIPPING, TRUE );
+    m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
+    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
+    m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
+
+    // Set up the texture 
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
     m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
     m_pd3dDevice->SetFVF( D3DFVF_D3DVertex );
     m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_DEBUGSTATE] );
+
+
+    // set up the HUD state block //
+    m_pd3dDevice->BeginStateBlock();
+    m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );  //no lighting
+    m_pd3dDevice->SetRenderState(D3DRS_ZENABLE, TRUE);      // Enable depth testing.
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU,  D3DTADDRESS_WRAP ); 
+    m_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV,  D3DTADDRESS_WRAP ); 
+    // for transparencies
+    m_pd3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);
+    m_pd3dDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);
+    m_pd3dDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
+    m_pd3dDevice->SetFVF( D3DFVF_D3DTMVertex );
+    m_pd3dDevice->EndStateBlock( &m_pSBMap[RENSB_HUD] );
 
     // initialize the saved state block for use
     m_pd3dDevice->CreateStateBlock( D3DSBT_ALL, &m_pSavedSB);
@@ -622,6 +705,61 @@ void CRenderer::InitializeState ()
     m_pDefaultSB->Apply();
 
     return;
+}
+
+
+//-----------------------------------------------------------------------------
+// Name:  InitializeTextures()
+// Desc:  sets up the default rendering state and commonly used state blocks
+//-----------------------------------------------------------------------------
+bool CRenderer::InitializeTextures ()
+{
+    // set working dir to the texture dir
+    if (!SetCurrentDirectory(CSettingsManager::GetSettingsManager().GetGameSetting(DIRTEXTURES).c_str()))
+        return false;
+
+    // load HUD texture filenames into the texture map
+    m_pTextureMap["rpm_gauge.bmp"] = NULL;
+    m_pTextureMap["needle.bmp"] = NULL;
+    m_pTextureMap["mpg_gear.bmp"] = NULL;
+
+    // load front end texture filenames into the texture map
+    m_pTextureMap["fe_main_menu.bmp"] = NULL;
+    m_pTextureMap["fe_quit.bmp"] = NULL;    
+
+
+    // load textures //
+    for(std::map< std::string, LPDIRECT3DTEXTURE9 >::iterator it = m_pTextureMap.begin();
+    it != m_pTextureMap.end(); it++)  {
+        if(D3DXCreateTextureFromFileEx(m_pd3dDevice, 
+            (LPCSTR)it->first.data(), 
+            D3DX_DEFAULT, 
+            D3DX_DEFAULT,
+            1,
+            0,
+            D3DFMT_UNKNOWN,
+            D3DPOOL_DEFAULT,
+            D3DX_FILTER_NONE,
+            D3DX_FILTER_NONE, 
+            D3DCOLOR_ARGB(255,255,0,255), //alpha color
+            NULL,
+            NULL,
+            &it->second) != D3D_OK) {
+            CLog::GetLog().Write(LOG_MISC, "ERROR Renderer: could not load texture %s%s", (char *)CSettingsManager::GetSettingsManager().GetGameSetting(DIRTEXTURES).data(),(char*)it->first.data());
+        }
+/*        if(D3DXCreateTextureFromFile(m_pd3dDevice, (LPCSTR)it->first.data(), &it->second) != D3D_OK) {
+            CLog::GetLog().Write(LOG_MISC, "ERROR Renderer: could not load texture %s%s", (char *)CSettingsManager::GetSettingsManager().GetGameSetting(DIRTEXTURES).data(),(char*)it->first.data());
+        }
+        */
+    }
+
+    // set the CWD back
+    if (!SetCurrentDirectory(CSettingsManager::GetSettingsManager().GetGameSetting(DIRCURRENTWORKING).c_str()))
+        return false;
+
+
+
+    return true;
 }
 
 

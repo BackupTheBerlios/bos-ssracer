@@ -39,6 +39,7 @@ void CSettingsManager::LoadDefaultSettings() {
     m_settingMap[DIRSOUND] = m_settingMap[DIRMEDIA] + "sound\\";
     m_settingMap[DIRMUSIC] = m_settingMap[DIRMEDIA] + "music\\";
     m_settingMap[DIRMESH]  = m_settingMap[DIRMEDIA] + "meshes\\";
+    m_settingMap[DIRTEXTURES] = m_settingMap[DIRMEDIA] + "textures\\";
 
     // dynamic mesh paths
     m_settingMap[DIRDYNMESH]  = m_settingMap[DIRMESH] + "dynamic\\";
@@ -50,7 +51,7 @@ void CSettingsManager::LoadDefaultSettings() {
     m_settingMap[DIRSTATICPROPS]  = m_settingMap[DIRSTATICMESH] + "props\\";
     m_settingMap[DIRSTATICBUILDINGS]  = m_settingMap[DIRSTATICMESH] + "buildings\\";
     m_settingMap[DIRSTATICMISC]  = m_settingMap[DIRSTATICMESH] + "misc\\";
-   
+
     // debug mesh path
     m_settingMap[DIRDEBUG] = m_settingMap[DIRMEDIA] + "debug\\";
 

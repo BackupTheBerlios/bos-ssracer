@@ -641,6 +641,7 @@ void CRenderer::DrawQuadTreeNode( CQuadNode * pQNode )
 
 
 
+
 //-----------------------------------------------------------------------------
 // Name:  DrawVehicle()
 // Desc:  Draw a vehicle with effects if any
@@ -653,6 +654,8 @@ void CRenderer::DrawVehicle( CVehicle * pVehicle )
     // draw tires
     for (int i=0; i<4; i++)
         DrawEntity( pVehicle->GetTire(i) );
+
+    //$$$TODO draw shadow
 
     //$$$TODO draw exhaust
     // get position of exhaust in local coords
@@ -695,4 +698,92 @@ void CRenderer::DrawFrontEnd()
 void CRenderer::DrawScreen(CScreen * pScreen)
 {
     pScreen->draw();
+}
+
+
+
+
+//-----------------------------------------------------------------------------
+// Name:  DrawHUD()
+// Desc:  draw heads up display for in game
+//-----------------------------------------------------------------------------
+bool CRenderer::DrawHUD()  
+{
+    //$$$TEMP STILL HAVE TO OPTIMIZE VERTEX BUFFERING!!!!
+    LPDIRECT3DVERTEXBUFFER9 Vertex_Buffer = NULL;   // Vertex buffer for hold our main object.
+
+    // apply HUD render states
+    m_pSBMap[RENSB_HUD]->Apply();
+
+    D3DXMATRIX matOrth;
+    D3DXMatrixOrthoLH(&matOrth, 2, 2, 0, 1 );
+    //
+    //D3DXMatrixOrthoLH(&matOrth, (float)((float)m_iWidth/(float)m_iHeight)*2.0f, (float)((float)m_iHeight/(float)m_iWidth)*2.0f, 0, 1 );
+
+    m_pd3dDevice->SetTransform( D3DTS_VIEW, &matOrth );
+    m_pd3dDevice->SetTransform( D3DTS_PROJECTION, &matOrth );
+
+
+    // Square data for its position and texture coords.
+/*	D3DTexMappedVertex Polygon_Data[4] = {
+		{-0.5f, 0.5f, 0.0f, 0.0, 0.0},
+      {0.5f, 0.5f, 0.0f, 1.0, 0.0},
+	   {-0.5f, -0.5f, 0.0f, 0.0, 1.0},
+      {0.5f, -0.5f, 0.0f, 1.0, 1.0}
+	};
+*/
+  	D3DTexMappedVertex Polygon_Data[4] = {
+		{0.7f, -0.6f, 0.5f, D3DCOLOR_ARGB( 255, 255, 255, 255 ), 0.0, 0.0},  // BL -+
+        {1.0f, -0.6f, 0.5f, D3DCOLOR_ARGB( 255, 255, 255, 255 ), 1.0, 0.0},   // BR ++
+	    {0.7f, -1.0f, 0.5f, D3DCOLOR_ARGB( 255, 255, 255, 255 ), 0.0, 1.0}, // TL --
+        {1.0f, -1.0f, 0.5f, D3DCOLOR_ARGB( 255, 255, 255, 255 ), 1.0, 1.0}   // TR +-
+	};
+
+    // Create the vertex buffer that will hold the square.
+    if(FAILED(m_pd3dDevice->CreateVertexBuffer(4*sizeof(D3DTexMappedVertex),
+                                            0, D3DFVF_D3DTMVertex,
+                                            D3DPOOL_DEFAULT, &Vertex_Buffer, NULL)))
+    {
+     return false;  // Exit this function if there is some kind of problem.
+    }
+	
+    // Pointer to the buffer.
+    VOID* Vertices;
+
+    // Lock the buffer we can write to it.
+    if(FAILED(Vertex_Buffer->Lock(0, sizeof(Polygon_Data), (void**)&Vertices, 0)))
+      return false;
+
+    // Here we copy the square's data into the vertex buffer.
+    memcpy(Vertices, Polygon_Data, sizeof(Polygon_Data));
+
+    // Unlock when your done copying data into the buffer.
+    Vertex_Buffer->Unlock();
+
+
+    // This will bind the vertex data in the buffer to the Direct3D device.
+    m_pd3dDevice->SetStreamSource(0, Vertex_Buffer, 0, sizeof(D3DTexMappedVertex));
+
+    // Set the vertex stream declaration.
+    m_pd3dDevice->SetFVF(D3DFVF_D3DTMVertex);
+
+    // SetTexture will add the image in the Texture object to all things draw after this.
+    //m_pd3dDevice->SetTexture(0, m_pTextureMap["mpg_gear.bmp"]);
+
+    // This will draw everything in the buffer (the square we created in InitializeObject().
+    //m_pd3dDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
+    // SetTexture will add the image in the Texture object to all things draw after this.
+    m_pd3dDevice->SetTexture(0, m_pTextureMap["rpm_gauge.bmp"]);
+
+    // This will draw everything in the buffer (the square we created in InitializeObject().
+    m_pd3dDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
+
+    SAFE_RELEASE(Vertex_Buffer);
+
+    // restore default states
+    m_pDefaultSB->Apply();  
+    
+    return true;
 }
