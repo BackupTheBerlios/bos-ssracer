@@ -214,9 +214,14 @@ int CScene::LoadMap(FILE* fp, string* directory, string* filename)
 					return 0;
 				}
             }
-            //Rams add
+            //Rams adds
             if(!strcmp(token, "waypoints")) {
 				if(!LoadWaypoints(directory, filename)) {
+					return 0;
+				}
+			}
+            if(!strcmp(token, "race")) {
+				if(!LoadRace(directory, filename)) {
 					return 0;
 				}
 			}
@@ -1081,111 +1086,147 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 					newObject->SetScale(Vector3f(temp[0], temp[1], temp[2]));
 					break;
 				}
-                /* NONE OF This Stuff used at all yet
-				if(!strcmp(token, "<OBBCenter>")) {
-					for(i=0;i<3;i++) {
-						token = strtok(NULL, seps);
-						temp[i] = float(atof(token));
-					}
-					tempBox.Center() = Vector3f(temp[0], temp[1], temp[2]);
-					continue;
-				}
-				if(!strcmp(token, "<OBBAxis1>")) {
-					for(i=0;i<3;i++) {
-						token = strtok(NULL, seps);
-						temp[i] = float(atof(token));
-					}
-					tempBox.Axis(0) = Vector3f(temp[0], temp[1], temp[2]);
-					continue;
-				}
-				if(!strcmp(token, "<OBBAxis2>")) {
-					for(i=0;i<3;i++) {
-						token = strtok(NULL, seps);
-						temp[i] = float(atof(token));
-					}
-					tempBox.Axis(1) = Vector3f(temp[0], temp[1], temp[2]);
-					continue;
-				}
-				if(!strcmp(token, "<OBBAxis3>")) {
-					for(i=0;i<3;i++) {
-						token = strtok(NULL, seps);
-						temp[i] = float(atof(token));
-					}
-					tempBox.Axis(2) = Vector3f(temp[0], temp[1], temp[2]);
-					continue;
-				}
-				if(!strcmp(token, "<OBBExtent1>")) {
-					token = strtok(NULL, seps);
-					tempBox.Extent(0) = float(atof(token));
-					continue;
-				}
-				if(!strcmp(token, "<OBBExtent2>")) {
-					token = strtok(NULL, seps);
-					tempBox.Extent(1) = float(atof(token));
-					continue;
-				}
-				if(!strcmp(token, "<OBBExtent3>")) {
-					token = strtok(NULL, seps);
-					tempBox.Extent(2) = float(atof(token));
-					newObject->SetBoundingBox(tempBox);
-					continue;
-				}
-				if(!strcmp(token, "<sphereCenter>")) {
-					for(i=0;i<3;i++) {
-						token = strtok(NULL, seps);
-						temp[i] = float(atof(token));
-					}
-					tempSphere.Center() = Vector3f(temp[0], temp[1], temp[2]);
-					continue;
-				}
-				if(!strcmp(token, "<sphereRadius>")) {
-					token = strtok(NULL, buf);
-					tempSphere.Radius() = float(atof(token));
-					newObject->SetBoundingSphere(tempSphere);
-
-
-					break;
-				}*/
-
-                    /*
-                    #ifdef _DEBUG
-					CLog::GetLog().Write(LOG_MISC, "<id> %d", newObject->getId());
-					CLog::GetLog().Write(LOG_MISC, "<name> %s", newObject->getName());
-					CLog::GetLog().Write(LOG_MISC, "<translate> %f %f %f", newObject->getTranslate().X(), newObject->getTranslate().Y(), newObject->getTranslate().Z());
-					CLog::GetLog().Write(LOG_MISC, "<scale> %f %f %f", newObject->getScale().X(), newObject->getScale().Y(), newObject->getScale().Z());
-					CLog::GetLog().Write(LOG_MISC, "<rotate> %f %f %f", newObject->getRotate().X(), newObject->getRotate().Y(), newObject->getRotate().Z());
-					CLog::GetLog().Write(LOG_MISC, "<OBBCenter> %f %f %f", newObject->getBoundingBox().Center().X(), newObject->getBoundingBox().Center().Y(), newObject->getBoundingBox().Center().Z());
-					CLog::GetLog().Write(LOG_MISC, "<OBBAxis1> %f %f %f", newObject->getBoundingBox().Axis(0).X(), newObject->getBoundingBox().Axis(0).Y(), newObject->getBoundingBox().Axis(0).Z());
-					CLog::GetLog().Write(LOG_MISC, "<OBBAxis2> %f %f %f", newObject->getBoundingBox().Axis(1).X(), newObject->getBoundingBox().Axis(1).Y(), newObject->getBoundingBox().Axis(1).Z());
-					CLog::GetLog().Write(LOG_MISC, "<OBBAxis3> %f %f %f", newObject->getBoundingBox().Axis(2).X(), newObject->getBoundingBox().Axis(2).Y(), newObject->getBoundingBox().Axis(2).Z());
-					CLog::GetLog().Write(LOG_MISC, "<OBBExtent1> %f", newObject->getBoundingBox().Extent(0));
-					CLog::GetLog().Write(LOG_MISC, "<OBBExtent2> %f", newObject->getBoundingBox().Extent(1));
-					CLog::GetLog().Write(LOG_MISC, "<OBBExtent3> %f", newObject->getBoundingBox().Extent(2));
-					CLog::GetLog().Write(LOG_MISC, "<sphereCenter> %f %f %f", newObject->getBoundingSphere().Center().X(), newObject->getBoundingSphere().Center().Y(), newObject->getBoundingSphere().Center().Z());
-					CLog::GetLog().Write(LOG_MISC, "<sphereRadius> %f", newObject->getBoundingSphere().Radius());
-                    #endif
-					*/
-                
-
+               
 			}
 		}
 
         //No mesh stuff needed :)
-        /*
-        // for now assume these are all static entitites in the map file
-        // so I know where to look for the mesh
-        // we will need to be able to tell the difference between static and dynamic eventually to preserve the directory struture
-
-        // look in .\media\meshes\static\
-        // the mesh filename is the object's name as well: .\media\meshes\static\meshname\meshname.x .
-        if(!(newObject->LoadMesh(CSettingsManager::GetSettingsManager().GetGameSetting(DIRSTATICMESH) + string(newObject->GetName()) +"\\")) ) {
-            CLog::GetLog().Write(LOG_MISC, "Error CScene::LoadEntities() >> Error loading mesh");
-//                        return 0; //if you comment this line out, The entity will still load but will not render
+        
+        //=== add it to the appropriate Waypoint vector ===//
+        if ( newObject->getPath() == 1)
+        {
+          m_vWPShortCut1.push_back(newObject);
+        }
+        else
+        {
+		  m_vWaypoints.push_back(newObject);
         }
 
-        //=== add it to the mesh map ===//
-        AddMesh( newObject->GetMesh() );
-        */
+	}  //endwhile
+
+    //Set Last Waypoint in Main Path as last Waypoint
+   
+    std::vector<CWaypoint *>::iterator it = m_vWaypoints.end()-1;
+	(*it)->setLastWay(true);
+	fclose(fp);
+
+	return 1;
+
+}
+
+int CScene ::LoadRace(string* directory, string* filename)
+{
+  // if your wondering i havent done a damn thing to this function yet...
+  // will do friday hopefully.
+	FILE* fp;
+	char buf[512];
+	char* token;
+	char seps[] = " \n";
+	int i;
+	string path;
+
+	path = directory->c_str();
+	//path.append("\\");
+	path += *filename;
+    ////
+    path += ".waypoints";
+
+	fp = fopen(path.c_str(), "r");
+
+	if(!fp) {
+		#ifdef _DEBUG
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Error CScene::LoadEntities() >> Unable to open file %s", path.c_str());
+		#endif
+		return 0;
+	}
+
+	float temp[3];
+	Box3f tempBox;
+	Sphere3f tempSphere;
+	CWaypoint *newObject = NULL;
+
+	while(fgets(buf, sizeof(buf), fp)) {
+		token = strtok(buf, seps);
+		if(token == NULL) {
+			continue;
+		}
+		if(!strcmp(token, "<newwp>")) {
+			//newObject = new CEntity;
+
+
+			NEW(newObject, CWaypoint, "Error CScene::LoadWaypoints >> new operator failed");
+			while(fgets(buf, sizeof(buf), fp)) {
+				token = strtok(buf, seps);
+				/*	Set the Type of the object (MAP, STATIC, DYNAMIC)
+				    NOT USED AS OF YET, MIGHT NEED IT LATER
+				if(!strcmp(token, "<type>")) {
+					token = strtok(NULL, seps);
+					newObject->setType(atoi(token));
+					continue;
+				}
+				*/
+				if(!strcmp(token, "<id>")) {
+					token = strtok(NULL, seps);
+					newObject->SetId(atoi(token));
+					continue;
+				}
+				if(!strcmp(token, "<name>")) {
+					token = strtok(NULL, seps);
+					newObject->SetName(token);
+					continue;
+				}
+				if(!strcmp(token, "<translate>")) {
+					for(i=0;i<3;i++) {
+						token = strtok(NULL, seps);
+						temp[i] = float(atof(token));
+					}
+					newObject->SetTranslate(Vector3f(temp[0], temp[1], temp[2]));
+					continue;
+				}
+				if(!strcmp(token, "<rotate>")) {
+					for(i=0;i<3;i++) {
+						token = strtok(NULL, seps);
+						temp[i] = float(atof(token));
+					}
+					newObject->SetRotate(Vector3f(temp[0], temp[1], temp[2]));
+					continue;
+				}
+                //To determine if waypoint is normal, branch, or conjunct or not
+                if(!strcmp(token, "<type>")) {
+					token = strtok(NULL, seps);
+					newObject->setType(atoi(token));
+					continue;
+					}
+                //To differentiate the different paths and where waypoint is ultimately loaded
+                if(!strcmp(token, "<path>")) {
+					token = strtok(NULL, seps);
+					newObject->setPath(atoi(token));
+					continue;
+					}
+                //Will only have on Waypoints that are of Branch type
+                if(!strcmp(token, "<BranchToPath>")) {
+					token= strtok(NULL, seps);
+					newObject->setGoToPath(atoi(token));
+					continue;
+					}
+                //Will only have on Waypoints that are of Conjunction type
+                if(!strcmp(token, "<ConjunctIndex>")) {
+					token= strtok(NULL, seps);
+					newObject->setCIndex(atoi(token));
+					continue;
+					}
+				if(!strcmp(token, "<scale>")) {
+					for(i=0;i<3;i++) {
+						token = strtok(NULL, seps);
+						temp[i] = float(atof(token));
+					}
+					newObject->SetScale(Vector3f(temp[0], temp[1], temp[2]));
+					break;
+				}                
+
+			}
+		}
+
         //=== add it to the Waypoint vector ===//
         if ( newObject->getPath() == 1)
         {
@@ -1207,6 +1248,8 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 	return 1;
 
 }
+
+
 
 // Gib's Add: code copied and pasted directly from Ram's LoadWaypoint()
 // then modified accordingly.

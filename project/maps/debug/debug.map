@@ -1,2 +1,3 @@
 <include> debug.objects
 <include> debug.waypoints
+<include> debug.race

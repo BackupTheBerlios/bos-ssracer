@@ -36,6 +36,7 @@ public:
     //Ram's Additions
 	int LoadOpponentVehicle(string* directory, string* filename);
     int LoadWaypoints(string* directory, string* filename);
+    int LoadRace(string* directory, string* filename);
     int LoadWaypoint(CWaypoint* waypoint){m_vWaypoints.push_back(waypoint); return 1;}; //Temp just for my own testing
     //$$$TEMP this is just to get access too the entities for now.
     vector<CEntity*> * TEMPGetEntities() { return &m_vEntities; };  //$$$TEMP this function will not exist soon....
