@@ -144,7 +144,7 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
     Vector3f vDisp;
 
     // get the camera's local ahead vector based on the vehicles heading and velocity
-    if (0){//vVel.Length() < 5.0f)  {// if velocity is small use heading
+    if ((float)fabs(vVel.Length()) < 0.1f)  {// if velocity is small use heading
         vDisp = vHeading;
         #ifdef _DEBUG
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using car heading");    
@@ -186,21 +186,21 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using current angle %f", DEGREES((float)acos(vHeading.Dot(vDisp))));
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "using end angle %f", DEGREES(theta));
   */      
-/*
+
         // interpolate between heading and displacement
-        static float fLastTime = 0.0f;
         static bool bAngleReached = false;
-        float fTime = DXUtil_Timer( TIMER_GETABSOLUTETIME );
-        float fTDelta = (fTime - fLastTime);
+        static float fTime = 0.0f;
+        fTime += fElapsedTime;        
+        float fTDelta = fTime;//(fTime - fLastTime);
         
 
-        static float fEndAngle =(float)acos(vHeading.Dot(vDisp)); // get angle between displacement and heading
+        static float fEndAngle =(float)acos(vHeading.Dot(vVelDir));//Disp)); // get angle between displacement and heading
         // % of the end angle left to interpolate
-        float fCurrentAngle = fEndAngle * (1.0f - fTDelta/TIME_TO_INTERP);
+        float fCurrentAngle = fEndAngle * (fTDelta/TIME_TO_INTERP);//fEndAngle * (1.0f - fTDelta/TIME_TO_INTERP);
 
-        // stop interpolating if desired angle reached
-        if ( fabs(fCurrentAngle) <= RADIANS(1.0f) || bAngleReached == true) {
-            fLastTime = fTime;  //reset the timer
+        // stop interpolating if desired angle reached or close enough
+        if ( fCurrentAngle >= fEndAngle*0.95f && bAngleReached == false) {
+            fTime = 0.0f;
             vDisp = vHeading;
             fEndAngle = 0.0f;
             bAngleReached = true;
@@ -209,11 +209,11 @@ VOID CCameraChase::FrameMove( FLOAT fElapsedTime )
             Matrix3f matRot = Matrix3f(Vector3f(0,1,0), fCurrentAngle);
             vDisp = matRot * vDisp;
             bAngleReached = false;
-            fEndAngle =(float)acos(vHeading.Dot(vDisp));
+            fEndAngle = (float)acos(vHeading.Dot(vDisp));
         }
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 7, "using current angle %f", DEGREES(fCurrentAngle));
         CLog::GetLog().Write(LOG_DEBUGOVERLAY, 8, "using end angle %f", DEGREES(fEndAngle));
-*/
+
     }
 
     vTemp = vDisp;

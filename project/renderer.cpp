@@ -665,7 +665,7 @@ void CRenderer::InitializeState ()
  
     // simple ambient light
     //m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, TRUE );
-    m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
+    //m_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0x00202020 );
 
     // disable lighting
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
@@ -687,7 +687,7 @@ void CRenderer::InitializeState ()
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
-    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE );
+    m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE);//D3DTOP_MODULATE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
     m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );

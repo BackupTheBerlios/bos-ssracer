@@ -19,9 +19,11 @@ typedef struct {
 	Vector3f* vertices;
 	int col_vertex;
 	Plane3f* Plane;
+	Rectangle3f* Rect;
 	float dist;
 	Vector3f* ColPoint;
 	Vector3f* Reverse;
+	int collision_type;
 } CollisionInfo;
 
 class CCollisionManager : public ITask {
@@ -37,6 +39,9 @@ public:
 	int ComputeVertices(Box3f BBox, Vector3f vertices[]);
 	int ComputeEdges(Vector3f vertices[], Vector3f edges[][2]);
 	Vector3f* ComputeCollisionPoint(Plane3f* Plane, CEntity* Entity);
+	int ComputeRectangles(Vector3f vertices[8], Rectangle3f[4]);
+	bool isInBoundingBox(Vector3f vertices[8], Rectangle3f rectangles[4], CVehicle* Car, int &whichrectangle);
+
 	static CCollisionManager & GetCollisionManager() {return *m_pkCollisionManager;}
     static CCollisionManager * GetCollisionManagerPtr() {return m_pkCollisionManager;}
 

@@ -45,8 +45,11 @@ void CPhysicsTask::DoMessageHandle( ITaskMessage *cMsg ) {
 
 	if (!cMsg) return;
 
+	CCollisionMessage* ColMsg;
+
 	if (cMsg->GetType() == COLLISION_MESSAGE) {
-		CGameStateManager::GetGameStateManagerPtr()->GetPlayerVehicle()
-			->DeliverCollisionMessage((CCollisionMessage*)cMsg);
+		ColMsg = (CCollisionMessage*)cMsg;
+
+		((CVehicle*)ColMsg->GetEntity())->DeliverCollisionMessage(ColMsg);
 	}
 }

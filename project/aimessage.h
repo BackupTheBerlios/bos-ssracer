@@ -20,12 +20,21 @@ public:
 
 	// Constructor
 	CAIMessage();
+    CAIMessage( string strR, string strPVName, string strPList );
 	~CAIMessage() {};
 
 	// Predefined Actions
 
+    // these are game specific parameters
+    string m_strRace;              // sets the map, planes, objects, opponents, starting positions etc.
+    string m_strPlayerVehicleName;     
+    string m_strPlayList;          // music to play while racing
+
+    // some other stuff might be needed here as well...
+
 protected:
 private:
+
 };
 
 #endif

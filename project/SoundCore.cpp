@@ -343,12 +343,14 @@ void CSoundCore::Destroy() {
 
 	// Stop all sound streams
 	for( i = 0; i < MAX_SOUND_STREAMS; i++ ) {
-		m_stream[i].Stop();
+        if (&m_stream[i] != NULL)
+            m_stream[i].Stop();
 	}
 
 	// Stop all sound effects
 	for( i = 0; i < MAX_SOUND_VOICES; i++ ) {
-		m_sfx[i].Stop();
+        if (&m_sfx[i] != NULL)
+            m_sfx[i].Stop();
 	}
 
 	// Destroy Sound checker thread

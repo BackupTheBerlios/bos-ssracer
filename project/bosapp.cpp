@@ -546,7 +546,7 @@ void CBOSApplication::InitializeKernel()
 */
 
     // Game Timer task
-    static CTimer TimerTask(200); // Initialize to 60 clicks per second
+    static CTimer TimerTask(200);
     TimerTask.m_lPriority = 10;
     CKernel::GetKernel().AddTask(&TimerTask);
 
@@ -588,7 +588,7 @@ void CBOSApplication::InitializeKernel()
 
 	// Frontend Manager task
 	static CFrontendManager FrontendManager;
-	FrontendManager.m_lPriority = 7000;//300; // idunno
+	FrontendManager.m_lPriority = 9000;//300; // idunno
 	CKernel::GetKernel().AddTask(&FrontendManager);
 
 	// Collision Manager task

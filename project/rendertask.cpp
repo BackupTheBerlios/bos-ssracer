@@ -24,6 +24,8 @@
 #include "timer.h"
 #include "appstate.h"
 
+#include "cfrontendmanager.h"
+
 #include "WmlVector3.h"
 using namespace Wml;
 
@@ -172,6 +174,8 @@ void CRenderTask::Update()
     {
     case STATE_PRE_GAME:
         // draw loading screen should be active in front end
+        m_pkRenderer->DrawScreen(CFrontendManager::GetFrontendManager().Screen(PRE_GAME));
+        break;
     case STATE_FRONT_END:
         m_pkRenderer->DrawFrontEnd();
         break;

@@ -57,6 +57,9 @@ public:
     bool getIsStatic() {return !m_bIsDynamic;};
     void setIsStatic(bool r) {m_bIsDynamic = !r;};
 
+    bool getHasTransparency() {return m_bHasTransparency;};
+    void setHasTransparency(bool r) {m_bHasTransparency = r;};
+
 
 protected:
 	CD3DMesh* m_pMesh;	// Mesh data structure
@@ -74,7 +77,8 @@ protected:
     bool m_isRenderable;
 
     //J
-    bool m_bIsDynamic;  // most objects are static right now except for vehicles, I need this to help update the quadtree
+    bool m_bIsDynamic;        // most objects are static right now except for vehicles, I need this to help update the quadtree
+    bool m_bHasTransparency;  // needed to sort these entities, I have to draw these last in the renderer.
     
 private:
 

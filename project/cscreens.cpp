@@ -1,6 +1,9 @@
 #include "cscreens.h"
 #include "input.h"
 
+#include "aimessage.h"
+#include "cfrontendmanager.h"
+
 // J's edit
 #include "renderer.h"
 #include "appstate.h"
@@ -8,6 +11,7 @@
 // main input processor maybe overrided in some screens
 //$$$TODO options screen needs a custom one
 //$$$TODO garage needs a custom one
+
 void CScreen::processInput(int key)
 {
   switch(key)
@@ -37,6 +41,48 @@ void CScreen::processInput(int key)
         CKernel::GetKernel().KillAllTasks();  //exit the game 
   }
 }
+
+void CHome::processInput(int key)
+{
+  switch(key)
+  {
+  case GAME_TAB:
+  case GAME_RIGHT:
+  case GAME_DOWN:
+    DeSelectWidget(selectedScreeni); //J's add
+    selectedScreeni++;
+    if (selectedScreeni > maxScreeni)
+        selectedScreeni =maxScreeni;
+
+    SelectWidget(selectedScreeni); //J's add
+    break;
+  case GAME_LEFT:
+  case GAME_UP:
+    DeSelectWidget(selectedScreeni); //J's add
+    selectedScreeni--;
+    if (selectedScreeni < 0)
+      selectedScreeni = 0;
+    SelectWidget(selectedScreeni); //J's add
+    break;  
+  case GAME_RETURN:
+  case GAME_NUMPADENTER:
+    gotoScreen = screenOrder[selectedScreeni];
+    switch (gotoScreen)
+    {
+        // means we're ready to race
+    case PRE_GAME:
+        // send a message off to the AI with the proper game parameters
+        //$$$TEMP LOAD DEFAULTS FOR NOW
+        CFrontendManager::GetFrontendManager().SetRaceName("map_final");
+        CFrontendManager::GetFrontendManager().SetPVName("acuransx");
+        CKernel::GetKernel().DeliverMessage(new CAIMessage(CFrontendManager::GetFrontendManager().GetRaceName(),
+                                                           CFrontendManager::GetFrontendManager().GetPVName(),"game"), AI_TASK);
+        CAppStateManager::GetAppMan().SetAppState(STATE_IN_GAME);
+        break;
+    }
+  }
+}
+
 
 // just attempt to auto arrange the widgets on screen
 void CScreen::AutoArrangeWidgets(WidgetArrangment eWA )
@@ -244,7 +290,7 @@ void CNewGame::draw()
   }
 }
 
-void CNewGame::processInput(int key)
+/*void CNewGame::processInput(int key)
 {CLog::GetLog().Write(LOG_DEBUGOVERLAY, 114, "in BLAH screen");
   switch(key)
   {//TODO Deal With ASCII Chars for TEXTFIELD!!!
@@ -264,7 +310,7 @@ void CNewGame::processInput(int key)
     gotoScreen = screenOrder[selectedScreeni];
   }
 }
-
+*/
 CGarage::CGarage()
 {
   select = new CButton();
@@ -306,6 +352,7 @@ void CGarage::draw()
   }
 }
 
+/*
 void CGarage::processInput(int key)
 {
   switch(key)
@@ -330,7 +377,7 @@ void CGarage::processInput(int key)
     gotoScreen = screenOrder[selectedScreeni];
   }
 }
-
+*/
 
 //PostGame Game Screen
 CPostGame::CPostGame()
@@ -798,7 +845,9 @@ void CDealership::draw()
   cancel->draw();
   instructions->draw();
 }
-/*  //J: I think this is what the merge did?
+
+
+/*
 void CDealership::processInput(int key)
 {
   switch(key)

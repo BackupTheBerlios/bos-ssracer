@@ -100,8 +100,12 @@ public:
 	Vector3f& GetPositionLC() {return positionLC;}
 	void updateBoundingBoxes(Vector3f bodyRotWC);
 	void SetFLTirePosition(Vector3f TirePos) {FLTirePosition = TirePos;}
+	void SetHeadingWC(Vector3f newHeading) {headingWC = newHeading;}
 	// end Gib's additions
-
+    //Ram's Add
+    void SetCheckTime(int checkNum, float time){checkPointTimes[checkNum] = time;}; 
+    float GetCheckTime(int checkNum) {return checkPointTimes[checkNum];};
+    //end Ram's add
 
 protected:
 	
@@ -219,6 +223,10 @@ protected:
 	Vector3f ExtraneousForces;
 	bool isPlayer;
 	Vector3f FLTirePosition; // The vector that points from the bbox center to the front-left tire's bbox center
+
+    //Ram's Stuff
+    //Why 4 you ask? we got 3 checkpoints + 1 finish line all in seconds.
+    float checkPointTimes[4];
 };
 
 

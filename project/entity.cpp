@@ -12,6 +12,7 @@ CEntity::CEntity()
 	m_scale = Vector3f(1.0f, 1.0f, 1.0f);
     // J:  need to set some more default values
     m_bIsDynamic = false;
+    m_bHasTransparency = false;
     m_box.Center() = m_translate;
     m_box.Extent(0) = m_box.Extent(1) = m_box.Extent(2) = 0.5f; // a unit bounding box
     m_box.Axis(0) = Vector3f(1,0,0);  // axis aligned by default

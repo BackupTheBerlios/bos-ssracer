@@ -1702,6 +1702,7 @@ int CCommandLineParser::LoadCollisionTest()
 	// Load planes
 	CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlanes(&planesDir, &planesName);
 
+	
 	// Load Player Vehicle
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&carDir, &carName))) {
 		CLog::GetLog().Write(LOG_GAMECONSOLE, "Player Vehicle not loaded correctly!");
@@ -1776,7 +1777,7 @@ int CCommandLineParser::LoadCollisionTest()
 
 	// sign = 1 --> ahead and to the right
 	// sign = -1 --> ahead and to the left
-	(*OV)->SetPositionLC(Vector3f(10.0f, 10.0f*sign, 0.0f)); 
+	(*OV)->SetPositionLC(Vector3f(10.0f*sign, 10.0f*sign, 0.0f)); 
 
 	// Set opponent vehicle's bounding box
 	(*OV)->GetBoundingBox()->Extent(0) = 1.5f;
@@ -1826,6 +1827,28 @@ int CCommandLineParser::LoadCollisionTest()
 
 	} while(OV != CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end());
 
+	/************* SET SOME WAYPOINTS *********************/
+
+	CWaypoint* WP = new CWaypoint();
+	WP->SetTranslate(Vector3f(100.0f, 0.0f, 40.0f));
+	std::vector<CWaypoint*>* WP_vector = new std::vector<CWaypoint*>;
+	WP_vector->push_back(WP);
+	OV--;
+	(*OV)->setWPSequence(WP_vector);
+	(*OV)->initNext();
+
+	COpponentAI::GetOpponentAIPtr()->addCar(*OV);
+	
+	CWaypoint* WP2 = new CWaypoint();
+	WP->SetTranslate(Vector3f(100.0f, 0.0f, -40.0f));
+	std::vector<CWaypoint*>* WP_vector2 = new std::vector<CWaypoint*>;
+	WP_vector2->push_back(WP2);	
+	OV--;
+	(*OV)->setWPSequence(WP_vector2);
+	(*OV)->initNext();
+
+	COpponentAI::GetOpponentAIPtr()->addCar(*OV);
+
 	/****** OTHER MISCELLANEOUS STUFF **********/
 
 	// Make planes visible
@@ -1841,8 +1864,6 @@ int CCommandLineParser::LoadCollisionTest()
 	// set camera
 	CRenderer::GetRenderer().SetActiveCamera(CAMERA_FREELOOK);
     ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
-
-	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 25, "%i planes", CCollisionManager::GetCollisionManagerPtr()->GetPlanes()->size());
 
 	return OK;
 }

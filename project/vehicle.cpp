@@ -14,7 +14,15 @@
 #include "timer.h"
 #include "macros.h"
 
+// Last minute hacks
 static float theta = 0.0f;
+static float skidTimeIn = 0.0f;
+static float skidTimeOut = 0.0f;
+static float skidPercent = 0.0f;
+
+#define SKID_INTERPOLATE_TIME	1.0f
+// End last minute hacks
+
 float sgn(float x)
 {
 	if(x > 0) {
@@ -100,9 +108,14 @@ void CVehicle::Init()
 	oldFreq = engineRev->GetFrequency();
 	engineIdle->SetFrequency( engineIdle->GetFrequency() * 1.5f );
 
+    //Rams Add
+    for(int i=0; i<4;i++){
+    checkPointTimes[i]=-1;
+    }
 	// Gib's additions
 	ExtraneousForces = Vector3f(0.0f, 0.0f, 0.0f);
 	isPlayer = false;
+
 
 }
 
@@ -263,14 +276,53 @@ void CVehicle::CalculateWeightDistribution()
 	if(weightDistribution[RLTIRE] > maximumTractionForce) {
 		b_dynamicTraction = true;
 	}
+
+
+	if(!inputState.gas && !inputState.brake) {
+		b_dynamicTraction = false;
+	}
+	if(inputState.brake && (inputState.lturn || inputState.rturn)) {
+		b_dynamicTraction = false;
+	}
 	if(inputState.ebrake) {
 		b_dynamicTraction = true;
 	}
 
 	if(b_dynamicTraction && !sgnSetAlready) {
+		//b_dynamicTraction = false;
 		sgnVel = sgn(velocityLC.X());
+
+		//if(skidTimeIn < SKID_INTERPOLATE_TIME) {
+		
+		//	skidTimeIn += CTimer::GetTimer().GetTimeElapsed();
+		//	skidPercent = skidTimeIn / SKID_INTERPOLATE_TIME;
+		//}
+		//else {
+		//
+		skidPercent = 1.0f;
+			//b_dynamicTraction = true;
+		//}
+
+		skidTimeOut = SKID_INTERPOLATE_TIME;
+	}
+	
+
+	if(sgnSetAlready && !b_dynamicTraction) {
+		b_dynamicTraction = true;
+		
+		if(skidTimeOut > 0.0f) {
+			skidTimeOut -= CTimer::GetTimer().GetTimeElapsed();
+			skidPercent = skidTimeOut / SKID_INTERPOLATE_TIME;
+		}
+		else {
+			skidPercent = 1.0f;
+			b_dynamicTraction = false;
+		}
+
+		skidTimeIn = 0.0f;
 	}
 
+			
 	if(b_dynamicTraction) {
 		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 60, "DYNAMIC TRACTION");
 	}
@@ -930,14 +982,10 @@ void CVehicle::CalculateTireRotation(float deltaT)
 //--------------------------------------------------------------
 void CVehicle::CalculateVehicleVelocity(float deltaT)
 {
-	if(!b_dynamicTraction) {
-		velocityLC.X() = velocityLC.X() + (accelerationLC.X() * deltaT);
-		velocityLC.Y() = 0.0f;
-		velocityLC.Z() = 0.0f;
-	}
-	else {
-		accelerationLC = Vector3f(0.0f, 0.0f, 0.0f);
-	}
+	velocityLC.X() = velocityLC.X() + (accelerationLC.X() * deltaT);
+	velocityLC.Y() = 0.0f;
+	velocityLC.Z() = 0.0f;
+
 }
 
 //--------------------------------------------------------------
@@ -1012,7 +1060,14 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 		//rotPos.Y() = tempTrans.X() * -sin(-rotationLC.Z()) + tempTrans.Y() * cos(-rotationLC.Z());
 		rotPos.Z() = tempTrans.Z();
 
-		positionLC += rotPos;
+		//if(skidPercent == 0.0f) {
+			positionLC += rotPos;
+		//}
+		//else {
+			// rotation rotPos by half angle,
+			// then add it to positionLC
+			// positionLC += rotPosRotHalf;
+		//}
 
 		Vector3f AB = A - B;
 		Vector3f AprimeBprime = Aprime - Bprime;
@@ -1116,8 +1171,11 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 
 			Vector3f tempTrans = temp * deltaT;
 
-			Vector3f AB = A - B;
-			Vector3f AprimeBprime = Aprime - Bprime;
+			rotPos.X() = tempTrans.X() * cos(-rotationLC.Z()) + tempTrans.Y() * sin(-tempTrans.Z());
+			rotPos.Y() = tempTrans.X() * -sin(-rotationLC.Z()) + tempTrans.Y() * cos(-tempTrans.Z());
+			//rotPos.X() = tempTrans.X() * cos(-rotationLC.Z()) + tempTrans.Y() * sin(-rotationLC.Z());
+			//rotPos.Y() = tempTrans.X() * -sin(-rotationLC.Z()) + tempTrans.Y() * cos(-rotationLC.Z());
+			rotPos.Z() = tempTrans.Z();
 
 		//	if(velocityLC.X() < -0.3f) {
 		//		velocityTotLC *= -1.0f;
@@ -1172,9 +1230,51 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 				b_playSkidSound = false;
 			}
 
-			velocityTotLC *= 0.99f;
-			positionLC += velocityTotLC * deltaT;
-			
+			velocityTotLC *= 0.995f;
+
+			if(skidPercent == 1.0f) {
+				positionLC += velocityTotLC * deltaT;
+			}
+			else {
+				
+				Vector3f a = velocityTotLC * skidPercent * deltaT;
+				Vector3f b = rotPos * (1 - skidPercent);
+
+				Vector3f temp12 = a + b;
+				/*
+				float velTotLCDotrotPos = (velocityTotLC.X()*deltaT) * rotPos.X() + (velocityTotLC.Y()*deltaT) * rotPos.Y() + (velocityTotLC.Z()*deltaT) * rotPos.Z();
+				float magVel2 = sqrt(pow(velocityTotLC.X() * deltaT, 2) + pow(velocityTotLC.Y() * deltaT, 2) + pow(velocityTotLC.Z() * deltaT, 2));
+				float magRotPos2 = sqrt(pow(rotPos.X(), 2) + pow(rotPos.Y(), 2) + pow(rotPos.Z(), 2));
+				float magAB = magVel2 * magRotPos2;
+
+				float rotRADS = float(acos(velTotLCDotrotPos / magAB));
+
+				Vector3f temp12 = velocityTotLC * deltaT;
+				CLog::GetLog().Write(LOG_MISC, "temp12: %f %f %f", temp12.X(), temp12.Y(), temp12.Z());
+				CLog::GetLog().Write(LOG_MISC, "rotPos: %f %f %f", rotPos.X(), rotPos.Y(), rotPos.Z());
+				CLog::GetLog().Write(LOG_MISC, "ROTRADS: %f", rotRADS);
+				CLog::GetLog().Write(LOG_MISC, "magVel2: %f", magVel2);
+				CLog::GetLog().Write(LOG_MISC, "magRotPos2: %f", magRotPos2);
+				CLog::GetLog().Write(LOG_MISC, "magAB: %f", magAB);
+				CLog::GetLog().Write(LOG_MISC, "velTotLCDotrotPos: %f", velTotLCDotrotPos);
+				if(rotRADS > RADIANS(1.0f))
+					RotateVectorAboutLocalZ(&temp12, rotRADS * (1-skidPercent));
+				
+				float magTemp12 = sqrt( temp12.X() * temp12.X() + temp12.Y() * temp12.Y() + temp12.Z() * temp12.Z());
+				temp12 /= magTemp12;
+
+
+				float test12 = fabs(magVel2 - magRotPos2);
+				float abc = magVel2 + (test12 * (1 - skidPercent));
+
+				test12 *= abc;
+				positionLC += temp12;
+				
+				*/
+
+				positionLC += temp12;
+			}
+
 			Vector3f test1 = velocityTotLC;
 
 			RotateVectorAboutLocalZ(&test1, -rotationLC.Z());

@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "ccollisionmessage.h"
 #include "WmlVector3.h"
+#include "WmlPlane3.h"
 
 using namespace Wml;
 
@@ -14,6 +15,10 @@ public:
 
 	void DeliverCollisionMessage(CCollisionMessage* ColMsg);
 	void UpdateCollisionReaction();
+	void HandlePushCollision(CCollisionMessage* ColMsg);
+	void HandleSphereToSphereCollision(CCollisionMessage* ColMsg);
+	Vector3f GetDirectionWhenDisturbed() {return m_vDirectionWhenDisturbed;}
+	bool& isDisturbed() {return disturbed;}
 
 protected:
 	Vector3f m_vPosition;

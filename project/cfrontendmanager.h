@@ -25,6 +25,11 @@ public:
 	CScreen* Screen(int which); // gets screen corresponding to which
 	int setState(int state); // careful, this function does not synchronize state with curWidget
 
+    void SetPVName(string s){ m_strPlayerVehicleName = s; };
+    void SetRaceName(string s){ m_strRaceName = s; };
+    string GetPVName(){return m_strPlayerVehicleName;};
+    string GetRaceName(){return m_strRaceName; };
+
 	// For use as Singleton:
 	static CFrontendManager & GetFrontendManager();
     static CFrontendManager * GetFrontendManagerPtr();
@@ -54,6 +59,11 @@ private:
 	CCredits * m_Credits;
 	CPerformance * m_Performance;
 	CDealership * m_Dealership;
+
+    // managed by the front end to create a game properly
+    string m_strPlayerVehicleName;
+    string m_strRaceName;
+
 };
 
 #endif

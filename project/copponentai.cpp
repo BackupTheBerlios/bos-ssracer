@@ -112,7 +112,15 @@ bool COpponentAI::isAtWaypoint(COpponentVehicle* Car)
 	float dist = (*Car->Next()->GetTranslate() - *Car->GetTranslate()).Length();
 	if (dist < Car->Next()->Radius()) 
     {
-     // CLog::GetLog().Write(LOG_DEBUGOVERLAY, 28, "WP Name: %s ", string(*Car->Next()->GetName()));
+     
+     //Set time here, if its a Timer WP/ Checkpoint
+     if(Car->Next()->getType()==3)
+     {
+       float newTime = CTimer::GetTimer().GetCurrTime();
+       float raceTime = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->getStartTime();
+       int checkPoint = Car->Next()->getCheckPoint();
+       Car->SetCheckTime(checkPoint, newTime-raceTime);
+     }
       return true;
     }
 
@@ -215,15 +223,16 @@ void COpponentAI::Update()
               {
                 (*thisCar)->incNext(); // new next target waypoint
 				setDirection(*thisCar);
+                 CLog::GetLog().Write(LOG_DEBUGOVERLAY, 111, "At Waypoint");
 			}
           
             else
             {
              setDirection(*thisCar);
-             CLog::GetLog().Write(LOG_DEBUGOVERLAY, 111, "Not at HT Yet");
+             CLog::GetLog().Write(LOG_DEBUGOVERLAY, 111, "");
             }
 			// accelerate/decelerate:
-			if ((*thisCar)->GetVehicleVelocityWC().Length() < VAI_CARS_VEL) {
+		/*	if ((*thisCar)->GetVehicleVelocityWC().Length() < VAI_CARS_VEL) {
 				(*thisCar)->SetGas(true); (*thisCar)->SetBrake(false);
 			}
 			if ((*thisCar)->GetVehicleVelocityWC().Length() > VAI_CARS_VEL) {
@@ -250,7 +259,8 @@ void COpponentAI::Update()
             }
               if((*thisCar)->raceOver){
                 (*thisCar)->SetBrake(false); (*thisCar)->SetGas(false);
-              }
+               // CLog::GetLog().Write(LOG_MISC,"Check Times %f %f %f %f For Car: %i", (*thisCar)->GetCheckTime(0),(*thisCar)->GetCheckTime(1),(*thisCar)->GetCheckTime(2),(*thisCar)->GetCheckTime(3),(*thisCar)->getAILevel());
+              }*/
         }
 		break;
 	default:; // Program should never get here

@@ -97,6 +97,11 @@
 // simple interpolation
 #define LERP(a,b,c)     (((b) - (a)) * (c) + (a))
 
+// for collision types
+#define REFLECTIVE 1
+#define PUSHED 2
+#define SPHERE_TO_SPHERE 3
+
 // error codes:
 #define OK 0
 #define GENERAL_ERROR 1
@@ -118,6 +123,7 @@
 #define EMPTY_VECTOR 17
 #define NEGATIVE_VALUE 18
 #define NO_SUCH_FONT 19
+#define INVALID_COLLISION_TYPE 20
 
 static int global_error; // for functions that don't return ints but can encounter errors
 // global_error not working properly

@@ -14,7 +14,7 @@
 #define NORMALWP 0
 #define BRANCHWP 1
 #define CONJUNCTWP 2
-
+#define TIMERWP 3
 
 using namespace Wml;
 
@@ -44,6 +44,9 @@ class CWaypoint : public CEntity {
         int getCPath(){return m_conjunctPath;};
         int setGoToPath(int p) {m_gotoPath=p; return OK;};
         int getGoToPath(){return m_gotoPath;};
+        int setCheckPoint(int p) {m_checkPointNum=p; return OK;};
+        int getCheckPoint(){return m_checkPointNum;};
+
 
 	protected:
         bool m_isLastWay;
@@ -54,6 +57,7 @@ class CWaypoint : public CEntity {
         int m_gotoPath;                 //if branch taken gotopath
         int m_conjunctIndex;             //when conjoining index on main path to goto
         int m_conjunctPath;
+        int m_checkPointNum;               //should only range from 0-3 for now
         std::vector<CWaypoint*> m_Neighbors;
 
 	private:

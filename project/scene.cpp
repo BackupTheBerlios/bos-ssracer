@@ -35,6 +35,7 @@ CScene::CScene()
     m_vWPShortCut3.clear();
     m_vPlanes.clear();
     m_kQuadTree = new CQuadTree();
+
 }
 
 
@@ -81,7 +82,7 @@ int CScene::ReleaseScene()
 /*	// Free all the meshes
 	for(i=0;i<m_vMeshes.size();i++) {
         m_vMeshes[i]->InvalidateDeviceObjects();
-        m_vMeshes[i]->Destroy();
+        m_vMeshes[i]->Destroy(); 
 		FREE(m_vMeshes[i], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
 	}
 
@@ -101,9 +102,12 @@ int CScene::ReleaseScene()
     m_kMeshMap.clear();
 
 	// Free all the entities
-	for(unsigned int i=0;i<m_vEntities.size();i++) {
+	for(unsigned int i=0;i<m_vEntities.size();i++) { 
 		FREE(m_vEntities[i], "Error CScene::ReleaseScene >> Attempted to delete a null pointer");
 	}
+
+    //for (vector <CEntity *>::iterator it2=m_vEntities.begin(); it2!=m_vEntities.end(); it2++)
+    //    SAFE_DELETE(*it2);
 
 	// Clear the vector of entity pointers
 	m_vEntities.clear();
@@ -152,7 +156,8 @@ int CScene::ReleaseScene()
 	// Can't think of anything else right now.
 
     // empty out the quadtree
-    m_kQuadTree->ClearQuadTree(); /////////////////////////////
+    if ( m_kQuadTree )
+        m_kQuadTree->ClearQuadTree(); /////////////////////////////
 
     bMapIsLoaded = false;
 
@@ -394,9 +399,16 @@ int CScene::LoadEntities(string* directory, string* filename)
 					newObject->SetBoundingSphere(tempSphere);
 
 
+					break;continue;
+				}
+/*                // check for transparency
+				if(!strcmp(token, "<transTexture>")) {
+					token = strtok(NULL, seps);
+					newObject->setHasTransparency((bool)(atoi(token)));
+
 					break;
 				}
-
+*/
                     /*
                     #ifdef _DEBUG
 					CLog::GetLog().Write(LOG_MISC, "<id> %d", newObject->getId());
@@ -1092,6 +1104,12 @@ int CScene ::LoadWaypoints(string* directory, string* filename)
 					newObject->setCPath(atoi(token));
 					continue;
 					}
+                //Will only have on Waypoints that are of Timer type
+                if(!strcmp(token, "<CheckPoint>")) {
+					token= strtok(NULL, seps);
+					newObject->setCheckPoint(atoi(token));
+					continue;
+					}
 				if(!strcmp(token, "<scale>")) {
 					for(i=0;i<3;i++) {
 						token = strtok(NULL, seps);
@@ -1142,7 +1160,7 @@ int CScene ::LoadRaceSettings(string* directory, string* filename)
 	char buf[512];
 	char* token;
 	char seps[] = " \n";
-	int i;
+	//int i;
 	string path;
 
 	path = directory->c_str();
@@ -1234,13 +1252,25 @@ int CScene ::LoadRaceSettings(string* directory, string* filename)
                     continue;
 				}
 				if(!strcmp(token, "<startpos>")) {
-					for(i=0;i<3;i++) {
+                  	for(int i=0;i<3;i++) {
+			    	token = strtok(NULL, seps);
+			    	temp[i] = float(atof(token));
+		        	}
+                    //Vector3f vOTrans = Vector3f(temp[0], temp[1], temp[2]);
+			        //currentOpponent->SetPositionLC(vOTrans);
+				/*	for(i=0;i<3;i++) {
 						token = strtok(NULL, seps);
 						temp[i] = float(atof(token));
-					}
+					}*/
                     //doesnt set starting position properly .... wtf.
 					currentOpponent->SetPositionLC(Vector3f(temp[0], temp[1], temp[2]));
-					//currentOpponent->SetTranslate(Vector3f(temp[0], temp[1], temp[2]));
+                    currentOpponent->GetRotationLC().Z() = PI_BOS/3;
+                    //Vector3f head = Vector3f(63,0,110);
+                    //head.Normalize();
+					//currentOpponent->SetHeadingTotLC(head);
+                    //currentOpponent->SetTranslate(Vector3f(temp[0], temp[1], temp[2]));
+                    //determine heading...
+                    
                     continue;
 				}
 				
@@ -1286,9 +1316,9 @@ int CScene ::LoadRaceSettings(string* directory, string* filename)
     /*std::vector<CWaypoint *>::iterator it = m_vWaypoints.end()-1;
 	(*it)->setLastWay(true);
 	fclose(fp);
-*/CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+*/  CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
     ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle((*CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->begin()));
-	CLog::GetLog().Write(LOG_MISC, "Leaving Race Settings");
+	//CLog::GetLog().Write(LOG_MISC, "Leaving Race Settings");
 	            
 	return 1;
 
@@ -1333,10 +1363,8 @@ int CScene::LoadRace(FILE* fp, string* directory, string* filename)
 		}
 	}
 
-    //bMapIsLoaded = true;  
-
-    // intitalize the quadtree using the new entitity information
-    //m_kQuadTree->Initialize( &m_vEntities );
+    //Start Timer... This is time when race starts....
+    setStartTime(CTimer::GetTimer().GetCurrTime());
 
 	return 1;
 }

@@ -10,6 +10,7 @@
 #include "log.h"
 
 #include "gamestatemanager.h"
+#include "settings.h"
 
 #include "appstate.h"
 #include "input.h"
@@ -165,6 +166,10 @@ void CAITask::DoMessageHandle( ITaskMessage *cMsg ) {
 		CLog::GetLog().Write(LOG_MISC, "AI Task: AI message received with timestamp %f.", cAIMsg->GetTimeStamp() );
 		#endif
 
+        //$$$NOTE should be in STATE_PRE_GAME set when this message was sent
+
+        HandleAIMessage(cAIMsg);
+
 		//---------------------------------------------------------------//
 		break;
 
@@ -178,6 +183,97 @@ void CAITask::DoMessageHandle( ITaskMessage *cMsg ) {
 		#endif
 		break;
 	}
+}
+
+
+
+//---------------------------------------------------------------
+// HandleAIMessage
+//---------------------------------------------------------------
+void CAITask::HandleAIMessage( CAIMessage *cAIMsg )
+{
+    #ifdef _DEBUG
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "Loading race %s", cAIMsg->m_strRace.c_str());
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "Loading playlist %s", cAIMsg->m_strPlayList.c_str());
+    CLog::GetLog().Write(LOG_GAMECONSOLE, "SHOULD be Loading playervehicle %s but it needs a starting posiiton first", cAIMsg->m_strPlayerVehicleName.c_str());
+    #endif
+
+    //--- load a race up ---//
+    string sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP)+cAIMsg->m_strRace+"\\";
+    string sName = cAIMsg->m_strRace;
+
+    FILE * fp = fopen( (sDir+sName+".race").c_str(), "r");
+    if (!fp)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "loadrace Error: File does not exist: %s", (sDir+sName+".race").c_str());
+        return;
+    }
+
+/*        // first unload the current map & scene if any
+    if (CGameStateManager::GetGameStateManager().GetScenePtr()->IsLoaded() == true )  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Releasing current scene");
+        if (CGameStateManager::GetGameStateManager().GetScenePtr()->ReleaseScene()){
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "Scene released sucessfully");
+        }
+        else {
+            CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR: Scene was not released sucessfully");
+        }
+    }
+*/
+    // load the map, race parameters
+    if (CGameStateManager::GetGameStateManager().GetScenePtr()->LoadRace( fp, &sDir, &sName ))  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Successfully loaded Race: %s%s%s", sDir.c_str(), sName.c_str(), ".race");
+    }
+    else  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "ERROR: Failed to load race: %s%s%s", sDir.c_str(), sName.c_str(), ".race");
+    }
+
+    // --- prepare renderer for game --- //
+    // turn vis culling on
+    CRenderer::GetRenderer().SetVisCulling(true);
+    // disable all debug drawing states
+    CRenderer::GetRenderer().SetDrawEntBBoxes(false);
+    CRenderer::GetRenderer().SetDrawQNodeBBoxes(false);
+    CRenderer::GetRenderer().SetDrawRects(false);
+    CRenderer::GetRenderer().SetDrawWayPoints(false);
+
+            
+    //$$$TODO need the starting position set somewhere because it keeps crashing!!!
+    //---  set the player vehicle ---//
+    sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+cAIMsg->m_strPlayerVehicleName+"\\";
+    sName = cAIMsg->m_strPlayerVehicleName;
+    sName.append(".car");  // build the actual filename we want to load
+
+    //check if the file exists
+    fp = fopen( (sDir+sName).c_str(), "r");
+    if (!fp)  {
+        CLog::GetLog().Write(LOG_GAMECONSOLE, "Error: File does not exist: %s", (sDir+sName).c_str());
+        return;
+    }
+/*
+    // load the player vehicle into the current scene
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&sDir, &sName))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "The scene was not loaded successfully!");
+		return;
+	}
+
+    //set the active camera to the chase cam
+    CRenderer::GetRenderer().SetActiveCamera(CAMERA_CHASE);
+
+    //set it to chase the vehicle we just created
+    ((CCameraChase *)CRenderer::GetRenderer().GetActiveCameraPtr())->SetVehicle(CGameStateManager::GetGameStateManager().GetPlayerVehicle());
+*/
+
+    //--- load up the game music ---//        
+   	CSoundMessage * cSMsg = new CSoundMessage();
+	cSMsg->LoadList( cAIMsg->m_strPlayList.c_str() );        
+	CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );   // load up the list
+    cSMsg = new CSoundMessage();
+    cSMsg->PlayList( 1.0f, true, true );
+    CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );   // play the list
+
+
+    // set the state to in game if not already set
+    CAppStateManager::GetAppMan().SetAppState(STATE_IN_GAME);
 }
 
 
@@ -241,17 +337,40 @@ void CAITask::HandleInputMessage( CInputTaskMessage *cIMsg ) {
 void CAITask::DEBUGHandleInGameInput( CInputTaskMessage * cIMsg )
 {
 
+    CSoundMessage * cSMsg;
+
     switch ( cIMsg->m_keyValue ) {
     #ifdef _DEBUG
-    case GAME_F11:
-        CKernel::GetKernel().KillAllTasks();  // kill the program
+
+    case GAME_F1:
+        cSMsg = new CSoundMessage();
+        cSMsg->KillSound();
+        cSMsg->KillSoundEffects();
+        cSMsg->KillSoundStreams();
+
+        CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+        break;
+
+    case GAME_F11:  
+        if (!cIMsg->m_keyDown)  {
+            CKernel::GetKernel().KillAllTasks();  // kill the program
+        }
         break;
     #endif
 
+        //$$$TEMP testing entire system out
+    case GAME_F5:
+        if (!cIMsg->m_keyDown)  {
+            CAppStateManager::GetAppMan().SetAppState(STATE_PRE_GAME);
+            CKernel::GetKernel().DeliverMessage(new CAIMessage("map_final", "acuransx", "game") , AI_TASK);
+        }
+        break;
+
 	case GAME_ESCAPE:
         // transition to front end
-        if (!cIMsg->m_keyDown)
+        if (!cIMsg->m_keyDown)  {
             CAppStateManager::GetAppMan().SetAppState(STATE_FRONT_END);
+        }
 
         // set the front end manager to display the options/quit screen
         // actual game exiting is performed there

@@ -46,7 +46,7 @@ public:
   //not much else in base class for now
   CScreen(){gotoScreen=0; maxScreeni = 1000; selectedScreeni =0;};
   ~CScreen(){};
-  void processInput(int key);
+  virtual void processInput(int key);
 
 protected:
   //CWidget * selectedWidget;
@@ -107,7 +107,7 @@ class CNewGame : public CScreen
   CNewGame();          //constructor where all widgets are set 
   ~CNewGame();         //destructor
   void draw();          //Jay's stub to render screen
-  void processInput(int key);
+  //void processInput(int key);
   
 
 };
@@ -129,7 +129,7 @@ class CGarage : public CScreen
   CGarage();          //constructor where all widgets are set 
   ~CGarage();         //destructor
   void draw();          //Jay's stub to render screen
-  void processInput(int key);
+  //void processInput(int key);
 
 };
 
@@ -345,7 +345,7 @@ class CDealership : public CScreen
   CDealership();          //constructor where all widgets are set 
   ~CDealership();         //destructor
   void draw();          //Jay's stub to render screen
-  void processInput(int key);
+  //void processInput(int key);
 
 };
 

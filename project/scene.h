@@ -38,6 +38,9 @@ public:
     int LoadWaypoints(string* directory, string* filename);
     int LoadRaceSettings(string* directory, string* filename);
     int LoadWaypoint(CWaypoint* waypoint){m_vWaypoints.push_back(waypoint); return 1;}; //Temp just for my own testing
+    void setStartTime (float time) {m_fstartTime = time;};
+    float getStartTime (){return m_fstartTime;};
+    
     //$$$TEMP this is just to get access too the entities for now.
     vector<CEntity*> * TEMPGetEntities() { return &m_vEntities; };  //$$$TEMP this function will not exist soon....
    
@@ -81,7 +84,7 @@ private:
 	int LoadMap(FILE* fp, string* directory, string* filename);		// Load a new map (.map file) and create a scene
 	int LoadEntities(string* directory, string* filename);	        // Load the objects specified in the map file (.objects file)
     bool bMapIsLoaded;
-
+    float m_fstartTime;
     int AddMesh( CD3DMesh * pMesh );  // add a mesh to the meshmap
 
 	/*void LoadMap(char * cFilename = "debug", char * cDir = "./maps/debug/");*/

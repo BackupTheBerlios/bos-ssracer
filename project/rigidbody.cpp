@@ -18,11 +18,24 @@ CRigidBody::~CRigidBody()
 }
 
 #define RIGIDBODY_REFLECTION_FACTOR 0.009f
-#define RIGIDBODY_SPACING_FACTOR 1.1f
-#define RIGIDBODY_SPIN_FACTOR 0.05f;
+#define RIGIDBODY_SPACING_FACTOR 3.0f
+#define RIGIDBODY_SPIN_FACTOR 0.02f;
 void CRigidBody::DeliverCollisionMessage(CCollisionMessage* ColMsg)
 {
 	if (!ColMsg) return;
+
+	if (ColMsg->GetCollisionType() == SPHERE_TO_SPHERE) {
+		HandleSphereToSphereCollision(ColMsg);
+		return;
+	}
+
+	/****** Deploy to HandlePushCollision() if this is the case ******/
+	// Push collision not working. Commenting this out for now.
+	/*	if (ColMsg->GetCollisionType() == PUSHED) {
+		HandlePushCollision(ColMsg);
+		return;
+	}
+*/ 
 
 	CVehicle* Car = (CVehicle*)ColMsg->GetEntity();
 
@@ -30,33 +43,20 @@ void CRigidBody::DeliverCollisionMessage(CCollisionMessage* ColMsg)
 
 	m_vPosition = m_translate + (*ColMsg->GetReverse())*RIGIDBODY_SPACING_FACTOR;
 
-	CLog::GetLog().Write(LOG_MISC, "reverse = (%f, %f, %f)",
-		ColMsg->GetReverse()->X(), ColMsg->GetReverse()->Y(), ColMsg->GetReverse()->Z());
-	CLog::GetLog().Write(LOG_MISC, "translate = (%f, %f, %f)",
-		m_translate.X(), m_translate.Y(), m_translate.Z());
-	CLog::GetLog().Write(LOG_MISC, "position = (%f, %f, %f)",
-		m_vPosition.X(), m_vPosition.Y(), m_vPosition.Z());
-
-	m_vDirectionWhenDisturbed = m_translate - m_vPosition;
-
-	Vector3f velocityWC = Car->GetVehicleVelocityWC();
-
-	// if reversing, velocityWC will point in opposite direction as actual velocity
-	if (Car->GetVehicleVelocityLC().X() < 0.0f)
-		velocityWC *= -1.0f;
+	Vector3f velocityWC;
+	if (disturbed) {
+		velocityWC = m_vDirectionWhenDisturbed*80.0f;
+	}
+	else {
+		velocityWC = Car->GetVehicleVelocityWC();
+		// if reversing, velocityWC will point in opposite direction as actual velocity
+		if (Car->GetVehicleVelocityLC().X() < 0.0f)
+			velocityWC *= -1.0f;
+	}
 
 	m_vReflection = velocityWC - 2.0f*(velocityWC.Dot(*ColMsg->GetNormal()))*(*ColMsg->GetNormal());
-	
-	/*	if (!disturbed)
-		m_vReflection = velocityWC - 2.0f*(velocityWC.Dot(*ColMsg->GetNormal()))*(*ColMsg->GetNormal());
-	else {
-		m_vReflection = m_vDirectionWhenDisturbed - 2.0f*(m_vDirectionWhenDisturbed.Dot(*ColMsg->GetNormal()))*(*ColMsg->GetNormal());
-		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 60, "DWD = (%f, %f, %f)",
-			m_vDirectionWhenDisturbed.X(), m_vDirectionWhenDisturbed.Y(), m_vDirectionWhenDisturbed.Z());
-		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 61, "Reflection = (%f, %f, %f)",
-			m_vReflection.X(), m_vReflection.Y(), m_vReflection.Z());
-	}*/
 	m_vReflection *= RIGIDBODY_REFLECTION_FACTOR;
+	m_vDirectionWhenDisturbed = m_vReflection;
 
 	Car->SetVehicleVelocityLC(0.0f);
 	Car->SetVehiclePositionLC(Vector3f(m_vPosition.X(), m_vPosition.Z(), m_vPosition.Y()));
@@ -84,10 +84,98 @@ void CRigidBody::DeliverCollisionMessage(CCollisionMessage* ColMsg)
 
 	m_translate = m_vPosition;
 	m_box.Center() = m_vPosition;
+	m_sphere.Center() = m_vPosition;
 	Car->GetRotationLC().Z() += spin;
 
 	disturbed = true;
+
+	/*
+	CLog::GetLog().Write(LOG_MISC, "\n\n\nreflection = (%f, %f, %f)",
+		m_vReflection.X(), m_vReflection.Y(), m_vReflection.Z());
+	CLog::GetLog().Write(LOG_MISC, "direction = (%f, %f, %f)\n\n",
+		m_vDirectionWhenDisturbed.X(), m_vDirectionWhenDisturbed.Y(), m_vDirectionWhenDisturbed.Z());
+*/
 }
+
+void CRigidBody::HandlePushCollision(CCollisionMessage* ColMsg)
+{
+	CVehicle* Car = (CVehicle*)ColMsg->GetEntity();
+
+
+	CLog::GetLog().Write(LOG_MISC, "In HandlePushCollision()");
+
+	/***************** First, findout how hard Car was hit **************/
+	float force = ColMsg->GetPushForce()->Length();
+
+	//CLog::GetLog().Write(LOG_MISC, "force = %f", force);
+
+	Vector3f Direction = (*ColMsg->GetNormal())*force;
+
+	CLog::GetLog().Write(LOG_MISC, "\n\n\nforce = %f", force);
+	CLog::GetLog().Write(LOG_MISC, "Direction = (%f, %f, %f)",
+		Direction.X(), Direction.Y(), Direction.Z());
+
+	/***************** Next, findout where along body Car was hit *********/
+	float where; 
+	Rectangle3f Rect = *ColMsg->GetPlane();
+	Vector3f ColPoint = *ColMsg->GetColPoint();
+	Plane3f P1 = Plane3f(Rect.Edge0(), Rect.Origin());
+	where = P1.DistanceTo(ColPoint)/Rect.Edge0().Length();
+	// So where = [1,0]. 0 - at origin, 1 - opposite origin
+
+}
+
+void CRigidBody::HandleSphereToSphereCollision(CCollisionMessage* ColMsg)
+{
+	CVehicle* Car = (CVehicle*)ColMsg->GetEntity();
+	Vector3f CenterToCenter = *ColMsg->GetCenterToCenter();
+
+	// set translate
+	m_vReflection = CenterToCenter*0.05f;
+	m_vPosition = m_translate;
+	m_vDirectionWhenDisturbed = m_vReflection;
+
+	// set rotation
+	if (CenterToCenter.Length() == 0.0f) CenterToCenter = Vector3f(1.0f, 0.0f, 0.0f);
+	float theta1 = (CenterToCenter.Dot(Car->GetVehicleHeadingWC()))/(CenterToCenter.Length()*Car->GetVehicleHeadingWC().Length());
+	Vector3f CP = CenterToCenter.Cross(Vector3f(0.0f, 1.0f, 0.0f));
+	float theta2 = (CP.Dot(Car->GetVehicleHeadingWC()))/(CP.Length()*Car->GetVehicleHeadingWC().Length());
+
+//	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 120, "theta1 = %f", theta1);
+//	CLog::GetLog().Write(LOG_DEBUGOVERLAY, 121, "theta2 = %f", theta2);
+
+	float spin;
+	if (0.0f < theta1 && theta1 < 1.0f) {
+		// LOWER-LEFT QUADRANT
+		if (0.0f < theta2 && theta2 < 1.0f) {
+			spin = theta2;
+		}
+		// LOWER-RIGHT QUADRANT
+		else {
+			spin = theta2;
+		}
+	}
+	else {
+		// UPPER-LEFT QUADRANT
+		if (0.0f < theta2 && theta2 < 1.0f) {
+			spin = -theta2;
+		}
+		// UPPER-RIGHT QUADRANT
+		else {
+			spin = -theta2;
+		}
+	}
+
+	spin *= RIGIDBODY_SPIN_FACTOR;
+	m_vRotation = Vector3f(0.0f, spin, 0.0f);
+
+	// actually set it!
+	Car->SetVehicleVelocityLC(0.0f);
+	Car->SetVehiclePositionLC(Vector3f(m_vPosition.X(), m_vPosition.Z(), m_vPosition.Y()));
+
+	disturbed = true;
+}
+
 #undef RIGIDBODY_REFLECTION_FACTOR
 #undef RIGIDBODY_SPACING_FACTOR
 #undef RIGIDBODY_SPIN_FACTOR
@@ -99,12 +187,15 @@ void CRigidBody::UpdateCollisionReaction()
 {
 	CVehicle* Car = (CVehicle*)this;
 
+	Vector3f OldPosition = m_vPosition;
+
 	// update reflection motion
 	m_vReflection *= RIGIDBODY_REFLECTION_ENTROPY_FACTOR;
 	m_vPosition = m_translate + m_vReflection;
-	m_vDirectionWhenDisturbed = m_vPosition - m_translate;
+	m_vDirectionWhenDisturbed = m_vPosition - OldPosition;
 	m_translate = m_vPosition;
 	m_box.Center() = m_vPosition;
+	m_sphere.Center() = m_vPosition;
 
 	Car->SetVehiclePositionLC(Vector3f(m_vPosition.X(), m_vPosition.Z(), m_vPosition.Y()));
 
@@ -116,22 +207,6 @@ void CRigidBody::UpdateCollisionReaction()
 	if (m_vReflection.Length() < RIGIDBODY_REFLECTION_DEATH_FACTOR) {
 		disturbed = false;
 	}
-
-	/*
-	if (disturbed) {
-		CLog::GetLog().Write(LOG_MISC, "\n\n\nreflection = (%f, %f, %f)",
-			m_vReflection.X(), m_vReflection.Y(), m_vReflection.Z());
-		CLog::GetLog().Write(LOG_MISC, "m_vPosition = (%f, %f, %f)",
-			m_vPosition.X(), m_vPosition.Y(), m_vPosition.Z());
-		CLog::GetLog().Write(LOG_MISC, "translate = (%f, %f, %f)",
-			m_translate.X(), m_translate.Y(), m_translate.Z());
-		CLog::GetLog().Write(LOG_MISC, "m_box = (%f, %f, %f)\n\n\n",
-			m_box.Center().X(), m_box.Center().Y(), m_box.Center().Z());
-	}
-	else {
-		CLog::GetLog().Write(LOG_MISC, "\n\n\ndisturbed = false\n\n\n");
-	}
-	*/
 
 }
 #undef RIGIDBODY_REFLECTION_ENTROPY_FACTOR

@@ -67,7 +67,6 @@ void CSoundTask::Stop() {
 
 	// First suspend operation
 	CSoundCore::GetSoundCore().Suspend();
-
 	return;
 }
 
