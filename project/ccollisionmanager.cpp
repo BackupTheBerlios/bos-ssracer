@@ -80,6 +80,7 @@ void CCollisionManager::Update()
 		// Implement opponent vehicle collisions with other opponent vehicles here
 		// Remember to skip opponent vehicles colliding with themselves
 		thisEntity++;
+        OP++;  //$$$NOTE Gibs it get stuck in this infinite loop, I think you forgot to inc this variable?!?!!? -J
 	}
 
 	// Basic needs:
