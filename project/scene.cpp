@@ -1321,7 +1321,7 @@ int CScene::LoadPlanes(string* directory, string* filename)
 					continue;
 				}
 				*/
-				if(!strcmp(token, "<origine>")) {
+				if(!strcmp(token, "<origin>")) {
 					for(i=0;i<3;i++) {
 						token = strtok(NULL, seps);
 						temp[i] = float(atof(token));

@@ -5,6 +5,7 @@
 #include "soundcore.h"
 #include "tire.h"
 #include "WmlVector3.h"
+#include "ccollisionmessage.h" // Gib's addition
 
 using namespace Wml;
 
@@ -80,6 +81,10 @@ public:
 	bool GetEBrake() { return inputState.ebrake; };
 	bool GetLTurn() { return inputState.lturn; };
 	bool GetRTurn() { return inputState.rturn; };
+
+	// Gib's additions
+	void DeliverCollisionMessage(CCollisionMessage* ColMsg);
+	// end Gib's additions
 
 protected:
 	
@@ -191,6 +196,8 @@ private:
 	CSoundEffect* engineRev;
 	CSoundEffect* tireSkid;
 
+	// Gib's additions
+	Vector3f ExtraneousForces;
 };
 
 

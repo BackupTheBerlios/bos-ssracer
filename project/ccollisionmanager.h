@@ -6,12 +6,23 @@
 
 #include "entity.h"
 #include "task.h"
+#include "ccollisionmessage.h"
 
 #include "WmlRectangle3.h"
 #include "wmlbox3.h"
 #include "wmlsphere3.h"
-#include "ccollisionmessage.h"
+#include "wmlplane3.h"
+
 using namespace Wml;
+
+typedef struct {
+	Vector3f* vertices;
+	int col_vertex;
+	Plane3f* Plane;
+	float dist;
+	Vector3f* ColPoint;
+	Vector3f* Reverse;
+} CollisionInfo;
 
 class CCollisionManager : public ITask {
 public:
@@ -25,7 +36,7 @@ public:
 
 	int ComputeVertices(Box3f BBox, Vector3f vertices[]);
 	int ComputeEdges(Vector3f vertices[], Vector3f edges[][2]);
-
+	Vector3f* ComputeCollisionPoint(Plane3f* Plane, CEntity* Entity);
 	static CCollisionManager & GetCollisionManager() {return *m_pkCollisionManager;}
     static CCollisionManager * GetCollisionManagerPtr() {return m_pkCollisionManager;}
 
@@ -44,6 +55,7 @@ protected:
 	// This Planes vector is meant to be set the the general planes vector in Game or Scene.
 	// This is so I don't have to change my code around when it actually gets implemented.
 	std::vector<Rectangle3f*>* m_vPlanes;
+	CollisionInfo m_CI;
 
 private:
 	static CCollisionManager* m_pkCollisionManager;

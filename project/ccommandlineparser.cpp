@@ -1584,12 +1584,13 @@ int CCommandLineParser::SoundStreamCommand()
 int CCommandLineParser::LoadCollisionTest()
 {
 // 	sDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMESH) + "static\\pylon\\";
-#ifdef _DEBUG
-	CLog::GetLog().Write(LOG_GAMECONSOLE, "LoadCollisionTest() still under construction. Have yet to implement planes");
-#endif
 
 	string carDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
 	string carName = "mitsuEclipse.car";
+	string oppDir1 = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
+	string oppName1 = "mitsuEclipse.car";
+	string oppDir2 = CSettingsManager::GetSettingsManager().GetGameSetting(DIRDYNVEHICLES)+"mitsuEclipse\\";
+	string oppName2 = "mitsuEclipse.car";
 	string planesDir = CSettingsManager::GetSettingsManager().GetGameSetting(DIRMAP) + "debug\\";
 	string planesName = "debug";
 	string pylonDir, pylonName;
@@ -1600,42 +1601,6 @@ int CCommandLineParser::LoadCollisionTest()
 
 	// Load planes
 	CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlanes(&planesDir, &planesName);
-
-	/* // Old code before I implemented CScene::LoadPlanes()
-	// COORDINATES:
-	// read: {near, left, right, far}
-	float normalx[] = {1.0f, 0.0f, 0.0f, -1.0f};
-	float normaly[] = {0.0f, 0.0f, 0.0f, 0.0f};
-	float normalz[] = {0.0f, 1.0f, -1.0f, 0.0f};
-	// read: {near-left, far-left, far-right, near-right}
-	float pointx[] = {-20.0f, 20.0f, -20.0f, 20.0f};
-	float pointy[] = {0.0f, 0.0f, 0.0f, 0.0f};
-	float pointz[] = {-20.0f, -20.0f, 20.0f, 20.0f};
-	// normals, points, and planes:
-	Vector3f normals[4];
-	Vector3f points[4];
-	std::vector<Plane3f*>* Planes = new std::vector<Plane3f*>();
-	std::vector<CEntity *>::iterator it;
-
-	// initialize them:
-	for (int j = 0; j < 4; j++) {
-		// Set planes:
-		normals[j] = Vector3f(normalx[j], normaly[j], normalz[j]);
-		points[j] = Vector3f(pointx[j], pointy[j], pointz[j]);
-		Planes->push_back(new Plane3f(normals[j], points[j]));
-
-		// Load pylons and initialize their positions
-		// These mark the corners of the world borders (planes)
-		if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadEntity(&pylonDir, &pylonName))) {
-			CLog::GetLog().Write(LOG_GAMECONSOLE, "%s not loaded successfully!", pylonName.begin());
-			return GENERAL_ERROR;
-		}
-		it = CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->TEMPGetEntities()->end()-1;
-		(*it)->SetTranslate(Vector3f(pointx[j], pointy[j], pointz[j]));
-	}
-	// Set planes vector in CollisionManager
-	CCollisionManager::GetCollisionManagerPtr()->SetPlanes(Planes);
-*/
 
 	// Load Player Vehicle
 	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadPlayerVehicle(&carDir, &carName))) {
@@ -1649,6 +1614,39 @@ int CCommandLineParser::LoadCollisionTest()
 	PV->GetBoundingBox()->Axis(0) = Vector3f(1.0f, 0.0f, 0.0f);
 	PV->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
 	PV->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
+	PV->SetPositionLC(Vector3f(0.0f, 30.0f, 0.0f));
+//	PV->SetTranslate(Vector3f(0.0f, 0.0f, 30.0f));
+
+	
+	// Load a couple opponent vehicles
+	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&oppDir1, &oppName1))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Opponent Vehicle 1 not loaded correctly!");
+		return GENERAL_ERROR;
+	}
+	COpponentVehicle* OV = (COpponentVehicle*)CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end()-1;
+	OV->GetBoundingBox()->Extent(0) = 1.5f;
+	OV->GetBoundingBox()->Extent(1) = 0.5f;
+	OV->GetBoundingBox()->Extent(2) = 0.5f;
+	OV->GetBoundingBox()->Axis(0) = Vector3f(1.0f, 0.0f, 0.0f);
+	OV->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
+	OV->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
+//	OV->SetTranslate(Vector3f(20.0f, 0.0f, 0.0f));
+
+
+
+/*	if(!(CGameStateManager::GetGameStateManagerPtr()->GetScenePtr()->LoadOpponentVehicle(&oppDir2, &oppName2))) {
+		CLog::GetLog().Write(LOG_GAMECONSOLE, "Opponent Vehicle 2 not loaded correctly!");
+		return GENERAL_ERROR;
+	}
+	PV = (CVehicle*)CGameStateManager::GetGameStateManagerPtr()->GetOpponents()->end()-1;
+	PV->GetBoundingBox()->Extent(0) = 1.5f;
+	PV->GetBoundingBox()->Extent(1) = 0.5f;
+	PV->GetBoundingBox()->Extent(2) = 0.5f;
+	PV->GetBoundingBox()->Axis(0) = Vector3f(1.0f, 0.0f, 0.0f);
+	PV->GetBoundingBox()->Axis(1) = Vector3f(0.0f, 1.0f, 0.0f);
+	PV->GetBoundingBox()->Axis(2) = Vector3f(0.0f, 0.0f, 1.0f);
+	PV->SetTranslate(Vector3f(20.0f, -20.0f, 0.0f));
+*/
 
 	//PV->SetTranslate(Vector3f(50.0f, 0.0f, 50.0f)); // right in the middle of the pylons
 
@@ -1658,8 +1656,6 @@ int CCommandLineParser::LoadCollisionTest()
 
 	return OK;
 }
-
-
 
 // SAVING THIS; IT'S USEFUL:
 /*

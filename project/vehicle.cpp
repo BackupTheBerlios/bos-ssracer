@@ -95,6 +95,9 @@ void CVehicle::Init()
 	oldFreq = engineRev->GetFrequency();
 	engineIdle->SetFrequency( engineIdle->GetFrequency() * 1.5f );
 
+	// Gib's additions
+	ExtraneousForces = Vector3f(0.0f, 0.0f, 0.0f);
+
 }
 
 
@@ -1149,6 +1152,16 @@ void CVehicle::TransformLocalToWorldSpace()
 	headingWC = Vector3f( headingTotLC.X(), -headingTotLC.Z(), headingTotLC.Y());
 	velocityWC = Vector3f( velocityTotLC.X(), -velocityTotLC.Z(), velocityTotLC.Y());
 
+	/*
+	// Gib's addition
+	if (ExtraneousForces.Length() > 0.1f) {
+		m_translate += ExtraneousForces;
+		m_box.Center() += ExtraneousForces;
+		ExtraneousForces *= 0.5f;
+		velocityLC = Vector3f(0.0f, 0.0f, 0.0f);
+	}
+	else ExtraneousForces = Vector3f(0.0f, 0.0f, 0.0f);
+*/
 
 }
 
@@ -1169,4 +1182,21 @@ void CVehicle::RotateVectorAboutLocalZ(Vector3f* param, float rotZRADS)
 
 }
 
+// Gib's addition
+void CVehicle::DeliverCollisionMessage(CCollisionMessage* ColMsg)
+{
+	if (!ColMsg) return;
+
+	// Reverse vehicle back to collision point
+	m_translate += *ColMsg->GetReverse();
+	m_box.Center() += *ColMsg->GetReverse();
+
+	Vector3f reflected = velocityWC - 2.0f*(velocityWC.Dot(*ColMsg->GetNormal()))*(*ColMsg->GetNormal());
+
+	//velocityTotLC = Vector3f(reflected.X(), reflected.Z(), -reflected.Y());
+	velocityLC = reflected;
+	ExtraneousForces = reflected;
+
+}
+// end Gib's addition
 
