@@ -38,7 +38,7 @@
 #define FADEINSTREAM_COMMAND 15
 #define FADEOUTSTREAM_COMMAND 16
 
-#define LISTAUDIO_COMMAND 255
+#define LISTAUDIO_COMMAND 32
 
 
 // Forward Class Definitions

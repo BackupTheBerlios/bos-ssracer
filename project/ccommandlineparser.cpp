@@ -90,6 +90,8 @@ int CCommandLineParser::initKeywords()
     Keywords.push_back(std::string("releasestream"));
     Keywords.push_back(std::string("pausestream"));
     Keywords.push_back(std::string("unpausestream"));
+
+    Keywords.push_back(std::string("listaudio"));
     /*** End Rob's Commands ***/
 
 	return OK;
@@ -153,6 +155,8 @@ int CCommandLineParser::execute()
     if (*it == "releasestream") error = SoundStreamCommand();
     if (*it == "pausestream") error = SoundStreamCommand();
     if (*it == "unpausestream") error = SoundStreamCommand();
+
+    if (*it == "listaudio") error = SoundCoreCommand();
 
 	return error;
 }
@@ -608,6 +612,35 @@ int CCommandLineParser::LoadVehicleAI()
 
 
 // ===== Begin Rob's Functions ==== ///
+int CCommandLineParser::SoundCoreCommand()
+{
+	std::string sSoundFile;
+	std::string sSoundID;
+	CSoundMessage *cSMsg = NULL;
+
+	// ** LISTAUDIO command ** //
+	if ( strcmp( Tokens[0].c_str(), "listaudio" ) == 0 ) {
+		switch( Tokens.size() ) {
+		case 1:
+			// Send the sound message
+			cSMsg = new CSoundMessage();
+			cSMsg->ListAudio();
+			CKernel::GetKernel().DeliverMessage( cSMsg, SOUND_TASK );
+			break;
+
+		default:
+			CLog::GetLog().Write(LOG_GAMECONSOLE, "listaudio - invalid syntax (command takes no arguments)." );
+			return BAD_COMMAND;
+			break;
+
+		}
+	}
+
+    return OK;
+}
+
+
+
 int CCommandLineParser::SoundEffectCommand()
 {
 	std::string sSoundFile;

@@ -75,6 +75,7 @@ void CSoundTask::DoMessageHandle( ITaskMessage *cMsg ) {
 void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 	map<CSoundID, CSoundEffect*>::iterator it;
 	map<CSoundID, CSoundStream*>::iterator it2;
+	CSoundID cSID;
 	CSoundEffect *cSfx = NULL;
 	CSoundStream *cStr = NULL;
 
@@ -82,16 +83,16 @@ void CSoundTask::HandleSoundMessage( CSoundMessage *cSMsg ) {
 
 	switch ( cSMsg->nCommandType ) {
 	case LISTAUDIO_COMMAND:
-		/*
 		// List all loaded sound effects
 		CLog::GetLog().Write( LOG_GAMECONSOLE, "Loaded Sound Effects:" );
 
 		it = sound.begin();
 		while ( it != sound.end() ) {
-			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (play: %d, pause: %d, loop: %d, destruct: %d)", it->first->getID(), it->second->IsPlaying, it->second->IsPaused() );
+			cSID = it->first;
+			//CSoundEffect *cSStrm = it->second;
+			CLog::GetLog().Write ( LOG_GAMECONSOLE, "::%s:: (play: %d, pause: %d, loop: %d, destruct: %d)", cSID.getID() );
 			it++;
 		}
-*/
 		break;
 
 	case PLAYSOUNDEFFECTONCE_COMMAND:

@@ -53,6 +53,7 @@ public:
 	// === Rob's Functions === //
     int SoundEffectCommand();
     int SoundStreamCommand();
+	int SoundCoreCommand();
 
 protected:
 	std::string deliminators;
