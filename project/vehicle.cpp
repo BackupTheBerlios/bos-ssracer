@@ -930,7 +930,7 @@ void CVehicle::CalculateVehiclePosition(float deltaT)
 		//accelerationLC.X() = tempTrans.X() / deltaT - test.X();
 		accelerationLC.Y() = tempTrans.Y() / deltaT - test.Y();
 
-		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 39, "accelerationLC.Y(): %f", accelerationLC.X());
+		CLog::GetLog().Write(LOG_DEBUGOVERLAY, 39, "accelerationLC.Y(): %f", accelerationLC.Y());
 
 		Vector3f rotPos;
 
@@ -984,24 +984,29 @@ void CVehicle::CalculateVehicleAngularVelocity(float deltaT)
 //--------------------------------------------------------------
 void CVehicle::CalculatePitchAndRoll(float deltaT)
 {
+	
 	// Body rolls 2 degrees per G of acceleration
 	// for right now.
 	if(float(fabs(accelerationLC.X())) > 0.0f) {
-		rotationLC.Y() += RADIANS(3.0f*deltaT) * sgn(accelerationLC.X());
-		if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
-			if(fabs(rotationLC.Y()) > ((accelerationLC.X() / 9.81) * RADIANS(3.0f))) {
-				rotationLC.Y() = RADIANS(((accelerationLC.X() / 9.81) * 3.0f)) * sgn(accelerationLC.X());
+		rotationLC.Y() += RADIANS(6.0f*deltaT) * sgn(accelerationLC.X());
+		//if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
+			if(fabs(rotationLC.Y()) > RADIANS(1.0f)) {
+				rotationLC.Y() = RADIANS(1.0f * sgn(accelerationLC.X()));
 			}
-		}
+		//}
 	}
+	
+
+	
 	if(float(fabs(accelerationLC.Y())) > 0.0f) {
 		rotationLC.X() += RADIANS(3.0f*deltaT) * sgn(accelerationLC.Y());
-		if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
-			if(fabs(rotationLC.X()) > ((accelerationLC.Y() / 9.81) * RADIANS(2.0f))) {
-				rotationLC.X() = RADIANS(((accelerationLC.Y() / 9.81) * 2.0f)) * sgn(accelerationLC.Y());
+	//	if(sgn(accelerationLC.X()) == sgn(rotationLC.Y())) {
+			if( fabs(rotationLC.X()) > RADIANS(20.0f)) {
+				rotationLC.X() = RADIANS(20.0f) * sgn(accelerationLC.Y());
 			}
-		}
+	//	}
 	}
+	
 }
 
 //--------------------------------------------------------------
