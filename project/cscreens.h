@@ -6,6 +6,7 @@
 #include "ctextfield.h"
 
 //Hey Gibran, heres my SCREEN MACROS that you can use
+#define NO_STATE 0
 #define MAIN_MENU 1
 #define NEW_GAME 2
 #define GARAGE 3
@@ -20,7 +21,8 @@
 #define PERFORMANCE 12
 #define HOME 13
 #define DEALERSHIP 14
-
+#define PRE_GAME 15
+#define MAX_STATES 15
 
 class CScreen
 {

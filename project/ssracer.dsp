@@ -241,7 +241,19 @@ SOURCE=.\cbutton.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\cfrontendmanager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\cfrontendmessage.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\clabel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\clist.cpp
 # End Source File
 # Begin Source File
 
@@ -491,7 +503,19 @@ SOURCE=.\cbutton.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\cfrontendmanager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\cfrontendmessage.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\clabel.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\clist.h
 # End Source File
 # Begin Source File
 

@@ -64,8 +64,11 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT )
     // Initialize any pre-game objects
     CAppStateManager::GetAppMan().SetAppState(STATE_INIT);
 
+	// Gib's modification (temporary: begin game in GAME_FRONT_END state)
+	CAppStateManager::GetAppMan().SetAppState(STATE_FRONT_END);
+
     //$$$DEBUG JUMP STRAIGHT IN
-    CAppStateManager::GetAppMan().SetAppState(STATE_IN_GAME);
+    //CAppStateManager::GetAppMan().SetAppState(STATE_IN_GAME);
     // jump into the game loop
     CBOSApplication::GetBOSApp().Run();
         

@@ -28,6 +28,8 @@
 #include "consoletask.h"
 #include "physicstask.h"
 #include "gamestatemanager.h"
+// Gib's modification (adding frontendmanager to task list)
+#include "cfrontendmanager.h"
 
 
 //-----------------------------------------------------------------------------
@@ -405,6 +407,12 @@ void CBOSApplication::InitializeKernel()
 	ConsoleTask.m_lPriority = 100;
 	CKernel::GetKernel().AddTask(&ConsoleTask);
 
+	// Gib's modification (adding FrontendManager task)
+	// Frontend Manager task
+	static CFrontendManager FrontendManager;
+	FrontendManager.m_lPriority = 300; // idunno
+	CKernel::GetKernel().AddTask(&FrontendManager);
+	// end Gib's modifications
 
     // test task
     //static CTestTask TTask;  

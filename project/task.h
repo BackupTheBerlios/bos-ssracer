@@ -28,6 +28,8 @@
 #define AI_TASK			4
 #define CONSOLE_TASK	5
 #define PHYSICS_TASK	6
+// Gib's modification (for FrontendManager task)
+#define FRONTEND_TASK 7
 
 // #defines for Message Types
 #define SYSTEM_TASK_MESSAGE		-1
@@ -38,6 +40,8 @@
 #define AI_TASK_MESSAGE			4
 #define CONSOLE_TASK_MESSAGE	5
 #define PHYSICS_MESSAGE			6
+// Gib's modification (for FrontendManager task)
+#define FRONTEND_TASK_MESSAGE 7
 
 // Forward class definitions
 class CKernel;

@@ -4,6 +4,9 @@
 #include "inputmessage.h"
 #include "soundmessage.h"
 #include "consolemessage.h"
+// Gib's modification (now receiving frontend messages)
+#include "cfrontendmessage.h"
+// end Gib's modification
 #include "log.h"
 
 #include "gamestatemanager.h"
@@ -153,20 +156,30 @@ void CAITask::HandleInputMessage( CInputTaskMessage *cIMsg ) {
     switch ( CAppStateManager::GetAppMan().GetAppState() ) {
     
 	case STATE_INIT:
-	case STATE_POST_GAME:
+
 	case STATE_CLEAN_UP:
 		break;
 
+// Gib's modification (process keyboard input for frontend)
+// I put all these cases together 'cause the FEM handles all of them
+    case STATE_PAUSE:
+	case STATE_POST_GAME:
 	case STATE_FRONT_END:
-		//forward to front end manager
-        //break;
+
+		CFrontendMessage* cFMsg;
+		if (cIMsg->m_keyDown) {
+			cFMsg = new CFrontendMessage(cIMsg->m_keyValue);
+			CKernel::GetKernel().DeliverMessage(cFMsg, FRONTEND_TASK);
+		}
+
+		// temporary (to be removed when we've got frontend rendering)
+		if (cIMsg->m_keyValue == GAME_ESCAPE)  
+			CAppStateManager::GetAppManPtr()->SetAppState(STATE_IN_GAME);
+		break;
+		// end Gib's modification
 	
     case STATE_PRE_GAME:
 		// may have special cases here
-        //break;
-
-    case STATE_PAUSE:
-		// special case to handle the pause key
         //break;
 
     case STATE_IN_GAME: 

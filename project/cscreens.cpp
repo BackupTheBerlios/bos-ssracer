@@ -19,6 +19,7 @@ CMainMenu::CMainMenu()
   int tempOrder[]={NEW_GAME, OPTIONS, BESTTIMES, HELP, CREDITS, QUIT};
   memcpy(screenOrder, tempOrder, sizeof(tempOrder));
   maxScreeni = 5;
+
 }
 
 
@@ -57,7 +58,8 @@ void CMainMenu::processInput(int key)
     break;
   case GAME_RETURN:
   case GAME_NUMPADENTER:
-    gotoScreen = selectedScreeni;
+	 
+    gotoScreen = screenOrder[selectedScreeni];
   }
 }
 
