@@ -268,6 +268,26 @@ SOURCE=.\gamestatemanager.cpp
 SOURCE=.\physicstask.cpp
 # End Source File
 # End Group
+# Begin Group "Front End Sources"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\cbutton.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\clabel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ctextfield.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\cwidget.cpp
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=.\dxutil.cpp
@@ -480,6 +500,26 @@ SOURCE=.\gamestatemanager.h
 # Begin Source File
 
 SOURCE=.\physicstask.h
+# End Source File
+# End Group
+# Begin Group "Front End Headers"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\cbutton.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\clabel.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ctextfield.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\cwidget.h
 # End Source File
 # End Group
 # Begin Source File
