@@ -153,7 +153,7 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
     m_fNodeWidth = max( m_vfMaxExtent.X()-m_vfMinExtent.X(), m_vfMinExtent.X() - m_vfMaxExtent.X());
     m_fNodeWidth = max( m_fNodeWidth, m_vfMaxExtent.Z()-m_vfMinExtent.Z());
     m_fNodeWidth = max( m_fNodeWidth, m_vfMinExtent.Z()-m_vfMaxExtent.Z());
-    m_fNodeWidth *= 1.50f;//2.0f;   
+    m_fNodeWidth *= 0.75f;//2.0f;   
 
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE, "Quadtree root node width: %f", m_fNodeWidth);
@@ -171,8 +171,8 @@ void CQuadTree::Initialize( std::vector <CEntity *> * pvEntities )
 
     // assuming a uniform distribution of entities, try to compute an optimal tree depth
     // want #levels = log(#entities)/log(#subdiv at each level=4)
-    //m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) ) + 1;
-    m_iLevels = 7;
+    m_iLevels = (int)Mathf::Ceil( (Mathf::Log((float)pvEntities->size())) / (Mathf::Log(4.0f)) ) +2 ;
+    //m_iLevels = 7;
     
     #ifdef _DEBUG
     CLog::GetLog().Write(LOG_GAMECONSOLE,"Quadtree depth %d", m_iLevels);
@@ -293,33 +293,34 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
     assert( m_iLevels > 1 ); 
 
     Box3f boxTemp =  box;
+    Box3f boxEnt = *pEntity->GetBoundingBox();
 
     // move box to the entity's height
-    boxTemp.Center().Y() = pEntity->GetBoundingBox()->Center().Y();
+    boxTemp.Center().Y() = boxEnt.Center().Y();
     //box.Extent(1) = 100.0f; //extend this box infinitely
 
     bool bEntInQuad = false;
 
     Vector3f vBoxVerts[8];
-    bool abValid[8] = { 0,0,0,0,0,0,0,0 };//{ 1,1,1,1,1,1,1,1 };//{ 0,0,0,0,0,0,0,0 };
-    bool bEntBoxInNode = true;
-    bool bNodeInEntBox = true;
+    bool abValid[8] = { 1,1,1,1,1,1,1,1 };//{ 0,0,0,0,0,0,0,0 };
+    bool bEntBoxInNode = false;
+    bool bNodeInEntBox = false;
 
-    switch(TestIntersection( boxTemp,  *pEntity->GetBoundingBox() ) ) 
+    switch(TestIntersection( boxTemp,  boxEnt ) ) 
     {
         case true:  // box intersects
             node->m_EntMap[pEntity->GetId()] = pEntity; 
             bEntInQuad = true;  // find if the children intersect too
             break;
 
-        case false:  // box is INSIDE or OUTSIDE the node
+        case false:  // ent box is INSIDE or OUTSIDE the node
             // get vertices for the bounding box                
-            boxTemp.ComputeVertices(vBoxVerts);
+            boxEnt.ComputeVertices(vBoxVerts);
 
             // if entities box is contained in node box
             for (int j=0; j<8; j++ ) {
-                if (!InBox( vBoxVerts[j], node->m_BBox))  {
-                    bEntBoxInNode = false;
+                if (InBox( vBoxVerts[j], boxTemp))  {
+                    bEntBoxInNode = true;
                 }
             }
 
@@ -329,12 +330,12 @@ void CQuadTree::AddReference( Box3f box, CEntity * pEntity, CQuadNode * node )  
                 bEntInQuad = true;  // find out what child quads also contain this
             }
             else { // OUTSIDE or entities box contains the bounding box!
-                node->m_BBox.ComputeVertices(vBoxVerts);
+                boxTemp.ComputeVertices(vBoxVerts);
                 
                 // if node box  is contained in entities box
                 for (int j=0; j<8; j++ ) {
-                    if (!InBox( vBoxVerts[j], boxTemp))  {
-                        bNodeInEntBox = false;
+                    if (InBox( vBoxVerts[j], boxEnt))  {
+                        bNodeInEntBox = true;
                     }
                 }
 
@@ -509,51 +510,6 @@ void CQuadTree::SubDivide( CQuadNode * pQNode, int iLevel )
 
 	return;
 }
-
-/*ol BoxInFrustum(Box3f BBox, CULLINFO Frust )
-{
-    Vector3f vCorner[8];
-	int iTotalIn = 0;
-
-	// get the corners of the box into the vCorner array
-	BBox.ComputeVertices(vCorner);
-
-	// test all 8 corners against the 6 sides 
-	// if all points are behind 1 specific plane, we are out
-	// if we are in with all points, then we are fully in
-	for(int p = 0; p < 6; ++p) {
-	
-		int iInCount = 8;
-		int iPtIn = 1;
-
-		for(int i = 0; i < 8; ++i) {
-
-			// test this point against the planes
-			if(m_plane[p].SideOfPlane(vCorner[i]) == BEHIND) {
-			iPtIn = 0;
-				--iInCount;
-			}
-		}
-
-		// were all the points outside of plane p?
-		If(iInCount == 0)
-			return false;
-
-		// check if they were all on the right side of the plane
-		iTotalIn += iPtIn;
-	}
-
-	// so if iTotalIn is 6, then all are inside the view
-	if(iTotalIn == 6)
-		return true;
-
-	// we must be partly in then otherwise
-
-
-
-}
-*/
-
 
 
 enum { INSIDE=0, OUTSIDE, INTERSECT };
